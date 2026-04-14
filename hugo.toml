@@ -5,7 +5,7 @@ theme = 'hugo-theme-stack'
 publishDir = 'docs'
 
 # [1. 댓글 설정]
-disqusShortname = "klifehack"
+disqusShortname = "klifehack-com"
 
 # [2. 분류 체계 정의]
 [taxonomies]
@@ -88,3 +88,8 @@ disqusShortname = "klifehack"
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
+	
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
