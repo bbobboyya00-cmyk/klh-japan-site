@@ -90,7 +90,7 @@ disqusShortname = "klifehack-com"
         url = "/privacy-policy/" 
         weight = 50
         [menu.main.params]
-            icon = "lock"
+            icon = "archive" # 👈 lock 대신 존재하는 아이콘인 archive로 변경 (또는 이 블록 삭제)
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
