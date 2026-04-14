@@ -7,25 +7,32 @@ publishDir = 'docs'
 [params]
     mainSections = ["posts"]
     featuredImageField = "image"
-    dateFormat = "2006/01/02"
-	favicon = "/img/favicon.ico"
-    # [좌측 사이드바 설정]
+    favicon = "/img/favicon.ico"
+
+    # [교정 1] dateFormat을 객체 구조로 변경 (빌드 에러 해결)
+    [params.dateFormat]
+        published = "2006/01/02"
+        lastUpdated = "2006/01/02"
+
     [params.sidebar]
         avatar = "/img/logo.jpg"
-        # 일본어 타겟팅 3줄 요약 소개 (Pangyo Tech, Smart Living, Travel)
+        # 일본어 타겟팅 3줄 요약 소개
         subtitle = "韓国・パンギョの現役テクニカルアーティスト「K」による技術的キュレーション。韓国の最新ITトレンド、ディープな旅行ハック、そしてリアルな生活情報をお届けします。"
 
-    # [우측 사이드바 위젯 구성] (검색, 아카이브, 카테고리)
-    [params.widgets]
-        homepage = ["search", "archives", "categories"]
-        sidebar = ["search", "archives", "categories"]
+    # [교정 2] 위젯 설정을 객체 배열 구조로 변경 (interface{} 에러 해결)
+    [[params.widgets]]
+        type = "search"
+    [[params.widgets]]
+        type = "archives"
+    [[params.widgets]]
+        type = "categories"
 
     [params.article]
         math = false
         toc = true
         readingTime = true
 
-# [좌측 메뉴바 구성 (영문 블로그 XML 1:1 매핑)]
+# [좌측 메뉴바 구성]
 [menu]
     [[menu.main]]
         identifier = "home"
@@ -33,7 +40,7 @@ publishDir = 'docs'
         url = "/"
         weight = 10
         [menu.main.params]
-            icon = "home" # Tabler 기본 내장 아이콘
+            icon = "home"
 
     [[menu.main]]
         identifier = "categories"
@@ -41,7 +48,8 @@ publishDir = 'docs'
         url = "/categories/"
         weight = 20
         [menu.main.params]
-            icon = "folder"
+            # folder.svg 에러 방지를 위해 존재하는 archive 아이콘으로 대체
+            icon = "archive" 
 
     [[menu.main]]
         identifier = "about"
@@ -59,6 +67,5 @@ publishDir = 'docs'
         [menu.main.params]
             icon = "messages"
 
-# [검색 및 메타데이터 출력]
 [outputs]
     home = ["HTML", "RSS", "JSON"]
