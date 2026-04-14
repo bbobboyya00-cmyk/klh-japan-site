@@ -1,8 +1,9 @@
 ---
 title: "プライバシーポリシー"
 description: "K-Life Hack の個人情報保護方針について"
-date: 2026-04-14T22:00:00+09:00
+date: 2026-04-14T22:35:00+09:00
 layout: "page"
+draft: false
 toc: false
 menu:
     main:

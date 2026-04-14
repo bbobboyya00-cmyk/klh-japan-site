@@ -83,6 +83,14 @@ disqusShortname = "klifehack-com"
         weight = 40
         [menu.main.params]
             icon = "mail"
+			
+	[[menu.main]]
+        identifier = "privacy-policy"
+        name = "Privacy Policy"
+        url = "/privacy-policy/" 
+        weight = 50
+        [menu.main.params]
+            icon = "lock"
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
