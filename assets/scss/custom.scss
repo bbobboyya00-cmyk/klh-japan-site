@@ -1,33 +1,36 @@
-/* [TA] Image Pair (psImg) Optimization for Hugo Stack */
+/* [TA] psImg Layout - Perfect Mobile Responsive */
 .psImg, .psimg {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 10px;
-    margin: 35px 0;
-    width: 100%;
-
-    /* Hugo가 자동 주입하는 p, br 태그 무력화 */
-    br, p { display: none !important; }
-
-    img {
-        flex: 1 1 0%;
-        width: 100%; /* auto 대신 100%가 그리드 정렬에 유리함 */
-        max-width: calc(50% - 5px);
-        margin: 0 !important;
-        object-fit: cover;
-        aspect-ratio: 1 / 1; /* 정방형 고정 */
-        border-radius: 12px;
-    }
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important; /* nowrap 제거 */
+    gap: 10px !important;
+    margin: 35px 0 !important;
+    width: 100% !important;
 }
 
-/* 모바일 대응 */
-@media screen and (max-width: 640px) {
+/* Hugo가 이미지 주변에 p태그를 강제 삽입할 경우를 대비 */
+.psImg p, .psimg p {
+    display: contents !important; /* 태그는 유지하되 레이아웃에 영향 안 줌 */
+}
+
+.psImg img, .psimg img {
+    flex: 1 1 calc(50% - 5px) !important; /* 너비 비중 명시 */
+    width: 100% !important;
+    max-width: calc(50% - 5px) !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+    border-radius: 12px !important;
+    margin: 0 !important;
+}
+
+@media screen and (max-width: 768px) {
     .psImg, .psimg {
-        flex-direction: column;
-        img {
-            max-width: 100%;
-            aspect-ratio: auto; /* 모바일에서는 원본 비율 유지 */
-        }
+        flex-direction: column !important;
+    }
+    .psImg img, .psimg img {
+        max-width: 100% !important;
+        aspect-ratio: auto !important; /* 모바일은 원본 비율로 */
+        flex: 1 1 100% !important;
     }
 }
