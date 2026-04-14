@@ -4,35 +4,42 @@ title = 'K-Life Hack Japan'
 theme = 'hugo-theme-stack'
 publishDir = 'docs'
 
+# [추가] 분류 체계 정의 (Taxonomy Error 해결)
+[taxonomies]
+    category = "categories"
+    tag = "tags"
+
 [params]
     mainSections = ["posts"]
     featuredImageField = "image"
     favicon = "/img/favicon.ico"
 
-    # [교정 1] dateFormat을 객체 구조로 변경 (빌드 에러 해결)
     [params.dateFormat]
         published = "2006/01/02"
         lastUpdated = "2006/01/02"
 
     [params.sidebar]
         avatar = "/img/logo.jpg"
-        # 일본어 타겟팅 3줄 요약 소개
-        subtitle = "韓国・パンギョの現役テクニカルアーティスト「K」による技術的キュレーション。韓国の最新ITトレンド、ディープな旅行ハック、そしてリアルな生活情報をお届けします。"
+        name = "K-Life Hack"
+        subtitle = "韓国・パンギョの現役テクニカルアーティスト「K」による技術的キュレーション。最新ITトレンド、旅行ハック、生活情報を届けます。"
 
-    # [교정 2] 위젯 설정을 객체 배열 구조로 변경 (interface{} 에러 해결)
-    [[params.widgets]]
-        type = "search"
-    [[params.widgets]]
-        type = "archives"
-    [[params.widgets]]
-        type = "categories"
+    [params.widgets]
+        homepage = [
+            { type = "search" },
+            { type = "archives" },
+            { type = "categories" }
+        ]
+        page = [
+            { type = "search" },
+            { type = "archives" },
+            { type = "categories" }
+        ]
 
     [params.article]
         math = false
         toc = true
         readingTime = true
 
-# [좌측 메뉴바 구성]
 [menu]
     [[menu.main]]
         identifier = "home"
@@ -48,7 +55,6 @@ publishDir = 'docs'
         url = "/categories/"
         weight = 20
         [menu.main.params]
-            # folder.svg 에러 방지를 위해 존재하는 archive 아이콘으로 대체
             icon = "archive" 
 
     [[menu.main]]
@@ -65,7 +71,8 @@ publishDir = 'docs'
         url = "https://t.me/korinside"
         weight = 40
         [menu.main.params]
-            icon = "messages"
+            icon = "mail"
 
+# [수정] 검색을 위한 출력 규격 최적화
 [outputs]
     home = ["HTML", "RSS", "JSON"]
