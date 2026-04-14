@@ -1,0 +1,11 @@
+baseURL = 'https://klifehack.com/'
+languageCode = 'ja-jp'
+title = 'K-Life Hack Japan'
+theme = 'PaperMod'
+publishDir = 'docs'
+
+[params]
+    env = 'production'
+    title = 'K-Life Hack'
+    description = '한국의 실시간 트렌드를 일본어로 전하는 기술적 큐레이션'
+publishDir = 'docs'

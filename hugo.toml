@@ -1,11 +1,26 @@
 baseURL = 'https://klifehack.com/'
 languageCode = 'ja-jp'
 title = 'K-Life Hack Japan'
-theme = 'PaperMod'
-publishDir = 'docs'
+theme = 'hugo-theme-stack'
+publishDir = 'docs' # GitHub Pages를 위해 반드시 유지
 
 [params]
-    env = 'production'
-    title = 'K-Life Hack'
-    description = '한국의 실시간 트렌드를 일본어로 전하는 기술적 큐레이션'
-publishDir = 'docs'
+    mainSections = ["posts"]
+    featuredImageField = "image" # 포스트의 대표 이미지 필드명
+
+    [params.sidebar]
+        avatar = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" # 임시 아바타
+        subtitle = "한국의 실시간 트렌드 큐레이션"
+        description = "기술적 분석으로 전하는 한국의 소식"
+
+    [params.article]
+        math = false
+        toc = true # 목차 활성화
+        readingTime = true
+
+    [params.comments]
+        enabled = false # 필요 시 나중에 활성화
+
+# 검색 기능 활성화 (Stack의 강점)
+[outputs]
+    home = ["HTML", "RSS", "JSON"]
