@@ -1,1 +1,4 @@
----\ntitle: "About"\nlayout: "about"\n---
+---
+title: "About"
+layout: "about"
+---

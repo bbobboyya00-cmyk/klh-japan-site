@@ -1,1 +1,4 @@
----\ntitle: "Categories"\nlayout: "categories"\n---
+---
+title: "Categories"
+layout: "categories"
+---
