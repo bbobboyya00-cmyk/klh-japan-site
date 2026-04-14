@@ -21,7 +21,7 @@ disqusShortname = "klifehack-com"
 [params]
     mainSections = ["posts"]
     featuredImageField = "image"
-    favicon = "/img/favicon.ico"
+    favicon = "favicon.ico"
 
     [params.dateFormat]
         published = "2006/01/02"
