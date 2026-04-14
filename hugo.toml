@@ -19,8 +19,8 @@ publishDir = 'docs'
         lastUpdated = "2006/01/02"
 
     [params.sidebar]
-        avatar = "/img/logo.jpg"
-        name = "K-Life Hack"
+        avatar = "img/logo.jpg" 
+		name = "K-Life Hack"
         subtitle = "韓国・パンギョの現役テクニカルアーティスト「K」による技術的キュレーション。最新ITトレンド、旅行ハック、生活情報を届けます。"
 
     [params.widgets]
