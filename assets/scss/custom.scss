@@ -1,0 +1,33 @@
+/* [TA] Image Pair (psImg) Optimization for Hugo Stack */
+.psImg, .psimg {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin: 35px 0;
+    width: 100%;
+
+    /* Hugo가 자동 주입하는 p, br 태그 무력화 */
+    br, p { display: none !important; }
+
+    img {
+        flex: 1 1 0%;
+        width: 100%; /* auto 대신 100%가 그리드 정렬에 유리함 */
+        max-width: calc(50% - 5px);
+        margin: 0 !important;
+        object-fit: cover;
+        aspect-ratio: 1 / 1; /* 정방형 고정 */
+        border-radius: 12px;
+    }
+}
+
+/* 모바일 대응 */
+@media screen and (max-width: 640px) {
+    .psImg, .psimg {
+        flex-direction: column;
+        img {
+            max-width: 100%;
+            aspect-ratio: auto; /* 모바일에서는 원본 비율 유지 */
+        }
+    }
+}

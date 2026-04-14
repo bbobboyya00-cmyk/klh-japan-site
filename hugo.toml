@@ -1,5 +1,7 @@
+defaultContentLanguage = "ja"
+hasCJKLanguage = true
 baseURL = 'https://klifehack.com/'
-languageCode = 'ja-jp'
+languageCode = 'ja'
 title = 'K-Life Hack'
 theme = 'hugo-theme-stack'
 publishDir = 'docs'
@@ -12,7 +14,7 @@ disqusShortname = "klifehack-com"
     category = "categories"
     tag = "tags"
 
-# [3. URL 구조: 데모와 동일하게 /p/ 스팀 설정]
+# [3. URL 구조]
 [Permalinks]
     posts = "/p/:slug/"
 
@@ -25,14 +27,11 @@ disqusShortname = "klifehack-com"
         published = "2006/01/02"
         lastUpdated = "2006/01/02"
 
-    # [4. 사이드바: 순수 일본어로 정제]
     [params.sidebar]
         avatar = "img/logo.jpg" 
         name = "K-Life Hack"
-        # 일본어 정제: 한국 팡교의 현역 TA 'K'가 전하는 기술 큐레이션 및 생활 정보
-        subtitle = "韓国・パンギョの現役テクニカルアーティスト「K」による技術的キュレーション。最新ITトレンドからディープな旅行ハック、リアルな生活情報までお届けします。"
+        subtitle = "韓国・パンギョの現役テクニカルアーティスト「K」による技術적キュレーション。最新ITトレンドからディープな旅行ハック、リアルな生活情報までお届けします。"
 
-    # [5. 우측 위젯: 데모 레이아웃 반영]
     [params.widgets]
         homepage = [
             { type = "search" },
@@ -52,7 +51,6 @@ disqusShortname = "klifehack-com"
         enabled = true
         type = "disqus"
 
-# [6. 메뉴 구성: 아이콘 의존성 해결]
 [menu]
     [[menu.main]]
         identifier = "home"
@@ -88,8 +86,11 @@ disqusShortname = "klifehack-com"
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
-	
+
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+  [markup.tableOfContents]
+    endLevel = 4
+    startLevel = 2
