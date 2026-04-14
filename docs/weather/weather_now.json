@@ -1,0 +1,39 @@
+{
+    "last_update": "2026-04-09 10:41:57",
+    "data": {
+        "Busan": {
+            "day3": {
+                "wf": null,
+                "low": null,
+                "high": null
+            },
+            "day5": {
+                "wf": "구름많음",
+                "low": 11,
+                "high": 20
+            },
+            "day7": {
+                "wf": "구름많음",
+                "low": 11,
+                "high": 20
+            }
+        },
+        "Gangwon": {
+            "day3": {
+                "wf": null,
+                "low": null,
+                "high": null
+            },
+            "day5": {
+                "wf": "맑음",
+                "low": 8,
+                "high": 22
+            },
+            "day7": {
+                "wf": "구름많음",
+                "low": 6,
+                "high": 23
+            }
+        }
+    }
+}
