@@ -94,3 +94,8 @@ disqusShortname = "klifehack-com"
   [markup.tableOfContents]
     endLevel = 4
     startLevel = 2
+
+[params.analytics]
+    enable = true
+    [params.analytics.google]
+        id = "G-92N7W10SPC" 
