@@ -2,25 +2,63 @@ baseURL = 'https://klifehack.com/'
 languageCode = 'ja-jp'
 title = 'K-Life Hack Japan'
 theme = 'hugo-theme-stack'
-publishDir = 'docs' # GitHub Pages를 위해 반드시 유지
+publishDir = 'docs'
 
 [params]
     mainSections = ["posts"]
-    featuredImageField = "image" # 포스트의 대표 이미지 필드명
-
+    featuredImageField = "image"
+    dateFormat = "2006/01/02"
+	favicon = "/img/favicon.ico"
+    # [좌측 사이드바 설정]
     [params.sidebar]
-        avatar = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" # 임시 아바타
-        subtitle = "한국의 실시간 트렌드 큐레이션"
-        description = "기술적 분석으로 전하는 한국의 소식"
+        avatar = "/img/logo.jpg"
+        # 일본어 타겟팅 3줄 요약 소개 (Pangyo Tech, Smart Living, Travel)
+        subtitle = "韓国・パンギョの現役テクニカルアーティスト「K」による技術的キュレーション。韓国の最新ITトレンド、ディープな旅行ハック、そしてリアルな生活情報をお届けします。"
+
+    # [우측 사이드바 위젯 구성] (검색, 아카이브, 카테고리)
+    [params.widgets]
+        homepage = ["search", "archives", "categories"]
+        sidebar = ["search", "archives", "categories"]
 
     [params.article]
         math = false
-        toc = true # 목차 활성화
+        toc = true
         readingTime = true
 
-    [params.comments]
-        enabled = false # 필요 시 나중에 활성화
+# [좌측 메뉴바 구성 (영문 블로그 XML 1:1 매핑)]
+[menu]
+    [[menu.main]]
+        identifier = "home"
+        name = "Home"
+        url = "/"
+        weight = 10
+        [menu.main.params]
+            icon = "home" # Tabler 기본 내장 아이콘
 
-# 검색 기능 활성화 (Stack의 강점)
+    [[menu.main]]
+        identifier = "categories"
+        name = "Categories"
+        url = "/categories/"
+        weight = 20
+        [menu.main.params]
+            icon = "folder"
+
+    [[menu.main]]
+        identifier = "about"
+        name = "About"
+        url = "/about/" 
+        weight = 30
+        [menu.main.params]
+            icon = "user"
+
+    [[menu.main]]
+        identifier = "telegram"
+        name = "Telegram"
+        url = "https://t.me/korinside"
+        weight = 40
+        [menu.main.params]
+            icon = "messages"
+
+# [검색 및 메타데이터 출력]
 [outputs]
     home = ["HTML", "RSS", "JSON"]
