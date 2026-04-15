@@ -57,44 +57,44 @@
     }
 }
 
-
-/* PC 레이아웃 (1024px 이상) 전용: 좌우 사이드바 고정 및 본문 독립 스크롤 */
+/* PC 레이아웃 (1024px 이상) 전용 최적화 */
 @media (min-width: 1024px) {
     
-    /* 1. 부모 컨테이너: 자식들이 본문 높이만큼 늘어나는 것을 방지 (Sticky의 핵심) */
+    /* 1. [부모] 스티키의 대전제: 자식이 부모 높이를 따라가지 않게 설정 */
     .main-container {
-        align-items: flex-start !important;
         display: flex !important;
+        align-items: flex-start !important; /* Stretch 해제 - 이게 없으면 sticky는 죽습니다 */
+        overflow: visible !important;      /* 부모의 overflow 차단 해제 */
     }
 
-    /* 2. 좌측 및 우측 사이드바 공통 타겟팅 */
-    .sidebar.left-sidebar.sticky,
-    .sidebar.right-sidebar.sticky {
+    /* 2. [사이드바] 좌우 날개를 화면에 박제 */
+    /* 원본 SCSS의 .left-sidebar와 .right-sidebar를 동시에 잡습니다. */
+    .sidebar.left-sidebar,
+    .sidebar.right-sidebar {
         position: sticky !important;
-        /* 상단 여백: 테마 변수 사용 (기본 35px) */
-        top: var(--main-top-padding, 35px) !important;
+        top: 0 !important;                 /* 화면 최상단에 밀착 */
         
-        /* 높이를 내용물에 맞게 조절하여 본문 스크롤 간섭 제거 */
-        height: auto !important;
+        /* [중요] 높이를 뷰포트 전체(100vh)로 고정하여 독립 영역 확보 */
+        height: 100vh !important;
         
-        /* [중요] 화면보다 긴 메뉴/목차 대응: 내부 스크롤은 허용하되 바는 숨김 */
-        max-height: calc(100vh - 70px) !important;
+        /* [스크롤바 박멸] 내용은 흐르되, 지저분한 바는 보이지 않게 처리 */
         overflow-y: auto !important;
-        
-        /* 이중 스크롤바 시각적 제거 */
+        scrollbar-width: none !important;   /* Firefox */
         -ms-overflow-style: none !important; /* IE/Edge */
-        scrollbar-width: none !important;    /* Firefox */
     }
 
-    /* 크롬, 사파리에서 사이드바 스크롤바 완전 박멸 */
-    .sidebar.left-sidebar.sticky::-webkit-scrollbar,
-    .sidebar.right-sidebar.sticky::-webkit-scrollbar {
+    /* Chrome, Safari, Edge 전용 스크롤바 숨김 */
+    .sidebar.left-sidebar::-webkit-scrollbar,
+    .sidebar.right-sidebar::-webkit-scrollbar {
         display: none !important;
     }
 
-    /* 3. 본문 영역(Main): 중앙에서 스크롤 주도 */
+    /* 3. [본문] 중앙 영역의 스크롤 주도권 확보 */
     main.main {
         flex: 1 !important;
         min-width: 0 !important;
+        /* 본문의 상단 여백을 사이드바의 첫 요소(아바타/로고)와 맞춥니다. */
+        padding-top: var(--main-top-padding, 35px) !important;
+        padding-bottom: var(--main-top-padding, 35px) !important;
     }
 }
