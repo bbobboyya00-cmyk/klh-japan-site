@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>韓国コスメ on K-Life Hack</title><link>https://klifehack.com/tags/%E9%9F%93%E5%9B%BD%E3%82%B3%E3%82%B9%E3%83%A1/</link><description>Recent content in 韓国コスメ on K-Life Hack</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 16 Apr 2026 07:45:00 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/%E9%9F%93%E5%9B%BD%E3%82%B3%E3%82%B9%E3%83%A1/index.xml" rel="self" type="application/rss+xml"/><item><title>ジェンダーニュートラルな美の聖地。聖水洞 'ラカ (Laka)' フラッグシップストア完全ガイド</title><link>https://klifehack.com/p/laka-seongsu-flagship-store/</link><pubDate>Thu, 16 Apr 2026 07:45:00 +0900</pubDate><guid>https://klifehack.com/p/laka-seongsu-flagship-store/</guid><description>&lt;img src="https://klifehack.com/" alt="Featured image of post ジェンダーニュートラルな美の聖地。聖水洞 'ラカ (Laka)' フラッグシップストア完全ガイド" /&gt;&lt;p&gt;ソウルの流行が生まれる街、聖水洞（ソンスドン）。&lt;/p&gt;
 &lt;p&gt;その中心でひときわ異彩を放つのが、ラカ（Laka）のフラッグシップストアです。&lt;/p&gt;
 &lt;p&gt;単なるコスメショップを超えた、五感を刺激するクリエイティブな空間をエディターKが案内します。&lt;/p&gt;
-&lt;p&gt;{{&amp;lt; alert type=&amp;ldquo;success&amp;rdquo; &amp;gt;}}&lt;/p&gt;
-&lt;p&gt;📌 Quick Summary&lt;/p&gt;
+&lt;div class="alert alert--success"&gt;
+ &lt;div class="alert-content"&gt;
+ &lt;p&gt;📌 Quick Summary&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;ジェンダーニュートラルな美学を体現したLakaの旗艦店&lt;/li&gt;
 &lt;li&gt;限定カラーの試飲や自分だけのティント作り体験が魅力&lt;/li&gt;
 &lt;li&gt;聖水洞らしいコンクリートと自然が融合した空間デザイン&lt;/li&gt;
 &lt;li&gt;周辺には話題のAIフォトブースや実力派カフェが点在&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;{{&amp;lt; /alert &amp;gt;}}&lt;/p&gt;
+ &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+.alert {
+ padding: 1.2rem;
+ border-radius: 8px;
+ margin: 2rem 0;
+ border-left: 5px solid;
+ background-color: rgba(128, 128, 128, 0.05);
+}
+.alert--success { border-left-color: #4caf50; }
+.alert--info { border-left-color: #2196f3; }
+.alert--warning { border-left-color: #ff9800; }
+.alert-content { color: var(--card-text-color); }
+&lt;/style&gt;
 &lt;h2 id="聖水の街角に現れた美学のランドマーク-"&gt;聖水の街角に現れた、美学のランドマーク 📸
 &lt;/h2&gt;&lt;p&gt;地下鉄2号線の聖水駅から歩いてすぐ。視界に飛び込んでくるのは、壁一面に描かれた大胆な広告と、モダンなタイポグラフィが印象的な建物です。&lt;/p&gt;
 &lt;img alt="Building exterior featuring a large Laka brand advertisement and a QR code - ジェンダーニュートラルな美の聖地。聖水洞 'ラカ (Laka)' フラッグシップストア完全ガイド" fetchpriority="high" height="564" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776293090_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="752"/&gt;
@@ -53,14 +69,14 @@
 &lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;서울특별시 성동구 성수이로7가길 7 2층&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background: var(--themeBg-sec); height: 350px; width: 100%;"&gt;
-&lt;iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%84%B1%EC%88%98%EC%9D%B4%EB%A1%9C7%EA%B0%80%EA%B8%B8%207%202%EC%B8%B5&amp;t=&amp;z=18&amp;ie=UTF8&amp;iwloc=&amp;output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"&gt;&lt;/iframe&gt;
+&lt;iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=라카 플래그십 스토어&amp;t=&amp;z=18&amp;ie=UTF8&amp;iwloc=&amp;output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"&gt;&lt;/iframe&gt;
 &lt;/div&gt;
 &lt;div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"&gt;
 &lt;span style="display: block; font-weight: 700; margin-bottom: 2px;"&gt;⚠️ 旅行者のための注意&lt;/span&gt;
 変化の激しいエリアでは、Googleマップの情報が最新ではない場合があります。より正確な位置確認のために、韓国語 &lt;b&gt;Naverマップ&lt;/b&gt; の使用をお勧めします。
 &lt;/div&gt;
 &lt;div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;"&gt;
-&lt;a href="https://www.google.com/maps/search/?api=1&amp;query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%84%B1%EC%88%98%EC%9D%B4%EB%A1%9C7%EA%B0%80%EA%B8%B8%207%202%EC%B8%B5" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank"&gt;Google マップ&lt;/a&gt;
-&lt;a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%84%B1%EC%88%98%EC%9D%B4%EB%A1%9C7%EA%B0%80%EA%B8%B8%207%202%EC%B8%B5" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank"&gt;Naver マップ&lt;/a&gt;
+&lt;a href="https://www.google.com/maps/search/?api=1&amp;query=라카 플래그십 스토어" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank"&gt;Google マップ&lt;/a&gt;
+&lt;a href="https://map.naver.com/p/search/라카 플래그십 스토어" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank"&gt;Naver マップ&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;</description></item></channel></rss>
