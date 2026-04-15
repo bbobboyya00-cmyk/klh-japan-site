@@ -58,39 +58,43 @@
 }
 
 
-/* PC 레이아웃 (데모 기준 1024px 이상에서 작동) */
+/* PC 레이아웃 (1024px 이상) 전용: 좌우 사이드바 고정 및 본문 독립 스크롤 */
 @media (min-width: 1024px) {
-    /* 1. 전체 컨테이너: 자식들이 부모 높이에 따라 늘어나는 것을 방지 */
+    
+    /* 1. 부모 컨테이너: 자식들이 본문 높이만큼 늘어나는 것을 방지 (Sticky의 핵심) */
     .main-container {
+        align-items: flex-start !important;
         display: flex !important;
-        align-items: flex-start !important; 
     }
 
-    /* 2. 좌측 & 우측 사이드바 공통 고정 설정 */
-    .left-sidebar, 
-    .right-sidebar {
+    /* 2. 좌측 및 우측 사이드바 공통 타겟팅 */
+    .sidebar.left-sidebar.sticky,
+    .sidebar.right-sidebar.sticky {
         position: sticky !important;
-        /* 상단 여백은 테마의 기본 상단 패딩 변수를 활용 */
-        top: var(--main-top-padding) !important;
+        /* 상단 여백: 테마 변수 사용 (기본 35px) */
+        top: var(--main-top-padding, 35px) !important;
         
-        /* [중요] 사이드바 자체의 높이를 뷰포트에 맞춤 */
-        /* 메뉴나 위젯이 길 경우 사이드바 내부에서 별도 스크롤 가능하게 처리 */
-        max-height: calc(100vh - var(--main-top-padding) * 2) !important;
+        /* 높이를 내용물에 맞게 조절하여 본문 스크롤 간섭 제거 */
+        height: auto !important;
+        
+        /* [중요] 화면보다 긴 메뉴/목차 대응: 내부 스크롤은 허용하되 바는 숨김 */
+        max-height: calc(100vh - 70px) !important;
         overflow-y: auto !important;
-
-        /* 스크롤바 디자인 (숨김 처리하여 깔끔하게 유지) */
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+        
+        /* 이중 스크롤바 시각적 제거 */
+        -ms-overflow-style: none !important; /* IE/Edge */
+        scrollbar-width: none !important;    /* Firefox */
     }
 
-    .left-sidebar::-webkit-scrollbar,
-    .right-sidebar::-webkit-scrollbar {
-        display: none;
+    /* 크롬, 사파리에서 사이드바 스크롤바 완전 박멸 */
+    .sidebar.left-sidebar.sticky::-webkit-scrollbar,
+    .sidebar.right-sidebar.sticky::-webkit-scrollbar {
+        display: none !important;
     }
 
-    /* 3. 본문 영역: 스크롤이 자유롭게 흐르도록 설정 */
+    /* 3. 본문 영역(Main): 중앙에서 스크롤 주도 */
     main.main {
-        flex: 1;
-        min-width: 0; /* Flex 내부 붕괴 방지 */
+        flex: 1 !important;
+        min-width: 0 !important;
     }
 }
