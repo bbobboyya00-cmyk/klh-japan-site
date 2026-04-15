@@ -109,7 +109,7 @@ author: "K-Life Hack"
 <p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">ソウル特別市 麻浦区 楊花路23キル 24 1階</p>
 </div>
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=%28%E3%83%A8%E3%83%B3%E3%83%8A%E3%83%A0%E3%83%89%E3%83%B3%29%20%EB%AA%A8%EC%B0%8C%EB%B0%A9%EC%95%97%EA%B0%84%20%EC%97%B0%EB%82%A8%EB%B3%B8%EC%A0%90&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"></iframe>
+<iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=모찌방앗간 연남본점&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"></iframe>
 </div>
 
 <div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;">
@@ -117,7 +117,7 @@ author: "K-Life Hack"
 変化の激しいエリアでは、Googleマップの情報が最新ではない場合があります。より正確な位置確認のために、韓国語 <b>Naverマップ</b> の使用をお勧めします。
 </div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%28%E3%83%A8%E3%83%B3%E3%83%8A%E3%83%A0%E3%83%89%E3%83%B3%29%20%EB%AA%A8%EC%B0%8C%EB%B0%A9%EC%95%97%EA%B0%84%20%EC%97%B0%EB%82%A8%EB%B3%B8%EC%A0%90" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
-<a href="https://map.naver.com/p/search/%28%E3%83%A8%E3%83%B3%E3%83%8A%E3%83%A0%E3%83%89%E3%83%B3%29%20%EB%AA%A8%EC%B0%8C%EB%B0%A9%EC%95%97%EA%B0%84%20%EC%97%B0%EB%82%A8%EB%B3%B8%EC%A0%90" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=모찌방앗간 연남본점" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
+<a href="https://map.naver.com/p/search/모찌방앗간 연남본점" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>
