@@ -12,7 +12,7 @@ disqusShortname = "klifehack-com"
 # [2. 분류 체계 정의]
 [taxonomies]
     category = "categories"
-    tag = "tags"
+    tags = "tags"
 
 # [3. URL 구조]
 [Permalinks]
@@ -40,6 +40,8 @@ disqusShortname = "klifehack-com"
 			{ type = "tagcloud" }
         ]
         page = [
+            { type = "search" },
+            { type = "tagcloud" },
             { type = "toc" }
         ]
 
@@ -95,6 +97,10 @@ disqusShortname = "klifehack-com"
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
+    page = ["HTML"]
+    section = ["HTML", "RSS"]
+    taxonomy = ["HTML", "RSS"]
+    term = ["HTML", "RSS"]
 
 [markup]
   [markup.goldmark]
