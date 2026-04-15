@@ -6,7 +6,7 @@
 
   gtag('config', 'G-92N7W10SPC');
 </script>
-
+{{ if .IsPage }}
 <div id="reading-progress-bar"></div>
 
 <style>
@@ -15,11 +15,11 @@
         top: 0;
         left: 0;
         width: 0%;
-        height: 4px; /* 바 두께 (취향껏 조절하세요) */
-        background: var(--theme-color, #2196f3); /* Stack 테마의 포인트 컬러를 자동으로 따라갑니다 */
+        height: 4px;
+        background: var(--theme-color); /* 테마 컬러 자동 상속 */
+        box-shadow: 0 0 8px var(--theme-color);
         z-index: 9999;
         transition: width 0.1s ease-out;
-        border-radius: 0 2px 2px 0;
     }
 </style>
 
@@ -28,6 +28,8 @@
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrolled = (winScroll / height) * 100;
-        document.getElementById("reading-progress-bar").style.width = scrolled + "%";
+        const bar = document.getElementById("reading-progress-bar");
+        if (bar) bar.style.width = scrolled + "%";
     });
 </script>
+{{ end }}
