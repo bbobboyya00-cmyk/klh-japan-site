@@ -12,7 +12,7 @@ disqusShortname = "klifehack-com"
 # [2. 분류 체계 정의]
 [taxonomies]
     category = "categories"
-    tags = "tags"
+    tag = "tags"
 
 # [3. URL 구조]
 [Permalinks]
@@ -37,14 +37,12 @@ disqusShortname = "klifehack-com"
             { type = "search" },
             { type = "archives" },
             { type = "categories" },
-			{ type = "tagcloud" }
+            { type = "tag-cloud" }    # 👈 C를 대문자로 변경 (에러 해결)
         ]
         page = [
-            { type = "search" },
-            { type = "tagcloud" },
             { type = "toc" }
         ]
-
+		
     [params.article]
         math = false
         toc = true
@@ -87,13 +85,6 @@ disqusShortname = "klifehack-com"
         [menu.main.params]
             icon = "mail"
 			
-	#[[menu.main]]
-    #    identifier = "privacy-policy"
-    #    name = "Privacy Policy"
-    #    url = "/privacy-policy/" 
-    #    weight = 50
-    #    [menu.main.params]
-    #        icon = "copyright" # 👈 lock 대신 존재하는 아이콘인 archive로 변경 (또는 이 블록 삭제)
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
