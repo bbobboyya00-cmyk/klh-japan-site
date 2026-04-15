@@ -1,0 +1,11 @@
+{{ $related := .Site.RegularPages.Related . | first 3 }}
+{{ with $related }}
+<div class="related-content" style="margin-top: 50px; border-top: 1px solid var(--themeBd-color);">
+    <h3 class="section-title" style="margin-top: 20px;">関連記事 (Related Posts)</h3>
+    <div class="article-list--compact">
+        {{ range . }}
+            {{ partial "article-list/compact" . }}
+        {{ end }}
+    </div>
+</div>
+{{ end }}
