@@ -18,15 +18,15 @@ author: "K-Life Hack"
 
 
 
-{{&lt; alert type="success" &gt;}}
+{{< alert type="success" >}}
 
 
-📌 Quick Summary
-・ スポセラピー（Spot Therapy）で受ける、韓国人熟練テラピストによる精密なパーソナルボディケア。
-・ 全席個室のプレミアム韓食ダイニング、ウアラ（Uara）で堪能する、五感で楽しむ10コースの贅沢な時間。
+📌 Quick Summary<br>
+・ スポセラピー（Spot Therapy）で受ける、韓国人熟練テラピストによる精密なパーソナルボディケア。<br>
+・ 全席個室のプレミアム韓食ダイニング、ウアラ（Uara）で堪能する、五感で楽しむ10コースの贅沢な時間。<br>
 
 
-{{&lt; /alert &gt;}}
+{{< /alert >}}
 
 
 
