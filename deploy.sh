@@ -3,9 +3,9 @@
 # [핀셋 수정]: 스크립트가 위치한 경로(site)로 강제 이동
 cd "/home/ubuntu/bot/k_life/site"
 
-# 1. 빌드 (정적 파일 생성 및 유령 페이지 완전 제거)
+# 1. 빌드 (HUGO_ENV=production 추가로 GA 스크립트 활성화)
 echo "🚀 Building Hugo site in $(pwd)..."
-/snap/bin/hugo --gc --minify --cleanDestinationDir
+HUGO_ENV=production /snap/bin/hugo --gc --minify --cleanDestinationDir
 
 # 2. CNAME 복구
 echo "klifehack.com" > docs/CNAME

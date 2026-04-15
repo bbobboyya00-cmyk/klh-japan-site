@@ -84,13 +84,13 @@ disqusShortname = "klifehack-com"
         [menu.main.params]
             icon = "mail"
 			
-	[[menu.main]]
-        identifier = "privacy-policy"
-        name = "Privacy Policy"
-        url = "/privacy-policy/" 
-        weight = 50
-        [menu.main.params]
-            icon = "archive" # 👈 lock 대신 존재하는 아이콘인 archive로 변경 (또는 이 블록 삭제)
+	#[[menu.main]]
+    #    identifier = "privacy-policy"
+    #    name = "Privacy Policy"
+    #    url = "/privacy-policy/" 
+    #    weight = 50
+    #    [menu.main.params]
+    #        icon = "copyright" # 👈 lock 대신 존재하는 아이콘인 archive로 변경 (또는 이 블록 삭제)
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
