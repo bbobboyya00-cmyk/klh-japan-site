@@ -6,3 +6,55 @@
 
   gtag('config', 'G-92N7W10SPC');
 </script>
+
+{{ if .IsPage }}
+<div id="reading-progress-bar"></div>
+
+<style>
+    #reading-progress-bar {
+        /* [핵심] 조상 요소(html, body)의 스타일 간섭을 피하기 위해 바 본체에만 집중 */
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 0%;
+        height: 4px !important;
+        
+        background: linear-gradient(to right, #3b82f6, #60a5fa) !important;
+        box-shadow: 0 1px 8px rgba(59, 130, 246, 0.4) !important;
+        
+        /* 테마의 그 어떤 레이어보다 위(Max Int)에 위치 */
+        z-index: 2147483647 !important; 
+        
+        transition: width 0.1s ease-out;
+        pointer-events: none; /* 클릭 방해 금지 */
+        
+        /* 아이폰 노치(Safe Area) 대응 */
+        margin-top: env(safe-area-inset-top, 0);
+    }
+</style>
+
+<script>
+    (function() {
+        const bar = document.getElementById("reading-progress-bar");
+        if (!bar) return;
+
+        const updateProgress = () => {
+            // 뷰포트 높이와 실제 스크롤 위치를 정밀 계산
+            const winScroll = window.pageYOffset || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - window.innerHeight;
+            
+            if (height > 0) {
+                const scrolled = (winScroll / height) * 100;
+                bar.style.width = Math.min(scrolled, 100) + "%";
+            }
+        };
+
+        // 스크롤 및 리사이즈 이벤트 최적화
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        window.addEventListener('resize', updateProgress);
+        
+        // 초기 로드 시 실행
+        updateProgress();
+    })();
+</script>
+{{ end }}
