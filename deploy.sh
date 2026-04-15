@@ -6,8 +6,8 @@ cd "$SITE_DIR" || { echo "❌ Directory not found"; exit 1; }
 
 echo "🚀 Building Hugo site in $(pwd)..."
 
-# 1. 빌드 성공 여부 사전 체크 (GA 활성화를 위해 production 환경 강제)
-if ! HUGO_ENV=production hugo --gc --minify --cleanDestinationDir; then
+# 1. 빌드 성공 여부 사전 체크 (절대 경로 /snap/bin/hugo 사용 필수)
+if ! HUGO_ENV=production /snap/bin/hugo --gc --minify --cleanDestinationDir; then
     echo "❌ [ERROR] Hugo build failed! Deployment aborted to save your files."
     exit 1
 fi
