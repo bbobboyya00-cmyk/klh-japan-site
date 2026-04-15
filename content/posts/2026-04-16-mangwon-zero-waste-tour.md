@@ -10,7 +10,7 @@ tags: ["望遠洞", "アルメン商店", "リトルメドウ", "韓国ゼロウ
 author: "K-Life Hack"
 ---
 
-{{&lt; alert type="success" &gt;}}
+{{<alert type="success">}}
 
 
 📌 Quick Summary
@@ -19,7 +19,7 @@ author: "K-Life Hack"
 ・マイバッグやリサイクル可能な容器を持参して、地球に優しいソウル旅行を楽しんでみませんか。
 
 
-{{&lt; /alert &gt;}}
+{{< /alert >}}
 
 
 
