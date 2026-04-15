@@ -36,7 +36,8 @@ disqusShortname = "klifehack-com"
         homepage = [
             { type = "search" },
             { type = "archives" },
-            { type = "categories" }
+            { type = "categories" },
+			{ type = "tagcloud" }
         ]
         page = [
             { type = "toc" }
@@ -61,12 +62,12 @@ disqusShortname = "klifehack-com"
             icon = "home"
 
     [[menu.main]]
-        identifier = "categories"
-        name = "Categories"
-        url = "/categories/"
-        weight = 20
-        [menu.main.params]
-            icon = "archive" 
+		identifier = "archives"   # 👈 identifier 변경
+		name = "Archives"        # 👈 표시 이름을 Archives로 변경
+		url = "/archives/"       # 👈 url을 /archives/로 변경
+		weight = 20
+		[menu.main.params]
+			icon = "archive"     # 👈 아이콘도 아카이브용으로 변경
 
     [[menu.main]]
         identifier = "about"
