@@ -86,7 +86,7 @@
 &lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;ソウル特別市 城東区 聖水二路 108&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background: var(--themeBg-sec); height: 350px; width: 100%;"&gt;
-&lt;iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=무신사 스토어 성수 &amp;t=&amp;z=18&amp;ie=UTF8&amp;iwloc=&amp;output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"&gt;&lt;/iframe&gt;
+&lt;iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=대한민국 서울특별시 성동구 성수이로 74 &amp;t=&amp;z=18&amp;ie=UTF8&amp;iwloc=&amp;output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"&gt;&lt;/iframe&gt;
 &lt;/div&gt;
 &lt;div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"&gt;
 &lt;span style="display: block; font-weight: 700; margin-bottom: 2px;"&gt;⚠️ 旅行者のための注意:&lt;/span&gt;
