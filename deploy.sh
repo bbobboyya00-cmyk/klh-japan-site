@@ -1,5 +1,14 @@
 #!/bin/bash
 
+echo "🚀 Building Hugo site..."
+# 빌드를 실행하고, 실패하면 즉시 중단합니다.
+if ! hugo --gc --cleanDestinationDir; then
+    echo "❌ [ERROR] Hugo build failed! Deployment aborted to save your files."
+    exit 1
+fi
+
+echo "📦 Preparing for GitHub push..."
+
 # [핀셋 수정]: 스크립트가 위치한 경로(site)로 강제 이동
 cd "/home/ubuntu/bot/k_life/site"
 
