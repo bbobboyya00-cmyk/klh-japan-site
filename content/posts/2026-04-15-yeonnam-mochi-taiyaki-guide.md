@@ -5,7 +5,7 @@ date: 2026-04-15T10:29:27+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776216556_0.webp"
 description: "ソウル・延南洞で話題のモッチパンアッカンを徹底取材。100%グルテンフリーのもちもち食感と焦がしバターの香りがたまらない新感覚の鯛焼きを紹介します。"
-categories: ["韓国旅行"]
+categories: ["K-Travel Hacks"]
 tags: ["延南洞グルメ", "ソウルスイーツ", "グルテンフリー韓国", "弘大カフェ", "モッチパンアッカン"]
 author: "K-Life Hack"
 ---

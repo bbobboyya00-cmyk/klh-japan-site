@@ -5,7 +5,7 @@ date: 2026-04-15T13:28:17+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776227285_0.webp"
 description: "漢南洞の注目スポット 'Pesade' の魅力を徹底取材。ウッディな香りとミニマルな空間、周辺のグルメや雑貨店まで、エディターKが贈るプレミアムな1日散策コース。"
-categories: ["韓国旅行"]
+categories: ["K-Beauty Insider"]
 tags: ["漢南洞", "ソウル香水", "Pesade", "韓国トレンド", "漢南洞カフェ"]
 author: "K-Life Hack"
 ---
