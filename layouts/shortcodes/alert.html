@@ -1,0 +1,19 @@
+<div class="alert alert--{{ .Get "type" | default "info" }}">
+    <div class="alert-content">
+        {{ .Inner | markdownify }}
+    </div>
+</div>
+
+<style>
+.alert {
+    padding: 1.2rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    border-left: 5px solid;
+    background-color: rgba(128, 128, 128, 0.05);
+}
+.alert--success { border-left-color: #4caf50; }
+.alert--info { border-left-color: #2196f3; }
+.alert--warning { border-left-color: #ff9800; }
+.alert-content { color: var(--card-text-color); }
+</style>
