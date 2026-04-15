@@ -56,3 +56,41 @@
         font-size: 1.2rem;
     }
 }
+
+
+/* PC 레이아웃 (데모 기준 1024px 이상에서 작동) */
+@media (min-width: 1024px) {
+    /* 1. 전체 컨테이너: 자식들이 부모 높이에 따라 늘어나는 것을 방지 */
+    .main-container {
+        display: flex !important;
+        align-items: flex-start !important; 
+    }
+
+    /* 2. 좌측 & 우측 사이드바 공통 고정 설정 */
+    .left-sidebar, 
+    .right-sidebar {
+        position: sticky !important;
+        /* 상단 여백은 테마의 기본 상단 패딩 변수를 활용 */
+        top: var(--main-top-padding) !important;
+        
+        /* [중요] 사이드바 자체의 높이를 뷰포트에 맞춤 */
+        /* 메뉴나 위젯이 길 경우 사이드바 내부에서 별도 스크롤 가능하게 처리 */
+        max-height: calc(100vh - var(--main-top-padding) * 2) !important;
+        overflow-y: auto !important;
+
+        /* 스크롤바 디자인 (숨김 처리하여 깔끔하게 유지) */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .left-sidebar::-webkit-scrollbar,
+    .right-sidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* 3. 본문 영역: 스크롤이 자유롭게 흐르도록 설정 */
+    main.main {
+        flex: 1;
+        min-width: 0; /* Flex 내부 붕괴 방지 */
+    }
+}
