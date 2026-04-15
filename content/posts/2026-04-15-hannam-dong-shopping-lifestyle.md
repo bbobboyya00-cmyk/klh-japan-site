@@ -2,6 +2,7 @@
 title: "春のソウル、漢南洞（ハンナムドン）で見つける旬の『K-Fashion』と洗練された日常の楽しみ方"
 date: 2026-04-15T07:43:31+09:00
 draft: false
+slug: "2026-04-15-Glowny"
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776206575_0.webp"
 description: "2026年春、韓国トレンドの最前線・漢南洞を徹底ナビゲート。グロニーやシエなどの人気ショールームから、地元っ子に愛される隠れ家グルメまで、エディターKが今のソウルを詳しくお伝えします。"
 categories: ["The Hype Logistics"]
