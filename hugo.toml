@@ -9,6 +9,24 @@ publishDir = 'docs'
 # [1. 댓글 설정]
 disqusShortname = "klifehack-com"
 
+
+[related]
+    threshold = 80
+    includeNewer = false
+    toLower = true
+
+    [[related.indices]]
+        name = "categories"
+        weight = 100  # 카테고리가 같으면 최우선 순위
+
+    [[related.indices]]
+        name = "tags"
+        weight = 80   # 태그 일치 여부
+
+    [[related.indices]]
+        name = "date"
+        weight = 10   # 최신순 가중치
+		
 # [2. 분류 체계 정의]
 [taxonomies]
     category = "categories"
@@ -47,7 +65,8 @@ disqusShortname = "klifehack-com"
         math = false
         toc = true
         readingTime = true
-
+		related = true
+		
     [params.comments]
         enabled = true
         type = "disqus"
