@@ -58,3 +58,43 @@
 }
 
 
+
+.subsection-list {
+    /* 1. 덜그럭거림 방지: 가로 스크롤은 허용하되 바디 이탈 방지 */
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
+    scroll-snap-type: x mandatory;
+    
+    /* 2. 네거티브 마진과 패딩의 균형 (핵심) */
+    /* 기존 변수를 유지하되 패딩으로 보정합니다. */
+    --shadow-overlap-x: calc(var(--shadow-l2-blur) + 4px);
+    margin-left: calc(var(--shadow-overlap-x) * -1);
+    margin-right: calc(var(--shadow-overlap-x) * -1);
+    
+    /* 패딩을 추가하여 실제 콘텐츠는 안전 영역 안에서 시작하게 합니다. */
+    padding-left: var(--shadow-overlap-x);
+    padding-right: var(--shadow-overlap-x);
+    
+    /* 3. 사라진 스크롤바 강제 가시화 */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--themeBd-color) transparent;
+}
+
+/* 4. Webkit(Chrome, Safari)에서 스크롤바가 안 보일 때의 핀셋 수정 */
+.subsection-list::-webkit-scrollbar {
+    height: 5px; /* 스크롤바 두께 */
+    display: block !important; /* 강제 노출 */
+}
+
+.subsection-list::-webkit-scrollbar-thumb {
+    background: var(--themeBd-color);
+    border-radius: 10px;
+}
+
+/* 리스트 아이템 스냅 설정 (사용자 경험 향상) */
+.subsection-list > * {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+}
