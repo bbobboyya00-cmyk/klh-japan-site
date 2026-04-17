@@ -89,29 +89,3 @@
 }
 
 
-
-.main-article, aside, #main-wrapper {
-    overflow-x: clip !important; /* hidden보다 강력하며 sticky 속성을 깨뜨리지 않음 */
-    width: 100%;
-    -webkit-overflow-scrolling: touch;
-}
-
-.subsection-list {
-    display: flex !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    /* [핵심] 터치 이벤트를 브라우저 기본값으로 완전히 돌려줌 */
-    touch-action: pan-x; 
-    -webkit-overflow-scrolling: touch;
-    
-    /* 네거티브 마진 대신 'Full-bleed' 현대적 기법 */
-    width: auto;
-    margin-left: -25px !important;
-    margin-right: -25px !important;
-    padding-left: 25px !important;
-    padding-right: 25px !important;
-    
-    & > * {
-        flex: 0 0 auto; /* 아이템 크기 고정 */
-    }
-}
