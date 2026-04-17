@@ -1,40 +1,31 @@
-/* [TA] psImg Layout - Perfect Mobile Responsive */
-html {
-    overflow-x: hidden !important;
-    overflow-y: scroll !important; /* 항상 스크롤바 자리를 확보하여 흔들림 방지 */
-    height: 100%;
-    -webkit-overflow-scrolling: touch;
-}
 
-body {
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
-    height: auto;
-    /* [핵심] 모든 터치 액션을 기본값으로 되돌려 세로 스크롤을 보장 */
-    touch-action: manipulation; 
-}
+.article-content {
+    ul, ol {
+        padding-left: 1.5rem !important; /* 기존 40px(약 2.5rem)에서 1.5rem으로 축소 */
+        margin-left: 0 !important;
+        
+        li {
+            padding-left: 5px; /* 불렛 기호와 텍스트 사이의 미세 간격 */
+            margin-bottom: 0.6rem; /* 항목 간 호흡 조절 */
+            line-height: 1.6;
+            
+            /* 리스트 내부의 리스트(중첩) 처리 */
+            ul, ol {
+                padding-left: 1.2rem !important;
+                margin-top: 0.4rem;
+            }
+        }
+    }
 
-/* [핵심] 사라진 메인 스크롤바를 현대적으로 디자인하여 강제 노출 */
-/* .subsection-list와 별개로 전체 브라우저용입니다. */
-::-webkit-scrollbar {
-    width: 10px !important;    /* 세로 스크롤바 두께 */
-    display: block !important; /* 숨김 방지 */
-}
-
-::-webkit-scrollbar-track {
-    background: var(--card-background); /* 테마 배경색과 동기화 */
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: var(--theme-color); /* 테마 포인트 컬러 사용 */
-    border-radius: 10px;
-    border: 2px solid var(--card-background); /* 바 주변에 여백을 주어 세련되게 */
-}
-
-/* 파이어폭스 대응 */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: var(--theme-color) transparent;
+    /* [선택 사항] 모바일에서 본문 자체의 좌우 패딩이 너무 넓다면 여기서 조정 */
+    @media screen and (max-width: 768px) {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        
+        ul, ol {
+            padding-left: 1.2rem !important; /* 모바일은 더 타이트하게 */
+        }
+    }
 }
 
 .psImg, .psimg {
@@ -99,80 +90,28 @@ body {
 
 
 
+.main-article, aside, #main-wrapper {
+    overflow-x: clip !important; /* hidden보다 강력하며 sticky 속성을 깨뜨리지 않음 */
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
 .subsection-list {
-    /* 110% 대신 100%를 유지하되, 패딩이 너비를 먹지 않게 합니다. */
-    width: 100% !important; 
-    box-sizing: border-box !important; 
+    display: flex !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    /* [핵심] 터치 이벤트를 브라우저 기본값으로 완전히 돌려줌 */
+    touch-action: pan-x; 
+    -webkit-overflow-scrolling: touch;
     
-    /* 가로 스크롤 시 흔들림 방지 */
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    touch-action: auto !important;
-
-    /* 네거티브 마진을 썼다면 반드시 패딩으로 상쇄 */
-    --shadow-overlap-x: 10px; /* 예시 수치 */
-    margin-left: calc(var(--shadow-overlap-x) * -1);
-    margin-right: calc(var(--shadow-overlap-x) * -1);
-    padding-left: var(--shadow-overlap-x);
-    padding-right: var(--shadow-overlap-x);
-	-webkit-overflow-scrolling: touch;
-    padding-bottom: 15px !important; /* 스크롤바와 콘텐츠 사이의 숨통 확보 */
-    margin-bottom: -15px !important; /* 패딩으로 인한 하단 공백 상쇄 */
-	will-change: transform;
-    transform: translateZ(0);
-}
-
-.main-article {
-    pointer-events: auto !important;
-}
-
-/* 4. Webkit(Chrome, Safari)에서 스크롤바가 안 보일 때의 핀셋 수정 */
-.subsection-list::-webkit-scrollbar {
-    height: 5px; /* 스크롤바 두께 */
-    display: block !important; /* 강제 노출 */
-}
-
-.subsection-list::-webkit-scrollbar-thumb {
-    background: var(--themeBd-color);
-    border-radius: 10px;
-}
-
-/* 리스트 아이템 스냅 설정 (사용자 경험 향상) */
-.subsection-list > * {
-    scroll-snap-align: start;
-    flex-shrink: 0;
-}
-
-body, #main-wrapper {
-    overflow-x: hidden; /* 자식이 110%든 200%든 화면 밖으로 못 나가게 가둡니다. */
-}
-
-.article-content {
-    ul, ol {
-        padding-left: 1.5rem !important; /* 기존 40px(약 2.5rem)에서 1.5rem으로 축소 */
-        margin-left: 0 !important;
-        
-        li {
-            padding-left: 5px; /* 불렛 기호와 텍스트 사이의 미세 간격 */
-            margin-bottom: 0.6rem; /* 항목 간 호흡 조절 */
-            line-height: 1.6;
-            
-            /* 리스트 내부의 리스트(중첩) 처리 */
-            ul, ol {
-                padding-left: 1.2rem !important;
-                margin-top: 0.4rem;
-            }
-        }
-    }
-
-    /* [선택 사항] 모바일에서 본문 자체의 좌우 패딩이 너무 넓다면 여기서 조정 */
-    @media screen and (max-width: 768px) {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-        
-        ul, ol {
-            padding-left: 1.2rem !important; /* 모바일은 더 타이트하게 */
-        }
+    /* 네거티브 마진 대신 'Full-bleed' 현대적 기법 */
+    width: auto;
+    margin-left: -25px !important;
+    margin-right: -25px !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+    
+    & > * {
+        flex: 0 0 auto; /* 아이템 크기 고정 */
     }
 }
