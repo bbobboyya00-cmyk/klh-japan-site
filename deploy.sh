@@ -6,15 +6,17 @@ cd "$SITE_DIR" || { echo "❌ Directory not found"; exit 1; }
 
 echo "🚀 Starting Clean Deployment Process..."
 
-# [2단계] 사전 동기화 (CRITICAL)
-# 빌드(hugo)를 하기 전에 먼저 원격의 최신 소스를 가져와야 컨플릭트가 나지 않습니다.
-git pull --rebase origin main
+# [2단계] 사전 동기화 및 충돌 강제 해결
+# pull 시 발생하는 충돌을 방지하기 위해 원격 데이터를 먼저 정렬합니다.
+git fetch origin main
+git merge -s recursive -X ours origin/main --no-edit
 
-# [3단계] 리소스 정리 및 빌드
+# [3단계] 리소스 정리 및 빌드 (중요: -D -F 옵션 추가)
 echo "🧹 Clearing Hugo resource cache..."
 rm -rf resources/_gen
 
-if ! hugo --gc --minify --cleanDestinationDir; then
+# [교정]: 페이지 누락 방지를 위해 드래프트(-D)와 미래 날짜(-F) 글을 강제로 포함합니다.
+if ! hugo -D -F --gc --minify --cleanDestinationDir; then
     echo "❌ [ERROR] Hugo build failed!"
     exit 1
 fi
@@ -24,30 +26,14 @@ echo "klifehack.com" > docs/CNAME
 
 # [5단계] 변경사항 반영 및 푸시
 echo "📦 Preparing for GitHub push..."
-<<<<<<< Updated upstream
-=======
-# [v94.3 핵심 교정]: 변경사항이 있는 상태에서도 안전하게 원격 데이터를 가져옵니다.
-git pull --rebase --autostash origin main
-
->>>>>>> Stashed changes
 git add .
+git commit -m "Site recovery: Force build all posts $(date +'%Y-%m-%d %H:%M:%S')" || echo "[-] No changes to commit."
 
-# 변경사항이 없을 경우를 대비해 commit 성공 여부 상관없이 진행
-git commit -m "Update site content: $(date +'%Y-%m-%d %H:%M:%S')" || echo "[-] No changes to commit."
-
-<<<<<<< Updated upstream
 echo "📤 Pushing to klh-japan-site..."
-git push origin main
-
-# [교정]: dash/sh 호환성을 위해 [ $? -eq 0 ] 방식 사용
-if [ $? -eq 0 ]; then
-=======
-# [v94.3 교정]: 목적지가 사이트 저장소로 바뀌었으므로 이제 안전하게 푸시합니다.
-echo "📤 Pushing to klh-japan-site..."
-if git push origin main
->>>>>>> Stashed changes
+# [인증]: 이미 토큰이 주입된 주소를 사용 중이므로 바로 푸시됩니다.
+if git push origin main; then
     echo "✅ Deployment Complete! Your updates are now live."
 else
-    echo "❌ [ERROR] Git push failed. Try manual push."
+    echo "❌ [ERROR] Git push failed."
     exit 1
 fi
