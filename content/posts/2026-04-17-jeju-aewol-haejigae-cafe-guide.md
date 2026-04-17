@@ -85,7 +85,7 @@ author: "K-Life Hack"
 ---
 
 > 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/aewols-sunset-sanctuary-why-haejigae.html)<div class="k-weather-section" style="margin-top: 35px; margin-bottom: 20px;"><h3 style="font-size: 1.2rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 15px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d51126d52/jeju-si" name="JEJU" >}}</div>
+> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/aewols-sunset-sanctuary-why-haejigae.html)<div class="k-weather-section" style="margin-top: 35px; margin-bottom: 20px;"><h3 style="font-size: 1.2rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 15px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">
