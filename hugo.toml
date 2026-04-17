@@ -48,7 +48,7 @@ disqusShortname = "klifehack-com"
     [params.sidebar]
         avatar = "img/logo.jpg" 
         name = "K-Life Hack"
-        subtitle = "韓国・パンギョの現役テクニカルアーティスト「K」による技術적キュレーション。最新ITトレンドからディープな旅行ハック、リアルな生活情報までお届けします。"
+        subtitle = "ITアーキテクトから編集長へ。クリエイティブ・ディレクター「K」が贈る、技術的洞察と洗練された韓国ライフスタイル・キュレーション。"
 
     [params.widgets]
         homepage = [
