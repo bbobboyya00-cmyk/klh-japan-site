@@ -8,6 +8,7 @@ toc: false
 
 ## Data-Driven Insights into Korean Life. 🛠️
 
+<div style="text-align: center;"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEgvSJJpIDBtKMYXd1c7J0XjU0twMvOxn654XeSj8Wp7KwzLQogLqlkNXs1rNwWMZJi1DDROT7rwRh705Bx1vzj9Ni52ubrc_2DPavlhwFVnIGhmBPjTSW1sthV14lQXmQ3JV9vstOhM7jo7mZosju2hJ-bIeA4wULogprw11hGSw_49fvM1k5dXgFrkEMc=w404-h404" width="60%" /></div>
 こんにちは。「K」です。
 韓国の最先端IT・テクノロジー業界で10年以上のキャリアを積み、複雑なシステム設計やワークフローの自動化を指揮してきたクリエイティブ・ディレクター兼チーフ・エディトリアル・プロデューサーです顺。
 
