@@ -24,16 +24,28 @@ echo "klifehack.com" > docs/CNAME
 
 # [5단계] 변경사항 반영 및 푸시
 echo "📦 Preparing for GitHub push..."
+<<<<<<< Updated upstream
+=======
+# [v94.3 핵심 교정]: 변경사항이 있는 상태에서도 안전하게 원격 데이터를 가져옵니다.
+git pull --rebase --autostash origin main
+
+>>>>>>> Stashed changes
 git add .
 
 # 변경사항이 없을 경우를 대비해 commit 성공 여부 상관없이 진행
 git commit -m "Update site content: $(date +'%Y-%m-%d %H:%M:%S')" || echo "[-] No changes to commit."
 
+<<<<<<< Updated upstream
 echo "📤 Pushing to klh-japan-site..."
 git push origin main
 
 # [교정]: dash/sh 호환성을 위해 [ $? -eq 0 ] 방식 사용
 if [ $? -eq 0 ]; then
+=======
+# [v94.3 교정]: 목적지가 사이트 저장소로 바뀌었으므로 이제 안전하게 푸시합니다.
+echo "📤 Pushing to klh-japan-site..."
+if git push origin main
+>>>>>>> Stashed changes
     echo "✅ Deployment Complete! Your updates are now live."
 else
     echo "❌ [ERROR] Git push failed. Try manual push."
