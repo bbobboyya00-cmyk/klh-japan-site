@@ -31,7 +31,6 @@ author: "K-Life Hack"
 
 建物の前に置かれた素朴な木のベンチと、壁に刻まれた「mikkang storage」の文字。かつて蜜柑の保管庫として使われていたこの場所は、現在、島の中でも指折りの感性を放つカフェへと生まれ変わりました。「ミッカン」とは済州島の方言で「蜜柑」を意味します。その名の通り、建物の裏手には広大な蜜柑畑が広がっており、一歩足を踏み入れる前から甘酸っぱい香りが漂ってくるようです。
 
-<img alt="Wooden table and chairs in a cafe with large glass windows and indoor plants - 済州島・涯月(エウォル)の静かな休息地。ミッカン倉庫(Mikkang Changgo)で過ごす、蜜柑の香りに包まれた休日" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/mikkang-changgo-jeju-cafe/khack_1776436563_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 店内に一歩入ると、高い天井を支える立派な梁と、大きな窓から差し込む柔らかな光に包まれます。木製のテーブルと椅子、そして所々に配された瑞々しい観葉植物が、古い倉庫特有の無機質さに温もりを添えています。都会の喧騒を忘れ、ただ静かに流れる時間を感じる。そんな贅沢なひとときを約束してくれる空間です。
 

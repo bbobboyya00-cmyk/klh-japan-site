@@ -1,4 +1,43 @@
 /* [TA] psImg Layout - Perfect Mobile Responsive */
+html {
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* 세로 스크롤은 시스템에 맡김 */
+    height: auto !important;     /* 높이 고정 해제 */
+}
+
+body {
+    overflow-x: hidden !important;
+    overflow-y: visible !important; /* html이 스크롤을 담당하게 함 */
+    min-height: 100vh;
+    width: 100vw;
+    position: relative;
+    /* 브라우저 기본 스크롤바 강제 가시화 (Overlay 방지) */
+    -webkit-overflow-scrolling: touch; 
+}
+
+/* [핵심] 사라진 메인 스크롤바를 현대적으로 디자인하여 강제 노출 */
+/* .subsection-list와 별개로 전체 브라우저용입니다. */
+::-webkit-scrollbar {
+    width: 10px !important;    /* 세로 스크롤바 두께 */
+    display: block !important; /* 숨김 방지 */
+}
+
+::-webkit-scrollbar-track {
+    background: var(--card-background); /* 테마 배경색과 동기화 */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--theme-color); /* 테마 포인트 컬러 사용 */
+    border-radius: 10px;
+    border: 2px solid var(--card-background); /* 바 주변에 여백을 주어 세련되게 */
+}
+
+/* 파이어폭스 대응 */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--theme-color) transparent;
+}
+
 .psImg, .psimg {
     display: flex !important;
     flex-direction: row !important;
@@ -6,6 +45,8 @@
     gap: 10px !important;
     margin: 35px 0 !important;
     width: 100% !important;
+	min-height: 200px; /* 너무 작은 이미지가 선택되었을 때 레이아웃 붕괴 방지 */
+    background-color: var(--themeBg-alt); /* 로딩 전이나 이미지 공백 시 미관 유지 */
 }
 
 /* Hugo가 이미지 주변에 p태그를 강제 삽입할 경우를 대비 */
@@ -60,26 +101,25 @@
 
 
 .subsection-list {
-    /* 1. 덜그럭거림 방지: 가로 스크롤은 허용하되 바디 이탈 방지 */
+    /* 110% 대신 100%를 유지하되, 패딩이 너비를 먹지 않게 합니다. */
+    width: 100% !important; 
+    box-sizing: border-box !important; 
+    
+    /* 가로 스크롤 시 흔들림 방지 */
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
-    -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
-    scroll-snap-type: x mandatory;
-    
-    /* 2. 네거티브 마진과 패딩의 균형 (핵심) */
-    /* 기존 변수를 유지하되 패딩으로 보정합니다. */
-    --shadow-overlap-x: calc(var(--shadow-l2-blur) + 4px);
+    touch-action: pan-x; /* 세로 스크롤 간섭 방지 */
+
+    /* 네거티브 마진을 썼다면 반드시 패딩으로 상쇄 */
+    --shadow-overlap-x: 10px; /* 예시 수치 */
     margin-left: calc(var(--shadow-overlap-x) * -1);
     margin-right: calc(var(--shadow-overlap-x) * -1);
-    
-    /* 패딩을 추가하여 실제 콘텐츠는 안전 영역 안에서 시작하게 합니다. */
     padding-left: var(--shadow-overlap-x);
     padding-right: var(--shadow-overlap-x);
-    
-    /* 3. 사라진 스크롤바 강제 가시화 */
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: var(--themeBd-color) transparent;
+	-webkit-overflow-scrolling: touch;
+    padding-bottom: 15px !important; /* 스크롤바와 콘텐츠 사이의 숨통 확보 */
+    margin-bottom: -15px !important; /* 패딩으로 인한 하단 공백 상쇄 */
 }
 
 /* 4. Webkit(Chrome, Safari)에서 스크롤바가 안 보일 때의 핀셋 수정 */
@@ -97,4 +137,37 @@
 .subsection-list > * {
     scroll-snap-align: start;
     flex-shrink: 0;
+}
+
+body, #main-wrapper {
+    overflow-x: hidden; /* 자식이 110%든 200%든 화면 밖으로 못 나가게 가둡니다. */
+}
+
+.article-content {
+    ul, ol {
+        padding-left: 1.5rem !important; /* 기존 40px(약 2.5rem)에서 1.5rem으로 축소 */
+        margin-left: 0 !important;
+        
+        li {
+            padding-left: 5px; /* 불렛 기호와 텍스트 사이의 미세 간격 */
+            margin-bottom: 0.6rem; /* 항목 간 호흡 조절 */
+            line-height: 1.6;
+            
+            /* 리스트 내부의 리스트(중첩) 처리 */
+            ul, ol {
+                padding-left: 1.2rem !important;
+                margin-top: 0.4rem;
+            }
+        }
+    }
+
+    /* [선택 사항] 모바일에서 본문 자체의 좌우 패딩이 너무 넓다면 여기서 조정 */
+    @media screen and (max-width: 768px) {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        
+        ul, ol {
+            padding-left: 1.2rem !important; /* 모바일은 더 타이트하게 */
+        }
+    }
 }

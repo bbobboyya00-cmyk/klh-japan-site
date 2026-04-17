@@ -32,7 +32,7 @@ author: "K-Life Hack"
 
 仁川松島セントラルパークのすぐ隣に、目を引く流線型の建物が姿を現します。国立世界文字博物館（国立世界文字博物館）です。まるで白い巻物が広がるようなその外観は、訪れる前から期待感を高めます。
 
-<img alt="The exterior of a modern, curved building with trees. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776454996_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: The exterior of a modern, curved building with trees.
+<img alt="The exterior of a modern, curved building with trees. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776454996_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 2023年6月にオープンしたこの博物館は、世界で3番目、韓国では初となる文字専門の博物館。入場料は無料というのも嬉しいポイントです。実際に足を運んでみると、その壮大なスケールと緻密な展示内容に驚かされました。展示は単に文字の歴史を追うだけでなく、体験を通してその奥深さを感じられるよう工夫されています。
 
@@ -44,7 +44,7 @@ author: "K-Life Hack"
 
 展示室を進むと、人類初の記録である岩刻画から、シュメールの楔形文字、古代エジプトの象形文字、インダス文明の文字など、世界各地の文字の起源と進化の過程を辿ることができます。単なる展示だけでなく、手で触れて文字の変遷を体験できるインタラクティブなコーナーも充実しており、子どもだけでなく大人も夢中になります。
 
-<img alt="A room with historical images projected onto the walls. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776455006_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: A room with historical images projected onto the walls.
+<img alt="A room with historical images projected onto the walls. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776455006_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 特に印象的だったのは、古代のパピルス文書のレプリカや、グーテンベルクの活版印刷機の実物展示です。文字がどのように記録され、伝えられてきたのかを具体的に知ることができ、印刷技術の発展が文化にもたらした影響を深く考えるきっかけとなりました。
 
@@ -52,11 +52,10 @@ author: "K-Life Hack"
 
 この博物館が家族連れに特におすすめな理由の一つが、『文字の国遊び場』という子ども体験室です。ここでは子どもたちが文字の原理を遊びながら学べるように設計されています。ピラミッドの脱出ゲームや、体を動かして文字を作るゲームなど、飽きさせない工夫が満載です。文字を知らない小さなお子さんでも、直感的に楽しむことができるでしょう。ただし、**子ども体験室は事前予約が必要**で、週末はすぐに満席になるため、早めの予約をおすすめします。
 
-<img alt="An interior corridor with numerous white lockers. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776455008_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: An interior corridor with numerous white lockers.
 
 展示フロアの合間には、休憩できるスペースやモダンなデザインの通路が設けられています。様々な形の丸窓が並ぶ白い廊下は、まるでアート作品のようでした。コインロッカーも完備されているので、大きな荷物を持っていても安心して観覧できます。
 
-<img alt="A white hallway with multiple circular windows and a restroom sign. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776455005_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: A white hallway with multiple circular windows and a restroom sign.
+<img alt="A white hallway with multiple circular windows and a restroom sign. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776455005_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 旅の締めくくりに、思い出を形に 🎁
 
