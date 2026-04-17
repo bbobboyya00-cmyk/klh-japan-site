@@ -22,14 +22,33 @@ fi
 echo "klifehack.com" > docs/CNAME
 
 echo "📦 Preparing for GitHub push..."
+<<<<<<< Updated upstream
 
 # 3. GitHub 전송 준비
+=======
+# [v94.3 핵심 교정]: 변경사항이 있는 상태에서도 안전하게 원격 데이터를 가져옵니다.
+git pull --rebase --autostash origin main
+
+>>>>>>> Stashed changes
 git add .
 # 변경사항이 없을 때 에러로 멈추지 않게 처리
 git commit -m "Update site content: $(date +'%Y-%m-%d %H:%M:%S')" || echo "[-] No changes to commit."
 
+<<<<<<< Updated upstream
 # 4. GitHub으로 강제 푸시
 echo "📤 Pushing to GitHub..."
 git push origin main -f
 
 echo "✅ Deployment Complete! Your updates are now live."
+=======
+# [v94.3 교정]: 목적지가 사이트 저장소로 바뀌었으므로 이제 안전하게 푸시합니다.
+echo "📤 Pushing to klh-japan-site..."
+if git push origin main
+    echo "✅ Deployment Complete! Your updates are now live."
+else
+    echo "❌ [ERROR] Git push failed. Checking for remote conflicts..."
+    # 마지막 수단으로 한 번 더 리베이스 후 재시도
+    git pull --rebase origin main
+    git push origin main
+fi
+>>>>>>> Stashed changes
