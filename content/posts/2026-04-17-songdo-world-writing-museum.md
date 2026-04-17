@@ -26,7 +26,7 @@ author: "K-Life Hack"
 {{< /alert >}}
 
 
-<img alt="Golden letters 'MW 국립세계문자박물관' on a white wall. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" fetchpriority="high" height="275" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776454994_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="322"/>: Golden letters 'MW 국립세계문자박물관' on a white wall.
+<img alt="Golden letters 'MW 국립세계문자박물관' on a white wall. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" fetchpriority="high" height="275" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776454994_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="322"/>
 
 ## 松島に現れた、世界への扉を開くモダニズム建築 ✨
 
@@ -61,7 +61,7 @@ author: "K-Life Hack"
 
 展示を鑑賞した後は、1階にある『DIVAN MOW MUSEUM SHOP』へ立ち寄ってみてください。文字をテーマにしたユニークなグッズや書籍が並び、旅の思い出にぴったりの品を見つけることができるはずです。
 
-<img alt="A wooden archway entrance to the 'DIVAN MOW MUSEUM SHOP'. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776455003_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: A wooden archway entrance to the 'DIVAN MOW MUSEUM SHOP'.
+<img alt="A wooden archway entrance to the 'DIVAN MOW MUSEUM SHOP'. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776455003_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 博物館の旅の始まりと終わりをスムーズにするのは、広々としたロビーとインフォメーションデスクです。何か困ったことがあれば、こちらの受付デスクで尋ねてみましょう。
 
