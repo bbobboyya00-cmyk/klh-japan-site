@@ -6,16 +6,18 @@ cd "$SITE_DIR" || { echo "❌ Directory not found"; exit 1; }
 
 echo "🚀 Starting Clean Deployment Process..."
 
-# [2단계] 사전 동기화 및 충돌 강제 해결
-# pull 시 발생하는 충돌을 방지하기 위해 원격 데이터를 먼저 정렬합니다.
+# [2단계] 사전 동기화 (교정: -X ours 삭제)
+# [이유]: -X ours는 API로 올라간 이미지 커밋을 '충돌'로 간주해 지워버릴 위험이 큽니다.
+# 안전하게 원격의 변경사항(API 커밋 등)을 가져온 뒤 진행합니다.
 git fetch origin main
-git merge -s recursive -X ours origin/main --no-edit
+git rebase origin/main || { echo "❌ Rebase failed. Please check manual conflicts."; exit 1; }
 
-# [3단계] 리소스 정리 및 빌드 (중요: -D -F 옵션 추가)
-echo "🧹 Clearing Hugo resource cache..."
-rm -rf resources/_gen
+# [3단계] 리소스 정리 및 빌드
+# [교정]: rm -rf resources/_gen 삭제
+# [이유]: 원본 유실 시 resources/_gen은 유일한 '복구용 파편'입니다. 
+# Hugo의 --gc 옵션만으로도 충분히 관리가 가능하므로 강제 삭제는 금지합니다.
+echo "🧹 Running Hugo Garbage Collection & Build..."
 
-# [교정]: 페이지 누락 방지를 위해 드래프트(-D)와 미래 날짜(-F) 글을 강제로 포함합니다.
 if ! hugo -D -F --gc --minify --cleanDestinationDir; then
     echo "❌ [ERROR] Hugo build failed!"
     exit 1
@@ -27,10 +29,11 @@ echo "klifehack.com" > docs/CNAME
 # [5단계] 변경사항 반영 및 푸시
 echo "📦 Preparing for GitHub push..."
 git add .
+# 변경사항이 없을 때 에러로 멈추지 않도록 처리
 git commit -m "Site recovery: Force build all posts $(date +'%Y-%m-%d %H:%M:%S')" || echo "[-] No changes to commit."
 
 echo "📤 Pushing to klh-japan-site..."
-# [인증]: 이미 토큰이 주입된 주소를 사용 중이므로 바로 푸시됩니다.
+# [주의]: force push는 절대 금지입니다. rebase 후 일반 push를 사용합니다.
 if git push origin main; then
     echo "✅ Deployment Complete! Your updates are now live."
 else
