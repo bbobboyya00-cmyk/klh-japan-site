@@ -1,18 +1,17 @@
 /* [TA] psImg Layout - Perfect Mobile Responsive */
 html {
     overflow-x: hidden !important;
-    overflow-y: auto !important; /* 세로 스크롤은 시스템에 맡김 */
-    height: auto !important;     /* 높이 고정 해제 */
+    overflow-y: scroll !important; /* 항상 스크롤바 자리를 확보하여 흔들림 방지 */
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
 }
 
 body {
     overflow-x: hidden !important;
-    overflow-y: visible !important; /* html이 스크롤을 담당하게 함 */
-    min-height: 100vh;
-    width: 100vw;
-    position: relative;
-    /* 브라우저 기본 스크롤바 강제 가시화 (Overlay 방지) */
-    -webkit-overflow-scrolling: touch; 
+    overflow-y: visible !important;
+    height: auto;
+    /* [핵심] 모든 터치 액션을 기본값으로 되돌려 세로 스크롤을 보장 */
+    touch-action: manipulation; 
 }
 
 /* [핵심] 사라진 메인 스크롤바를 현대적으로 디자인하여 강제 노출 */
@@ -109,7 +108,7 @@ body {
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
-    touch-action: pan-x; /* 세로 스크롤 간섭 방지 */
+    touch-action: auto !important;
 
     /* 네거티브 마진을 썼다면 반드시 패딩으로 상쇄 */
     --shadow-overlap-x: 10px; /* 예시 수치 */
@@ -120,6 +119,12 @@ body {
 	-webkit-overflow-scrolling: touch;
     padding-bottom: 15px !important; /* 스크롤바와 콘텐츠 사이의 숨통 확보 */
     margin-bottom: -15px !important; /* 패딩으로 인한 하단 공백 상쇄 */
+	will-change: transform;
+    transform: translateZ(0);
+}
+
+.main-article {
+    pointer-events: auto !important;
 }
 
 /* 4. Webkit(Chrome, Safari)에서 스크롤바가 안 보일 때의 핀셋 수정 */
