@@ -26,7 +26,7 @@ author: "K-Life Hack"
 {{< /alert >}}
 
 
-<img alt="Golden letters 'MW 국립세계문자박물관' on a white wall. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" fetchpriority="high" height="275" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/khack_1776454994_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="322"/>
+<img alt="Golden letters 'MW 국립세계문자박물관' on a white wall. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" fetchpriority="high" height="275" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/thumb_main.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="322"/>
 
 ## 松島に現れた、世界への扉を開くモダニズム建築 ✨
 
