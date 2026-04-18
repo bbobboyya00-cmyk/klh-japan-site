@@ -115,18 +115,3 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/modoo-ui-card-k-pass-guide-maximizing.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="36d35127d38/daejeon" name="CHUNGCHEONG" >}}</div>
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 K-パス運営事務局</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">세종특별자치시 한누리대로 411</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EB%8C%80%EB%8F%84%EC%8B%9C%EA%B6%8C%EA%B4%91%EC%97%AD%EA%B5%90%ED%86%B5%EC%9C%84%EC%9B%90%ED%9A%8C&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EB%8C%80%EB%8F%84%EC%8B%9C%EA%B6%8C%EA%B4%91%EC%97%AD%EA%B5%90%ED%86%B5%EC%9C%84%EC%9B%90%ED%9A%8C&query_place_id=ChIJA-pdcmDLejURTozeVwJLl8A" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EC%96%B4%EC%A7%84%EB%8F%99%20%EB%8C%80%EB%8F%84%EC%8B%9C%EA%B6%8C%EA%B4%91%EC%97%AD%EA%B5%90%ED%86%B5%EC%9C%84%EC%9B%90%ED%9A%8C" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
-</div>
-</div>
