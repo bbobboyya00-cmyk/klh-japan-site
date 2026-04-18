@@ -6,37 +6,43 @@ cd "$SITE_DIR" || { echo "❌ Directory not found"; exit 1; }
 
 echo "🚀 Starting Clean Deployment Process..."
 
-# [2단계] 사전 동기화 (교정: -X ours 삭제)
-# [이유]: -X ours는 API로 올라간 이미지 커밋을 '충돌'로 간주해 지워버릴 위험이 큽니다.
-# 안전하게 원격의 변경사항(API 커밋 등)을 가져온 뒤 진행합니다.
+# [2단계] 사전 동기화 및 충돌 방지 (v145.0 TA 교정본)
+# [이유]: WinSCP 수동 수정/삭제(Unstaged changes)가 있을 경우 rebase가 실패하는 현상을 방지.
+# rebase 실행 전, 현재 로컬의 모든 변화를 일단 기록(Commit)하여 작업 트리를 깨끗하게 만듭니다.
+echo "📦 Syncing manual changes from WinSCP..."
+git add .
+git commit -m "Auto sync: Manual changes before deployment $(date +'%Y-%m-%d %H:%M:%S')" || echo "[-] No manual changes to sync."
+
+echo "🔄 Reversing remote updates (API Commits)..."
 git fetch origin main
-git rebase origin/main || { echo "❌ Rebase failed. Please check manual conflicts."; exit 1; }
+# -X ours 옵션 없이 표준 rebase를 수행하여 로컬 수정본과 API 업로드 이미지를 안전하게 병합합니다.
+if ! git rebase origin/main; then
+    echo "❌ [CRITICAL] Rebase failed. Please check manual conflicts in $SITE_DIR"
+    exit 1
+fi
 
 # [3단계] 리소스 정리 및 빌드
-# [교정]: rm -rf resources/_gen 삭제
-# [이유]: 원본 유실 시 resources/_gen은 유일한 '복구용 파편'입니다. 
-# Hugo의 --gc 옵션만으로도 충분히 관리가 가능하므로 강제 삭제는 금지합니다.
+# [교정]: Hugo의 --gc 및 --cleanDestinationDir 옵션을 사용하여 구형 리소스를 안전하게 관리합니다.
 echo "🧹 Running Hugo Garbage Collection & Build..."
-
 if ! hugo -D -F --gc --minify --cleanDestinationDir; then
     echo "❌ [ERROR] Hugo build failed!"
     exit 1
 fi
 
-# [4단계] CNAME 복구
+# [4단계] CNAME 복구 (배포 시 도메인 연결 유지)
 echo "klifehack.com" > docs/CNAME
 
-# [5단계] 변경사항 반영 및 푸시
-echo "📦 Preparing for GitHub push..."
+# [5단계] 최종 결과물 반영 및 푸시
+echo "📦 Preparing for final GitHub push..."
 git add .
-# 변경사항이 없을 때 에러로 멈추지 않도록 처리
+# 빌드 결과물(docs/) 변화가 없을 때 에러로 멈추지 않도록 처리
 git commit -m "Site recovery: Force build all posts $(date +'%Y-%m-%d %H:%M:%S')" || echo "[-] No changes to commit."
 
 echo "📤 Pushing to klh-japan-site..."
-# [주의]: force push는 절대 금지입니다. rebase 후 일반 push를 사용합니다.
+# [주의]: force push는 금지하며, rebase로 정렬된 이력을 일반 push로 올립니다.
 if git push origin main; then
     echo "✅ Deployment Complete! Your updates are now live."
 else
-    echo "❌ [ERROR] Git push failed."
+    echo "❌ [ERROR] Git push failed. GitHub status or network check required."
     exit 1
 fi
