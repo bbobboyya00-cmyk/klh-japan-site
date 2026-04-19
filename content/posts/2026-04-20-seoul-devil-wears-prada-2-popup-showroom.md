@@ -94,6 +94,27 @@ author: "K-Life Hack"
 『プラダを着た悪魔2』ポップアップショールームは、映画ファンはもちろん、ソウルの最新トレンドとハイエンドなライフスタイルに触れたいすべての方におすすめのスポットです。ぜひこの機会に、聖水洞で特別なファッション体験をお楽しみください。ディレクターKでした。
 
 ---
-
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/the-devil-wears-prada-2-exclusive-pop.html)
+
+<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;">
+<h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>
+{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}
+</div>
+
+## 📍 地図・アクセス
+
+<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
+<div style="padding: 20px 20px 10px;">
+<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 The Devil Wears Prada 2 Showroom Seongsu</h3>
+<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울특별시 성동구 연무장7길 13</p>
+</div>
+<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
+<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%97%B0%EB%AC%B4%EC%9E%A57%EA%B8%B8%2013&hl=ja&t=&z=17&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
+</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が最新でない場合があります。より正確な位置確認のために、<b>Naverマップ</b>の使用を推奨します。</div>
+<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
+<a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%97%B0%EB%AC%B4%EC%9E%A57%EA%B8%B8%2013" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
+<a href="https://map.naver.com/p/search/%EC%84%B1%EC%88%98%EB%8F%99%20%EC%95%85%EB%A7%88%EB%8A%94%20%ED%94%84%EB%9D%BC%EB%8B%A4%EB%A5%BC%EC%9E%85%EB%8A%94%EB%8B%A42%20%EC%87%BC%EB%A3%B8%20%EC%84%B1%EC%88%98%EC%A0%90" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
+</div>
+</div>
