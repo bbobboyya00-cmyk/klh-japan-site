@@ -133,11 +133,11 @@ author: "K-Life Hack"
 <p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">제주특별자치도 제주시 애월읍 중산간서로 5994-47</p>
 </div>
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%91%A0%EC%9B%94%EC%9D%8D%20%EC%A4%91%EC%82%B0%EA%B0%84%EC%84%9C%EB%A1%9C%205994-47&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
+<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=파호이호이 라바필드 파크 제주&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
 <div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%ED%8C%8C%ED%98%B8%EC%9D%B4%ED%98%B8%EC%9D%B4%20%EC%9A%A9%EC%95%94%EC%A7%80%EC%A7%88%EA%B3%B5%EC%9B%90" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=파호이호이 라바필드 파크 제주" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%ED%8C%8C%ED%98%B8%EC%9D%B4%ED%98%B8%EC%9D%B4%20%EB%9D%BC%EB%B0%94%ED%95%84%EB%93%9C%20%ED%8C%8C%ED%81%AC%20%EC%A0%9C%EC%A3%BC" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>
