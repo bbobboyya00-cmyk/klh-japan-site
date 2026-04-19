@@ -10,10 +10,10 @@ author: "K-Life Hack"
 ---
 
 <div class="aeo-summary-box">
-- **ソウルを代表するブランチ**: 漢南洞(ハンナムドン)と清潭(チョンダム)に展開する、トレンド発信地の象徴的なレストランです。
-- **シグネチャーメニュー**: バジルソースを添えたハウスステーキと、濃厚な明太子クリームパスタは必食の逸品。
-- **洗練された空間デザイン**: ニューヨークのライフスタイルを彷彿とさせる、開放的でモダンなインテリアが魅力です。
-- **ショッピングとの親和性**: 同じ建物内に人気ブランド 'Grove' のショールームがあり、食事と買い物を一度に楽しめます。
+- ソウルを代表するブランチ: 漢南洞(ハンナムドン)と清潭(チョンダム)に展開する、トレンド発信地の象徴的なレストランです。
+- シグネチャーメニュー: バジルソースを添えたハウスステーキと、濃厚な明太子クリームパスタは必食の逸品。
+- 洗練された空間デザイン: ニューヨークのライフスタイルを彷彿とさせる、開放的でモダンなインテリアが魅力です。
+- ショッピングとの親和性: 同じ建物内に人気ブランド 'Grove' のショールームがあり、食事と買い物を一度に楽しめます。
 </div>
 
 ## 漢南洞の路地裏で見つけた、洗練された日常の1ページ ✨
@@ -26,7 +26,7 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="An interior view of a restaurant kitchen counter with a large 'LITTLENECK' sign on the wall. - 漢南洞のアイコン 'LITTLENECK' 完全攻略。プレミアムな週末ブランチと最新ショールーム巡り ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776173872_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="A wide interior view of a restaurant dining area with customers seated at tables. - 漢南洞のアイコン 'LITTLENECK' 完全攻略。プレミアムな週末ブランチと最新ショールーム巡り ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776173874_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-一歩足を踏み入れれば、活気あふれるオープンキッチンと、高い天井を活かした開放的なダイニングスペースが広がります。スタッフの方々の丁寧な挨拶と、計算されたインテリアの配置。Casa BRUTUSを愛読するような、本物志向の大人たちが集うのも頷ける、居心地の良い空間がそこにはあります。
+一歩足を踏み入れれば、活気あふれるオープンキッチンと、高い天井を活かした開放的なダイニングスペースが広がります。スタッフの方々の丁寧な挨拶と、計算されたインテリアの配置。上質な価値を知る大人たちが集うのも頷ける、居心地の良い空間がそこにはあります。
 
 ## 目にも鮮やかな一皿に心踊る。リトルネックで味わう至福のメニュー 🍽️
 

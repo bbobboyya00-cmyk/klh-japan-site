@@ -25,9 +25,8 @@ author: "K-Life Hack"
 {{< /alert >}}
 
 
-皆様、こんにちは。プレミアムライフスタイルマガジン『Hanako』や『Casa BRUTUS』のKです。
-今回は、韓国・釜山でいま最も熱い話題となっているイベントをご紹介します。
-
+皆様、こんにちは。ソウルのハイエンドな日常を届ける『K-Life Hack』のディレクター、Kです。
+今回は、韓国・釜山でいま最も熱い話題となっている、BLACKPINKロゼのアンコールポップアップイベントを独自の視点で詳しくご紹介します。
 世界的な人気を誇るガールズグループBLACKPINKのメンバー、ロゼさんのソロプロジェクト「one year of rosie」を記念したポップアップストアが、釜山・海雲台の絶景スポット、BUSAN X the SKYで開催中です。韓国の最先端トレンドを肌で感じられる、まさに見逃せないチャンスですよ。
 
 <img alt="ロゼ アンコールポップアップ 'one year of rosie' の感覚的な公式メインブランディンググラフィック - 釜山で開催中！BLACKPINKロゼの魅力が詰まった「one year of rosie」ポップアップストアを徹底ガイド" fetchpriority="high" height="1012" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/19/rose-busan-popup-guide/khack_1776605532_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>

@@ -4,7 +4,7 @@ slug: "gwanghwamun-wellness-guide"
 date: 2026-04-15T22:32:01+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776259902_0.webp"
-description: "ソウルの中心、光化門で見つけた熟練テラピストによる本格スパと、五感を刺激するプレミアム韓食ダイニングを、Hanako風の視点で深掘り紹介します。"
+description: "ソウルの中心、光化門で見つけた熟練セラピストによる本格スパと、五感を刺激するプレミアム韓食ダイニング。『K-Life Hack』のディレクターKが、独自の視点でその魅力を深掘り紹介します。"
 categories: ["Cultural Nuance"]
 tags: ["光化門マッサージ", "ソウルスパおすすめ", "韓国ウェルネス", "ウアラ光化門", "ソウル個室ランチ"]
 author: "K-Life Hack"

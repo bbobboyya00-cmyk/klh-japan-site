@@ -4,7 +4,7 @@ slug: "jara-island-flower-garden"
 date: 2026-04-18T13:32:43+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jara-island-flower-garden/khack_1776486741_0.webp"
-description: "加平の「Jara Island 南島花園」は、季節ごとに異なる花々が咲き誇る、まさに地上の楽園。広大な敷地に広がる色鮮やかな花畑は、訪れる人々を魅了し、心癒される体験を提供します。Hanako編集部が厳選した、韓国の隠れた名所へご案内します。"
+description: "加平の「ジャラ島 南島花園」は、季節ごとに異なる花々が咲き誇る、まさに地上の楽園。広大な敷地に広がる色鮮やかな花畑は、訪れる人々を魅了し、心癒される体験を提供します。『K-Life Hack』のディレクターKが厳選した、韓国의 隠れた名所へご案内します。"
 categories: ["K-Travel Hacks"]
 tags: ["加平", "ジャラ島", "花畑", "韓国旅行", "絶景", "ヒーリング", "花フェスタ", "京畿道", "フォトジェニック", "ドローン撮影"]
 author: "K-Life Hack"
