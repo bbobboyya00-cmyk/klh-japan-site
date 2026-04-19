@@ -3,7 +3,7 @@ title: "ミシュラン掲載店「サムチョンドン・スジェビ」三清
 slug: "samcheongdong-sujebi"
 date: 2026-04-19T20:17:01+09:00
 draft: false
-image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597385_0.webp"
+image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597415_14.webp"
 description: "三清洞の趣ある街並みに佇む老舗「サムチョンドン・スジェビ」。ミシュランガイドに8年連続掲載される名店の、温かく優しい手打ち麺スープと絶品チヂミを現地キュレーターKが徹底解説します。"
 categories: ["K-Travel Hacks"]
 tags: ["サムチョンドン・スジェビ", "三清洞グルメ", "ソウル旅行", "韓国料理", "ミシュラン"]
@@ -14,7 +14,7 @@ author: "K-Life Hack"
 
 「ミシュランガイド・ソウル」に8年連続で掲載されている老舗、その名は「サムチョンドン・スジェビ」。今回は、その深い味わいの秘密と、訪れる際の賢い楽しみ方を、私Kがご紹介します。
 
-<img alt="ノスタルジックな雰囲気が漂う三清洞の通り、黄色く色づいたイチョウ並木と伝統的な韓屋の店々が調和しています - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" fetchpriority="high" height="894" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597385_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="647"/>
+
 <!--more-->
 
 
@@ -37,7 +37,6 @@ author: "K-Life Hack"
 
 私が訪れたのは平日の午後でしたが、店先にはすでに長い行列ができており、その人気の高さに驚かされました。しかし、心配ご無用。席数が多く回転が速いため、思ったよりも早く入店できました。行列の先に待つ期待感も、旅の醍醐味の一つですね。
 
-<img alt="サムチョンドン・スジェビの店先に長く伸びる行列、その人気の高さが伺える活気ある光景 - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597387_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 ### 厳選されたシンプルなメニュー構成
 順番を待っている間に、店頭に掲げられたメニューを眺めます。メインはもちろん「スジェビ」ですが、その他にも「チャプサル・オンシミ（もち米の団子スープ）」や「カムジャジョン（ジャガイモチヂミ）」、「パジョン（ネギチヂミ）」、「ノクドゥジョン（緑豆チヂミ）」、そして「チュクミ（イイダコ炒め）」など、食欲をそそる品々が並んでいます。
@@ -48,21 +47,18 @@ author: "K-Life Hack"
 
 席に着くと、スジェビを取り分けるための器と、チヂミ用の醤油皿がすでに準備されていました。このきめ細やかなサービスも、老舗ならではの心遣いです。
 
-<img alt="きれいに整頓されたテーブルに置かれた調味料の容器 - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597393_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
 ### 嬉しいセルフサービスのキムチと秘伝の薬味
 テーブルには、いつでも好きなだけ楽しめるように、白菜の浅漬けキムチと大根の角切りキムチ（カクテキ）が大きな容器に入って置かれています。どちらも自家製で、スジェビの優しい味わいを引き立てる、ちょうど良い塩梅と辛さが特徴です。特に、シャキシャキとした食感の浅漬けキムチは、箸が止まらなくなる美味しさでした。
 
 また、チヂミをさらに美味しくする特製の醤油ダレと、刻み青唐辛子も用意されています。この青唐辛子は、辛いものが得意な方にはぜひ試していただきたい、ピリッとしたアクセントになります。
 
-<img alt="採れたてのように新鮮な白菜の浅漬けキムチとカクテキ、そしてチヂミ用の醤油皿 - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597395_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 ### こんがり熱々！素朴な味わいの「カムジャジョン」
 注文してすぐに、香ばしい香りを漂わせながらカムジャジョンが運ばれてきました。見るからに美味しそうな黄金色に焼き上げられた、厚みのあるチヂミです。
 
 一口いただくと、外はカリッ、中はモチモチとした独特の食感がたまりません。生のジャガイモをすりおろして作られているそうで、ジャガイモ本来の優しい甘みが口の中に広がります。油っこさがなく、あっさりとしているので、スジェビが来る前の食前のお楽しみとしても最適です。
 
-<img alt="こんがりと焼かれたジャガイモチヂミと整えられたおかず、醤油皿が調和した食卓 - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597397_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+
 このシンプルな味わいが、世代を超えて愛される秘訣なのだと実感しました。次は、他のチヂミも試してみたいですね。
 
 ## 心と身体を温める「スジェビ」の優しい一杯 🍲
@@ -70,10 +66,9 @@ author: "K-Life Hack"
 
 スープは、煮干しと昆布、そしてアサリから丁寧に取られたという出汁がベース。一口飲むと、その深く澄んだ味わいに感動します。しつこさがなく、あっさりしていながらも、奥深い旨みがじんわりと身体に染み渡るようです。冷えた身体が芯から温まる、まさにソウルフードと呼ぶにふさわしい一杯です。
 
-<img alt="香ばしい出汁に磯の香り豊かな海苔がたっぷり乗ったスジェビのクローズアップ - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597399_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 手でちぎられたスジェビの生地は、薄すぎず厚すぎず、絶妙なモチモチとした弾力があります。時間が経っても煮崩れることなく、最後までその食感が楽しめるのも特徴です。中には、ホクホクのジャガイモや、風味豊かなアサリ、細切りのかぼちゃなども入っており、食感のアクセントになっています。
 
-<img alt="温かいスジェビの丼と色とりどりの小皿料理が並ぶ、食事全体の様子 - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597401_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+
 この完璧なバランスの味わいは、まさにミシュランが認めた理由なのだと納得しました。
 
 <div class="psImg"><img alt="お玉でスジェビをすくい上げる生き生きとした様子、モチモチとした食感が伝わってきます - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597403_9.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="白い器に盛られたスジェビをスプーンで掬い上げたクローズアップ - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597417_15.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
