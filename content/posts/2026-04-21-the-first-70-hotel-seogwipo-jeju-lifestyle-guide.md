@@ -115,7 +115,7 @@ K-Life HackのディレクターKです。
 
 西帰浦という街は、歩けば歩くほどその魅力が深まる場所です。
 その中心にあるザ・ファースト70ホテルは、あなたの済州島旅行をより豊かで快適なものにしてくれるでしょう。
-豪華さだけを求めるのではなく、真の価値を知るスマートな旅行者にこそ選んでいただきたい拠点です。
+豪華さだけを求めるのJW 메리어트 제주 리조트ではなく、真の価値を知るスマートな旅行者にこそ選んでいただきたい拠点です。
 次回の済州島旅行では、この場所から新しい思い出を紡ぎ始めてみてはいかがでしょうか。
 
 ---
@@ -129,11 +129,11 @@ K-Life HackのディレクターKです。
 <p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">済州特別自治道 西帰浦市 明洞路 182 (서귀포시 서귀동 182)</p>
 </div>
 <div style="background:var(--themeBg-sec);height:350px;width:100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=서귀동 182&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
+<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=더퍼스트70 호텔 서귀포&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
 </div>
 <div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=제주특별자치도 서귀포시 명동로 46 더퍼스트70 호텔" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EB%8D%94%ED%8D%BC%EC%8A%A4%ED%8A%B870%20%ED%98%B8%ED%85%94" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Naver マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=더퍼스트70 호텔 서귀포" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
+<a href="https://map.naver.com/p/search/더퍼스트70 호텔 서귀포" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Naver マップ</a>
 </div>
 </div>
