@@ -126,14 +126,14 @@ K-Life HackのディレクターKです。
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
 <div style="padding:20px 20px 10px;">
 <h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 ザ・ファースト70ホテル</h3>
-<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">済州特別自治道 西帰浦市 明洞路 46 (서귀포시 서귀동 439-1)</p>
+<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">済州特別自治道 西帰浦市 明洞路 182 (서귀포시 서귀동 182)</p>
 </div>
 <div style="background:var(--themeBg-sec);height:350px;width:100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EA%B7%80%ED%8F%AC%EC%8B%9C%20%EC%84%9C%EA%B7%80%EB%8F%99%20439-1&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
+<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=서귀동 182&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
 </div>
 <div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EA%B7%80%ED%8F%AC%EC%8B%9C%20%EC%84%9C%EA%B7%80%EB%8F%99%20439-1" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=제주특별자치도 서귀포시 명동로 46 더퍼스트70 호텔" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EB%8D%94%ED%8D%BC%EC%8A%A4%ED%8A%B870%20%ED%98%B8%ED%85%94" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Naver マップ</a>
 </div>
 </div>
