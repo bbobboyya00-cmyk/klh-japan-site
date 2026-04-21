@@ -104,11 +104,11 @@
 &lt;p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;"&gt;忠清北道 堤川市 義林池路 33 (忠清北道 堤川市 モサンドン 241)&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background:var(--themeBg-sec);height:350px;width:100%;"&gt;
-&lt;iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%9D%98%EB%A6%BC%EC%A7%80&amp;output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"&gt;&lt;/iframe&gt;
+&lt;iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=충북 제천시 모산동 241&amp;output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"&gt;&lt;/iframe&gt;
 &lt;/div&gt;
 &lt;div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"&gt;&lt;span style="display:block;font-weight:700;margin-bottom:2px;"&gt;⚠️ 旅行者のための注意&lt;/span&gt;変化の激しいエリアでは、Googleマップの情報が最新でない場合があります。より正確な位置確認のために、&lt;b&gt;Naverマップ&lt;/b&gt;の使用を推奨します。&lt;/div&gt;
 &lt;div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;"&gt;
-&lt;a href="https://www.google.com/maps/search/?api=1&amp;query=%EC%9D%98%EB%A6%BC%EC%A7%80" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank"&gt;Google マップ&lt;/a&gt;
+&lt;a href="https://www.google.com/maps/search/?api=1&amp;query=충북 제천시 모산동 241" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank"&gt;Google マップ&lt;/a&gt;
 &lt;a href="https://map.naver.com/p/search/%EC%9D%98%EB%A6%BC%EC%A7%80" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank"&gt;Naver マップ&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;</description></item></channel></rss>
