@@ -54,7 +54,34 @@ author: "K-Life Hack"
 
 ### Quick Local Takeaways
 
-<div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;"><table style="width: 100%; min-width: 500px; border-collapse: collapse; color: var(--themeC); text-align: left;"><thead style="border-bottom: 1px solid var(--themeBd-color, rgba(128,128,128,0.2));"><tr><th>Curation</th><th>Details</th></tr></thead><tbody><tr style="border-bottom: 1px solid var(--themeBd-color, rgba(128,128,128,0.2));"><td>Signature Offerings</td><td>Vegan Tteokguk, Artisanal Soy-based Bulgogi, Mushroom Tangsuyuk</td></tr><tr style="border-bottom: 1px solid var(--themeBd-color, rgba(128,128,128,0.2));"><td>Investment Range</td><td>10,000 - 15,000 KRW per curated dish</td></tr><tr style="border-bottom: 1px solid var(--themeBd-color, rgba(128,128,128,0.2));"><td>Vibe</td><td>Ancestral, serene, and profoundly quiet (go-jeok-ha-da)</td></tr><tr style="border-bottom: 1px solid var(--themeBd-color, rgba(128,128,128,0.2));"><td>Companion Policy</td><td>Refined pets are welcome in this sanctuary.</td></tr></tbody></table></div>
+<div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;">
+<table style="width: 100%; min-width: 500px; border-collapse: collapse; color: var(--themeC); text-align: left;">
+<thead style="border-bottom: 1px solid var(--themeBd-color, rgba(128,128,128,0.2));">
+<tr>
+<th style="padding: 12px 15px;">キュレーション</th>
+<th style="padding: 12px 15px;">詳細</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom: 1px solid var(--themeBd-color, rgba(128,128,128,0.2));">
+<td style="padding: 12px 15px; font-weight: 700;">看板メニュー</td>
+<td style="padding: 12px 15px;">ビーガン・トック（韓国風餅スープ）、職人仕込みのソイ・プルコギ、キノコのタンスユク</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--themeBd-color, rgba(128,128,128,0.2));">
+<td style="padding: 12px 15px; font-weight: 700;">ご予算の目安</td>
+<td style="padding: 12px 15px;">1品あたり 約1,000〜1,500円 (10,000〜15,000 KRW)</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--themeBd-color, rgba(128,128,128,0.2));">
+<td style="padding: 12px 15px; font-weight: 700;">空間の雰囲気</td>
+<td style="padding: 12px 15px;">歴史の息吹を感じる、深く静かな「古寂（コジョク）」とした佇まい</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--themeBd-color, rgba(128,128,128,0.2));">
+<td style="padding: 12px 15px; font-weight: 700;">ペット同伴</td>
+<td style="padding: 12px 15px;">マナーを守れる洗練されたペットと共に、穏やかな時間を過ごせる聖域です。</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 ---
 
