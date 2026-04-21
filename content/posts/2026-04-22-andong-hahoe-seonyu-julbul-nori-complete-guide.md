@@ -70,12 +70,12 @@ author: "K-Life Hack"
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid var(--themeBd-color); padding: 12px;">開催期間 (2025年基準)</td>
-<td style="border: 1px solid var(--themeBd-color); padding: 12px;">6/14, 6/28, 7/12, 7/26, 8/14, 8/30, 9/20, 10/4, 10/25, 11/8</td>
+<td style="border: 1px solid var(--themeBd-color); padding: 12px;">開催期間 </td>
+<td style="border: 1px solid var(--themeBd-color); padding: 12px;">2026年度は5月2日（第1回）と5月23日（第2回）にのみ開催される、刹那の邂逅</td>
 </tr>
 <tr>
 <td style="border: 1px solid var(--themeBd-color); padding: 12px;">開催時間</td>
-<td style="border: 1px solid var(--themeBd-color); padding: 12px;">19:00 - 21:00 (※9・10回目は18:00 - 20:00)</td>
+<td style="border: 1px solid var(--themeBd-color); padding: 12px;">19:00 - 21:00 </td>
 </tr>
 <tr>
 <td style="border: 1px solid var(--themeBd-color); padding: 12px;">料金 (Fee)</td>
