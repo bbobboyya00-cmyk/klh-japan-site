@@ -59,7 +59,7 @@ author: "K-Life Hack"
 
 ## Quick Local Takeaways 📝
 
-[OFFICIAL KTO DATA]に基づいた詳細な開催情報を以下の表にまとめました。計画を立てる際にお役立てください。
+最新の公式予約プラットフォームに基づく2026年度の開催情報を整理しました。限られた日程を逃さないよう、旅の計画にお役立てください。
 
 <table style="border-collapse: collapse; width: 100%; border: 1px solid var(--themeBd-color); color: var(--themeC);">
 <thead>
