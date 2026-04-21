@@ -28,7 +28,7 @@ author: "K-Life Hack"
 2026年4月、私たちは音楽の歴史が塗り替えられる瞬間に立ち会いました。長い沈黙を破り、ついにBTSが7人揃って私たちの前に帰ってきたのです。今回のワールドツアーのテーマは『ARIRANG（アリラン）』。韓国人にとって最も馴染み深い民謡をタイトルに冠したこのプロジェクトは、単なるアイドルのカムバックを超えた、一つの文化現象として世界中を席巻しています。
 
 <img alt="チャムシル主競技場の外壁に掲げられた「BTS WORLD TOUR ARIRANG」の巨大な公式メインバナーと、熱気あふれる会場の全景 - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" fetchpriority="high" height="484" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603225_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="647"/>
-<!--more-->
+<!---->
 
 ソウルの街を歩けば、至る所で彼らの帰還を祝うフラッグやバナーを目にします。特に主競技場周辺に集まったファンの表情には、何年もの月日を待ち続けた深い愛情と、再会への純粋な喜びが溢れていました。今回のプロジェクトは、BTS 2.0の始まりを告げる重要なステップとなっています。
 

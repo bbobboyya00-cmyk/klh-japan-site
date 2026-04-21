@@ -33,7 +33,7 @@ author: "K-Life Hack"
 ソウル、特にトレンドの発信地である蚕室に、プロ野球チーム『ロッテジャイアンツ』の新しい公式グッズショップが2026年4月11日にオープンしました。ここはただのショップではありません。ファッショングループ'ヒョンジ'のスポーツブランド『ウィルビプレイ』との協業により誕生した、新しい形のトータル野球グッズショップなのです。
 
 <img alt="롯데ジャイアンツの躍動的な'PLAY'スローガンが強調されたオフライングッズショールームの内部全景とユニフォームディスプレイ - ソウル最新！ロッテジャイアンツ公式グッズ『ウィルビプレイ』徹底ガイド" fetchpriority="high" height="363" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/lotte-giants-willbeplay-seoul-goods-guide/khack_1776625431_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="647"/>
-<!--more-->
+<!---->
 
 店内に入ると、ダイナミックな'PLAY'というスローガンが目に飛び込んできます。ロッテジャイアンツの熱いエネルギーを体感できるような空間設計です。ファンだけでなく、野球に詳しくない方でも楽しめる仕掛けが随所に散りばめられています。
 

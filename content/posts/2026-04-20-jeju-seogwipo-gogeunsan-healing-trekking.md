@@ -32,7 +32,7 @@ author: "K-Life Hack"
 一年を通して変化する自然の表情が、訪れる人々を魅了してやみません。春にはツツジが咲き乱れ、夏には深い緑の森が涼しげな影を落とし、秋には黄金色のススキが風になびき、そして冬には時折、白い雪景色が広がります。
 
 <img alt="alt - 済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639461_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-<!--more-->: ドラマチックな雲間から太陽光が差し込む、海岸都市と火山島の息をのむような空撮。
+<!---->: ドラマチックな雲間から太陽光が差し込む、海岸都市と火山島の息をのむような空撮。
 
 ## オオルムへの道のり：ヒーリングと探検のコース 🌿
 高根山は、傾斜が比較的緩やかで、様々な登山道が整備されているため、老若男女問わず楽しむことができます。特に、杉の木が鬱蒼と茂る森の中を歩く体験は、心身に活力を与えるフィトンチッドをたっぷりと感じられるでしょう。

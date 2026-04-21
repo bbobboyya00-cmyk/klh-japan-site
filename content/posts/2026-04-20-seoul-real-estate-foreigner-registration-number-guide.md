@@ -29,7 +29,7 @@ author: "K-Life Hack"
 
 
 <img alt="alt - ソウルでの不動産購入を成功させる：外国人不動産登記用登録番号ガイド" fetchpriority="high" height="491" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-real-estate-foreigner-registration-number-guide/khack_1776616151_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="739"/>
-<!--more-->都会的な雰囲気を強調する高層ビル群の全景。不動産というテーマの高級感あふれる始まりを告げます。
+<!---->都会的な雰囲気を強調する高層ビル群の全景。不動産というテーマの高級感あふれる始まりを告げます。
 
 ## 外国人不動産登記用登録番号とは？🏙️
 

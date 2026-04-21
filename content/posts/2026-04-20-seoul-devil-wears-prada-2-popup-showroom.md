@@ -35,7 +35,7 @@ author: "K-Life Hack"
 このショールームは、単なる展示スペースではありません。映画に登場するファッション雑誌『ランウェイ』の世界を忠実に再現し、来場者がまるでその一員になったかのような気分を味わえる、特別なコンセプト空間となっているのです。
 
 <img alt="alt:ポップアップショールームの華やかな外観。'プラダを着た悪魔'テーマの大型グラフィックと赤いハイヒールのオブジェが目を引きます。 - K-Life Hack独占: 聖水洞『プラダを着た悪魔2』ポップアップで感じるハイエンドなソウル体験" fetchpriority="high" height="645" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-devil-wears-prada-2-popup-showroom/khack_1776621865_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="860"/>
-<!--more-->
+<!---->
 
 ショールーム全体を彩る映画のグラフィックや、象徴的な赤いハイヒールのオブジェは、訪れる人々を瞬時に映画の世界へと誘います。聖水洞の街並みに突如現れるこの空間は、まさに『K-Life Hack』が追求する"非日常"の体験です。
 
