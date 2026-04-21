@@ -26,11 +26,11 @@
 &lt;p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;"&gt;55-21 Seojeon-gil, Simwon-myeon, Gochang-gun, Jeollabuk-do&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background:var(--themeBg-sec);height:350px;width:100%;"&gt;
-&lt;iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=Simwon-myeon%20%ED%95%98%EC%A0%84%EC%96%B4%EC%B4%8C%EC%B2%B4%ED%97%98%EB%A7%88%EC%9D%84&amp;output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"&gt;&lt;/iframe&gt;
+&lt;iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=하전어촌체험마을&amp;output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"&gt;&lt;/iframe&gt;
 &lt;/div&gt;
 &lt;div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"&gt;&lt;span style="display:block;font-weight:700;margin-bottom:2px;"&gt;⚠️ 旅行者のための注意&lt;/span&gt;変化の激しいエリアでは、Googleマップの情報が最新でない場合があります。より正確な位置確認のために、&lt;b&gt;Naverマップ&lt;/b&gt;の使用を推奨します。&lt;/div&gt;
 &lt;div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;"&gt;
-&lt;a href="https://www.google.com/maps/search/?api=1&amp;query=Simwon-myeon%20%ED%95%98%EC%A0%84%EC%96%B4%EC%B4%8C%EC%B2%B4%ED%97%98%EB%A7%88%EC%9D%84" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank"&gt;Google マップ&lt;/a&gt;
-&lt;a href="https://map.naver.com/p/search/Simwon-myeon%20%ED%95%98%EC%A0%84%EC%96%B4%EC%B4%8C%EC%B2%B4%ED%97%98%EB%A7%88%EC%9D%84" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank"&gt;Naver マップ&lt;/a&gt;
+&lt;a href="https://www.google.com/maps/search/?api=1&amp;query=하전어촌체험마을" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank"&gt;Google マップ&lt;/a&gt;
+&lt;a href="https://map.naver.com/p/search/하전어촌체험마을" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank"&gt;Naver マップ&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;</description></item></channel></rss>
