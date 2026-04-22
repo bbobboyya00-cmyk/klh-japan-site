@@ -10,7 +10,7 @@ tags: ["全羅監営", "全州旅行", "韓国伝統建築", "全州ナイトツ
 author: "K-Life Hack"
 ---
 
-<blockquote class="alert alert-success" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;">
+<blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;">
 <div class="alert-body">
 朝鮮王朝500年の息吹を感じる「全羅監営」は、全州韓屋村に隣接する歴史的聖地です。2026年、さらに深化した夜間開園と復元建築の美しさを、最新のディテールと共にお届けします.
 </div>
