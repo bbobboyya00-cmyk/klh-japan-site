@@ -169,3 +169,12 @@
         letter-spacing: 0.5px;
     }
 }
+
+.k-summary-box h3,
+.summary-box h3 {
+    border-left: none !important; /* 세로 하얀 막대 제거 */
+    padding-left: 0 !important;   /* 막대가 사라진 자릿수 보정 */
+    margin-left: 0 !important;
+    /* 테마에 따라 배경색이나 다른 장식이 붙는 경우 아래 추가 */
+    background: none !important; 
+}
