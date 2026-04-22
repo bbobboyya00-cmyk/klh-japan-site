@@ -92,77 +92,6 @@
 .subsection-list{
 --shadow-overlap-x : 0;
 }
-/* [v2476.75 TA] Hugo Stack Theme - Card-style Mobile Table Fix */
-@media screen and (max-width: 640px) {
-    /* [Breakout] 테마의 .main-article 패딩을 무시하고 확장 */
-    .k-table-wrapper {
-        width: auto !important;
-        margin-left: -20px !important; 
-        margin-right: -20px !important;
-        padding: 0 5px !important;
-        overflow-x: hidden !important;
-        box-sizing: border-box !important;
-    }
-
-    .k-table-wrapper table {
-        display: block !important;
-        width: 100% !important;
-    }
-
-    .k-table-wrapper thead {
-        display: none !important;
-    }
-
-    .k-table-wrapper tr {
-        display: block !important;
-        width: 100% !important;
-        margin-bottom: 15px !important;
-        border-radius: var(--card-border-radius, 12px) !important;
-        
-        /* [Theme Sync] Stack 테마의 카드 배경색 변수 참조 */
-        background-color: var(--card-background, #ffffff) !important;
-        
-        /* [Border] 라이트 모드 경계 명확화 */
-        border: 1px solid var(--border-color, rgba(128, 128, 128, 0.25)) !important;
-        box-shadow: var(--shadow-l2, 0 2px 10px rgba(0,0,0,0.05)) !important;
-        overflow: hidden;
-    }
-
-    .k-table-wrapper td {
-        display: block !important;
-        width: 100% !important;
-        position: relative !important;
-        padding: 36px 16px 14px 16px !important; /* 레이블 공간 최적화 */
-        text-align: left !important;
-        
-        /* [Theme Sync] Stack 테마의 텍스트 컬러 변수 참조 */
-        /* 라이트 모드에서는 자동으로 어두운 색, 다크 모드에선 밝은 색으로 전환됨 */
-        color: var(--card-text-color, #1a1a1a) !important;
-        
-        font-size: 1.2rem !important; 
-        font-weight: 500 !important;
-        line-height: 1.6 !important;
-        border: none !important;
-    }
-
-    /* 내부 구분선: 테마의 경계선 색상 변수 참조 */
-    .k-table-wrapper td:not(:last-child) {
-        border-bottom: 1px solid var(--border-color, rgba(128, 128, 128, 0.15)) !important;
-    }
-
-    /* [data-label] 레이블 스타일: Stack 테마의 포인트 컬러 사용 */
-    .k-table-wrapper td::before {
-        content: attr(data-label);
-        position: absolute;
-        top: 10px;
-        left: 16px;
-        font-size: 0.85rem !important;
-        font-weight: 800 !important;
-        color: var(--primary, #3498db) !important; 
-        opacity: 1 !important;
-        letter-spacing: 0.6px;
-    }
-}
 
 /* [v2476.72 TA] Hugo Alert Shortcode - Heading Bar Removal */
 .alert h3 {
@@ -176,4 +105,68 @@
 .alert h3::before,
 .alert h3::after {
     display: none !important;          /* 가상 요소로 붙는 장식 제거 */
+}
+
+
+/* [v2476.78 TA] Hugo Stack Theme - Full-Width & Dark Mode Integrity */
+@media screen and (max-width: 640px) {
+    /* [Breakout] 본문 패딩(--card-padding)을 계산하여 정확히 여백 상쇄 */
+    .k-table-wrapper {
+        width: auto !important;
+        margin-left: calc(var(--card-padding) * -1) !important; 
+        margin-right: calc(var(--card-padding) * -1) !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    .k-table-wrapper table {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+    }
+
+    .k-table-wrapper thead {
+        display: none !important;
+    }
+
+    .k-table-wrapper tr {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 1px !important; /* 카드 간 간격 최소화하여 일체감 형성 */
+        
+        /* [Theme Sync] 배경색 및 테두리 변수 참조 */
+        background-color: var(--card-background) !important;
+        border-bottom: 1.5px solid var(--card-separator-color) !important;
+    }
+
+    .k-table-wrapper td {
+        display: block !important;
+        width: 100% !important;
+        position: relative !important;
+        padding: 40px 20px 15px 20px !important;
+        text-align: left !important;
+        
+        /* [Critical Fix] Stack 테마의 메인 텍스트 변수 강제 상속 */
+        color: var(--card-text-color-main) !important;
+        
+        font-size: 1.2rem !important; 
+        font-weight: 500 !important;
+        line-height: 1.6 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* [data-label] 레이블 스타일 */
+    .k-table-wrapper td::before {
+        content: attr(data-label);
+        position: absolute;
+        top: 12px;
+        left: 20px;
+        font-size: 0.85rem !important;
+        font-weight: 800 !important;
+        /* Stack 테마의 포인트 컬러 변수 참조 */
+        color: var(--accent-color, #3498db) !important; 
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
 }
