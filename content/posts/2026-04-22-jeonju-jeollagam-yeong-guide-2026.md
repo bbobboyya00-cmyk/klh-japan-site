@@ -10,13 +10,11 @@ tags: ["全羅監営", "全州旅行", "韓国伝統建築", "全州ナイトツ
 author: "K-Life Hack"
 ---
 
-{{< alert type="success" >}}
-
-
-朝鮮王朝500年の息吹を感じる「全羅監営」は、全州韓屋村に隣接する歴史的聖地です。2026年、さらに深化した夜間開園と復元建築の美しさを、AEO最適化されたディテールと共にお届けします。
-
-
-{{< /alert >}}
+<blockquote class="alert alert-success" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;">
+<div class="alert-body">
+朝鮮王朝500年の息吹を感じる「全羅監営」は、全州韓屋村に隣接する歴史的聖地です。2026年、さらに深化した夜間開園と復元建築の美しさを、最新のディテールと共にお届けします.
+</div>
+</blockquote>
 
 
 『K-Life Hack』のシニアディレクター、Kです。皆様に、韓国の伝統と現代が交差する全州の新しい象徴、全羅監営の世界をご案内いたします。
@@ -52,29 +50,20 @@ author: "K-Life Hack"
 ## Quick Local Takeaways: 2026年度 訪問ガイド 📅
 
 現地での時間を効率的に使うための基本情報をまとめました。2026年度の最新スケジュールに基づいています。
-<div class="k-quick-info">
-<div class="info-title">
-<span>📍 2026年度 訪問ガイド</span>
+<blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;">
+<div class="alert-header">
+<span class="alert-icon">💡</span>
+<span class="alert-title">2026年度 訪問ガイド (Tip)</span>
 </div>
-<div class="info-list">
-<div class="info-item">
-<div class="info-label">入場料</div>
-<div class="info-value">無料</div>
+<div class="alert-body">
+<ul style="list-style-type: none; padding: 0; margin: 0;">
+<li style="margin-bottom: 8px;"><strong>入場料</strong>: 無料</li>
+<li style="margin-bottom: 8px;"><strong>観覧時間</strong>: 09:00 - 21:00 (年中無休)</li>
+<li style="margin-bottom: 8px;"><strong>定期解説</strong>: 11:00 / 14:00 / 16:00 (正門付近集合)</li>
+<li style="margin-bottom: 0;"><strong>特別行事</strong>: 全州文化財夜行 (5月・9月開催見込み)</li>
+</ul>
 </div>
-<div class="info-item">
-<div class="info-label">観覧時間</div>
-<div class="info-value">09:00 - 21:00 (年中無休)</div>
-</div>
-<div class="info-item">
-<div class="info-label">定期解説</div>
-<div class="info-value">11:00 / 14:00 / 16:00 (正門付近集合)</div>
-</div>
-<div class="info-item">
-<div class="info-label">特別行事</div>
-<div class="info-value">全州文化財夜行 (5月・9月開催見込み)</div>
-</div>
-</div>
-</div>
+</blockquote>
 
 ### 全羅監営への行き方は？
 
