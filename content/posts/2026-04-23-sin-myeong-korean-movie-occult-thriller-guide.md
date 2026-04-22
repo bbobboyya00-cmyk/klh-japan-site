@@ -120,19 +120,4 @@ K-Life Hackのシニアディレクター、Kです。
 ---
 
 > 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/the-shamanic-shadows-of-power-unmasking.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-## 📍 地図・アクセス
-<div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
-<div style="padding:20px 20px 10px;">
-<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 ポラムマウル・シンミョンスカイビュー</h3>
-<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">仁川広域市 富平区 吉州路 659 (인천광역시 부평구 부개동 502)</p>
-</div>
-<div style="background:var(--themeBg-sec);height:350px;width:100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EB%B3%B4%EB%9E%8C%EB%A7%88%EC%9D%84%20%EC%8B%A0%EB%AA%85%EC%8A%A4%EC%B9%B4%EC%9D%B4%EB%B7%B0&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-<div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EB%B3%B4%EB%9E%8C%EB%A7%88%EC%9D%84%20%EC%8B%A0%EB%AA%85%EC%8A%A4%EC%B9%B4%EC%9D%B4%EB%B7%B0" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EB%B3%B4%EB%9E%8C%EB%A7%88%EC%9D%84%20%EC%8B%A0%EB%AA%85%EC%8A%A4%EC%B9%B4%EC%9D%B4%EB%B7%B0" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Naver マップ</a>
-</div>
-</div>
+> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/the-shamanic-shadows-of-power-unmasking.html)
