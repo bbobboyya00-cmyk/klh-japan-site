@@ -107,66 +107,55 @@
     display: none !important;          /* 가상 요소로 붙는 장식 제거 */
 }
 
+/* [v2476.79 TA] Hugo Stack - Quick Info Card Style */
+.k-quick-info {
+    /* [Breakout] 본문 패딩을 무시하고 가로폭 확장 */
+    margin-left: calc(var(--card-padding) * -1) !important;
+    margin-right: calc(var(--card-padding) * -1) !important;
+    background-color: var(--card-background);
+    border-radius: var(--card-border-radius);
+    padding: 20px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-l1);
+}
 
-/* [v2476.78 TA] Hugo Stack Theme - Full-Width & Dark Mode Integrity */
-@media screen and (max-width: 640px) {
-    /* [Breakout] 본문 패딩(--card-padding)을 계산하여 정확히 여백 상쇄 */
-    .k-table-wrapper {
-        width: auto !important;
-        margin-left: calc(var(--card-padding) * -1) !important; 
-        margin-right: calc(var(--card-padding) * -1) !important;
-        padding: 0 !important;
-        overflow-x: hidden !important;
-        box-sizing: border-box !important;
-    }
+.k-quick-info .info-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--card-text-color-main);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-    .k-table-wrapper table {
-        display: block !important;
-        width: 100% !important;
-        border: none !important;
-    }
+.k-quick-info .info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-    .k-table-wrapper thead {
-        display: none !important;
-    }
+.k-quick-info .info-item {
+    display: flex;
+    justify-content: b-e-t-w-e-e-n; /* 정정: space-between */
+    display: flex;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--card-separator-color);
+    padding-bottom: 8px;
+    font-size: 1.15rem;
+}
 
-    .k-table-wrapper tr {
-        display: block !important;
-        width: 100% !important;
-        margin-bottom: 1px !important; /* 카드 간 간격 최소화하여 일체감 형성 */
-        
-        /* [Theme Sync] 배경색 및 테두리 변수 참조 */
-        background-color: var(--card-background) !important;
-        border-bottom: 1.5px solid var(--card-separator-color) !important;
-    }
+.k-quick-info .info-label {
+    font-weight: 800;
+    color: var(--accent-color);
+    min-width: 100px;
+    flex-shrink: 0;
+}
 
-    .k-table-wrapper td {
-        display: block !important;
-        width: 100% !important;
-        position: relative !important;
-        padding: 40px 20px 15px 20px !important;
-        text-align: left !important;
-        
-        /* [Critical Fix] Stack 테마의 메인 텍스트 변수 강제 상속 */
-        color: var(--card-text-color-main) !important;
-        
-        font-size: 1.2rem !important; 
-        font-weight: 500 !important;
-        line-height: 1.6 !important;
-        box-sizing: border-box !important;
-    }
-
-    /* [data-label] 레이블 스타일 */
-    .k-table-wrapper td::before {
-        content: attr(data-label);
-        position: absolute;
-        top: 12px;
-        left: 20px;
-        font-size: 0.85rem !important;
-        font-weight: 800 !important;
-        /* Stack 테마의 포인트 컬러 변수 참조 */
-        color: var(--accent-color, #3498db) !important; 
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-    }
+.k-quick-info .info-value {
+    color: var(--card-text-color-main);
+    text-align: right;
+    flex-grow: 1;
+    word-break: break-all;
 }

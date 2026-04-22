@@ -52,8 +52,29 @@ author: "K-Life Hack"
 ## Quick Local Takeaways: 2026年度 訪問ガイド 📅
 
 現地での時間を効率的に使うための基本情報をまとめました。2026年度の最新スケジュールに基づいています。
-
-<div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;"><table style="width: 100%; min-width: 500px; border-collapse: collapse; color: var(--themeC); text-align: left;"><thead style="border-bottom: 2px solid var(--themeBd-color);"><tr><th style="padding: 12px;">項目</th><th style="padding: 12px;">詳細内容</th></tr></thead><tbody><tr><td data-label="項目" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">入場料</td><td data-label="詳細内容" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">無料</td></tr><tr><td data-label="項目" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">観覧時間</td><td data-label="詳細内容" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">09:00 - 21:00 (年中無休)</td></tr><tr><td data-label="項目" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">定期解説ツアー</td><td data-label="詳細内容" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">11:00 / 14:00 / 16:00 (正門付近集合)</td></tr><tr><td data-label="項目" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">2026年特別行事</td><td data-label="詳細内容" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">全州文化財夜行 (5月・9月開催見込み)</td></tr></tbody></table></div>
+<div class="k-quick-info">
+<div class="info-title">
+<span>📍 2026年度 訪問ガイド</span>
+</div>
+<div class="info-list">
+<div class="info-item">
+<div class="info-label">入場料</div>
+<div class="info-value">無料</div>
+</div>
+<div class="info-item">
+<div class="info-label">観覧時間</div>
+<div class="info-value">09:00 - 21:00 (年中無休)</div>
+</div>
+<div class="info-item">
+<div class="info-label">定期解説</div>
+<div class="info-value">11:00 / 14:00 / 16:00 (正門付近集合)</div>
+</div>
+<div class="info-item">
+<div class="info-label">特別行事</div>
+<div class="info-value">全州文化財夜行 (5月・9月開催見込み)</div>
+</div>
+</div>
+</div>
 
 ### 全羅監営への行き方は？
 
