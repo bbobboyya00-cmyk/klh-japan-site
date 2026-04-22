@@ -51,37 +51,37 @@ author: "K-Life Hack"
 さらに、瞻星台や東宮と月池といった主要な観光スポットへもスムーズにアクセスできるため、移動のストレスなく韓服姿での散策を楽しめます。
 
 <div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;">
-<table>
+<table style="border-collapse: collapse; color: var(--themeC); width: 100%; text-align: left;">
 <thead>
 <tr>
-<th style="border-bottom:1px solid var(--themeBd-color);padding:8px;text-align:left;">項目</th>
-<th style="border-bottom:1px solid var(--themeBd-color);padding:8px;text-align:left;">詳細</th>
+<th style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800;">項目</th>
+<th style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800;">詳細</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">店舗名</td>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">花道韓服（コッキル韓服）</td>
+<td data-label="項目" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">店舗名</td>
+<td data-label="詳細" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">花道韓服（コッキル韓服）</td>
 </tr>
 <tr>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">住所</td>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">慶尚北道 慶州市 金城路235</td>
+<td data-label="項目" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">住所</td>
+<td data-label="詳細" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">慶尚北道 慶州市 金城路235</td>
 </tr>
 <tr>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">営業時間</td>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">毎日 10:00～18:50</td>
+<td data-label="項目" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">営業時間</td>
+<td data-label="詳細" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">毎日 10:00～18:50</td>
 </tr>
 <tr>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">最終貸出</td>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">15:00（それ以降は返却のみ可能）</td>
+<td data-label="項目" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">最終貸出</td>
+<td data-label="詳細" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">15:00（それ以降は返却のみ可能）</td>
 </tr>
 <tr>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">電話番号</td>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">+82-507-1426-1262</td>
+<td data-label="項目" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">電話番号</td>
+<td data-label="詳細" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">+82-507-1426-1262</td>
 </tr>
 <tr>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">特記事項</td>
-<td style="border-bottom:1px solid var(--themeBd-color);padding:8px;">慶州農協本店ハナロマート向かいに位置しています。</td>
+<td data-label="項目" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">特記事項</td>
+<td data-label="詳細" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">慶州農協本店ハナロマート向かいに位置しています。</td>
 </tr>
 </tbody>
 </table>
