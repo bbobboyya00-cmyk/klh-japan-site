@@ -92,15 +92,14 @@
 .subsection-list{
 --shadow-overlap-x : 0;
 }
-
-/* [v2476.60 TA] Hugo Japan Site - Breakout & High-Density Card */
+/* [v2476.75 TA] Hugo Stack Theme - Card-style Mobile Table Fix */
 @media screen and (max-width: 640px) {
-    /* [Breakout] 테마의 녹색 여백 영역을 잠식하여 가로폭 확장 */
+    /* [Breakout] 테마의 .main-article 패딩을 무시하고 확장 */
     .k-table-wrapper {
         width: auto !important;
-        margin-left: -20px !important;   /* 테마 여백에 맞춰 -15~25px 사이 조절 */
+        margin-left: -20px !important; 
         margin-right: -20px !important;
-        padding: 0 5px !important; 
+        padding: 0 5px !important;
         overflow-x: hidden !important;
         box-sizing: border-box !important;
     }
@@ -108,8 +107,6 @@
     .k-table-wrapper table {
         display: block !important;
         width: 100% !important;
-        min-width: 0 !important;
-        border: none !important;
     }
 
     .k-table-wrapper thead {
@@ -119,54 +116,51 @@
     .k-table-wrapper tr {
         display: block !important;
         width: 100% !important;
-        border: 1.5px solid rgba(128, 128, 128, 0.25) !important;
-        margin-bottom: 12px !important;
-        border-radius: 8px !important;
-        background-color: var(--card-background, #1e1e1e) !important;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18) !important;
+        margin-bottom: 15px !important;
+        border-radius: var(--card-border-radius, 12px) !important;
+        
+        /* [Theme Sync] Stack 테마의 카드 배경색 변수 참조 */
+        background-color: var(--card-background, #ffffff) !important;
+        
+        /* [Border] 라이트 모드 경계 명확화 */
+        border: 1px solid var(--border-color, rgba(128, 128, 128, 0.25)) !important;
+        box-shadow: var(--shadow-l2, 0 2px 10px rgba(0,0,0,0.05)) !important;
+        overflow: hidden;
     }
 
     .k-table-wrapper td {
         display: block !important;
         width: 100% !important;
         position: relative !important;
-        /* 레이블 공간(32px) + 내부 여백 */
-        padding: 32px 14px 12px 14px !important; 
-        
+        padding: 36px 16px 14px 16px !important; /* 레이블 공간 최적화 */
         text-align: left !important;
-        /* [Expert's Choice] 1.5rem은 너무 커서 1.2rem으로 밸런스 조정 */
+        
+        /* [Theme Sync] Stack 테마의 텍스트 컬러 변수 참조 */
+        /* 라이트 모드에서는 자동으로 어두운 색, 다크 모드에선 밝은 색으로 전환됨 */
+        color: var(--card-text-color, #1a1a1a) !important;
+        
         font-size: 1.2rem !important; 
         font-weight: 500 !important;
-        line-height: 1.5 !important;
-        color: var(--card-text-color, #ffffff) !important;
-        
-        white-space: normal !important;
-        word-break: break-all !important;
-        box-sizing: border-box !important;
+        line-height: 1.6 !important;
         border: none !important;
     }
 
-    /* 2열 정보 테이블에서 '항목' 열이 중복으로 보이지 않도록 숨김 처리 */
-    .k-table-info td:first-child {
-        display: none !important;
-    }
-
-    /* 내부 구분선 (정보가 여러 개일 때만 노출) */
+    /* 내부 구분선: 테마의 경계선 색상 변수 참조 */
     .k-table-wrapper td:not(:last-child) {
-        border-bottom: 1px solid rgba(128, 128, 128, 0.15) !important;
+        border-bottom: 1px solid var(--border-color, rgba(128, 128, 128, 0.15)) !important;
     }
 
-    /* [data-label] 레이블 스타일: 시인성 대폭 강화 */
+    /* [data-label] 레이블 스타일: Stack 테마의 포인트 컬러 사용 */
     .k-table-wrapper td::before {
         content: attr(data-label);
         position: absolute;
-        top: 8px;
-        left: 14px;
-        font-size: 0.8rem !important;
+        top: 10px;
+        left: 16px;
+        font-size: 0.85rem !important;
         font-weight: 800 !important;
         color: var(--primary, #3498db) !important; 
         opacity: 1 !important;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.6px;
     }
 }
 
