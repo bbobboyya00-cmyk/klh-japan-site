@@ -81,28 +81,12 @@ K-Life Hackのシニアディレクター、Kです。
 
 私は一人で夜中に鑑賞しましたが、あまりの没入感に、窓の外で揺れる木の葉さえも何かの兆しのように感じてしまいました。
 
-## 撮影の舞台となった「ポラム村」のリアルな空気感 🏘️
 
-映画の重要な舞台であり、実際に撮影が行われた仁川・富平の「ポラム村」周辺は、今も当時の面影を色濃く残しています。
-
-三山体育館駅のすぐそばに位置するこのエリアは、2026年現在も静かな住宅街としての趣を守り続けています。
-
-<img alt="alt: 物語の物理的な舞台を象徴する「ポラム村」の石碑が写ったロケーションショット - 呪術と権力の狂騒曲、韓国映画『神明』が暴く2026年の真実と聖地巡礼の記録" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/sin-myeong-korean-movie-occult-thriller-guide/khack_1776873948_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-実際にこの場所を歩いてみると、映画の中で感じたあの独特の「日常に潜む非日常」が、単なるセットではなく、現実の風景に根ざしていたことがわかります。
-
-古い桜並木や、整然と並ぶアパートメントの構造は、主人公たちが抱えていた孤独や渇望を代弁しているかのようです。
-
-映画の余韻に浸りながら、近くの公園を散策し、作品が投げかけた問いについて思いを馳せる時間は、非常に贅沢な体験となるでしょう。
-
-<img alt="alt: 日常적이며라도 リアルな設定を強調する、居住用アパートの構造を捉えたビジュアル - 呪術と権力の狂騒曲、韓国映画『神明』が暴く2026年の真実と聖地巡礼の記録" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/sin-myeong-korean-movie-occult-thriller-guide/khack_1776873952_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-<blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
+<blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">ガイド (Tip)</span></div><div class="alert-body">
 
 映画『神明』鑑賞ガイド＆ロケーションデータ
 - <strong>作品タイトル</strong> 神明 (Sin-myeong)
 - <strong>主な出演者</strong> キム・ギュリ、アン・ネサン、チュ・ソンファン
-- <strong>主な撮影地</strong> 仁川広域市 富平区 富開洞 「ポラム村」エリア
-- <strong>最寄り駅</strong> 地下鉄7号線 三山体育館駅 1番出口から徒歩すぐ
 - <strong>視聴可能な場所</strong> 各種グローバルOTTプラットフォームにて2026年度も配信中
 - <strong>鑑賞のコツ</strong> 結末に登場するクッキー映像は、制作陣からの切実なメッセージが含まれているため、最後まで席を立たないことが鉄則です。
 
@@ -115,7 +99,7 @@ K-Life Hackのシニアディレクター、Kです。
 
 この週末、あなたもその深い闇と、わずかな光の物語に身を投じてみてはいかがでしょうか。
 
-<div style="text-align:center;margin:45px 0 20px;"><a href="https://japanese.visitkorea.or.kr" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div>
+<div style="text-align:center;margin:45px 0 20px;"><a href="https://www.netflix.com" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div>
 
 ---
 
