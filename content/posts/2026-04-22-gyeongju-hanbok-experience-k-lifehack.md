@@ -149,26 +149,6 @@ author: "K-Life Hack"
 </table>
 </div>
 
-<div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;">
-<table style="border-collapse: collapse; color: var(--themeC); width: 100%; text-align: left; min-width: 500px;">
-<thead>
-<tr>
-<th style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">プラン名</th>
-<th style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">料金 (2026年度 予想)</th>
-<th style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">利用時間</th>
-<th style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">含まれるサービス</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">2時間コース</td>
-<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">22,000 KRW</td>
-<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">2時間</td>
-<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">-</td>
-</tr>
-</tbody>
-</table>
-</div>
 ※上記は2026年度の現地レビューに基づく予想料金です。最新情報は店舗にてご確認ください。
 
 ### おすすめの時間帯と注意点
