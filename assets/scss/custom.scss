@@ -93,15 +93,16 @@
 --shadow-overlap-x : 0;
 }
 
-
-/* [v2476.57 TA] Hugo Japan Site Only - High-Contrast Compact Table */
+/* [v2476.60 TA] Hugo Japan Site - Breakout & High-Density Card */
 @media screen and (max-width: 640px) {
-    /* 테이블 컨테이너 가로폭 강제 */
+    /* [Breakout] 테마의 녹색 여백 영역을 잠식하여 가로폭 확장 */
     .k-table-wrapper {
-        width: 100% !important;
-        margin: 1.5rem 0 !important;
-        padding: 0 !important;
+        width: auto !important;
+        margin-left: -20px !important;   /* 테마 여백에 맞춰 -15~25px 사이 조절 */
+        margin-right: -20px !important;
+        padding: 0 5px !important; 
         overflow-x: hidden !important;
+        box-sizing: border-box !important;
     }
 
     .k-table-wrapper table {
@@ -112,60 +113,59 @@
     }
 
     .k-table-wrapper thead {
-        display: none !important; /* 모바일 헤더 숨김 */
+        display: none !important;
     }
 
-    .k-table-wrapper tbody,
     .k-table-wrapper tr {
         display: block !important;
         width: 100% !important;
+        border: 1.5px solid rgba(128, 128, 128, 0.25) !important;
+        margin-bottom: 12px !important;
+        border-radius: 8px !important;
+        background-color: var(--card-background, #1e1e1e) !important;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18) !important;
     }
 
-    /* 개별 행(Row)을 독립된 카드로 변환 */
-    .k-table-wrapper tr {
-        border: 1.5px solid rgba(128, 128, 128, 0.25) !important; /* 더 뚜렷한 외곽선 */
-        margin-bottom: 15px !important;
-        border-radius: 12px !important;
-        background-color: var(--card-background, #1e1e1e) !important; /* Hugo 테마 변수 대응 */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
-        overflow: hidden;
-    }
-
-    /* 셀(Cell) 스타일링: 상하 간격 조절 및 폰트 강화 */
     .k-table-wrapper td {
         display: block !important;
         width: 100% !important;
         position: relative !important;
-        padding: 34px 16px 12px 16px !important; /* 상단 레이블 공간 확보 */
+        /* 레이블 공간(32px) + 내부 여백 */
+        padding: 32px 14px 12px 14px !important; 
         
         text-align: left !important;
-        font-size: 1.05rem !important; /* 일본어 가독성을 위한 크기 상향 */
+        /* [Expert's Choice] 1.5rem은 너무 커서 1.2rem으로 밸런스 조정 */
+        font-size: 1.2rem !important; 
         font-weight: 500 !important;
-        line-height: 1.6 !important;
+        line-height: 1.5 !important;
         color: var(--card-text-color, #ffffff) !important;
         
         white-space: normal !important;
-        word-break: break-all !important; /* 긴 텍스트 강제 줄바꿈 */
+        word-break: break-all !important;
         box-sizing: border-box !important;
         border: none !important;
     }
 
-    /* 내부 구분선: 선명도 강화 */
-    .k-table-wrapper td:not(:last-child) {
-        border-bottom: 1.5px solid rgba(128, 128, 128, 0.18) !important;
+    /* 2열 정보 테이블에서 '항목' 열이 중복으로 보이지 않도록 숨김 처리 */
+    .k-table-info td:first-child {
+        display: none !important;
     }
 
-    /* [data-label] 레이블: 명도 및 폰트 가중치 최대화 */
+    /* 내부 구분선 (정보가 여러 개일 때만 노출) */
+    .k-table-wrapper td:not(:last-child) {
+        border-bottom: 1px solid rgba(128, 128, 128, 0.15) !important;
+    }
+
+    /* [data-label] 레이블 스타일: 시인성 대폭 강화 */
     .k-table-wrapper td::before {
         content: attr(data-label);
         position: absolute;
-        top: 10px;
-        left: 16px;
+        top: 8px;
+        left: 14px;
         font-size: 0.8rem !important;
         font-weight: 800 !important;
-        text-transform: uppercase;
-        color: var(--primary, #3498db) !important; /* 포인트 컬러 사용 시 가시성 급증 */
-        opacity: 0.9 !important; /* 투명도 제거하여 선명하게 표시 */
+        color: var(--primary, #3498db) !important; 
+        opacity: 1 !important;
         letter-spacing: 0.5px;
     }
 }

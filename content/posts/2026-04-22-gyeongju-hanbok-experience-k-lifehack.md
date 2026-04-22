@@ -50,38 +50,38 @@ author: "K-Life Hack"
 
 さらに、瞻星台や東宮と月池といった主要な観光スポットへもスムーズにアクセスできるため、移動のストレスなく韓服姿での散策を楽しめます。
 
-<div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;">
+<div class="k-table-wrapper k-table-info" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;">
 <table style="border-collapse: collapse; color: var(--themeC); width: 100%; text-align: left;">
 <thead>
-<tr>
-<th style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800;">項目 (Item)</th>
-<th style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800;">詳細 (Details)</th>
+<tr style="border-bottom: 1px solid var(--themeBd-color);">
+<th style="padding: 12px 8px; font-weight: 800;">項目 (Item)</th>
+<th style="padding: 12px 8px; font-weight: 800;">詳細 (Details)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800; color: var(--primary, #3498db);">店舗名</td>
-<td data-label="店舗名" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">花道韓服（コッキル韓服）</td>
+<td style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800; color: var(--primary, #3498db);">店舗名</td>
+<td data-label="店舗名" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">花道韓服（コッキル韓服）</td>
 </tr>
 <tr>
-<td style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800; color: var(--primary, #3498db);">住所</td>
-<td data-label="住所" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">慶尚北道 慶州市 金城路235</td>
+<td style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800; color: var(--primary, #3498db);">住所</td>
+<td data-label="住所" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">慶尚北道 慶州市 金城路235</td>
 </tr>
 <tr>
-<td style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800; color: var(--primary, #3498db);">営業時間</td>
-<td data-label="営業時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">毎日 10:00～18:50</td>
+<td style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800; color: var(--primary, #3498db);">営業時間</td>
+<td data-label="営業時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">毎日 10:00～18:50</td>
 </tr>
 <tr>
-<td style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800; color: var(--primary, #3498db);">最終貸出</td>
-<td data-label="最終貸出" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">15:00（それ以降は返却のみ可能）</td>
+<td style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800; color: var(--primary, #3498db);">最終貸出</td>
+<td data-label="最終貸出" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">15:00（それ以降は返却のみ可能）</td>
 </tr>
 <tr>
-<td style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800; color: var(--primary, #3498db);">電話番号</td>
-<td data-label="電話番号" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">+82-507-1426-1262</td>
+<td style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800; color: var(--primary, #3498db);">電話番号</td>
+<td data-label="電話番号" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">+82-507-1426-1262</td>
 </tr>
 <tr>
-<td style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800; color: var(--primary, #3498db);">特記事項</td>
-<td data-label="特記事項" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">慶州農協本店ハナロマートの向かい側に位置しています。</td>
+<td style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800; color: var(--primary, #3498db);">特記事項</td>
+<td data-label="特記事項" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">慶州農協本店ハナロマートの向かい側に位置しています。</td>
 </tr>
 </tbody>
 </table>
@@ -99,45 +99,72 @@ author: "K-Life Hack"
 ## 賢く利用する！料金プランとおすすめの時間帯 ⏰
 「花道韓服」では、お客様のニーズに合わせた多様な料金プランが用意されています。慶州での滞在スタイルに合わせて、最適なプランを選びましょう。
 <div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;">
-<table style="border-collapse: collapse; color: var(--themeC); width: 100%; text-align: left;">
+<table style="border-collapse: collapse; color: var(--themeC); width: 100%; text-align: left; min-width: 500px;">
 <thead>
 <tr>
-<th style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800;">プラン名</th>
-<th style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800;">料金 (2026年度 予想)</th>
-<th style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800;">利用時間</th>
-<th style="border-bottom: 1px solid var(--themeBd-color); padding: 8px; font-weight: 800;">含まれるサービス</th>
+<th style="border-bottom: 2px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">プラン名</th>
+<th style="border-bottom: 2px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">料金 (2026年度 予想)</th>
+<th style="border-bottom: 2px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">利用時間</th>
+<th style="border-bottom: 2px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">含まれるサービス</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">2時間コース</td>
-<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">22,000ウォン</td>
-<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">2時間</td>
-<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">基本韓服、ペ치コート、ロッカー</td>
+<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">2時間コース</td>
+<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">22,000 KRW</td>
+<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">2時間</td>
+<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">基本韓服、ペチコート、ロッカー</td>
 </tr>
 <tr>
-<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">自由利用券 (フリーパス)</td>
-<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">33,000ウォン</td>
-<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">当日 10:00～18:50</td>
-<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">ヘアスタイリング、小物（バッグ、帽子、装飾品、腰帯）、ヘアアクセサリー、ペチコート、ロッカー、写真プリント</td>
+<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">2時間コース</td>
+<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">22,000 KRW</td>
+<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">2時間</td>
+<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">基本韓服、ペチコート、ロッカー</td>
 </tr>
 <tr>
-<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">夜間券 (ナイトパス)</td>
-<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">44,000ウォン</td>
-<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">15:00/16:00貸出 → 翌日 10:00/12:00返却</td>
-<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">自由利用券と同サービス（写真プリントを除く）</td>
+<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">自由利用券 (フリーパス)</td>
+<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">33,000 KRW</td>
+<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">当日 10:00～18:50</td>
+<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">ヘアスタイリング、小物一式（バッグ、帽子、装飾品、腰帯）、ヘアアクセサリー、ペチコート、ロッカー、写真プリント</td>
 </tr>
 <tr>
-<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">24時間利用券</td>
-<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">66,000ウォン</td>
-<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">24時間</td>
-<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">自由利用券と同サービス</td>
+<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">夜間券 (ナイトパス)</td>
+<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">44,000 KRW</td>
+<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">15:00/16:00貸出 → 翌日 10:00/12:00返却</td>
+<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">24時間利用券</td>
 </tr>
 <tr>
-<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">特別料金</td>
-<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">新羅服/特殊衣装: +10,000ウォン<br/>セルフヘアセット: 7,000ウォン</td>
-<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">-</td>
-<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 8px;">-</td>
+<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">24時間利用券</td>
+<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">66,000 KRW</td>
+<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">24時間</td>
+<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">自由利用券と同サービス</td>
+</tr>
+<tr>
+<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">特別料金</td>
+<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">新羅服/特殊衣装: +10,000 KRW<br/>セルフヘアセット: 7,000 KRW</td>
+<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">-</td>
+<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">-</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;">
+<table style="border-collapse: collapse; color: var(--themeC); width: 100%; text-align: left; min-width: 500px;">
+<thead>
+<tr>
+<th style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">プラン名</th>
+<th style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">料金 (2026年度 予想)</th>
+<th style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">利用時間</th>
+<th style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px; font-weight: 800;">含まれるサービス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="プラン名" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">2時間コース</td>
+<td data-label="料金" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">22,000 KRW</td>
+<td data-label="利用時間" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">2時間</td>
+<td data-label="サービス" style="border-bottom: 1px solid var(--themeBd-color); padding: 12px 8px;">-</td>
 </tr>
 </tbody>
 </table>
