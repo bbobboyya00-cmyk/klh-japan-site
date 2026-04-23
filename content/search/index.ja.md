@@ -1,8 +1,13 @@
 ---
-title: "Search"
+title: "検索"
+slug: "search"
 layout: "search"
-# 이 페이지에서만 HTML과 JSON을 동시에 뽑으라고 강제 명령
 outputs:
-    - HTML
-    - JSON
+  - html
+  - json
+menu:
+  main:
+    weight: -60
+    params:
+      icon: search
 ---
