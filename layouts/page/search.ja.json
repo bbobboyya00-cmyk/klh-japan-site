@@ -1,7 +1,7 @@
 [
 {{- range $i, $e := (partial "helper/pages.html" .Site.Home) -}}
     {{- if $i -}},{{- end -}}
-    {{- $data := dict "title" .Title "date" (.Date.Format "2006-01-02") "permalink" .Permalink "content" .Plain -}}
+    {{- $data := dict "title" .Title "date" (.Date.Format "2006-01-02T15:04:05Z") "permalink" .RelPermalink "content" .Summary -}}
     {{- $image := partial "helper/image" (dict "Image" .Params.image "Resources" .Resources "Context" .) -}}
     {{- if $image -}}
         {{- $data = merge $data (dict "image" $image.Permalink) -}}
