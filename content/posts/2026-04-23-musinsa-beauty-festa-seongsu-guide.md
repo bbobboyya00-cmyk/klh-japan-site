@@ -124,29 +124,29 @@ author: "K-Life Hack"
 
 <p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">ソウル特別市 城東区 演武場キル 81 (서울특별시 성동구 성수동2가 316-1)</p>
 </div>
-<div class="k-map-box" style="margin: 40px -25px 20px !important; width: calc(100% + 50px) !important; background: var(--themeBg-alt); border-top: 1px solid var(--themeBd-color); border-bottom: 1px solid var(--themeBd-color); overflow: hidden; display: block; border-radius: 0 !important;">
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
+<div class="k-map-box">
+<div class="k-map-iframe-wrap">
 <iframe 
 frameborder="0" 
-height="100%" 
-width="100%" 
 scrolling="no" 
-src="https://www.google.com/maps?q=무신사+뷰티+스페이스+1&output=embed" 
-style="border: none; filter: grayscale(0.2) contrast(1.1) Invert(var(--dark-mode-invert, 0));">
+src="https://www.google.com/maps?q=무신사%20뷰티%20스페이스%201&output=embed" 
+style="filter: grayscale(0.2) contrast(1.1) Invert(var(--dark-mode-invert, 0));">
 </iframe>
 </div>
 
-<div style="padding: 20px 25px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color);">
-<p style="margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 800; color: var(--themeC);">📍 ムシンサ・ビューティースペース1</p>
-<p style="margin: 0 0 15px 0; font-size: 0.9rem; color: var(--themeC); opacity: 0.8;">ソウル特別市 城東区 演武場キル 81 (서울특별시 성동구 성수동2가 316-1)</p>
+<div class="k-map-notice">
+<span style="font-size: 1.1rem; color: var(--themeC);">📍 ムシンサ・뷰티스페이스 1</span>
+<p style="margin: 5px 0 10px; opacity: 0.8;">ソウル特別市 城東区 演武場キル 81 (서울특별시 성동구 성수동2가 316-1)</p>
 
-<div style="display: flex; gap: 10px; margin-top: 15px;">
-<a href="https://www.google.com/maps/search/?api=1&query=무신사+뷰티+스페이스+1" target="_blank" style="flex: 1; padding: 12px; background: #4285F4; color: white; border-radius: 12px; text-align: center; font-weight: 700; text-decoration: none; font-size: 0.85rem;">Google Map</a>
-<a href="https://map.naver.com/p/search/무신사%20뷰티%20스페이스%201" target="_blank" style="flex: 1; padding: 12px; background: #00C73C; color: white; border-radius: 12px; text-align: center; font-weight: 700; text-decoration: none; font-size: 0.85rem;">Naver Map</a>
-</div>
-</div>
+<span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>
+Googleマップは韓国国内で情報の更新が遅れたり、正確な位置が表示されない場合があります。より円滑な移動のために<b>Naverマップ</b>の使用を強く推奨します。
 </div>
 
+<div class="k-map-buttons">
+<a href="https://www.google.com/maps/search/무신사%20뷰티%20스페이스%201" class="btn-google" target="_blank">Google Map</a>
+<a href="https://map.naver.com/p/search/무신사%20뷰티%20스페이스%201" class="btn-naver" target="_blank">Naver Map</a>
+</div>
+</div>
 ---
 
 > 🌐 **Read this post in other languages:**
