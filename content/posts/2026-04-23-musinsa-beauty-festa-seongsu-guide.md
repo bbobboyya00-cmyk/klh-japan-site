@@ -124,8 +124,17 @@ author: "K-Life Hack"
 <h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 ムシンサ・ビューティースペース1</h3>
 <p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">ソウル特別市 城東区 演武場キル 81 (서울특별시 성동구 성수동2가 316-1)</p>
 </div>
-<div style="background:var(--themeBg-sec);height:350px;width:100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EB%AC%B4%EC%8B%A0%EC%82%AC%20%EB%B7%B0%ED%8B%B0%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%201&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
+<div class="k-map-box" style="margin: 40px -25px 20px !important; width: calc(100% + 50px) !important; max-width: none !important; border-radius: 0 !important; overflow: hidden;">
+<div style="background:var(--themeBg-sec); height:350px; width:100%;">
+<iframe 
+frameborder="0" 
+height="100%" 
+width="100%" 
+scrolling="no" 
+src="https://www.google.com/maps?q=성동구+연무장길+81&output=embed" 
+style="border:none; filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));">
+</iframe>
+</div>
 </div>
 <div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;">
