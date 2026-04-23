@@ -10,3 +10,30 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+    if (!window.location.pathname.startsWith("/search")) return;
+
+    const keyword = new URLSearchParams(window.location.search).get("keyword");
+    if (!keyword) return;
+
+    const res = await fetch('/index.json');
+    const data = await res.json();
+
+    const result = data.filter(post =>
+        post.title.toLowerCase().includes(keyword.toLowerCase()) ||
+        post.content.toLowerCase().includes(keyword.toLowerCase())
+    );
+
+    const container = document.querySelector(".article-list--compact");
+    if (!container) return;
+
+    container.innerHTML = result.map(p => `
+        <article>
+            <h2><a href="${p.permalink}">${p.title}</a></h2>
+            <p>${p.summary || ''}</p>
+        </article>
+    `).join('');
+});
+</script>
