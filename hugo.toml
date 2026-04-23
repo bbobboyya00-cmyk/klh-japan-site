@@ -105,7 +105,7 @@ defaultContentLanguage = 'en'    # 👈 'en'으로 고정
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
-    page = ["HTML", "JSON"]      # 👈 이 줄이 'page' 섹션에 JSON을 허용하는 핵심 열쇠입니다.
+    page = ["HTML", "JSON"]     
     section = ["HTML", "RSS"]
     taxonomy = ["HTML", "RSS"]
     term = ["HTML", "RSS"]
