@@ -1,6 +1,12 @@
 [
 {{- range $i, $e := .Site.RegularPages -}}
     {{- if $i -}},{{- end -}}
-    {{- dict "title" .Title "date" (.Date.Format "2006-01-02") "permalink" .RelPermalink "content" .Plain | jsonify -}}
+    {{- dict 
+        "title" .Title 
+        "date" (.Date.Format "2006-01-02") 
+        "permalink" .RelPermalink 
+        "content" .Plain 
+        "image" .Params.image
+    | jsonify -}}
 {{- end -}}
 ]
