@@ -2,38 +2,3 @@
     <a href="/privacy-policy/" style="color:inherit; text-decoration:none; margin:0 10px;">Privacy Policy</a>
     <a href="https://t.me/korinside" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; margin:0 10px;">Contact (Telegram)</a>
 </div>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    if (window.location.pathname.startsWith("/search")) {
-        document.body.classList.remove("template-archives");
-        document.body.classList.add("template-search");
-    }
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", async function () {
-    if (!window.location.pathname.startsWith("/search")) return;
-
-    const keyword = new URLSearchParams(window.location.search).get("keyword");
-    if (!keyword) return;
-
-    const res = await fetch('/index.json');
-    const data = await res.json();
-
-    const result = data.filter(post =>
-        post.title.toLowerCase().includes(keyword.toLowerCase()) ||
-        post.content.toLowerCase().includes(keyword.toLowerCase())
-    );
-
-    const container = document.querySelector(".article-list--compact");
-    if (!container) return;
-
-    container.innerHTML = result.map(p => `
-        <article>
-            <h2><a href="${p.permalink}">${p.title}</a></h2>
-            <p>${p.summary || ''}</p>
-        </article>
-    `).join('');
-});
-</script>

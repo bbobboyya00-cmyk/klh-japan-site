@@ -1,4 +1,20 @@
+{{ define "main" }}
+
+<form action="/search/" class="search-form" data-json="/index.json">
+    <p>
+        <label>Search</label>
+        <input name="keyword" placeholder="Type something...">
+    </p>
+    <button title="Search">Search</button>
+</form>
+
+<div class="search-result hidden">
+    <h3 class="search-result--title section-title"></h3>
+    <div class="search-result--list article-list--compact"></div>
+</div>
+
 <script>
-window.searchResultTitleTemplate = "#PAGES_COUNT pages (#TIME_SECONDS seconds)"
+window.searchResultTitleTemplate = "#PAGES_COUNT pages (#TIME_SECONDS seconds)";
 </script>
-<script src="/ts/search.js" defer></script>
+
+{{ end }}
