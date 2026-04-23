@@ -116,6 +116,7 @@ defaultContentLanguage = 'en'    # 👈 'en'으로 고정
     enable = true
     [params.analytics.google]
         id = "G-92N7W10SPC" 
+
 [outputs]
     home = ["HTML", "RSS", "JSON"]
     page = ["HTML"]
