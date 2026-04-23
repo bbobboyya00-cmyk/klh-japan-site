@@ -1,12 +1,9 @@
-defaultContentLanguage = "ja"
-hasCJKLanguage = true
 baseURL = 'https://klifehack.com/'
-languageCode = 'ja'
 title = 'K-Life Hack'
 theme = 'hugo-theme-stack'
 publishDir = 'docs'
 
-# [1. 댓글 설정]
+
 disqusShortname = "klifehack-com"
 
 
