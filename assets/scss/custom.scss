@@ -135,7 +135,7 @@
             height: 100%;
             width: 100%;
             border: none;
-            filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));
+            filter: grayscale(0.2) contrast(1.1) Invert(var(--dark-mode-invert, 0));
         }
     }
 
