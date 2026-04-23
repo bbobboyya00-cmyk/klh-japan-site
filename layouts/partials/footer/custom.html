@@ -6,3 +6,23 @@
 <form action="/search/" class="search-form widget">
     <input name="keyword" placeholder="Type something...">
 </form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const keyword = new URLSearchParams(window.location.search).get("keyword");
+    const input = document.querySelector("input[name='keyword']");
+
+    if (keyword && input && input.value === "") {
+        input.value = keyword;
+
+        // 🔥 핵심: Enter 키 이벤트로 "사용자 입력" 시뮬레이션
+        input.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'Enter',
+            code: 'Enter',
+            keyCode: 13,
+            which: 13,
+            bubbles: true
+        }));
+    }
+});
+</script>
