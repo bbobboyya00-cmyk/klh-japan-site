@@ -3,16 +3,6 @@
     <a href="https://t.me/korinside" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; margin:0 10px;">Contact (Telegram)</a>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const url = new URL(window.location.href);
-    const keyword = url.searchParams.get("keyword");
-
-    const input = document.querySelector("input[name='keyword']");
-
-    // 👉 input에 값만 넣고 submit은 하지 않는다
-    if (keyword && input && input.value === "") {
-        input.value = keyword;
-    }
-});
-</script>
+<form action="/search/" class="search-form widget">
+    <input name="keyword" placeholder="Type something...">
+</form>
