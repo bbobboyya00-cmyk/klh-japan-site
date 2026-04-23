@@ -1,6 +1,6 @@
 ---
 title: "Search"
-layout: "search"
+layout: "index"
 outputs:
   - html
   - json
