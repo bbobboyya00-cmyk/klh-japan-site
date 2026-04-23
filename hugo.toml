@@ -2,7 +2,8 @@ baseURL = 'https://klifehack.com/'
 title = 'K-Life Hack'
 theme = 'hugo-theme-stack'
 publishDir = 'docs'
-
+languageCode = 'en-us'           # 👈 'ja'가 아닌지 확인
+defaultContentLanguage = 'en'    # 👈 'en'으로 고정
 
 disqusShortname = "klifehack-com"
 
