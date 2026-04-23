@@ -2,3 +2,16 @@
     <a href="/privacy-policy/" style="color:inherit; text-decoration:none; margin:0 10px;">Privacy Policy</a>
     <a href="https://t.me/korinside" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; margin:0 10px;">Contact (Telegram)</a>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const keyword = new URLSearchParams(window.location.search).get("keyword");
+    const input = document.querySelector("input[name='keyword']");
+    const form = document.querySelector("form.search-form");
+
+    if (keyword && input && form) {
+        input.value = keyword;
+        form.submit();
+    }
+});
+</script>
