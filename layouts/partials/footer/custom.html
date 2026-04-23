@@ -2,27 +2,11 @@
     <a href="/privacy-policy/" style="color:inherit; text-decoration:none; margin:0 10px;">Privacy Policy</a>
     <a href="https://t.me/korinside" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; margin:0 10px;">Contact (Telegram)</a>
 </div>
-
-<form action="/search/" class="search-form widget">
-    <input name="keyword" placeholder="Type something...">
-</form>
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const keyword = new URLSearchParams(window.location.search).get("keyword");
-    const input = document.querySelector("input[name='keyword']");
-
-    if (keyword && input && input.value === "") {
-        input.value = keyword;
-
-        // 🔥 핵심: Enter 키 이벤트로 "사용자 입력" 시뮬레이션
-        input.dispatchEvent(new KeyboardEvent('keydown', {
-            key: 'Enter',
-            code: 'Enter',
-            keyCode: 13,
-            which: 13,
-            bubbles: true
-        }));
+    if (window.location.pathname.startsWith("/search")) {
+        document.body.classList.remove("template-archives");
+        document.body.classList.add("template-search");
     }
 });
 </script>
