@@ -5,7 +5,7 @@ publishDir = 'docs'
 languageCode = 'en-us'           # 👈 'ja'가 아닌지 확인
 defaultContentLanguage = 'en'    # 👈 'en'으로 고정
 
-disqusShortname = "klifehack-com"
+#disqusShortname = "klifehack-com"
 
 
 [related]
@@ -66,7 +66,7 @@ disqusShortname = "klifehack-com"
 		related = true
 		
     [params.comments]
-        enabled = true
+        enabled = false
         type = "disqus"
 
 [menu]
