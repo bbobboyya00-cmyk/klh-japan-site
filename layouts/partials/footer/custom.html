@@ -5,13 +5,14 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const keyword = new URLSearchParams(window.location.search).get("keyword");
-    const input = document.querySelector("input[name='keyword']");
-    const form = document.querySelector("form.search-form");
+    const url = new URL(window.location.href);
+    const keyword = url.searchParams.get("keyword");
 
-    if (keyword && input && form) {
+    const input = document.querySelector("input[name='keyword']");
+
+    // 👉 input에 값만 넣고 submit은 하지 않는다
+    if (keyword && input && input.value === "") {
         input.value = keyword;
-        form.submit();
     }
 });
 </script>
