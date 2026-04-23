@@ -2,8 +2,8 @@ baseURL = 'https://klifehack.com/'
 title = 'K-Life Hack'
 theme = 'hugo-theme-stack'
 publishDir = 'docs'
-languageCode = 'en-us'           # 👈 'ja'가 아닌지 확인
-defaultContentLanguage = 'en'    # 👈 'en'으로 고정
+languageCode = 'ja'             # 👈 'en-us'에서 변경
+defaultContentLanguage = 'ja'   # 👈 'en'에서 변경
 
 #disqusShortname = "klifehack-com"
 
@@ -73,23 +73,23 @@ defaultContentLanguage = 'en'    # 👈 'en'으로 고정
 [menu]
     [[menu.main]]
         identifier = "home"
-        name = "Home"
+        name = "ホーム"         # 👈 Home -> ホーム
         url = "/"
         weight = 10
         [menu.main.params]
             icon = "home"
 
     [[menu.main]]
-		identifier = "archives"   # 👈 identifier 변경
-		name = "Archives"        # 👈 표시 이름을 Archives로 변경
-		url = "/archives/"       # 👈 url을 /archives/로 변경
-		weight = 20
-		[menu.main.params]
-			icon = "archive"     # 👈 아이콘도 아카이브용으로 변경
+        identifier = "archives"
+        name = "アーカイブ"      # 👈 Archives -> アーカイブ
+        url = "/archives/"
+        weight = 20
+        [menu.main.params]
+            icon = "archive"
 
     [[menu.main]]
         identifier = "about"
-        name = "About"
+        name = "紹介"           # 👈 About -> 紹介 (또는 プロフィール)
         url = "/about/" 
         weight = 30
         [menu.main.params]
@@ -97,7 +97,7 @@ defaultContentLanguage = 'en'    # 👈 'en'으로 고정
 
     [[menu.main]]
         identifier = "telegram"
-        name = "Telegram"
+        name = "テレグラム"      # 👈 Telegram -> テレグラム
         url = "https://t.me/korinside"
         weight = 40
         [menu.main.params]
