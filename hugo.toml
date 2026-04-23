@@ -56,8 +56,9 @@ defaultContentLanguage = 'en'    # 👈 'en'으로 고정
             { type = "tag-cloud" }    # 👈 C를 대문자로 변경 (에러 해결)
         ]
         page = [
-            { type = "toc" }
-        ]
+			{ type = "search" },   # 👈 이거 추가 (핵심)
+			{ type = "toc" }
+		]
 		
     [params.article]
         math = false
@@ -120,3 +121,8 @@ defaultContentLanguage = 'en'    # 👈 'en'으로 고정
 [outputs]
     home = ["HTML", "RSS", "JSON"]
     page = ["HTML"]
+
+[params.search]
+    enable = true
+    type = "fuse"
+    content = true
