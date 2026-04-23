@@ -1,11 +1,23 @@
 {{ define "main" }}
-<div class="search-page">
+<main class="main full-width">
 
-    <form action="/search/" class="search-form widget">
+<form action="/search/" class="search-form" data-json="/index.json">
+    <p>
+        <label>Search</label>
         <input name="keyword" placeholder="Type something...">
-    </form>
+    </p>
+</form>
 
-    <section class="article-list--compact"></section>
-
+<div class="search-result hidden">
+    <h3 class="search-result--title section-title"></h3>
+    <div class="search-result--list article-list--compact"></div>
 </div>
+
+<script>
+window.searchResultTitleTemplate = "#PAGES_COUNT pages (#TIME_SECONDS seconds)"
+</script>
+
+<script src="/ts/search.js" defer></script>
+
+</main>
 {{ end }}
