@@ -107,7 +107,7 @@ disqusShortname = "klifehack-com"
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
-    page = ["HTML"]
+    page = ["HTML", "JSON"]      # 👈 이 줄이 'page' 섹션에 JSON을 허용하는 핵심 열쇠입니다.
     section = ["HTML", "RSS"]
     taxonomy = ["HTML", "RSS"]
     term = ["HTML", "RSS"]
