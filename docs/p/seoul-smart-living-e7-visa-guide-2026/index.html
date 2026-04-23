@@ -42,4 +42,9 @@
         lightbox.init();
     }
 </script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script><div style=text-align:center;margin-top:15px;font-size:.85em;opacity:.6><a href=/privacy-policy/ style="color:inherit;text-decoration:none;margin:0 10px">Privacy Policy</a>
-<a href=https://t.me/korinside target=_blank rel=noopener style="color:inherit;text-decoration:none;margin:0 10px">Contact (Telegram)</a></div><script>document.addEventListener("DOMContentLoaded",function(){window.location.pathname.startsWith("/search")&&(document.body.classList.remove("template-archives"),document.body.classList.add("template-search"))})</script></body></html>
+<a href=https://t.me/korinside target=_blank rel=noopener style="color:inherit;text-decoration:none;margin:0 10px">Contact (Telegram)</a></div><script>document.addEventListener("DOMContentLoaded",function(){window.location.pathname.startsWith("/search")&&(document.body.classList.remove("template-archives"),document.body.classList.add("template-search"))})</script><script>document.addEventListener("DOMContentLoaded",async function(){if(!window.location.pathname.startsWith("/search"))return;const e=new URLSearchParams(window.location.search).get("keyword");if(!e)return;const n=await fetch("/index.json"),s=await n.json(),o=s.filter(t=>t.title.toLowerCase().includes(e.toLowerCase())||t.content.toLowerCase().includes(e.toLowerCase())),t=document.querySelector(".article-list--compact");if(!t)return;t.innerHTML=o.map(e=>`
+        <article>
+            <h2><a href="${e.permalink}">${e.title}</a></h2>
+            <p>${e.summary||""}</p>
+        </article>
+    `).join("")})</script></body></html>
