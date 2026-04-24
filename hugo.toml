@@ -114,9 +114,10 @@ defaultContentLanguage = 'ja'   # 👈 'en'에서 변경
     startLevel = 2
 
 [params.analytics]
-    enable = true
+    enabled = true      # 'enable'이 아닌 'enabled'
+    provider = "google" # 반드시 명시
     [params.analytics.google]
-        id = "G-4KGC4HJF0E" 
+        id = "G-4KGC4HJF0E"
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
