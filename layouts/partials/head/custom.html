@@ -1,3 +1,12 @@
+{{ if .Site.Params.analytics.enabled }}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ .Site.Params.analytics.google.id }}"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ .Site.Params.analytics.google.id }}');
+</script>
+{{ end }}
 
 {{ if .IsPage }}
 <div id="reading-progress-bar"></div>
