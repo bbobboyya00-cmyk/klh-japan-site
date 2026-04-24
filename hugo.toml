@@ -116,7 +116,7 @@ defaultContentLanguage = 'ja'   # 👈 'en'에서 변경
 [params.analytics]
     enable = true
     [params.analytics.google]
-        id = "G-92N7W10SPC" 
+        id = "G-4KGC4HJF0E" 
 
 [outputs]
     home = ["HTML", "RSS", "JSON"]
