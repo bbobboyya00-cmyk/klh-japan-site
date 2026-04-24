@@ -94,85 +94,39 @@
 }
 
 
-/* ==========================================================================
-   [K-Life Hack] Map Full-width Section
-   ========================================================================== */
+/* [Hugo] Map Full-width Optimized (v2501.20) */
 .k-map-box {
     margin: 40px -25px 20px !important;
     width: calc(100% + 50px) !important;
-    padding: 0;
     background: var(--themeBg-alt);
     border-top: 1px solid var(--themeBd-color);
     border-bottom: 1px solid var(--themeBd-color);
-    border-left: none;
-    border-right: none;
-    border-radius: 0; /* 기존 라운드 속성 무효화 */
     overflow: hidden;
 
     .k-map-header {
         padding: 20px 25px 10px;
-        
-        .k-map-title {
-            color: var(--themeC);
-            font-size: 1.2rem;
-            font-weight: 800;
-            margin: 0 0 5px;
-        }
-        .k-map-address {
-            color: var(--themeC);
-            font-size: 0.9rem;
-            margin: 0;
-            opacity: 0.8;
-        }
+        .k-map-title { color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0 0 5px !important; }
+        .k-map-address { color: var(--themeC); font-size: 0.9rem; margin: 0; opacity: 0.8; }
     }
 
     .k-map-iframe-wrap {
-        height: 350px;
-        width: 100%;
-        background: var(--themeBg-sec);
-        
-        iframe {
-            height: 100%;
-            width: 100%;
-            border: none;
-            filter: grayscale(0.2) contrast(1.1) Invert(var(--dark-mode-invert, 0));
-        }
+        height: 350px; width: 100%;
+        iframe { width: 100%; height: 100%; border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)); }
     }
 
     .k-map-notice {
-        padding: 12px 25px;
-        background: var(--themeBg-sec);
-        border-top: 1px solid var(--themeBd-color);
-        font-size: 0.8rem;
-        line-height: 1.5;
-        color: var(--themeC);
-        opacity: 0.7;
-
-        span {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
+        padding: 12px 25px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color);
+        font-size: 0.8rem; color: var(--themeC); opacity: 0.7; line-height: 1.5;
+        span { display: block; font-weight: 700; color: #00c73c; margin-bottom: 2px; }
     }
 
     .k-map-buttons {
-        display: flex;
-        gap: 10px;
-        padding: 15px 25px;
-        background: var(--themeBg-sec);
-
-        a {
-            border-radius: 12px;
-            color: white;
-            flex: 1 1 0%;
-            font-size: 0.85rem;
-            font-weight: 700;
-            padding: 12px 10px;
-            text-align: center;
-            text-decoration: none;
-
-            &.btn-google { background: rgb(66,133,244); }
-            &.btn-naver { background: rgb(0,199,60); }
+        display: flex; gap: 10px; padding: 15px 25px; background: var(--themeBg-sec);
+        a { 
+            flex: 1; border-radius: 12px; color: #fff !important; font-size: 0.85rem; font-weight: 700; 
+            padding: 12px; text-align: center; text-decoration: none !important;
+            &.btn-google { background: #4285F4; }
+            &.btn-naver { background: #00c73c; }
         }
     }
 }
