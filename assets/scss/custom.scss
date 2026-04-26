@@ -50,7 +50,7 @@
     max-width: calc(50% - 5px) !important;
     height: auto !important;
     aspect-ratio: 1 / 1 !important;
-    object-fit: cover !important;
+    object-fit: contain !important;
     border-radius: 12px !important;
     margin: 0 !important;
 }
