@@ -36,6 +36,8 @@ author: "K-Life Hack"
 
 全州市内から少し離れた黄榜山(ファンバンサン)の麓にひっそりと佇む西古寺は、都会の喧騒を忘れさせてくれる、まさに隠れ家のような存在でした。
 
+
+
 ## 西古寺(ソゴサ)とは？ 心を落ち着かせる場所へ ✨
 
 全州革新都市の中心にありながら、最も古い息吹を秘めた古刹、西古寺(ソゴサ)。大韓仏教曹渓宗(テハンブルギョジョゲジョン)に属するこのお寺は、新羅末期に創建されたと言われています。私が訪れた日は少し霞んでいましたが、晴れた日には素晴らしい景色が広がるだろうと感じました。
@@ -43,6 +45,8 @@ author: "K-Life Hack"
 広大な敷地に入ると、まず目に入ったのが、大きな木の下に立つ石碑です。そこには「서고사 일주문 (西古寺 一柱門)」と刻まれており、聖なる空間への入口であることを静かに示していました。一歩足を踏み入れると、ひんやりとした山の空気が心を洗い流してくれるようでした。
 
 <img alt="A stone monument with '서고사 일주문' (Seogosa Iljumun) text, positioned under a large tree on a mountain path. - 全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" fetchpriority="high" height="538" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385504_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>: A stone monument with '서고사 일주문' (Seogosa Iljumun) text, positioned under a large tree on a mountain path.
+
+
 
 ## 静寂に包まれた伝統建築の美 📸
 
@@ -58,6 +62,8 @@ author: "K-Life Hack"
 
 <img alt="Multiple traditional Korean temple buildings with red and yellow accents, built into a rocky hillside with sparse winter vegetation. - 全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385514_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: Multiple traditional Korean temple buildings with red and yellow accents, built into a rocky hillside with sparse winter vegetation.
 
+
+
 ## テンプルステイで体験する韓国仏教文化 🙏
 
 私が申し込んだのは「休息型」のテンプルステイでした。到着後、案内されたのは清潔で広々としたオンドル部屋。部屋にはチョッキが用意されており、申し出るとズボンと水も提供していただきました。宿泊施設はとてもきれいで、ヒーターや暖房も完備。一人には十分すぎるほど快適な空間でした。
@@ -67,6 +73,8 @@ author: "K-Life Hack"
 <img alt="A grey stone Buddha statue seated inside a temple hall, flanked by two candle holders and incense burners on a table. - 全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385512_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: A grey stone Buddha statue seated inside a temple hall, flanked by two candle holders and incense burners on a table.
 
 夕食は精進料理。肉はありませんが、どれも野菜の旨味が詰まった滋味深い味わいで、特に白菜チヂミがとても美味しかったです。普段の食生活では味わえない、心と体に優しい食事に感謝しました。夕食後は、希望者のみ参加できる夕方の礼仏へ。少し慌ただしく参加しましたが、終わった後に僧侶が境内を案内してくださり、その美しさに感動しました。
+
+
 
 ## 穏やかな時間の中で、自分と向き合う 🧘‍♀️
 
@@ -82,15 +90,21 @@ author: "K-Life Hack"
 
 この体験を通して、本当に多くの学びがありました。僧侶が贈ってくださった数珠のブレスレットと「ヘインさん、ファイト！」という温かい言葉に、思わず涙が出そうになりました。心が軽くなり、新たな気持ちで日常に戻れる準備ができた気がします。
 
+
+
 ## 西古寺(ソゴサ)へのアクセスと訪問のヒント 🚩
 
-### 西古寺(ソゴサ)への行き方
+#
+
+## 西古寺(ソゴサ)への行き方
 
 西古寺は、全州(チョンジュ)市徳津区(トクチング)に位置しています。公共交通機関でのアクセスも可能ですが、少し山道になりますので、タクシーの利用が便利かもしれません。駐車場も完備されていますが、お寺の入り口に近い駐車場を利用することをおすすめします。
 
 <img alt="A traditional Korean temple building with a dark tiled roof and yellow walls, situated on a stone platform on a steep, rocky incline. - 全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385521_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: A traditional Korean temple building with a dark tiled roof and yellow walls, situated on a stone platform on a steep, rocky incline.
 
-### おすすめの時間帯と持ち物
+#
+
+## おすすめの時間帯と持ち物
 
 テンプルステイは基本的に予約制なので、公式サイトから事前に申し込んでください。特に休息型は、自分のペースで過ごせるため、初めての方にもおすすめです。個人的な感想としては、人が少ない時期に訪れると、より深く自分と向き合える静かな時間を過ごせるでしょう。
 
@@ -101,6 +115,8 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/seogosa-temple-stay-pan-gyo-locals.html)
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">

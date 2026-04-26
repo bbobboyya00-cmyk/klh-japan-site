@@ -25,6 +25,8 @@ author: "K-Life Hack"
 {{< /alert >}}
 
 
+
+
 ## 街の視線を釘付けにする、鮮やかなパープルの外観 ✨
 
 聖水洞の路地を歩いていると、突如として現れる鮮明なパープルの建物。それがオフビューティーのアイデンティティです。これまでのドラッグストアの常識を覆すようなファサードは、まるでギャラリーやアートスペースのような洗練された雰囲気を醸し出しています。一歩足を踏み入れる前から、これから始まるショッピング体験への期待が高まります。
@@ -34,6 +36,8 @@ author: "K-Life Hack"
 建物の側面からも、ブランドの力強いアイデンティティが伝わってきます。聖水駅とトゥクソム駅の中間に位置し、カフェ巡りの合間に立ち寄るのにも最適なロケーションです。広い敷地を贅沢に使ったこの空間は、まさにショッピングのデスティネーションと呼ぶにふさわしい存在感を放っています。
 
 <img alt="入口側から見た店舗全景と洗練されたブランドロゴのディスプレイ - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571380_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 
 ## 倉庫型コンセプトが生み出す、圧倒的な没入感 ✨
 
@@ -45,6 +49,8 @@ author: "K-Life Hack"
 
 <img alt="2階建ての広大な店内とタイムセールを知らせる案内板が置かれた活気ある風景 - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571386_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
+
+
 ## 選びやすさを追求した、プロフェッショナルな棚割り ✨
 
 広い店内で迷わないよう、各フロアのカテゴリーは物理的なガイドボードで分かりやすく案内されています。驚くべきは、その整理整頓の美しさです。カテゴリーごとに整然と並べられた通路は、まるで図書館で本を探すようなワクワク感を与えてくれます。特にスキンケアセクションの充実は目を見張るものがあります。
@@ -54,6 +60,8 @@ author: "K-Life Hack"
 ブランドのカラーであるパープルのクレートに無造作に、かつ大量に積み上げられた大容量の化粧水やクレンジング製品は、まさに倉庫型ショップならではの醍醐味です。まとめ買いをする観光客の姿も多く、現地のトレンドを肌で感じることができます。
 
 <img alt="大容量のトナーやクレンジング製品が並ぶスキンケアセクションの詳細ビュー - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571403_13.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 
 ## 賢く買い物をするための、スマートなヒント ✨
 
@@ -65,6 +73,8 @@ author: "K-Life Hack"
 
 <img alt="午前11時30分まで適用される早朝割引のプロモーション案内板 - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571398_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
+
+
 ## マスクパックの壁と、細やかな価格表示 ✨
 
 韓国ショッピングの定番であるシートマスクの充実ぶりも特筆すべき点です。壁一面を埋め尽くす色彩豊かなマスクパックの数々は、圧巻の一言。JMソリューションなどの人気ブランドが10枚セットでリーズナブルに提供されており、オンラインショップでの欠品商品が見つかることも珍しくありません。
@@ -75,6 +85,8 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="マスクパックの製品と価格表が鮮明に確認できるクローズアップカット - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571392_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="割引価格が強調されたクレンジングティッシュ製品のディテール - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571405_14.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
+
+
 ## 美しさをトータルでサポートする、ライフスタイル提案 ✨
 
 最後に、インナーケアについても触れておきましょう。スチール製の棚に並ぶサプリメントや健康補助食品のセクションは、外見だけでなく内側からのケアも重視する韓国の美容文化を象徴しています。整然と並べられたサプリメントの瓶は、生活の質を高めてくれるような安心感を与えてくれます。
@@ -83,13 +95,17 @@ author: "K-Life Hack"
 
 オフビューティー聖水は、単なるショップを超えて、今のKビューティーの熱量を体感できる場所です。広大な空間で、新しい自分に出会うためのアイテムを探してみてはいかがでしょうか。聖水洞でのデートや散策の際に、必ず立ち寄りたいリストに加えておくべき一軒です。
 
-### オフビューティー聖水メガファクトリー店への行き方 ✨
+#
+
+## オフビューティー聖水メガファクトリー店への行き方 ✨
 地下鉄2号線「聖水（ソンス）駅」または「뚝섬（トゥクソム）駅」から徒歩約10分。かつてのPeaches DOWONの跡地を目指せば、あの鮮やかなパープルの建物が見えてきます。駐車場は完備されていないため、近隣の公共駐車場の利用をおすすめします。おすすめの時間帯は、もちろん早朝割引が適用されるオープン直後です。
 
 ---
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/k-beauty-deep-dive-navigating-massive.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">

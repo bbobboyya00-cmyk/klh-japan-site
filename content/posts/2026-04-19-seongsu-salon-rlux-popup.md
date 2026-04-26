@@ -29,6 +29,8 @@ author: "K-Life Hack"
 {{< /alert >}}
 
 
+
+
 ## 邸宅を訪れるような感覚で楽しむ、五感の旅 🏛️
 
 「Salon de R.LUX」の外観は、聖水の街並みの中でも一際目を引くホワイトトーンの端正な佇まいです。建物全体がひとつの「サロン」として設計されており、地下1階から4階まで、それぞれのフロアで異なるストーリーが展開されています。エントランスでは、ホテルのような洗練されたサービスで迎えてくれるスタッフが印象的です。
@@ -38,6 +40,8 @@ author: "K-Life Hack"
 チェックインを済ませると、この空間の鍵となる「マスターキー」が渡されます。このキーを各フロアの製品にタッチすることで、自分の好みを記録し、後で自分だけのショッピングリストを受け取ることができる仕組みです。最新のテクノロジーとアナログな優雅さが融合した、実に今のソウルらしい演出と言えるでしょう。
 
 <div class="psImg"><img alt="ブラックのオーニングとホワイトの対比が美しいエントランスデザイン - 聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-salon-rlux-popup/khack_1776592969_12.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="ミニマルで洗練された印象を与える、会場入口の回廊 - 聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-salon-rlux-popup/khack_1776592965_10.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
+
+
 
 ## ハイエンドな香りと色が共演するギャラリー空間 ✨
 
@@ -50,11 +54,15 @@ author: "K-Life Hack"
 <img alt="フラワーパターンと香水が絶妙に配置されたアーティスティックなウィンドウディスプレイ - 聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-salon-rlux-popup/khack_1776592958_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <div class="psImg"><img alt="ジョー マローンなどのプレミアムブランドが並ぶ、整然とした製品棚 - 聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-salon-rlux-popup/khack_1776592963_9.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="ブランドアイデンティティが込められた公式アメニティのパッケージ構成 - 聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-salon-rlux-popup/khack_1776592950_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
+
+
 ## ビューティーとリラックスが交差する、上質なアトリエ 💄
 
 2階と3階は、より深い美の世界に没入できる「ビューティーアトリエ」と「ブティック」になっています。ナスのファンデーションを自分の肌で試せるスタジオや、人気メイクアップアーティストによるビューティークラスなど、プロの技を間近で体感できる貴重な機会が用意されています。マスターキーを使って自分にぴったりのカラーを見つける過程は、まるで宝探しのような楽しさがあります。
 
 <div class="psImg"><img alt="ウェルカムドリンクとMagazine B、NARSのロゴが調和するハイエンドな演出 - 聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-salon-rlux-popup/khack_1776592946_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="イベントのギフトやキーアイテムを紹介する詳細カット - 聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-salon-rlux-popup/khack_1776592948_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
+
+
 
 ## 都会の喧騒を離れ、屋上と地下で味わう余韻 🍷
 
@@ -66,12 +74,18 @@ author: "K-Life Hack"
 
 <img alt="ギフトボックスが並ぶ、高揚感あふれるイベント体験ゾーン - 聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-salon-rlux-popup/khack_1776592967_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
+
+
 ## 「Salon de R.LUX」を賢く楽しむためのアドバイス ✍️
 
-### 予約とアクセスのヒント
+#
+
+## 予約とアクセスのヒント
 このポップアップは、Coupangのアプリを通じて事前に「サロンパス（100ウォン）」を購入することでスムーズに入場できます。週末は混雑が予想されますが、平日の早い時間帯を狙えば、よりプライベートな感覚で各フロアを巡ることができるでしょう。聖水駅3番出口から目と鼻の先にあるため、ショッピングの合間に立ち寄るのにも最適です。
 
-### おすすめの持ち物と服装
+#
+
+## おすすめの持ち物と服装
 館内は非常にフォトジェニックなため、お気に入りのスタイルで訪れることをおすすめします。また、最後に受け取るギフト（エコバッグやサンプルセット）が非常に充実しているため、身軽な装いで訪れても安心です。自分だけの「香り」を見つけたい方は、香水をつけずに訪問するのも良いかもしれません。
 
 <img alt="プログラムや利用方法が丁寧に記された会場のインフォメーションボード - 聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-salon-rlux-popup/khack_1776592954_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
@@ -82,6 +96,8 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/inside-salon-de-rlux-pinnacle-of.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">

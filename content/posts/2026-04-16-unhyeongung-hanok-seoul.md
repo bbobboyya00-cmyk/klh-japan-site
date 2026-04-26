@@ -34,6 +34,8 @@ author: "K-Life Hack"
 
 
 
+
+
 ## 都会の喧騒を忘れる、王族のプライベート空間へ ✨
 
 安国駅の出口を出てすぐ、重厚な石垣と黒い看板が掲げられた正門が迎えてくれます。ここがかつての権力の中枢であったことを物語る、堂々とした佇まいです。
@@ -43,6 +45,8 @@ author: "K-Life Hack"
 門をくぐると、外の喧騒が嘘のように消え去り、澄んだ空気が流れます。まずは案内所でパンフレットを手に取り、この広大な屋敷の歴史に思いを馳せてみましょう。
 
 <img alt="White paper brochure with the text Unhyeongung held in front of a blurred background - 麗しき「雲峴宮（ウニョングン）」で辿る、朝鮮王朝の残り香と春の静寂" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776341154_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 
 ## 朝鮮王朝の歴史が息づく、重厚な建築美 📸
 
@@ -56,17 +60,23 @@ author: "K-Life Hack"
 
 中庭に目を向けると、春の時期には淡い色の梅の花が建物を彩り、松の木が庭園に深みを与えています。派手さはありませんが、職人の手仕事が光る低い石垣や、季節ごとに表情を変える庭園を眺めているだけで、心が洗われるようです。
 
+
+
 ## 迷路のような路地と、細部に宿るディテール
 
 大きな建物の間には、小さな門や塀が複雑に組み合わさっており、歩くたびに新しい風景に出会えます。瓦屋根の下に広がる、素朴ながらも力強い石とレンガの壁は、韓屋ならではの造形美です。
 
 <img alt="Small wooden gate with a tiled roof framed by stone and brick walls - 麗しき「雲峴宮（ウニョングン）」で辿る、朝鮮王朝の残り香と春の静寂" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776341158_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-### 雲峴宮（ウニョングン）とは？行き方と見どころ
+#
+
+## 雲峴宮（ウニョングン）とは？行き方と見どころ
 
 ここは、1860年代に建てられた朝鮮王朝末期の重要な遺構です。高宗皇帝が王位に就く前まで過ごした場所として知られ、歴史ドラマのファンにとっても聖地のような存在です。入場料が無料でありながら、文化財としての価値が非常に高く、落ち着いて見学できるのが最大の魅力です。
 
-### おすすめの訪問時間帯と周辺スポット
+#
+
+## おすすめの訪問時間帯と周辺スポット
 
 午前中の早い時間帯に訪れると、柔らかい日差しが建物に差し込み、より幻想的な写真を撮ることができます。見学後は、すぐ隣の'洋館（旧徳成女子大学校本館）'へ足を伸ばすのもおすすめです。ここはドラマ'トッケビ'の撮影地としても有名で、伝統的な韓屋とはまた違う、ルネサンス様式の美しい外観を楽しむことができます。
 
@@ -76,6 +86,8 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/unhyeongung-deep-dive-into-joseons.html)
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">

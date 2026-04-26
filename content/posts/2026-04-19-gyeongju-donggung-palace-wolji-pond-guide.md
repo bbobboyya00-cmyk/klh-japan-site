@@ -29,6 +29,8 @@ author: "K-Life Hack"
 
 歴史の重みを感じさせる入り口を抜けると、そこには現代の喧騒を忘れさせてくれる静謐な空間が広がっています。ここは新羅の太子の居所であり、同時に国の重要な祝宴が催された華麗な舞台でもありました。
 
+
+
 ## 月が降り立つ池、新羅の美意識に触れる 🌙
 
 かつて「雁鴨池（アナプチ）」という名で親しまれていたこの場所は、発掘調査の結果「月が映る池」を意味する「月池」という本来の名を取り戻しました。その名の通り、夜空に浮かぶ月が水面に溶け込む様子は、千年前の人々も同じように眺めていたに違いありません。
@@ -45,6 +47,8 @@ author: "K-Life Hack"
 
 水面に浮かぶ蓮の葉の間をゆったりと泳ぐ鴨の姿は、平和な時間の象徴です。近づいて建築物の細部を観察すれば、複雑に組み上げられた軒下の細工や、洗練された色彩の調和に、当時の職人たちの驚くべき技術力を感じ取ることができるでしょう。
 
+
+
 ## 旅の記録を整える、スマートな観覧ガイド 📝
 
 ここを訪れるなら、事前に入場時間や料金を確認しておくことが大切です。入り口付近の案内板には、観覧をスムーズに進めるための情報が分かりやすくまとめられています。
@@ -53,6 +57,8 @@ author: "K-Life Hack"
 
 チケットを手にした瞬間から、本格的な歴史旅行が始まります。慶州の他の遺跡と合わせて巡るなら、このチケットも大切な旅の思い出の一片となるはずです。最近ではデジタル化も進んでいますが、紙のチケットが持つ独特の情緒も捨てがたいものです。
 
+
+
 ## 壮大な王宮の姿を想像する、模型が語る物語 🏰
 
 現在、私たちが見ることができるのは復元された一部の殿閣のみですが、敷地内にある模型を見れば、かつてここにどれほど壮大な宮殿が広がっていたかを容易に想像することができます。
@@ -60,6 +66,8 @@ author: "K-Life Hack"
 <img alt="かつての栄華を再現した、精巧な新羅王宮の復元模型 - 慶州・東宮と月池：新羅の黄金夜景に酔いしれる、春のロマンチック散歩 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/gyeongju-donggung-palace-wolji-pond-guide/khack_1776572750_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 緻密に作られた模型を眺めながら、当時の王族や貴族たちがどのような思いでこの池を歩いていたのかに思いを馳せてみてください。失われた歴史のピースが、頭の中で一つに繋がっていくような感覚を覚えるはずです。
+
+
 
 ## 黄金色に輝く、慶州最高の夜景体験 🌌
 
@@ -74,6 +82,8 @@ author: "K-Life Hack"
 
 昼の穏やかな全景も魅力的ですが、夜のシンメトリーな美しさは、慶州という街の魂に触れるような深い感動を与えてくれます。静寂の中で揺らめく灯りを見つめていると、千年の時を超えた贅沢なひとときを過ごしている実感に浸ることができます。
 
+
+
 ## 春限定の贅沢、桜と古宮のロマンチックな出会い 🌸
 
 2026年4月、今まさに満開を迎えた桜が東宮と月池を特別な色で彩っています。伝統建築の重厚さと、桜の花びらの繊細な美しさが生み出すコントラストは、この季節にしか出会えない奇跡のような風景です。
@@ -84,11 +94,15 @@ author: "K-Life Hack"
 
 <img alt="伝統的な手すり越しに広がる、淡いピンク色の桜景色 - 慶州・東宮と月池：新羅の黄金夜景に酔いしれる、春のロマンチック散歩 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/gyeongju-donggung-palace-wolji-pond-guide/khack_1776572761_13.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-### 東宮と月池(東宮と月池)への行き方とおすすめの時間帯
+#
+
+## 東宮と月池(東宮と月池)への行き方とおすすめの時間帯
 
 この場所を100%楽しむためのキーワードは「日没30分前」です。慶州駅からバス、あるいは瞻星台から徒歩15分ほどで到着できるアクセスの良さも魅力。夕暮れ時の青みがかった空とライトアップが混ざり合う、いわゆるブルーアワーを狙って入場してください。
 
-### 慶州夜景散歩をより充実させるために
+#
+
+## 慶州夜景散歩をより充実させるために
 
 東宮と月池を巡った後は、ぜひ近くの「月精橋」や「瞻星台」まで足を伸ばしてみてください。これらはすべて徒歩圏内にあり、夜の慶州を象徴するスポットを一つのストーリーのように繋いで楽しむことができます。春の夜風はまだ少し肌寒いこともあるため、薄手のカーディガンを一枚持って出かけるのが、洗練されたエディター流の楽しみ方です。
 
@@ -98,6 +112,8 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/beyond-moonlight-timeless-allure-of.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド{{< weather loc="35d87128d60/daegu" name="GYEONGSANG" >}}</div>
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">

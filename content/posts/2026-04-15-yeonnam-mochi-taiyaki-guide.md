@@ -26,6 +26,8 @@ author: "K-Life Hack"
 今回エディターKが足を運んだのは、韓国の伝統的なおやつを現代風にアレンジした「モッチパンアッカン（モッチ餅工房）」です。
 
 
+
+
 ## 黄色の看板が目印！路地裏で見つけた「餅」の聖地 ✨
 
 <img alt="Exterior of '모찌방앗간 MOCHI DESSERT' shop with a yellow signboard and striped awning. - 延南洞の新名物！モッチパンアッカンの100%グルテンフリー・もちもち鯛焼きガイド" fetchpriority="high" height="528" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776216556_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="484"/>
@@ -34,6 +36,8 @@ author: "K-Life Hack"
 
 
 実際に訪れてみると、テイクアウト専門の小さなお店ながら、絶え間なくお客さんが訪れる人気ぶりに驚かされました。看板に描かれた魚のキャラクターが、これから出会うスイーツへの期待を高めてくれます。
+
+
 
 
 ## 驚きの「100%グルテンフリー」という選択肢 🚩
@@ -51,9 +55,13 @@ author: "K-Life Hack"
 店頭に掲げられた案内板には、鯛焼きを半分に割った様子が写っています。写真からも伝わるその驚異的な「伸び」は、まさに餅そのもの。健康を意識しながらも、美味しいスイーツを諦めたくない現代のソウルっ子たちに支持される理由が、ここにあるのだと感じました。
 
 
+
+
 ## 目の前で焼き上がる、ライブ感あふれるキッチン 📸
 
-### 職人の手仕事が見える安心感
+#
+
+## 職人の手仕事が見える安心感
 
 <div class="psImg"><img alt="Person pouring liquid batter into fish-shaped molds on a Mochi Taiyaki machine. - 延南洞の新名物！モッチパンアッカンの100%グルテンフリー・もちもち鯛焼きガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776216560_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="Person adding red bean paste onto mochi dough placed in a fish-shaped mold on a cooking machine. - 延南洞の新名物！モッチパンアッカンの100%グルテンフリー・もちもち鯛焼きガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776216561_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
@@ -63,11 +71,15 @@ author: "K-Life Hack"
 ここで重要なのが「ブールノワゼット（焦がしバター）」の存在です。焼き上げる際に贅沢にバターを塗ることで、表面はサクッと、中は驚くほどもちもちとした独特の食感を生み出しているのです。
 
 
-### 注文から受け取りまでスムーズなシステム
+#
+
+## 注文から受け取りまでスムーズなシステム
 
 <img alt="Interior view of the shop kitchen and ordering kiosk with an employee working. - 延南洞の新名物！モッチパンアッカンの100%グルテンフリー・もちもち鯛焼きガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776216563_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 店内は非常に清潔感があり、調理場がオープンになっているため、自分が食べるものがどのように作られているかを確認できるのが嬉しいポイントです。入り口付近にあるキオスクで簡単に注文を済ませることができるので、韓国語に不安がある旅行者の方でもスムーズに利用できます。
+
+
 
 
 ## 実際に食べて分かった、5つの味の魅力 🍱
@@ -87,12 +99,16 @@ author: "K-Life Hack"
 カウンターの脇には、ブランドロゴが入ったコースターやフライヤー、そしてウェットティッシュなどが丁寧に用意されていました。こうした細やかな配慮が、延南洞の激戦区で愛され続ける秘訣なのかもしれません。
 
 
+
+
 ## モッチパンアッカンへの行き方は？ 🗺️
 
 地下鉄2号線・空港鉄道・京義中央線の「弘大入口（ホンデイック）駅」3番出口から歩いて約5分ほどです。延南洞のメインストリートを散策しながら立ち寄るのに最適な場所にあります。
 
 
-### おすすめの訪問時間帯は？
+#
+
+## おすすめの訪問時間帯は？
 
 営業時間は毎日12:30から22:30まで。おやつどきの午後は混み合うことが多いため、少し時間をずらした夕方や、夜の散歩がてらに訪れるのがおすすめです。焼き立てをその場で頬張るのが一番の贅沢ですが、持ち帰ってエアフライヤーで少し温め直すと、外側のサクッとした食感が復活して、また別の美味しさを楽しめますよ。
 

@@ -27,6 +27,8 @@ author: "K-Life Hack"
 
 <img alt="담소요의 정체성을 보여주는 로고 벽면과 감각적인 색감의 체어가 배치된 시그니처 컷 - 済州島の静寂を歩く。ハルラ山の麓に佇む秘密の庭園カフェ「ダムソヨ（DAMSOYO）」完全ガイド ✨" fetchpriority="high" height="709" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-damsoyo-garden-cafe/khack_1776483462_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="647"/>
 
+
+
 ## 建築と自然が織りなす、地下へと続く秘密の入り口 🌿
 
 ダムソヨに到着してまず驚かされるのは、そのユニークな構造です。地上に駐車場を構え、そこから階段を下りることで秘密の庭園へと誘われるアプローチは、まるで別世界への入り口のようです。垂直に伸びるコンクリートのラインと、その隙間から溢れ出す緑のコントラストが、訪れる者の期待感を高めてくれます。
@@ -37,6 +39,8 @@ author: "K-Life Hack"
 
 <img alt="공간의 구성과 유의사항을 한눈에 확인할 수 있는 공식 안내 표지판 - 済州島の静寂を歩く。ハルラ山の麓に佇む秘密の庭園カフェ「ダムソヨ（DAMSOYO）」完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-damsoyo-garden-cafe/khack_1776483468_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
+
+
 ## ハルラ山を背に、静かな池のほとりを彷徨う贅沢 🦆
 
 ダムソヨの最大の見所は、店名の由来でもある「静かな池（潭）」を中心とした広大な庭園です。遠くには済州の魂とも言えるハルラ山の稜線が美しく重なり、目の前には鏡のように穏やかな水面が広がります。ここでは、派手な花々ではなく、済州の風土に適応した自生植物や多年草が主役です。自然に逆らわず、ゆっくりと根を下ろす植物たちの姿に、真の豊かさを感じずにはいられません。
@@ -44,6 +48,8 @@ author: "K-Life Hack"
 <div class="psImg"><img alt="한라산의 능선과 울창한 숲을 배경으로 한 담소요 건축물의 평화로운 전경 - 済州島の静寂を歩く。ハルラ山の麓に佇む秘密の庭園カフェ「ダムソヨ（DAMSOYO）」完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-damsoyo-garden-cafe/khack_1776483466_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="담소요 내부의 고요한 연못과 자연 경관을 담아낸 개방감 있는 전경 사진 - 済州島の静寂を歩く。ハルラ山の麓に佇む秘密の庭園カフェ「ダムソヨ（DAMSOYO）」完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-damsoyo-garden-cafe/khack_1776483473_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
 池の周りには、看板アヒルの家族が自由に歩き回り、訪れる人々を温かく出迎えてくれます。水辺のベンチに座り、アヒルたちが水面を滑る様子を眺めているだけで、時間は驚くほど穏やかに流れていきます。この庭園は、季節ごとにその表情を劇的に変え、春の新緑から冬の静謐な佇まいまで、いつ訪れても新しい発見を約束してくれます。
+
+
 
 ## 窓景を味わうインテリアと、心に栄養を与えるブックショップ ☕
 
@@ -55,12 +61,18 @@ author: "K-Life Hack"
 
 <img alt="방문객의 동선을 돕는 시각적으로 명확한 일러스트 기반의 공간 지도 - 済州島の静寂を歩く。ハルラ山の麓に佇む秘密の庭園カフェ「ダムソヨ（DAMSOYO）」完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-damsoyo-garden-cafe/khack_1776483477_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-### 訪れる前に知っておきたい、スマートな旅のヒント
+#
 
-### ダムソヨへのアクセスと最適な時間帯は？
+## 訪れる前に知っておきたい、スマートな旅のヒント
+
+#
+
+## ダムソヨへのアクセスと最適な時間帯は？
 西帰浦の少し奥まった場所に位置するため、レンタカーでの訪問が最もスムーズです。広々とした専用駐車場が完備されています。おすすめは、光が最も柔らかく、庭園の緑が最も美しく映える午前中、もしくは閉館前の穏やかな午後です。営業時間が17:30までと比較的早いため、スケジュールには余裕を持って訪れるのが正解です。
 
-### 予約や利用時の注意点はありますか？
+#
+
+## 予約や利用時の注意点はありますか？
 静かな休息を目的とした空間であるため、過度な騒音を控えるなどの配慮が求められます。また、1人1オーダー制となっており、この注文には広大な庭園の維持管理費も含まれていると考えれば、非常に価値のある投資と言えるでしょう。ペット同伴も可能ですが、リードの着用など基本的なルールの遵守が必要です。
 
 <img alt="방문객 편의를 위한 넓고 쾌적한 주차 공간 및 주변 환경 정보 컷 - 済州島の静寂を歩く。ハルラ山の麓に佇む秘密の庭園カフェ「ダムソヨ（DAMSOYO）」完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-damsoyo-garden-cafe/khack_1776483479_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
@@ -71,6 +83,8 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/damsoyo-serene-high-end-garden-cafe.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">

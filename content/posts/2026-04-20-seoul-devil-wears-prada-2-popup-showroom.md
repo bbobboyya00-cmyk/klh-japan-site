@@ -28,6 +28,8 @@ author: "K-Life Hack"
 {{< /alert >}}
 
 
+
+
 ## 見どころ：『プラダを着た悪魔2』ポップアップショールームとは？👠
 
 2006年の公開から20年。多くのファッショニスタを魅了し続けてきた『プラダを着た悪魔』の待望の続編、『プラダを着た悪魔2』が2026年4月29日に全世界で劇場公開されます。それに先立ち、ソウル聖水洞で期間限定のポップアップショールームがオープンいたしました。
@@ -53,6 +55,8 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="alt:ショールーム内に設置された'プラダを着た悪魔'ロゴのデジタルディスプレイ - K-Life Hack独占: 聖水洞『プラダを着た悪魔2』ポップアップで感じるハイエンドなソウル体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-devil-wears-prada-2-popup-showroom/khack_1776621882_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:ショールームの内部配置図と利用情報を掲載した案内板 - K-Life Hack独占: 聖水洞『プラダを着た悪魔2』ポップアップで感じるハイエンドなソウル体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-devil-wears-prada-2-popup-showroom/khack_1776621872_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
+
+
 ## 『プラダを着た悪魔2』の世界観を体験する展示内容✨
 
 ショールーム内では、映画の重要なシーンを彷彿とさせる様々な展示が用意されています。一つ一つがフォトジェニックな空間となっており、どこを切り取っても絵になること間違いありません。
@@ -65,7 +69,9 @@ author: "K-Life Hack"
 
 <img alt="alt:映画テーマの衣装とアイテムが展示されたガラス陳列棚。床には'IF YOU LOOK SO CHIC'の文字があり、洗練されたディスプレイです。 - K-Life Hack独占: 聖水洞『プラダを着た悪魔2』ポップアップで感じるハイエンドなソウル体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-devil-wears-prada-2-popup-showroom/khack_1776621874_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-### 参加型イベントと限定アイテムを見逃さないで！🎁
+#
+
+## 参加型イベントと限定アイテムを見逃さないで！🎁
 
 このポップアップショールームでは、展示を見るだけでなく、実際に体験できるイベントも豊富に用意されています。SNS認証イベントやラッキードローなど、映画をより深く楽しめる仕掛けが満載です。
 
@@ -79,7 +85,9 @@ author: "K-Life Hack"
 
 特に注目したいのは、K-BeautyブランドJUNGSAEMMOOLとの限定コラボレーションアイテムです。映画の象徴的なレッドとシックなブラックを基調としたパッケージデザインは、まさにファッショニスタの心をくすぐる逸品です。クッションファンデーション、リップ、ミスト、クリームなど、日常使いできるコスメがラインナップされています。
 
-### 聖水洞ポップアップショールームへの行き方とおすすめの時間帯🚃
+#
+
+## 聖水洞ポップアップショールームへの行き方とおすすめの時間帯🚃
 
 『プラダを着た悪魔2』ポップアップショールームへのアクセスは非常に便利です。聖水洞は、感度の高いショップやカフェが集まるエリアとしても知られており、ポップアップ訪問の前後で周辺散策を楽しむのもおすすめです。
 
@@ -101,6 +109,8 @@ author: "K-Life Hack"
 <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド
 {{< weather loc="37d57126d98/seoul" name="SEOUL" >}}
 </div>
+
+
 
 ## 📍 地図・アクセス
 

@@ -38,6 +38,8 @@ author: "K-Life Hack"
 
 
 
+
+
 ## 1500年の歴史が息づく、韓国の「敦煌」骨窟寺へ ✨
 
 慶州の市街地から東へ、東海（東海）へと続く道を辿ると、含月山の麓に「骨窟寺（コルグルサ）」が現れます。この寺院の歴史は驚くほど古く、今から約1,500年前の6世紀、インドから渡来した光有聖人（クァンユソンイン）一行によって創建されたと言い伝えられています。
@@ -45,6 +47,8 @@ author: "K-Life Hack"
 骨窟寺を象徴するのは、その名の通り「骨（白い石灰岩）」に刻まれた「窟（石窟）」です。インドの石窟寺院を彷彿とさせるその姿は、韓国の他の寺院とは一線を画す圧倒的な存在感を放っています。凝灰岩の断崖に穿たれた12の石窟は、かつて修行僧たちが瞑想に励んだ祈りの空間。一歩足を踏み入れると、時が止まったかのような静寂に包まれます。
 
 <img alt="A wooden framed map showing the layout and paths of the Golgulsa Temple grounds - 慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346176_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 
 ## 断崖に刻まれた祈り：磨崖如来坐像と12の石窟 📸
 
@@ -54,11 +58,15 @@ author: "K-Life Hack"
 
 岩壁に彫られた仏像は、慈愛に満ちた表情で東海を見守っています。9世紀の統一新羅時代の特徴である、力強くも繊細な彫刻美は見る者を圧倒します。周囲のタフォニ地形（風化によってできた蜂の巣状の穴）が、この仏像の神秘性をさらに引き立てており、自然と信仰が融合した類まれなる風景を作り出しています。
 
-### 磨崖如来坐像へのアクセスとおすすめの時間帯
+#
+
+## 磨崖如来坐像へのアクセスとおすすめの時間帯
 
 磨崖如来坐像への道はかなり急勾配ですので、歩きやすい靴が必須です。おすすめの時間帯は、朝の光が仏像を照らし出す午前中。空気が澄んだ時間帯に登ると、頂上から見渡す山々のパノラマと相まって、より深い感動を味わえるでしょう。
 
 <div class="psImg"><img alt="Detail of natural rock grottoes and weathered stone surfaces on the temple cliff - 慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346175_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="A row of orange lotus lanterns attached to a wooden fence next to a pond - 慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346172_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
+
+
 
 ## 動く瞑想、禅武道（ソンムド）の精神に触れる 🧘
 
@@ -68,15 +76,21 @@ author: "K-Life Hack"
 
 境内には、禅武道のダイナミックなポーズをとった像が点在しており、修行の厳しさと美しさを物語っています。現在、毎週水曜日から日曜日まで（月・火は休演）、午後3時から境内の特設舞台で演武公演が行われており、誰でも無料で見学することができます。研ぎ澄まされた動きと力強い気迫は、観る者の心に深い響きを与えます。
 
-### 禅武道公演の基本情報
+#
+
+## 禅武道公演の基本情報
 - **開催時間**: 毎週水曜日〜日曜日 午後3時（1日1回）
 - **場所**: 境内の特設舞台（時期により場所が変動する場合があるため、入口の案内板をチェックしてください）
 
 <img alt="A large multi-story traditional building with a stone pagoda and a bronze martial arts statue - 慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346169_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
+
+
 ## 伝説の「冬児（ドンア）菩薩」：寺院を見守る賢い犬 🐕
 
 骨窟寺を訪れると、一匹の犬の銅像に目が留まるはずです。これは、かつてこの寺で暮らしていた伝説の犬「冬児（ドンア）」を記念したものです。冬児は、明け方の礼拝に一度も欠かさず参列し、参拝客を道案内したという賢い犬で、テレビ番組でも紹介され、多くの人々に愛されました。現在はその遺志を継ぐ新しい犬たちが境内をのんびりと守っており、訪れる人々の心を和ませてくれます。
+
+
 
 ## テンプルステイで体験する、心洗われる朝食と沈黙の時間 🍱
 
@@ -84,13 +98,17 @@ author: "K-Life Hack"
 
 外国人参加者が非常に多いため、英語での案内も充実しており、初めての方でも安心して参加できるのが骨窟寺の魅力です。デジタルデトックスを行い、自然の音に耳を澄ませる体験は、旅の最高の思い出になるでしょう。
 
-### 骨窟寺への行き方（アクセス）
+#
+
+## 骨窟寺への行き方（アクセス）
 慶州市内からは車で約30分、仏国寺（プルグッサ）からは約20分ほどです。公共交通機関を利用する場合は、慶州駅から700番バス、またはシ외バスターミナルから100番・150番バスに乗り、「骨窟寺・祇林寺入口」で下車後、徒歩約15〜20分です。上り坂が続くため、タクシーの利用も検討してみてください。
 
 ---
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/gyeongju-golgulsa-temple-guide-sunmudo.html)
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">

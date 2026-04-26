@@ -32,13 +32,17 @@ author: "K-Life Hack"
 {{< /alert >}}
 
 
+
+
 ## 三清洞のランドマーク、「サムチョンドン・スジェビ」✨
 「サムチョンドン・スジェビ」は、ソウル市が選定する「オレガゲ（長く愛される店）」にも名を連ねる、1982年創業の伝統あるお店です。趣のある韓屋が軒を連ねる三清洞のメインストリートから少し入った場所に位置しています。
 
 私が訪れたのは平日の午後でしたが、店先にはすでに長い行列ができており、その人気の高さに驚かされました。しかし、心配ご無用。席数が多く回転が速いため、思ったよりも早く入店できました。行列の先に待つ期待感も、旅の醍醐味の一つですね。
 
 
-### 厳選されたシンプルなメニュー構成
+#
+
+## 厳選されたシンプルなメニュー構成
 順番を待っている間に、店頭に掲げられたメニューを眺めます。メインはもちろん「スジェビ」ですが、その他にも「チャプサル・オンシミ（もち米の団子スープ）」や「カムジャジョン（ジャガイモチヂミ）」、「パジョン（ネギチヂミ）」、「ノクドゥジョン（緑豆チヂミ）」、そして「チュクミ（イイダコ炒め）」など、食欲をそそる品々が並んでいます。
 
 私たちはシグネチャーのスジェビ2人前と、人気のカムジャジョンを注文することにしました。どれも魅力的で迷いましたが、まずは定番を試すのがK流です。
@@ -47,19 +51,25 @@ author: "K-Life Hack"
 
 席に着くと、スジェビを取り分けるための器と、チヂミ用の醤油皿がすでに準備されていました。このきめ細やかなサービスも、老舗ならではの心遣いです。
 
-### 嬉しいセルフサービスのキムチと秘伝の薬味
+#
+
+## 嬉しいセルフサービスのキムチと秘伝の薬味
 テーブルには、いつでも好きなだけ楽しめるように、白菜の浅漬けキムチと大根の角切りキムチ（カクテキ）が大きな容器に入って置かれています。どちらも自家製で、スジェビの優しい味わいを引き立てる、ちょうど良い塩梅と辛さが特徴です。特に、シャキシャキとした食感の浅漬けキムチは、箸が止まらなくなる美味しさでした。
 
 また、チヂミをさらに美味しくする特製の醤油ダレと、刻み青唐辛子も用意されています。この青唐辛子は、辛いものが得意な方にはぜひ試していただきたい、ピリッとしたアクセントになります。
 
 
-### こんがり熱々！素朴な味わいの「カムジャジョン」
+#
+
+## こんがり熱々！素朴な味わいの「カムジャジョン」
 注文してすぐに、香ばしい香りを漂わせながらカムジャジョンが運ばれてきました。見るからに美味しそうな黄金色に焼き上げられた、厚みのあるチヂミです。
 
 一口いただくと、外はカリッ、中はモチモチとした独特の食感がたまりません。生のジャガイモをすりおろして作られているそうで、ジャガイモ本来の優しい甘みが口の中に広がります。油っこさがなく、あっさりとしているので、スジェビが来る前の食前のお楽しみとしても最適です。
 
 
 このシンプルな味わいが、世代を超えて愛される秘訣なのだと実感しました。次は、他のチヂミも試してみたいですね。
+
+
 
 ## 心と身体を温める「スジェビ」の優しい一杯 🍲
 カムジャジョンを味わっていると、いよいよお待ちかねのスジェビが到着しました。2人前は、韓国の食卓でおなじみの大きな甕(かめ)の器にたっぷりと盛り付けられています。湯気と共に立ち上る香ばしい出汁の香りに、思わずごくりと喉が鳴りました。
@@ -73,21 +83,27 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="お玉でスジェビをすくい上げる生き生きとした様子、モチモチとした食感が伝わってきます - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597403_9.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="白い器に盛られたスジェビをスプーンで掬い上げたクローズアップ - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597417_15.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-### 賢く訪れる！「サムチョンドン・スジェビ」の楽しみ方
+#
+
+## 賢く訪れる！「サムチョンドン・スジェビ」の楽しみ方
 「サムチョンドン・スジェビ」は、平日・週末問わず、お昼時には常に長い行列ができています。しかし、先ほどもお伝えしたように、店内は広く回転も速いため、見た目ほど待つことはありません。
 
 もし行列を避けたいのであれば、開店時間の11時を目指す「オープンラン」か、ランチタイムが過ぎた午後2時以降の訪問がおすすめです。私たちが訪れた際も、午後2時半頃には行列が落ち着き、比較的スムーズに入店できました。
 
 <img alt="日差しの中でサムチョンドン・スジェビの店前に長く並ぶお客さんの姿 - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597406_10.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-### 味変で二度美味しい！「コチュカンジャン」を添えて
+#
+
+## 味変で二度美味しい！「コチュカンジャン」を添えて
 テーブルに置かれている刻み青唐辛子の薬味「コチュカンジャン」を少し加えてみてください。最初はそのままの優しい出汁の味を楽しみ、途中からピリッとした辛さを加えることで、また違った顔を見せてくれます。
 
 この少しの辛みが食欲をさらに刺激し、最後まで飽きさせない工夫がされています。まさに韓国料理の奥深さを感じさせる瞬間です。
 
 <img alt="ピリ辛でシャキシャキとした食感が絶品の刻み唐辛子のおかず - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597408_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-### 三清洞で忘れられない美食体験を
+#
+
+## 三清洞で忘れられない美食体験を
 三清洞の美しい街並みを散策し、歴史と伝統が息づく「サムチョンドン・スジェビ」で温かい手打ち麺を味わう。これこそが、ソウル旅行の醍醐味の一つだと感じました。
 
 <img alt="カリッと香ばしく焼かれた丸いジャガイモチヂミ - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597410_12.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
@@ -101,6 +117,8 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/samcheongdong-sujebi-michelin.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">

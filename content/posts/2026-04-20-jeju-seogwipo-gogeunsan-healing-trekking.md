@@ -26,6 +26,8 @@ author: "K-Life Hack"
 
 ここでは、壮大な自然の中でリラックスし、日々の喧騒から離れて心を浄化することができます。私は、この素晴らしいオオルムが皆様の済州島旅行をさらに豊かにする一手になることを願っています。
 
+
+
 ## 高根山（コグンサン）とは？ ✨
 高根山は、済州島にある多くの寄生火山（オオルム）の一つで、西帰浦市街地に隣接しています。標高は比較的低いですが、頂上からの眺望は圧巻の一言です。済州島の象徴である漢拏山（ハルラサン）の雄大な姿と、南海岸線の美しいパノラマを一望できます。
 
@@ -34,6 +36,8 @@ author: "K-Life Hack"
 <img alt="alt - 済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639461_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <!---->: ドラマチックな雲間から太陽光が差し込む、海岸都市と火山島の息をのむような空撮。
 
+
+
 ## オオルムへの道のり：ヒーリングと探検のコース 🌿
 高根山は、傾斜が比較的緩やかで、様々な登山道が整備されているため、老若男女問わず楽しむことができます。特に、杉の木が鬱蒼と茂る森の中を歩く体験は、心身に活力を与えるフィトンチッドをたっぷりと感じられるでしょう。
 
@@ -41,7 +45,9 @@ author: "K-Life Hack"
 
 <img alt="alt - 済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639457_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: 鮮やかな青空の下、遠くの漢拏山頂へ続く風光明媚な土の道。
 
-### コースの選び方とおすすめの時間帯 ⏰
+#
+
+## コースの選び方とおすすめの時間帯 ⏰
 高根山には主に「オレンジ（Aコース）」と「ブルー（Bコース）」の二つのコースがあります。
 - オレンジ（Aコース）: 緩やかな傾斜と階段が整備されており、初心者でも気軽に登ることができます。
 - ブルー（Bコース）: 鬱蒼とした杉林を通り抜け、比較的急な階段が続く上り坂です。森林浴効果が高く、よりディープな自然体験を求める方におすすめです。
@@ -50,12 +56,16 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="alt - 済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639453_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt - 済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639463_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div><p>: 明るく澄んだ空を背景に、青々と茂る常緑樹の葉が広がるローアングルショット。</p><p>: 広大な青空の下に広がる黄金色のススキ畑、静寂と広がりを感じさせる。</p>
 
-### 絶景が待つ頂上と、道中の楽しみ 🏞️
+#
+
+## 絶景が待つ頂上と、道中の楽しみ 🏞️
 高根山の頂上からは、済州島の主要な観光名所が一望できます。眼下には西帰浦市街が広がり、遠くには江汀（カンジョン）港から松岳山（ソンアクサン）へと続く海岸線の絶景が眼前に迫ります。そして、火口に沿って歩くと現れる西帰浦の海岸線には、文島、虎島、森島といった美しい島々が点在し、まるで絵画のような景色を織りなしています。
 
 <img alt="alt - 済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639459_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: 海岸の景色を一望できる屋外展望デッキに設置された物理的な情報表示板。
 
 また、登山道の途中や頂上付近には、簡単な運動器具や足裏を刺激する石の指圧路も設置されており、景色を楽しみながら軽く体を動かすことができます。ここはまさに、広大な自然の中に位置するヒーリングセンターと言えるでしょう。季節や時間帯によって変わる空の色は、訪れるたびに異なる感動を与えてくれます。
+
+
 
 ## 四季折々の高根山の魅力 🍂
 高根山は、季節ごとにその姿を変え、いつ訪れても新しい発見があります。
@@ -74,6 +84,8 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/gogeunsan-oreum-jejus-alpine-sanctuary.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">

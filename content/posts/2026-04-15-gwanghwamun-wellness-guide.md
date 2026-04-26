@@ -30,6 +30,8 @@ author: "K-Life Hack"
 
 
 
+
+
 ## 光化門のビル群に隠れた、身体の調律師 ✨
 
 デスクワークやスマートフォンの使用で、私たちの身体は想像以上に悲鳴を上げています。光化門のオフィス街にひっそりと佇む『スポセラピー(Spot Therapy) 光化門世宗店』は、そんな都会人の駆け込み寺のような場所です。
@@ -41,6 +43,8 @@ author: "K-Life Hack"
 <div class="psImg"><img alt="Interior wall featuring the Spot Therapy logo and a list of massage services - 2026年、光化門で心身を解きほぐす。究極のウェルネスと美食を巡るソウル・エディターズ・ガイド" fetchpriority="high" height="240" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776259902_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="322"/><img alt="Spa hallway with wooden door frames and a long perspective view - 2026年、光化門で心身を解きほぐす。究極のウェルネスと美食を巡るソウル・エディターズ・ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776259910_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
 壁に掲げられたロゴとメニューリストを見ながら、まずは自分の身体の状態をチェック。エディターKも実際に体験しましたが、院長先生が歩き方や立ち姿を一目見ただけで、どこが凝っていて、どの方向に骨格が歪んでいるかをズバリ言い当てたのには驚かされました。
+
+
 
 ## 熟練の指先が届ける、極上のリセット時間 💆‍♀️
 
@@ -58,6 +62,8 @@ author: "K-Life Hack"
 
 ふかふかのスリッパを履き替えてお店を出る頃には、足取りが驚くほど軽くなっているはずです。
 
+
+
 ## 五感を満たす、現代韓食の新しいカタチ 🍱
 
 身体を整えた後は、徒歩圏内にある『ウアラ (Uara) 光化門店』へ。ここは全席プライベート個室を完備した、特別な日のためのプレミアム韓食ダイニングです。
@@ -66,11 +72,15 @@ author: "K-Life Hack"
 
 特に感動したのは、個人用の火鉢で焼く「韓牛（ハヌ）のサーロイン」。自分の好みの焼き加減で仕上げる最高級の牛肉は、口の中でとろけるような甘みがあります。季節の野菜とともに提供される半床（バンサン）スタイルは、韓国の伝統と現代的な洗練が見事に融合した瞬間でした。
 
-### スポセラピー(Spot Therapy)への行き方と予約のヒント
+#
+
+## スポセラピー(Spot Therapy)への行き方と予約のヒント
 
 地下鉄5号線の光化門駅1番出口からすぐ、セジョン文化会館の裏手に位置しています。周辺は落ち着いた雰囲気で、施術の前後にお散歩するのにも最適です。人気店のため、週末や平日の夜は早めの予約を強くおすすめします。
 
-### おすすめの訪問時間帯
+#
+
+## おすすめの訪問時間帯
 
 おすすめは午後の15時頃。昼間の活気が少し落ち着いた時間帯にスパでリラックスし、その後の17時半頃から『ウアラ』でゆっくりとディナーを楽しむコースが、エディターK一押しの「完璧な癒しプラン」です。
 

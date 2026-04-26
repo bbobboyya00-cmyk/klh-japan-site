@@ -23,6 +23,8 @@ author: "K-Life Hack"
 
 
 
+
+
 ## 歴史の深淵に触れる、全州の新たな顔 🏛️
 
 全羅監営は、朝鮮時代の全羅道における行政、軍事、司法のすべてを司った場所です。現在の全羅北道、全羅南道、そして済州島までもがここから統治されていました。1414年の設置以来、この地は常に地域の中心であり続けました。
@@ -30,6 +32,8 @@ author: "K-Life Hack"
 しかし、歴史の荒波の中でその姿を一度は失いました。2017年から始まった大規模な復元事業を経て、2020年にようやく第1段階が完了し、私たちは再びその壮麗な建築美を目の当たりにできるようになったのです。2026年の現在、周辺環境も整い、全州観光のゴールデンルートとして定着しています。
 
 <div class="psImg"><img alt='alt="伝統的な韓屋の軒先越しに美しく切り取られた東屋の夜景。" - 2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852251_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="伝統的な木造建築の美しさと空間の広がりを感じさせる日中の本殿。" - 2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852253_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
+
+
 
 ## 建築の美学：宣化堂と観風閣 🎨
 
@@ -39,6 +43,8 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt='alt="木目の質感と伝統的な書体の美しさが際立つ「宣化堂」の扁額。" - 2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852258_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="伝統的な木造天井の複雑で幾何学的な構造美を捉えた内部視点。" - 2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852260_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
+
+
 ## 春の訪れと夜の魔法：2026年度の見どころ 🌸
 
 3月上旬から中旬にかけて、全羅監営は淡いピンク色の紅梅に包まれます。有名な慶基殿の梅も素晴らしいですが、混雑を避けてゆっくりと花を愛でたいなら、ここが最高の穴場となります。伝統的な白い壁と黒い瓦を背景に咲く梅は、極上のフォトジェニックな瞬間を提供してくれます。
@@ -46,6 +52,8 @@ author: "K-Life Hack"
 そして、太陽が沈んだ後の全羅監営こそが、この旅のハイライトです。温かみのある黄金色のライトが建物の輪郭を浮かび上がらせ、昼間とは全く異なる神秘的な空間へと変貌させます。夜風に吹かれながら歩く広場は、都会の喧騒を忘れさせてくれるでしょう。
 
 <img alt='alt="伝統的な石垣と木造建築を背景に、満開の紅梅が彩る春の風景。" - 2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852255_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 
 ## Quick Local Takeaways: 2026年度 訪問ガイド 📅
 
@@ -65,13 +73,19 @@ author: "K-Life Hack"
 </div>
 </blockquote>
 
-### 全羅監営への行き方は？
+#
+
+## 全羅監営への行き方は？
 
 全州韓屋村の中心部から徒歩圏内です。慶基殿の正門を出て、西方向に約10分ほど歩くと大きな木造の門が見えてきます。タクシーを利用する場合は「全羅監営（チョンラガミョン）」と伝えればスムーズです。
 
-### おすすめの時間帯はいつ？
+#
+
+## おすすめの時間帯はいつ？
 
 最もおすすめなのは、日没の30分前です。明るい時間帯の建築美を確認した後、徐々にライトアップされていく魔法のような変化を楽しむことができます。また、夜は比較的空いているため、静かな散策が可能です。
+
+
 
 ## 旅の余韻を楽しむ周辺スポット ☕
 
@@ -87,6 +101,8 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/beyond-palace-walls-reclaiming.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="35d16126d85/gwangju" name="JEOLLA" >}}</div>
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
 <div style="padding:20px 20px 10px;">

@@ -17,12 +17,16 @@ author: "K-Life Hack"
 <li>家族や友人との絆を深める、唯一無二の思い出作りにも。</li>
 </div></blockquote>
 <p>『K-Life Hack』ディレクターKです。皆様を、仁川に息づく歴史と現代の活気が織りなす伝統市場、「松島駅前市場」へと誘いましょう。古き良き韓国の情緒が色濃く残りながらも、現代のライフスタイルと美しく交差するこの奥深い魅力を、今、皆様と共に探訪します。</p>
+
+
 ## 松島駅前市場とは？ 時代を超えた物語が息づく場所 ✨
 <p>仁川の深遠な歴史を物語る松島駅前市場は、1937年の水仁線開通と共に自然発生的に生まれました。かつては、新鮮な海産物や農産物が集い、旅人たちの賑わいの中で、「半月市場（パンチャクシジャン）」という愛らしい名で親しまれていたのです。水仁線の到着と共に商品を並べ、発車と共に片付ける、その律動が目に浮かぶようです。</p>
 <p>市場の壁面には、1937年から1970年代にかけての玉蓮洞の息吹、そして近代仁川の移ろいを伝える貴重な写真が展示されています。それらを辿るうちに、まるで時空を超えた旅に出たかのような感覚に包まれるでしょう。一時は訪れる人々が少なくなった時期もありましたが、今もなお、地元の人々の生活に深く根差し、その歴史の頁を刻み続けています。</p>
 <div class="psImg"><img alt="alt:伝統的な店や地元の店が並び、秋の午後の柔らかな日差しの中で祝祭の提灯が灯る松島駅前市場の賑やかな街並みを捉えたダイナミックなストリートビュー。 - 仁川松島駅前市場：歴史とグルメを巡るタイムトリップガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/songdo-yeokjeon-market-incheon-heritage/khack_1777133042_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:仁川松島松島駅前市場のビジュアル - 仁川松島駅前市場：歴史とグルメを巡るタイムトリップガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/songdo-yeokjeon-market-incheon-heritage/khack_1777133052_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 <p>ディレクターKとしては、このような歴史の息吹を感じられる場所こそ、旅の真髄だと考えます。単に品物を手に入れるだけでなく、その土地の紡いできた物語に触れ、往時の人々の営みに思いを馳せること。市場の隅々に残る痕跡から、そんな想像を巡らせるのも、この市場ならではの、贅沢な楽しみ方と言えるでしょう。</p>
 <div class="psImg"><img alt="alt:仁川松島松島駅前市場のビジュアル - 仁川松島駅前市場：歴史とグルメを巡るタイムトリップガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/songdo-yeokjeon-market-incheon-heritage/khack_1777133055_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:仁川松島松島駅前市場のビジュアル - 仁川松島駅前市場：歴史とグルメを巡るタイムトリップガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/songdo-yeokjeon-market-incheon-heritage/khack_1777133058_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
+
+
 ## 市場グルメ巡り：ディレクターKが選ぶ至福の味覚体験 🍜
 <p>松島駅前市場の魅力は、その歴史だけにとどまりません。市場の路地裏には、地元の人々に長年愛されてきた珠玉のグルメが点在しています。数多の飲食店の中から、ディレクターKが特におすすめしたい3店舗を厳選しました。</p>
 <p>まずは、赤い看板が目を引く「ワンチャンポン（王チャンポン）」。海鮮が惜しみなく使われた基本のチャンポンから、奥深いスープの旨味が忘れられない一品まで、幅広いメニューが楽しめます。一人静かに味わう人も、長年の常連客も、皆がその奥深い味に舌鼓を打ちます。特に、濃厚ながらも洗練されたスープは、一度味わえば心に深く刻まれることでしょう。</p>
@@ -33,11 +37,15 @@ author: "K-Life Hack"
 <div class="psImg"><img alt="alt:松島駅前総合食品の賑やかな店先には、様々な包装食品と新鮮な地元産品が誇らしげに陳列されており、コミュニティの日常が反映されています。 - 仁川松島駅前市場：歴史とグルメを巡るタイムトリップガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/songdo-yeokjeon-market-incheon-heritage/khack_1777133046_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:乾燥海産物と様々な包装された韓国伝統珍味の豊かな陳列をクローズアップしたショットは、松島駅前市場ならではの本格的な味と多様な料理の提供を示しています。 - 仁川松島駅前市場：歴史とグルメを巡るタイムトリップガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/songdo-yeokjeon-market-incheon-heritage/khack_1777133048_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 <p>市場散策をより一層楽しむための秘訣として、デジタルオンヌリ商品券の活用をおすすめします。中小ベンチャー企業部が実施するこの還元イベントを利用すれば、最大10%の割引と還元が受けられるのです。ワンチャンポン、カフェ チャオラビータ、コルモクスンデクッパを含む松島駅前市場のほぼ全ての店舗で利用可能なので、この機会にお得に市場の味を心ゆくまで堪能してみてはいかがでしょうか。</p>
 <img alt="alt:仁川松島松島駅前市場のビジュアル - 仁川松島駅前市場：歴史とグルメを巡るタイムトリップガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/songdo-yeokjeon-market-incheon-heritage/khack_1777133066_10.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 ## 周辺観光スポット：旧松島駅文化公園で歴史に触れる 🚂
 <p>松島駅前市場のすぐ傍には、「旧松島駅文化公園」があります。ここは、かつて水仁線が通っていた旧松島駅の歴史を忠実に再現した、貴重な文化空間です。公園内には、実物図面に基づいて復元された蒸気機関車と水仁線の狭軌客車が並んで展示されており、当時の鉄道文化に深く触れることができます。</p>
 <img alt="alt:仁川松島松島駅前市場のビジュアル - 仁川松島駅前市場：歴史とグルメを巡るタイムトリップガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/songdo-yeokjeon-market-incheon-heritage/khack_1777133072_11.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>特に、子供向けの体験ゾーンでは、「狭軌ディーゼル列車」の運転体験が可能です。実際にハンドルを握り、速度や警笛を操作しながら列車を運転するこの貴重な経験は、きっと忘れられない思い出となるでしょう。AI駅長から鉄道の仕組みを学べるシミュレーターもあり、大人も子供も楽しみながら歴史を学ぶことができる、まさに知的好奇心を刺激する場所です。2026年にはKTX松島駅も開通予定で、過去と現在の鉄道を比較する良い機会となることでしょう。</p>
 <p>ディレクターKとしては、市場での賑やかな体験の後、このような静かで学びのある空間を訪れることで、旅に奥行きと深みが加わると感じています。鉄道ファンはもちろん、そうでない方も、韓国の鉄道史の一端を感じられる、稀有な場所です。</p>
+
+
 ## アクセス情報と賢い利用方法 💡
 <p>松島駅前市場と旧松島駅文化公園へのアクセスは非常に便利で、初めて訪れる方にも安心です。</p>
 <p><b>公共交通機関でのアクセス</b></p>

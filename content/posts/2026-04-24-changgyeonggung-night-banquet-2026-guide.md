@@ -30,11 +30,15 @@ author: "K-Life Hack"
 </div></blockquote>
 
 
+
+
 ## 朝鮮王朝の華やかな夜へ誘う「夜宴」の由来 🌙
 
 夜宴（ヤヨン）とは、文字通り「夜の宴会」を意味します。19世紀、朝鮮王朝の孝明世子が父である純祖王のために、その孝心を込めて主催した宮中宴会がそのルーツです。
 
 単に伝統的な公演を鑑賞するだけのものではありません。このプログラムの真髄は、ゲストが歴史の一部としてその場に「存在する」ことにあります。文政殿の石畳の上に座り、ライトアップされた宮殿を背景に受けるもてなしは、まさに時空を超えた体験と言えるでしょう。
+
+
 
 
 
@@ -49,6 +53,8 @@ author: "K-Life Hack"
 宴の間には、王室で実際に愛された伝統的な菓子や茶が振る舞われます。緑茶の薬食（ヤクシッ）や干し柿の菓子など、見た目にも美しい品々は、現代のスイーツにはない繊細な甘みを教えてくれます。
 
 <img alt="丁寧に盛り付けられた宮中菓子の数々 - 2026年ソウル・昌慶宮「夜宴」ガイド：親への最高の孝行、朝鮮王朝の主人公になる一夜" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/changgyeonggung-night-banquet-2026-guide/khack_1776981893_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 
 ## 2026年度の開催スケジュールと予約の戦略 📅
 
@@ -71,6 +77,8 @@ author: "K-Life Hack"
 
 予約には、本人のアカウント作成と迅速な決済が必要です。特に週末の回は数分で完売するため、平日の回を狙うのが賢明な選択です。また、天候によって中止になる場合もあるため、予備の日程も検討しておくと良いでしょう。
 
+
+
 ## 完璧な一夜を過ごすためのディレクターKのアドバイス 💡
 
 まず、足元への注意が必要です。昌慶宮の地面は未舗装の場所が多く、伝統衣装の裾が長いため、歩きやすさを優先した履物を準備することをお勧めします。衣装の下に隠れる範囲で、履き慣れたフラットシューズを選ぶのがコツです。
@@ -84,6 +92,8 @@ author: "K-Life Hack"
 さらに、写真撮影についてはプロのカメラマンが同行しますが、自分たちでも最高の瞬間を残したいはずです。スマートフォンでの撮影は可能ですが、フラッシュや三脚の使用は厳禁です。暗所での撮影に強いカメラを準備するか、夜景モードの操作を事前に練習しておくと、忘れられない一枚が手に入ります。
 
 <img alt="夜の昌慶宮を照らす伝統的な灯籠 - 2026年ソウル・昌慶宮「夜宴」ガイド：親への最高の孝行、朝鮮王朝の主人公になる一夜" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/changgyeonggung-night-banquet-2026-guide/khack_1776981915_9.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 
 ## 歴史の余韻に浸りながら歩く昌慶宮の夜 🌌
 

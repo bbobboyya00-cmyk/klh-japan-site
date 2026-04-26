@@ -34,6 +34,8 @@ author: "K-Life Hack"
 
 
 
+
+
 ## 1200年の歴史が息づく韓国茶の故郷へ 🍃
 
 多くの旅行者が韓国の茶といえば宝城（ポソン）や済州島を思い浮かべますが、真の茶好きが最後に行き着くのは、ここ河東です。新羅時代に中国の唐から持ち帰った茶の種が初めて植えられた場所として知られ、野生に近い状態で育つ茶葉は、その力強い香りと深い味わいで知られています。
@@ -41,6 +43,8 @@ author: "K-Life Hack"
 博物館の入り口に立つと、智異山の澄んだ空気と共に、どこからかお茶の香ばしい匂いが漂ってきます。ここは単なる展示施設ではなく、韓国茶のアイデンティティを守り、体験を通して伝える文化のハブとなっています。建築物自体も周囲の山々と調和しており、一歩足を踏み入れるだけで心が静まるのを感じるでしょう。
 
 <img alt='alt="青空の下、建物の規模とプレミアムな雰囲気を強調する河東野生茶博物館のモダンな白い建築外観" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960231_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 
 ## 五感を研ぎ澄ます「ドックム」体験 🍵
 
@@ -50,6 +54,8 @@ author: "K-Life Hack"
 
 <img alt='alt="博物館の体験センターで、大きな鉄釜を使って手作業で茶葉を焙煎する伝統的な「ドックム」工程のクローズアップ" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960237_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
+
+
 ## 智異山を望むテラスで究極の一杯を ⛰️
 
 体験の後は、隣接する「ティーカフェ河東」へ足を運んでください。ここでは、智異山の稜線と美しい茶畑をパノラマで眺めながら、静かに茶を楽しむことができます。特におすすめなのは、発酵させた「ファンチャ（黄茶）」や、香ばしさが際立つ「ホジ茶」です。
@@ -58,6 +64,8 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt='alt="智異山と地元の茶畑の息を呑むようなパノラマ風景を見渡すバルコニーでの穏やかなティーテイスティング体験" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960233_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="伝統的な韓国茶、薬菓（ヤックァ）、繊細な椿の花のアレンジメントが並ぶ、プレミアムなお茶文化を紹介する美しい木製トレイ" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960235_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
+
+
 ## 職人の技に触れるギャラリーショップ 🏺
 
 博物館の内外にあるショップでは、河東の地元の陶芸家たちが作った茶器や、厳選された最高級の茶葉を購入することができます。特に、雨の前に摘み取られた希少な「雨前（ウジョン）」茶は、茶の宝石と呼ばれるほど価値が高いものです。
@@ -65,6 +73,8 @@ author: "K-Life Hack"
 私はここで、持ち運びに便利な「トラベル茶器セット」を見つけました。洗練されたデザインでありながら機能的で、旅先でも河東の思い出と共にティータイムを楽しめる逸品です。機械生産ではない、一つ一つ表情が異なる作家物の茶器は、自分への最高のご褒美になるでしょう。
 
 <div class="psImg"><img alt='alt="職人による韓国の茶器や陶器の多様なコレクションを展示する博物館内のエレガントなギャラリーショップ" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960240_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="地元の収穫物の有機的な質感と品質を強調する、ほうじ茶や発酵茶を含む乾燥した河東茶葉のマクロショット" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960242_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
+
+
 
 ## 訪れる前に知っておきたいローカルTips 💡
 
@@ -86,6 +96,8 @@ author: "K-Life Hack"
 河東は、派手な観光地ではありません。しかし、本物を知る大人にとっては、これほど豊かで贅沢な時間を過ごせる場所は他にありません。次の韓国旅行では、ソウルの喧騒を離れ、智異山の麓で歴史と香りに身を委ねてみてはいかがでしょうか。
 
 <div style="text-align:center;margin:45px 0 20px;"><a href="https://www.hadong.go.kr/tea.web" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
+
+
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
 <div style="padding:20px 20px 10px;">

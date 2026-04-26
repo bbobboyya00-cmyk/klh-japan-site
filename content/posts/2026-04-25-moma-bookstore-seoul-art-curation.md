@@ -22,6 +22,8 @@ author: "K-Life Hack"
 </div></blockquote>
 <p>皆様、ディレクターKです。ソウルの街に、アートとデザインの新たな感性が息吹く場所が誕生しました。今回ご紹介するのは、江南・島山公園の閑静な通りにひっそりと佇む「MoMAブックストア ソウル」。ニューヨーク近代美術館（MoMA）が誇る唯一無二の出版物とデザイン商品を専門に扱う、世界で唯一のブックストアが、このソウルで開かれたのです。</p>
 
+
+
 ## ソウルで出会うニューヨークの感性：MoMAブックストアの魅力とは？ 🎨
 
 <p>島山公園の美しい並木道に、午後の柔らかな光が差し込む頃。その洗練された商業エリアの一角に、ひときわ目を引く白いファサードが現れます。看板よりも先にその色合いが、そしてその佇まいが、訪れる者に静かに語りかけてくるような場所、それが「現代カード MoMAブックストア」です。</p>
@@ -40,6 +42,8 @@ author: "K-Life Hack"
 <p>しかし、一部の来訪者からは、ニューヨークのMoMAストアと比較して、書籍の品揃えの幅や価格帯に物足りなさを感じる声も聞かれます。これは、あくまでキュレーションされたセレクションに特化しているがゆえの特性とも言え、誰もが求める「全網羅的な品揃え」とは異なるアプローチだと理解する必要があります。私としては、むしろ「選ばれた」ものだけがそこに存在するという、限定的な贅沢さを享受すべきだと考えます。</p>
 <img alt="alt - ソウルに誕生、MoMAブックストア：アートとデザインを巡る洗練された旅" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/moma-bookstore-seoul-art-curation/khack_1777095400_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><p>MoMAブックストアソウルの活気に満ちたエネルギッシュな一角。大胆な黄色とオレンジ色の壁が特徴で、カラフルな商品や本の厳選されたセレクションが展示され、現代的なデザイン哲学と遊び心のある精神を反映しています。</p>
 <img alt="alt - ソウルに誕生、MoMAブックストア：アートとデザインを巡る洗練された旅" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/moma-bookstore-seoul-art-curation/khack_1777095402_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><p>MoMAブックストアソウルの魅惑的な通りに面したウィンドウディスプレイ。鮮やかな黄色の棚にカラフルな本とデザインオブジェクトが芸術的に配置され、その視覚的な魅力で通行人を引きつけます。</p>
+
+
 
 ## MoMAブックストア ソウルへのアクセスと賢い利用方法 📍
 

@@ -11,7 +11,9 @@ author: "K-Life Hack"
 ---
 
 {{< alert type="success" >}}
-### 📌 Quick Destination Summary
+#
+
+## 📌 Quick Destination Summary
 
 - 🏞️ **Signature Highlights**: 築100年の韓屋をリノベーションした空間で楽しむ、進歩的な100%植物性のアジア料理。
 - 🗓️ **Service Schedule**: 毎日 11:30 - 20:00 (Break Time 15:00 - 17:00)。
@@ -19,6 +21,8 @@ author: "K-Life Hack"
 - 💎 **Cultural Value**: 伝統建築の遺産と、グローバルな倫理的消費の精神が融合する場所。
 - 💡 **Curator's Secret Tip**: 中庭の庭園を望む、光が降り注ぐアネックス席を予約して静かな対話を。
 {{< /alert >}}
+
+
 
 ## 伝統と現代が交差する、益善洞の隠れ家「Vegan Insa」 🌿
 
@@ -32,6 +36,8 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="ヴィーガンの聖地へと続く、益善洞の情緒あふれる狭い路地の風景" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739072_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="芸術的な壁画と木製外観のディテールが印象的なレストランの外観" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739074_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
+
+
 ## 五感を刺激する、植物性素材の革新 🥢
 
 「Vegan Insa」のメニューは、伝統と現代の効率性がシームレスに融合しています。シグネチャーである「ヴィーガン・トックク（韓国餅のスープ）」は、野菜の旨みを最大限に引き出した澄んだスープを使用しており、非常に上品な後味が特徴です。
@@ -41,6 +47,8 @@ author: "K-Life Hack"
 <img alt="新鮮なキムチと海苔が添えられた、本場のヴィーガン韓国餅スープ（トックク）" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739083_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 <div class="psImg"><img alt="レストランの植物性料理の哲学が記された、温かみのある物理メニューブック" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739078_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="木製ドアに掲げられた、営業日と休憩時間を記した手書きの案内板" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739085_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
+
+
 
 ## 築100年の空間がもたらす心の平穏 🌸
 
@@ -52,7 +60,9 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="レストランの優しい精神を象徴する、店内の植物と装飾用の石のクローズアップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739069_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="自然光の下で様々な鉢植えが並ぶ、静寂に包まれた中庭の庭園" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739081_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-### Quick Local Takeaways
+#
+
+## Quick Local Takeaways
 
 <div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;">
 <table style="width: 100%; min-width: 500px; border-collapse: collapse; color: var(--themeC); text-align: left;">
@@ -87,6 +97,8 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-sanctuary-of-plant-based-heritage.html)
+
+
 
 ## 📍 地図・アクセス
 

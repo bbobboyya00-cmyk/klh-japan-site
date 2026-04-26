@@ -31,6 +31,8 @@ author: "K-Life Hack"
 <img alt="공원 입구의 현대적인 타이포그래피가 새겨진 대형 석조 표지석" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554883_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
+
+
 ## 荒々しい自然とモダンデザインの境界 ✨
 
 公園のアイデンティティは、その建築デザインにも色濃く反映されています。石造りの重厚なサインや、直線を活かしたミニマルなチケットオフィスは、周囲の溶岩フィールドと見事な調和を見せています。無機質なコンクリートやスチールといった素材が、太古の岩石と出会うことで、これまでにない現代的な美しさが生まれています。
@@ -47,6 +49,8 @@ author: "K-Life Hack"
 地形を傷つけないように設置されたインダ스트리얼なムードの鉄製デッキは、この公園の象徴的な風景の一つです。足元に広がる溶岩のディテールを安全に観察しながら、心地よい風を感じるウォーキングは、日常の喧騒を忘れさせてくれる至福の時間です。
 
 <img alt="지형을 보호하며 보행의 편의를 더한 인더스트리얼 무드의 철제 데크" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554891_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 
 ## 溶岩フィールドを歩く、特別な体験 🗿
 
@@ -65,6 +69,8 @@ author: "K-Life Hack"
 </div>
 
 <img alt="ガラス窓越しに映る清潔感のある無人チケット発券システム" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554903_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 
 ## 五感で楽しむ地質の物語 🌿
 
@@ -86,6 +92,8 @@ author: "K-Life Hack"
 <img alt="石造構造物の内部から空を見上げた芸術的な視線" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554916_17.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
+
+
 ## ライフスタイルに寄り添う休息の時間 ☕
 
 細部へのこだわりは床面のタイポグラフィにまで及びます。影と混ざり合う文字の配列은, 歩くこと自体をひとつのアート体験に変えてくれます。古木の下に置かれた椅子に座り、ただ流れる時間を楽しむ。そんな余裕こそが、この場所が提供する真のラグジュアリーではないでしょうか。
@@ -99,10 +107,14 @@ author: "K-Life Hack"
 <img alt="温かい木材の天井と粗い石壁が対比される建築ディテール" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554923_20.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
-### パホイホイ溶岩地質公園とは？
+#
+
+## パホイホイ溶岩地質公園とは？
 済州島の代表的な火山地形で、粘性の低い溶岩が滑らかに流れて固まった「ビルレ（平らな岩盤）」をベースにした体験型公園です。地質の観察だけでなく、トレッキングシューズを借りて直接溶岩の上を歩くことができる貴重なスポットです。
 
-### 行き方とおすすめの時間帯
+#
+
+## 行き方とおすすめの時間帯
 済州空港から西側へ車で約30分。崖月の中山間エリアに位置しています。午後の遅い時間帯に訪れると、溶岩の凹凸に長い影が落ち、地形の立体感がよりドラマチックに感じられるのでおすすめです。
 
 <img alt="全体的な公園のトーン＆マナーを示す端正な建築的構図" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554925_21.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
@@ -124,6 +136,8 @@ author: "K-Life Hack"
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-journey-into-jejus-volcanic-soul.html)
 
 <div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
+
+
 
 ## 📍 地図・アクセス
 
