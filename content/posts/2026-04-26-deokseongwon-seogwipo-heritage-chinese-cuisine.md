@@ -19,9 +19,9 @@ author: "K-Life Hack"
 <p>ソウルの喧騒を離れ、済州島の南端、西帰浦の静かな港町に降り立つと、そこには時間の流れを止めたかのような一軒の店があります。1945年の創業から三代、火の熱気と共に歴史を刻んできた「徳成園（トッソンウォン）」です。ここは単なるレストランではなく、島の記憶と誇りを象徴する聖地と言えるでしょう。</p>
 
 <p>重厚な黒御影石に覆われたファサードは、幾多の季節を越えてきた威厳を放ちます。伝統とモダンが交差するその佇まいは、本質を求める旅人の審美眼を満足させるに十分な魅力を持っています。入口に掲げられた看板は、ここが単なる飲食店ではなく、一つの文化的なランドマークであることを物語っています。</p>
-<img alt='alt="徳成園の正面。ドラマに登場するような趣のある景観と、現代的な清潔感が共存しています。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173801_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
 <p>扉を開ければ、そこには外観の厳格さとは対照的な、光に満ちた洗練された空間が広がります。装飾を最小限に抑えたミニマリズムなインテリアは、訪れる者がただ目の前の一皿に没頭できるよう、静かに、そして贅沢に演出されています。</p>
-<img alt='alt="徳成園の広々としたダイニングホール. シンプルで清潔感があり、ゆったりと食事を楽しめる空間です。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173802_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
 <p>ここで味わうべきは、海の恵みを極限まで昇華させた名物「ワタリガニチャンポン」です。運ばれてきた瞬間、磯の香りと共にカニの濃厚なアロマが鼻をくすぐります。それは、美食家たちが「人生のチャンポン」と称えるに相応しい、期待に満ちた幕開けです。</p>
 <img alt='alt="徳成園の名物、ワタリガニチャンポンのビジュアル。カニの旨味が溶け出したスープの輝きが印象的です。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173806_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>一口スープを含めば、一般的なチャンポンのような鋭い辛さではなく、カニから溢れ出した圧倒的な「甘み」と「コク」が広がります。刺激を抑え、素材の輪郭を際立たせたその味わいは、まるで高級な海鮮鍋を麺料理として再定義したかのような上品さがあります。</p>
@@ -50,12 +50,12 @@ author: "K-Life Hack"
         <p class="k-map-address">제주특별자치도 서귀포시 태평로401번길 4 (제주특별자치도 서귀포시 서귀동 474)</p>
     </div>
     <div class="k-map-iframe-wrap">
-        <iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EB%8D%95%EC%84%B1%EC%9B%90&output=embed"></iframe>
+        <iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=서귀포 덕성원&output=embed"></iframe>
     </div>
     <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
     <div class="k-map-buttons">
-        <a href="https://www.google.com/maps/search/?api=1&query=%EB%8D%95%EC%84%B1%EC%9B%90" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-        <a href="https://map.naver.com/p/search/%EB%8D%95%EC%84%B1%EC%9B%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=서귀포 덕성원" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+        <a href="https://map.naver.com/p/search/서귀포 덕성원" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
     </div>
 </div>
 
