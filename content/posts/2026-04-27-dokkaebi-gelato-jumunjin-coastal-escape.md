@@ -1,0 +1,85 @@
+---
+title: "江陵・注文津の海を五感で味わう。ドラマ『トッケビ』の情景と共鳴する「トッケビジェラート」の空間美"
+slug: "dokkaebi-gelato-jumunjin-coastal-escape"
+date: 2026-04-27T06:44:53+09:00
+draft: false
+image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/dokkaebi-gelato-jumunjin-coastal-escape/khack_1777239824_0.webp"
+description: "江陵・注文津の象徴的な海辺に佇む「トッケビジェラート」。ドラマ『トッケビ』のロケ地を望む絶景と、五感を刺激する手作りジェラートが織りなす極上のライフスタイル空間をディレクターKがナビゲートします。"
+categories: ["K-Travel Hacks"]
+tags: ["江陵", "注文津", "トッケビ", "ジェラート", "韓国旅行", "オーシャンビュー"]
+author: "K-Life Hack"
+---
+
+<blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
+<li>🏞️ 見どころ: ドラマ『トッケビ』撮影地を目の前に望むオーシャンビュー </li>
+<li>🗓️ 開催日程: 通年営業（火曜日定休） </li>
+<li>📍 開催場所: 江原特別自治道江陵市注文津海辺 </li>
+<li>💡 ディレクターKのTips: 2階窓際席は、海を額縁のように切り取る絶好のフォトスポットです。</li>
+</div></blockquote>
+<p>韓国・江陵（カンヌン）の海岸線を彩る深い青。その中でも、注文津（チュムンジン）の防波堤は、今や一つの文化的なアイコンとなりました。今回、私ディレクターKがキュレーションするのは、その象徴的な風景のすぐ向かいに位置する「トッケビジェラート」です。ここは単なるデザートショップではなく、ドラマの余韻とモダンな感性が交差する、洗練された空間の振り付け（Choreography）を体験できる場所です。</p>
+
+## 
+
+ドラマの記憶を呼び覚ます空間のナラティブ
+
+<p>この場所を語る上で、ドラマ『トッケビ〜君がくれた愛しい日々〜』は欠かせません。店舗の入り口からして、訪れる者を物語の世界へと誘います。建物の白と、ポイントカラーとして配されたイエローのコントラストは、注文津の荒い波飛沫の中でもひと際鮮やかな存在感を放っています。店内に足を踏み入れれば、そこにはドラマの象徴的なアイテムである赤いマフラーやソバの花のブーケが用意されており、ゲスト自身が物語の主人公になれる仕掛けが施されています。</p>
+<div class="psImg"><img alt="『トッケビ』のアイコニックなシーンを写した看板。ロケ地としての存在感を高めています。 - 江陵・注文津の海を五感で味わう。ドラマ『トッケビ』の情景と共鳴する「トッケビジェラート」の空間美" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/dokkaebi-gelato-jumunjin-coastal-escape/khack_1777239826_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="多くのファンが訪れる注文津の防波堤。海風を感じながらドラマの世界観に浸れる場所です。 - 江陵・注文津の海を五感で味わう。ドラマ『トッケビ』の情景と共鳴する「トッケビジェラート」の空間美" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/dokkaebi-gelato-jumunjin-coastal-escape/khack_1777239828_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
+<p>ドラマ『トッケビ』の一場面。実際にドラマの撮影が行われた防波堤を眺めながら、当時の感動を再確認できるのは、この場所が持つ最大の空間的価値と言えるでしょう。1階から3階のルーフトップまで、各フロアは異なる温度感で設計されており、特に2階はアートギャラリーのような静謐さを湛えています。そこにはキャンバスドローイングを楽しめるスペースもあり、ゲストは海の色彩を自身の感性で表現することができます。</p>
+
+## 
+
+注文津のテロワールを凝縮したジェラートの質感
+
+<p>空間の美しさに負けないのが、毎朝丹精込めて作られる自家製ジェラートのクオリティです。化学的な甘味料を排除し、天然素材にこだわったその味わいは、まさに大人のためのガストロノミー。江陵の名産である「草堂（チョダン）トウモロコシ」や「純豆腐（スンドゥブ）」をベースにしたフレーバーは、この土地のテロワールを舌の上で解釈するような体験を与えてくれます。</p>
+<img alt="青い海を背景に、可愛らしいデコレーションが施された2つのジェラートカップ。 - 江陵・注文津の海を五感で味わう。ドラマ『トッケビ』の情景と共鳴する「トッケビジェラート」の空間美" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/dokkaebi-gelato-jumunjin-coastal-escape/khack_1777239829_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<p>ジェラートのテクスチャーは非常に濃厚で、それでいて後味は潔いほどに軽やかです。特に、甘じょっぱい魅力が詰まった「トッケビジェラフル（クロッフルとジェラートのセット）」は、サクサクとした温かいクロッフルと、冷たいジェラートの温度差が官能的なコントラストを生み出します。視覚的にも、トッケビの角を模したミニコーンが添えられ、ディテールに至るまでの美意識が感じられます。</p>
+<img alt="色彩豊かなフレーバーが並ぶショーケース。毎朝14種類の新鮮な味が用意されます。 - 江陵・注文津の海を五感で味わう。ドラマ『トッケビ』の情景と共鳴する「トッケビジェラート」の空間美" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/dokkaebi-gelato-jumunjin-coastal-escape/khack_1777239831_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+## 
+
+ライフスタイルとしての「海辺の休息」
+
+<p>3階のルーフトップに上がると、そこには都会の喧騒を完全に遮断したプライベートな時間が流れています。個別に設置されたテントスタイルのカバナは、海風を適度に遮りながらも、視界いっぱいに広がる水平線を独占できる贅沢な空間です。ここでは、コーヒー一杯が単なる飲料を超え、旅の途中で「一時停止」するための重要なツールとなります。</p>
+<img alt="開放感溢れるルーフトップ。テント型の座席が並び、海を一望しながらリラックスできます。 - 江陵・注文津の海を五感で味わう。ドラマ『トッケビ』の情景と共鳴する「トッケビジェラート」の空間美" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/dokkaebi-gelato-jumunjin-coastal-escape/khack_1777239834_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<p>また、この施設は愛犬家や子連れのゲストに対しても極めて洗練された配慮を見せています。ペット同伴のための専用エチケット管理や、ワンちゃん専用のジェラートメニュー、さらには小さなお子様のためのハイチェア完備など、全世代がこの空間の美学を共有できるようなインフラが整っています。それは、真のハイエンドなライフスタイルとは「排除」ではなく「包容」にあることを示唆しているかのようです。</p>
+
+### 
+
+注文津トッケビジェラートへの行き方
+
+<p>江陵駅から車で約20分、海沿いの美しいドライブコースを辿ると見えてくる白い建物が目印です。公共交通機関を利用する場合は、注文津行きのバスに乗り、「トッケビ撮影地」付近で下車するのが最もスムーズです。周辺には無料の公用駐車場も完備されており、アクセシビリティも申し分ありません。</p>
+
+### 
+
+現地で楽しむドローイング体験とは
+
+<p>店舗の2階にはミニキャンバスと画材が用意されており、誰でも自由に絵を描くことができます。ここで制作された作品の一部は壁に展示され、店全体がゲストとの共創によって常に変化し続けています。旅の思い出を写真だけでなく、自分の手で描いた線と色で残す。そんなアナログで贅沢な時間の使い方が、ここでの滞在をより深いものにしてくれます。</p>
+<blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
+
+- 住所: 江原特別自治道江陵市注文津邑海岸路1605 (dokkaebi_gelato)
+- 営業時間: 11:00 - 18:00 (土曜日は19:30まで / 火曜定休)
+- 交通アクセス: 江陵駅からタクシーで約20分、または注文津方面バス利用
+- お問い合わせ: 0507-1356-0079
+- サービス: ペット同伴可（QR登録必須）、ドローイング体験可、ドラマ小道具無料貸出
+
+</div></blockquote>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="GANGNEUNG" >}}</div>
+<div class="k-map-box">
+<div class="k-map-header">
+<h3 class="k-map-title">📍 Dokkaebi Gelato Jumunjin</h3>
+<p class="k-map-address">江原特別自治道 江陵市 注文津邑 海岸路 1605 (강원특별자치도 강릉시 주문진읍 교항리 81-59)</p>
+</div>
+<div class="k-map-iframe-wrap">
+<iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EB%8F%84%EA%B9%A8%EB%B9%84%EC%A0%A4%EB%9D%BC%EB%98%90&output=embed"></iframe>
+</div>
+<div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
+<div class="k-map-buttons">
+<a href="https://www.google.com/maps/search/?api=1&query=%EB%8F%84%EA%B9%A8%EB%B9%84%EC%A0%A4%EB%9D%BC%EB%98%90" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://map.naver.com/p/search/%EB%8F%84%EA%B9%A8%EB%B9%84%EC%A0%A4%EB%9D%BC%EB%98%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+</div>
+</div>
+
+---
+
+> 🌐 **Read this post in other languages:**
+> * <a href="https://en.klifehack.com/2026/04/jumunjins-dokkaebi-gelato-curated.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>
