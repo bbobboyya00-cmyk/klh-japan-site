@@ -75,10 +75,10 @@ author: "K-Life Hack"
 *   **注意点**: 飲食物の持ち込みはご遠慮ください。
 
 </div></blockquote>
-<p>ニューヨークとソウルの感性が交錯するこの特別な空間で、あなただけのインスピレーションを見つけてみてはいかがでしょうか。</p><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+<p>ニューヨークとソウルの感性が交錯するこの特別な空間で、あなただけのインスピレーションを見つけてみてはいかがでしょうか。</p><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 MoMA Bookstore Seoul</h3>
+        <h3 class="k-map-title">📍 MoMA Bookstore Seoul
         <p class="k-map-address">ソウル特別市 江南区 道山大路45キル 18-10 (서울 강남구 신사동 668-23)</p>
     </div>
     <div class="k-map-iframe-wrap">

@@ -117,10 +117,10 @@ author: "K-Life Hack"
 バラの美しさは永遠ではありません。だからこそ、その一瞬の輝きを求めて旅をする価値があるのです。2026年の春、皆様が谷城のバラの香りに癒やされることを願っております。
 
 <img alt="alt:コケの質感と鮮やかな花の「髪」が印象的な顔の彫刻のクローズアップ。 - 2026年「谷城世界バラまつり」完全ガイド：1,004種の香りに包まれる韓国最高峰のローズガーデンへ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/gokseong-international-rose-festival-2026-guide/khack_1777036231_18.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-<div style="text-align:center;margin:45px 0 20px;"><a href="https://www.gokseong.go.kr/tour/festival/rose" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="GWANGJU" >}}</div>
+<div style="text-align:center;margin:45px 0 20px;"><a href="https://www.gokseong.go.kr/tour/festival/rose" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="GWANGJU" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 谷城世界バラまつり (島津江汽車村)</h3>
+        <h3 class="k-map-title">📍 谷城世界バラまつり (島津江汽車村)
         <p class="k-map-address">全羅南道 谷城郡 オゴク面 汽車村路 252-16 (전라남도 곡성군 오곡면 오지리 770-5)</p>
     </div>
     <div class="k-map-iframe-wrap">

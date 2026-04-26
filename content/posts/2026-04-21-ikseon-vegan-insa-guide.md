@@ -92,7 +92,7 @@ author: "K-Life Hack"
 
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 비건인사 채식당 (Vegan Insa)</h3>
+<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 비건인사 채식당 (Vegan Insa)
 <p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울특별시 종로구 삼일대로32가길 12-4 익선동 33-18 한옥</p>
 </div>
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">

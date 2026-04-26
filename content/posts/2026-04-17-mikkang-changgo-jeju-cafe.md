@@ -62,22 +62,22 @@ author: "K-Life Hack"
 
 こちらのおすすめは、済州名物の太刀魚を贅沢に使った「太刀魚の蒲焼丼」。ふっくらと焼き上げられた身に、甘辛いタレが絡み、ご飯が進む一品です。地元の人々にも愛される温かな家庭の味は、旅の思い出にさらなる彩りを添えてくれます。愛犬と一緒に旅をしている方にとっても、ペット同伴可能な貴重なレストランとして重宝するはずです。
 
-### <h3> ミッカン倉庫への行き方とおすすめの時間帯 </h3>
+### ###  ミッカン倉庫への行き方とおすすめの時間帯 
 
 済州国際空港からレンタカー、またはタクシーを利用するのが最もスムーズです。約20分ほどで到着します。人気店のため、週末や午後のティータイムには席が埋まってしまうことも。おすすめは、オープンの11時に合わせた「オープンラン」です。午前中の清々しい空気の中で、庭園を独り占めする贅沢を楽しんでください。
 
-### <h3> 済州島のカフェ巡りを楽しむためのヒント </h3>
+### ###  済州島のカフェ巡りを楽しむためのヒント 
 
 済州島のカフェは、季節によって営業時間が変動したり、急な店休日が設けられたりすることも珍しくありません。特にミッカン倉庫は、材料が完売すると早めにクローズすることもあるため、公式SNSを事前にチェックしておくことをおすすめします。また、現在はノーキッズ・ノーペットゾーンとして運営されているため、静寂を愛する大人の旅人にとって、これ以上ない隠れ家となるでしょう。
 
 ---
 
 > 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/k-travel-hacks-ultimate-aewol-guide-to.html)<div class="k-weather-section" style="margin-top: 15px; margin-bottom: 10px;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 5px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
+> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/k-travel-hacks-ultimate-aewol-guide-to.html)<div class="k-weather-section" style="margin-top: 15px; margin-bottom: 10px;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 5px;">📅 現地のお天気ガイド{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 미깡창고</h3>
+<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 미깡창고
 <p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">제주특별자치도 제주시 애월읍 중산간서로 6710-1 미깡창고</p>
 </div>
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">

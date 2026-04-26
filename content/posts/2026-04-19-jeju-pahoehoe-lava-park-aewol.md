@@ -123,13 +123,13 @@ author: "K-Life Hack"
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-journey-into-jejus-volcanic-soul.html)
 
-<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
+<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
 
 ## 📍 地図・アクセス
 
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 파호이호이 용암지질공원</h3>
+<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 파호이호이 용암지질공원
 <p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">제주특별자치도 제주시 애월읍 중산간서로 5994-47</p>
 </div>
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">

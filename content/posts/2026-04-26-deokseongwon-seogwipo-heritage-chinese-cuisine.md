@@ -16,12 +16,14 @@ author: "K-Life Hack"
 <li>重厚な黒御影石の外観とモダンな内装が織りなす上質な空間。</li>
 <li>混雑を避けた午後2時以降の訪問が、最高の食体験を生む。</li>
 </div></blockquote>
+## 80年の歴史が宿る佇まい：西帰浦の街角に立つ黒御影石の品格
 <p>ソウルの喧騒を離れ、済州島の南端、西帰浦の静かな港町に降り立つと、そこには時間の流れを止めたかのような一軒の店があります。1945年の創業から三代、火の熱気と共に歴史を刻んできた「徳成園（トッソンウォン）」です。ここは単なるレストランではなく、島の記憶と誇りを象徴する聖地と言えるでしょう。</p>
 
 <p>重厚な黒御影石に覆われたファサードは、幾多の季節を越えてきた威厳を放ちます。伝統とモダンが交差するその佇まいは、本質を求める旅人の審美眼を満足させるに十分な魅力を持っています。入口に掲げられた看板は、ここが単なる飲食店ではなく、一つの文化的なランドマークであることを物語っています。</p>
 
 <p>扉を開ければ、そこには外観の厳格さとは対照的な、光に満ちた洗練された空間が広がります。装飾を最小限に抑えたミニマリズムなインテリアは、訪れる者がただ目の前の一皿に没頭できるよう、静かに、そして贅沢に演出されています。</p>
 
+## 海の恵みを極めた至高の一杯：名物「ワタリガニチャンポン」の深いコク
 <p>ここで味わうべきは、海の恵みを極限まで昇華させた名物「ワタリガニチャンポン」です。運ばれてきた瞬間、磯の香りと共にカニの濃厚なアロマが鼻をくすぐります。それは、美食家たちが「人生のチャンポン」と称えるに相応しい、期待に満ちた幕開けです。</p>
 <img alt='alt="徳成園の名物、ワタリガニチャンポンのビジュアル。カニの旨味が溶け出したスープの輝きが印象的です。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173806_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>一口スープを含めば、一般的なチャンポンのような鋭い辛さではなく、カニから溢れ出した圧倒的な「甘み」と「コク」が広がります。刺激を抑え、素材の輪郭を際立たせたその味わいは、まるで高級な海鮮鍋を麺料理として再定義したかのような上品さがあります。</p>
@@ -29,11 +31,13 @@ author: "K-Life Hack"
 <p>ディレクターKの視点から見れば、この一杯は「解毒（ヘジャン）」を超えた、魂の癒やしです。繊細な細麺が濃厚な出汁をしっかりと抱き込み、喉を通るたびに日常の疲れを優しく解きほぐしてくれるでしょう。地元の愛好家たちがこのスープを飲み干す理由が、その一吸いで理解できます。</p>
 <img alt='alt="チャンポンの麺とスープの絶妙な絡み合い。細めの麺がスープをしっかりと持ち上げます。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173812_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt='alt="食事を楽しむ人々の様子。地元住民と観光客が入り混じる、活気に満ちた店内の風景。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173814_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+## 伝統の火加減が成す職人技：黄金色の衣を纏った「タンスユク」との調和
 <p>また、サイドメニューとして愛される「タンスユク（韓国風酢豚）」も見逃せません。黄金色の衣を纏った豚肉と、透明感のある甘酸っぱい餡の調和。チャンポンの深い塩味とのコントラストは、食の体験をより一層豊かなものへと導きます。</p>
 <img alt='alt="共に注文したいタンスユク。黄金色の衣と艶やかな餡が食欲をそそります。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173817_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>イ・ジュンソプ通りからもほど近いこの場所で、80年近く変わらずに火を使い続け、鍋を振り続けてきた職人たちの矜持。華美な演出はなくとも、そこには「時間」という名の至高のスパイスが効いています。</p>
 <img alt='alt="店舗周辺の落ち着いた街並み。西帰浦の日常に溶け込んだ徳成園の存在感。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173819_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt='alt="厨房から漂う香ばしい香り。長年の経験に裏打ちされた調理技術が、一皿一皿に込められています。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173821_9.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+# 西帰浦の日常に溶け込む美食：時代を超えて愛される老舗の矜持
 <p>済州の潮風を感じながら、歴史ある一杯を嗜む時間は、まさに至福のひととき。訪れる際は、ぜひスープの底に溜まったカニの身まで堪能してください。それこそが、徳成園が守り続けてきた誠実さの証なのです。</p>
 <img alt='alt="徳成園の入り口付近。創業から続く伝統を守り抜くという決意が感じられる佇まい。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173823_10.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt='alt="完食した後の満足感。西帰浦での食事体験を象徴する、徳成園の象徴的な風景。" - 1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173826_11.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
@@ -43,10 +47,10 @@ author: "K-Life Hack"
 <li>駐車場：店舗前の路上または近隣の公営駐車場を利用</li>
 <li>店舗展開：本店のほか、済州市内や中門にも公式支店を運営</li>
 </div></blockquote>
-<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 덕성원</h3>
+        <h3 class="k-map-title">📍 덕성원
         <p class="k-map-address">제주특별자치도 서귀포시 태평로401번길 4 (제주특별자치도 서귀포시 서귀동 474)</p>
     </div>
     <div class="k-map-iframe-wrap">

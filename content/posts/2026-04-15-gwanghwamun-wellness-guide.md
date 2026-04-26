@@ -82,7 +82,7 @@ author: "K-Life Hack"
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/spot-therapy-gwanghwamun-seouls-secret.html)
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 スポセラピー 光化門世宗店 (Spot Therapy)</h3>
+<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 スポセラピー 光化門世宗店 (Spot Therapy)
 <p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울 종로구 종로1가 24 4층</p>
 </div>
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">

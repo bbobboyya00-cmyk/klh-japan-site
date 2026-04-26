@@ -105,10 +105,10 @@ K-Life HackのディレクターKです。
 - 5/30 18:00 ラジオ公開放送 (シム・スボン、ポムジン、パンチ)
 
 </div></blockquote>
-<div style="text-align:center;margin:45px 0 20px;"><a href="https://www.imsil.go.kr/tour/index.imsil?menuCd=DOM_000000203001012003" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+<div style="text-align:center;margin:45px 0 20px;"><a href="https://www.imsil.go.kr/tour/index.imsil?menuCd=DOM_000000203001012003" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 イムシルチーズテーマパーク バラ園</h3>
+        <h3 class="k-map-title">📍 イムシルチーズテーマパーク バラ園
         <p class="k-map-address">全羅北道特別自治道 林實郡 聖寿面 道仁2キル 50 (전북특별자치도 임실군 성수면 도인리 687)</p>
     </div>
     <div class="k-map-iframe-wrap">

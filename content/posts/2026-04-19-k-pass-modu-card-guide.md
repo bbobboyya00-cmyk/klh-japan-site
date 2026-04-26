@@ -114,4 +114,4 @@ author: "K-Life Hack"
 ---
 
 > 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/modoo-ui-card-k-pass-guide-maximizing.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="36d35127d38/daejeon" name="CHUNGCHEONG" >}}</div>
+> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/modoo-ui-card-k-pass-guide-maximizing.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド{{< weather loc="36d35127d38/daejeon" name="CHUNGCHEONG" >}}</div>

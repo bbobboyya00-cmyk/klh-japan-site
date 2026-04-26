@@ -85,11 +85,11 @@ author: "K-Life Hack"
 
 河東は、派手な観光地ではありません。しかし、本物を知る大人にとっては、これほど豊かで贅沢な時間を過ごせる場所は他にありません。次の韓国旅行では、ソウルの喧騒を離れ、智異山の麓で歴史と香りに身を委ねてみてはいかがでしょうか。
 
-<div style="text-align:center;margin:45px 0 20px;"><a href="https://www.hadong.go.kr/tea.web" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
+<div style="text-align:center;margin:45px 0 20px;"><a href="https://www.hadong.go.kr/tea.web" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
 <div style="padding:20px 20px 10px;">
-<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 河東野生茶博物館</h3>
+<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 河東野生茶博物館
 <p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">慶尚南道 河東郡 花開面 双渓路 571-25 (경상남도 하동군 화개면 운수리 667)</p>
 </div>
 <div style="background:var(--themeBg-sec);height:350px;width:100%;">

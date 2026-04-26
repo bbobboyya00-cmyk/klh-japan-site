@@ -94,10 +94,10 @@ author: "K-Life Hack"
 
 ### 宝城の茶畑、どこで見るのがベスト？ ###
 
-博物館の展望台も素晴らしいですが、さらに深い緑を感じたいなら、隣接する「テウム茶畑」や車で数分の「大韓茶園」まで足を伸ばすのが正解です。特に午前中の霧がかかった時間帯は、幻想的な写真が撮れることで有名です。博物館で知識を得た後に、実際の畑を歩くことで、茶の香りがより一層鮮明に感じられるはずです。<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="GWANGJU" >}}</div>
+博物館の展望台も素晴らしいですが、さらに深い緑を感じたいなら、隣接する「テウム茶畑」や車で数分の「大韓茶園」まで足を伸ばすのが正解です。特に午前中の霧がかかった時間帯は、幻想的な写真が撮れることで有名です。博物館で知識を得た後に、実際の畑を歩くことで、茶の香りがより一層鮮明に感じられるはずです。<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="GWANGJU" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 한국차박물관</h3>
+        <h3 class="k-map-title">📍 한국차박물관
         <p class="k-map-address">전라남도 보성군 보성읍 녹차로 775 한국차-소리문화공원 (전라남도 보성군 보성읍 봉산리 1191-1 한국차-소리문화공원)</p>
     </div>
     <div class="k-map-iframe-wrap">

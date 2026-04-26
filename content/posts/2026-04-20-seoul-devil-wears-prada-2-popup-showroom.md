@@ -98,7 +98,7 @@ author: "K-Life Hack"
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/the-devil-wears-prada-2-exclusive-pop.html)
 
 <div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;">
-<h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>
+<h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド
 {{< weather loc="37d57126d98/seoul" name="SEOUL" >}}
 </div>
 
@@ -106,7 +106,7 @@ author: "K-Life Hack"
 
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 The Devil Wears Prada 2 Showroom Seongsu</h3>
+<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 The Devil Wears Prada 2 Showroom Seongsu
 <p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울특별시 성동구 연무장7길 13</p>
 </div>
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">

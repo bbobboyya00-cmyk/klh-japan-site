@@ -97,11 +97,11 @@ author: "K-Life Hack"
 ---
 
 > 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-symphony-of-falling-stars-450-year.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="35d87128d60/daegu" name="GYEONGSANG" >}}</div>
+> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-symphony-of-falling-stars-450-year.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="35d87128d60/daegu" name="GYEONGSANG" >}}</div>
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
 <div style="padding:20px 20px 10px;">
-<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 安東河回村 萬松亭</h3>
+<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 安東河回村 萬松亭
 <p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">경북 안동시 풍천면 하회리 694-1</p>
 </div>
 <div style="background:var(--themeBg-sec);height:350px;width:100%;">

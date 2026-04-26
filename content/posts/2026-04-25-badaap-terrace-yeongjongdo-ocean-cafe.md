@@ -47,10 +47,10 @@ author: "K-Life Hack"
 - **駐車場**: 建物地下駐車場を利用可能（カフェ利用客は2時間無料、以降60分3,000ウォン、最大10,000ウォン）
 
 </div></blockquote>
-<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 바다앞테라스</h3>
+        <h3 class="k-map-title">📍 바다앞테라스
         <p class="k-map-address">인천광역시 중구 은하수로 10 더 테라스프라자 5층 (인천광역시 중구 은하수로 10)</p>
     </div>
     <div class="k-map-iframe-wrap">

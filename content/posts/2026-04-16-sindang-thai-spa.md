@@ -112,7 +112,7 @@ author: "K-Life Hack"
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/cassia-thai-wangsimni-premier.html)
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 カシアタイ王十里店</h3>
+<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 カシアタイ王十里店
 <p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울특별시 중구 신당동 484 1층</p>
 </div>
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">

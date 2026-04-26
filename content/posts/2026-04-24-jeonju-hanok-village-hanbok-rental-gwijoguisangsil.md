@@ -141,10 +141,10 @@ K-Life Hack ディレクターKです。
 『貴族衣装室』での体験は、全州韓屋村の旅を一層豊かにしてくれるはずです。美しい衣装を身につけて竹林の中を歩いたり、石畳の道を散策したりすれば、まるで時代劇のワンシーンのような写真が残せるでしょう。大切な人との思い出作りに、ぜひこの場所を訪れてみてください。
 
 <img alt="白と水色の韓服を着た人が高い竹林の中に立っており、穏やかな伝統的な雰囲気を捉えています。 - 全州韓屋村で優雅な韓服体験：『貴族衣装室』で叶える特別な一日" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/jeonju-hanok-village-hanbok-rental-gwijoguisangsil/khack_1777003581_12.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 貴族衣装室</h3>
+        <h3 class="k-map-title">📍 貴族衣装室
         <p class="k-map-address">全羅北道 全州市 完山区 崔明姫キル 17-5 1階 (전북 전주시 완산구 최명희길 17-5 1층)</p>
     </div>
     <div class="k-map-iframe-wrap">

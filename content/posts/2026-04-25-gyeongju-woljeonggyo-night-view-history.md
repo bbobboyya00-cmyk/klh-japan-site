@@ -107,10 +107,10 @@ author: "K-Life Hack"
 
 
 慶州の月精橋は、昼夜を問わずその美しさを堪能できる場所です。特に夜は、ライトアップされた橋が水面に映る光景が息をのむほど美しく、ディレクターKは日本の皆様にもぜひ一度訪れていただきたいと願っています。周辺観光地と合わせて、新羅の歴史と文化に触れる慶州旅行をお楽しみください。
-<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="GYEONGJU" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="GYEONGJU" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 月精橋</h3>
+        <h3 class="k-map-title">📍 月精橋
         <p class="k-map-address">慶尚北道 慶州市 橋村洞 274 (경상북도 경주시 교동 274)</p>
     </div>
     <div class="k-map-iframe-wrap">

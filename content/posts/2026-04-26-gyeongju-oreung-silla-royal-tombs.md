@@ -41,10 +41,10 @@ author: "K-Life Hack"
 </div></blockquote>
 <img alt="聖域への入り口となる荘厳な正門の佇まい - 慶州オヌン（五陵）の静寂と白木蓮｜新羅の始まりを歩く、究極のヒーリングガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/gyeongju-oreung-silla-royal-tombs/khack_1777165639_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>砂利を踏む音、風に揺れる松のざわめき、そして時折聞こえる鳥の声。それらすべてが、あなただけの贅沢なBGMとなります。最後に、私から一つだけアドバイスを。夕暮れ時、閉門の一時間前に訪れてみてください。西日に照らされた王陵の影が長く伸びる時、五陵は一日の中で最も神聖な表情を見せてくれます。都会のノイズを忘れ、新羅の始祖と共に過ごす時間は、あなたの旅をより深いものにしてくれるはずです。</p>
-<img alt="歴史公園内を貫く陽光に照らされた穏やかな散策路 - 慶州オヌン（五陵）の静寂と白木蓮｜新羅の始まりを歩く、究極のヒーリングガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/gyeongju-oreung-silla-royal-tombs/khack_1777165641_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="GYEONGJU" >}}</div>
+<img alt="歴史公園内を貫く陽光に照らされた穏やかな散策路 - 慶州オヌン（五陵）の静寂と白木蓮｜新羅の始まりを歩く、究極のヒーリングガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/gyeongju-oreung-silla-royal-tombs/khack_1777165641_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="GYEONGJU" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 Gyeongju Oreung</h3>
+        <h3 class="k-map-title">📍 Gyeongju Oreung
         <p class="k-map-address">67-1, Tap-dong, Gyeongju-si, Gyeongsangbuk-do (경상북도 경주시 탑동 67-1)</p>
     </div>
     <div class="k-map-iframe-wrap">

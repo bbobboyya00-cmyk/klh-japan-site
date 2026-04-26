@@ -52,7 +52,7 @@
 &lt;p&gt;安東の祭りは、単なる過去の再現ではありません。&lt;/p&gt;
 &lt;p&gt;私たちが今、この瞬間をより楽しく、豊かに過ごすための「ライフハック」が詰まった場所です。&lt;/p&gt;
 &lt;p&gt;2026年の春、安東でしか味わえないダイナミズムをぜひ肌で感じてみてください。&lt;/p&gt;
-&lt;div style="text-align:center;margin:45px 0 20px;"&gt;&lt;a href="https://cjng.co.kr/" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);"&gt;公式サイトを見る&lt;/a&gt;&lt;/div&gt;&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
+&lt;div style="text-align:center;margin:45px 0 20px;"&gt;&lt;a href="https://cjng.co.kr/" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);"&gt;公式サイトを見る&lt;/a&gt;&lt;/div&gt;&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
  data-label_1="SEOUL" data-label_2="WEATHER" data-theme="original" &gt;
  SEOUL WEATHER
 &lt;/a&gt;
@@ -61,7 +61,7 @@
 &lt;/script&gt;&lt;/div&gt;
 &lt;div class="k-map-box"&gt;
  &lt;div class="k-map-header"&gt;
- &lt;h3 class="k-map-title"&gt;📍 中央線1942安東駅&lt;/h3&gt;
+ &lt;h3 class="k-map-title"&gt;📍 中央線1942安東駅
  &lt;p class="k-map-address"&gt;慶尚北道安東市慶東路684 (경상북도 안동시 운흥동 176-18)&lt;/p&gt;
  &lt;/div&gt;
  &lt;div class="k-map-iframe-wrap"&gt;
@@ -163,7 +163,7 @@
  &lt;p&gt;🌐 &lt;strong&gt;Read this post in other languages:&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://en.klifehack.com/2026/04/a-symphony-of-falling-stars-450-year.html" target="_blank" rel="noopener"
- &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/35d87128d60/daegu/" 
+ &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/35d87128d60/daegu/" 
  data-label_1="GYEONGSANG" data-label_2="WEATHER" data-theme="original" &gt;
  GYEONGSANG WEATHER
 &lt;/a&gt;
@@ -176,7 +176,7 @@
 &lt;h2 id="-地図アクセス"&gt;📍 地図・アクセス
 &lt;/h2&gt;&lt;div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;"&gt;
 &lt;div style="padding:20px 20px 10px;"&gt;
-&lt;h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;"&gt;📍 安東河回村 萬松亭&lt;/h3&gt;
+&lt;h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;"&gt;📍 安東河回村 萬松亭
 &lt;p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;"&gt;경북 안동시 풍천면 하회리 694-1&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background:var(--themeBg-sec);height:350px;width:100%;"&gt;

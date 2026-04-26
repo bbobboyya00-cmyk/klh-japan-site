@@ -47,10 +47,10 @@ author: "K-Life Hack"
 - **決済案内**: 現金不可、カード決済のみ対応
 
 </div></blockquote>
-<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="YONGIN" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="YONGIN" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 조아용in스토어 용인시청점</h3>
+        <h3 class="k-map-title">📍 조아용in스토어 용인시청점
         <p class="k-map-address">경기도 용인시 처인구 중부대로 1199</p>
     </div>
     <div class="k-map-iframe-wrap">

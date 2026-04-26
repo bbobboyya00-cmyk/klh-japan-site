@@ -71,7 +71,7 @@
  &lt;p&gt;🌐 &lt;strong&gt;Read this post in other languages:&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://en.klifehack.com/2026/04/safeguarding-your-assets-definitive.html" target="_blank" rel="noopener"
- &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
+ &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
  data-label_1="SEOUL" data-label_2="WEATHER" data-theme="original" &gt;
  SEOUL WEATHER
 &lt;/a&gt;
@@ -84,7 +84,7 @@
 &lt;h2 id="-地図アクセス"&gt;📍 地図・アクセス
 &lt;/h2&gt;&lt;div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;"&gt;
 &lt;div style="padding:20px 20px 10px;"&gt;
-&lt;h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;"&gt;📍 住宅都市保証公社 (HUG)&lt;/h3&gt;
+&lt;h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;"&gt;📍 住宅都市保証公社 (HUG)
 &lt;p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;"&gt;ソウル特別市永登浦区議事堂大路21 (서울특별시 영등포구 여의도동 25)&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background:var(--themeBg-sec);height:350px;width:100%;"&gt;

@@ -89,11 +89,11 @@ author: "K-Life Hack"
 
 ## 潭陽・竹緑苑へのアクセスとベストシーズン 📅
 
-<h3>竹緑苑への行き方とは？</h3>
+### 竹緑苑への行き方とは？
 ソウル市内からは、高速バスまたはKTXを利用して光州（クァンジュ）へ向かい、そこから市内バスやタクシーで約30〜40分で到着します。自家用車を利用する場合、竹緑苑の正門と後門の両方に広い駐車場が完備されています。周辺にはメタセコイア並木道や官防堤林（グァンバンジェリム）もあり、徒歩圏内で複数の名所を巡ることができます。
 
 <img alt='alt="潭陽のメタセコイア並木道を歩く家族。暖かい午後の日差しが捉えられている" - 竹林の静寂と美食の極致。ディレクターKが贈る、潭陽（タミャン）ハイエンド・トラベルガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/damyang-juknokwon-luxury-lifestyle-guide/khack_1776949538_22.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-<h3>最適な訪問時期はいつですか？</h3>
+### 最適な訪問時期はいつですか？
 竹林は常緑のため一年中楽しめますが、特におすすめは春と秋です。春には竹の深い緑と桜のピンクが美しいコントラストを描き、秋には周囲の広葉樹が色づき、より深い情緒を感じられます。夏は竹林が天然の遮光カーテンとなり、市街地よりも数度涼しく感じられるため、避暑地としても人気があります。
 
 <div class="psImg"><img alt='alt="伝統的な韓屋に入る白いジャケットを着た子供。建築の規模と細部が見て取れる" - 竹林の静寂と美食の極致。ディレクターKが贈る、潭陽（タミャン）ハイエンド・トラベルガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/damyang-juknokwon-luxury-lifestyle-guide/khack_1776949540_23.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="竹緑苑内の小さな川に架かる橋の風景。静かな環境を楽しむ訪問者たち" - 竹林の静寂と美食の極致。ディレクターKが贈る、潭陽（タミャン）ハイエンド・トラベルガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/damyang-juknokwon-luxury-lifestyle-guide/khack_1776949542_24.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
@@ -133,11 +133,11 @@ author: "K-Life Hack"
 </div></blockquote>
 
 
-潭陽の旅は、単なる観光ではなく、自分への「リセット」です。次の週末、竹の香りに誘われて南へと向かってみてはいかがでしょうか。ディレクターKがお届けしました。<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="GWANGJU" >}}</div>
+潭陽の旅は、単なる観光ではなく、自分への「リセット」です。次の週末、竹の香りに誘われて南へと向かってみてはいかがでしょうか。ディレクターKがお届けしました。<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="GWANGJU" >}}</div>
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
 <div style="padding:20px 20px 10px;">
-<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 죽녹원</h3>
+<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 죽녹원
 <p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">전라남도 담양군 담양읍 죽녹원로 119 (전라남도 담양군 담양읍 향교리 282)</p>
 </div>
 <div style="background:var(--themeBg-sec);height:350px;width:100%;">

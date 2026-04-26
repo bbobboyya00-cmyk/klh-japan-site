@@ -36,10 +36,10 @@ author: "K-Life Hack"
 - **住所**: 江原特別自治道 楊口郡 楊口邑 上里 394-21 一帯（レポーツ公園）
 
 </div></blockquote>
-<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="CHUNCHEON" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="CHUNCHEON" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 Yanggu Leports Park</h3>
+        <h3 class="k-map-title">📍 Yanggu Leports Park
         <p class="k-map-address">366-33 Baksugeun-ro, Yanggu-eup, Yanggu-gun, Gangwon-do (강원특별자치도 양구군 양구읍 상리 394-21)</p>
     </div>
     <div class="k-map-iframe-wrap">

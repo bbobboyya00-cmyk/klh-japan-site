@@ -41,10 +41,10 @@ author: "K-Life Hack"
 - 駐車場：普通車基準 1日 1,000ウォン（定額制）
 
 </div></blockquote>
-<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="JEONJU" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="JEONJU" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 전주동물원</h3>
+        <h3 class="k-map-title">📍 전주동물원
         <p class="k-map-address">전북특별자치도 전주시 덕진구 소리로 68 전주동물원 (전북특별자치도 전주시 덕진구 덕진동1가 73-48 전주동물원)</p>
     </div>
     <div class="k-map-iframe-wrap">
