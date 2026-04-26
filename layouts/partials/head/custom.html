@@ -1,5 +1,5 @@
-{{/* [v2504.26 TA] 태그/카테고리 페이지 검색 카니발라이제이션 방지 */}}
-{{ if or .IsTaxonomy .IsTerm }}
+{{/* [v2504.27 TA] 404 페이지 빌드 에러 대응: .Kind 속성 사용 */}}
+{{ if or (eq .Kind "taxonomy") (eq .Kind "term") }}
   <meta name="robots" content="noindex, follow">
 {{ end }}
 
