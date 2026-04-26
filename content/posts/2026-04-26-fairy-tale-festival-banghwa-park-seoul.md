@@ -77,18 +77,18 @@ author: "K-Life Hack"
 </div></blockquote>
 <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
-    <div class="k-map-header">
-        <h3 class="k-map-title">📍 江西区子ども童話祭り
-        <p class="k-map-address">서울특별시 강서구 금낭화로 178 (서울특별시 강서구 금낭화로 178)</p>
-    </div>
-    <div class="k-map-iframe-wrap">
-        <iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B0%95%EC%84%9C%EA%B5%AC%20%EA%B8%88%EB%82%AD%ED%99%94%EB%A1%9C%20178&output=embed"></iframe>
-    </div>
-    <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-    <div class="k-map-buttons">
-        <a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B0%95%EC%84%9C%EA%B5%AC%20%EA%B8%88%EB%82%AD%ED%99%94%EB%A1%9C%20178" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-        <a href="https://map.naver.com/p/search/%EA%B0%95%EC%84%9C%EC%96%B4%EB%A6%B0%EC%9D%B4%20%EB%8F%99%ED%99%94%EC%B6%95%EC%A0%9C" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
-    </div>
+<div class="k-map-header">
+<h3 class="k-map-title">📍 江西区子ども童話祭り
+<p class="k-map-address">서울특별시 강서구 금낭화로 178 (서울특별시 강서구 금낭화로 178)</p>
+</div>
+<div class="k-map-iframe-wrap">
+<iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B0%95%EC%84%9C%EA%B5%AC%20%EA%B8%88%EB%82%AD%ED%99%94%EB%A1%9C%20178&output=embed"></iframe>
+</div>
+<div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
+<div class="k-map-buttons">
+<a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B0%95%EC%84%9C%EA%B5%AC%20%EA%B8%88%EB%82%AD%ED%99%94%EB%A1%9C%20178" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://map.naver.com/p/search/%EA%B0%95%EC%84%9C%EC%96%B4%EB%A6%B0%EC%9D%B4%20%EB%8F%99%ED%99%94%EC%B6%95%EC%A0%9C" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+</div>
 </div>
 
 ---
