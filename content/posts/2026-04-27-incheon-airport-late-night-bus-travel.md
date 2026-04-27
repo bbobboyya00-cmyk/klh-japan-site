@@ -63,15 +63,7 @@ author: "K-Life Hack"
 
 </div></blockquote>
 
-<div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
-<a href="https://www.airport.kr/ap/jp/tpt/busRouteList.do" 
-target="_blank" 
-rel="noopener noreferrer" 
-style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); color: #ffffff; display: inline-block; font-weight: 800; letter-spacing: -0.5px; padding: 16px 32px; text-decoration: none; transition: all 0.3s ease;">
-公式サイトを見る
-</a>
-</div>
-    <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header">
 <h3 class="k-map-title">📍 Incheon International Airport</h3>
