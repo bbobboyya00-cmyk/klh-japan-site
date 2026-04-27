@@ -40,15 +40,7 @@
 &lt;li&gt;公式お問合せ: 仁川国際空港カスタマーセンター (+82-1577-2600)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;&lt;/blockquote&gt;
-&lt;div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;"&gt;
-&lt;a href="https://www.airport.kr/ap/jp/tpt/busRouteList.do" 
-target="_blank" 
-rel="noopener noreferrer" 
-style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); color: #ffffff; display: inline-block; font-weight: 800; letter-spacing: -0.5px; padding: 16px 32px; text-decoration: none; transition: all 0.3s ease;"&gt;
-公式サイトを見る
-&lt;/a&gt;
-&lt;/div&gt;
- &lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d46126d71/incheon/" 
+&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d46126d71/incheon/" 
  data-label_1="INCHEON" data-label_2="WEATHER" data-theme="original" &gt;
  INCHEON WEATHER
 &lt;/a&gt;
