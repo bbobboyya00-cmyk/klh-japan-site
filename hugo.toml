@@ -4,6 +4,7 @@ theme = 'hugo-theme-stack'
 publishDir = 'docs'
 languageCode = 'ja'             # 👈 'en-us'에서 변경
 defaultContentLanguage = 'ja'   # 👈 'en'에서 변경
+hasCJKLanguage = true
 
 #disqusShortname = "klifehack-com"
 
