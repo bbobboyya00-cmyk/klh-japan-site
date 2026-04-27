@@ -53,12 +53,14 @@ author: "K-Life Hack"
 
 <p>寺院内では「黙言（沈黙）」が基本です。特に夜9時の消灯以降は、他の修行者の迷惑にならないよう静かに過ごすのがエチケットです。また、外部の食べ物の持ち込みは原則禁止されていますが、夜間にお腹が空くこともあるため、匂いの出ないチョコレートなどの栄養補給品を少量持参することをお勧めします。2026年のトレンドである「マインドフルネス・トラベル」を、ここ骨窟寺で体現してみてください。</p>
 
-[TIP_START]
-- 住所 / リリース日: 慶尚北道 慶州市 文武大王面 祇林路 101-5
-- 営業時間 / プラットフォーム: テンプルステイ 入山 14:30 / 退山 翌日 11:00
-- 交通アクセス / 関連リンク: KTX神経州駅よりバスまたはタクシー利用 / www.templestay.com
-- お問い合わせ / 公式SNS: 054-744-1689 / 公式サイトを通じて予約可能
-[TIP_END]
+<blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">リリース & 訪問ガイド (Tip)</span></div><div class="alert-body">
+
+- **住所 / リリース日:** 慶尚北道 慶州市 文武大王面 祇林路 101-5
+- **営業時間 / プラットフォーム:** テンプルステイ 入山 14:30 / 退山 翌日 11:00
+- **交通アクセス / 関連リンク:** KTX神経州駅よりバスまたはタクシー利用 / [www.templestay.com](https://www.templestay.com)
+- **お問い合わせ / 公式SNS:** 054-744-1689 / 公式サイトを通じて予約可能
+
+</div></blockquote>
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.templestay.com" 
 target="_blank" 
