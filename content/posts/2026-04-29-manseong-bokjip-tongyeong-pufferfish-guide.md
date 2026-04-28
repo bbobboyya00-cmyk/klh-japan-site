@@ -11,7 +11,6 @@ author: "K-Life Hack"
 ---
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-<li>🏞️ 50年の歴史が宿る、澄み切った河豚スープの芸術</li>
 <li>🗓️ 活気あふれる早朝の市場散策と共にお愉しみください</li>
 <li>📍 グルメ番組も認めた、トンヨン（統営）の「魂の安息所」</li>
 <li>💡 酢の一滴が魔法のようにスープの深みを変える美食体験</li>
