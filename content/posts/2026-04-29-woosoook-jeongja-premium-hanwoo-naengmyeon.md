@@ -30,7 +30,7 @@ author: "K-Life Hack"
 ## ディレクターKが紐解く：極上の韓牛料理と平壌冷麺の真髄 🥩
 
 <p>優水屋の料理は、厳選された1++等級の雌牛韓牛と熟練の技が織りなす美食の芸術です。その繊細な肉質は、生プルコギの品良い甘みと口の中でとろける食感、そして美しい盛り付けによって昇華されます。</p>
-<img alt="優水屋 亭子本店のプライベート個室 - K-Life Hack: 優水屋 亭子本店、格式と伝統の極上韓国料理体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/woosoook-jeongja-premium-hanwoo-naengmyeon/khack_1777411825_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
 <p>新世界グループの鄭溶鎮（チョン・ヨンジン）会長が「乙支路（ウルチロ）の系譜を継ぐ、真のウレオクは優水屋だ」と絶賛した逸話は、この店の味への絶対的な信頼を物語ります。優水屋は、伝統的な高級冷麺の味を現代に再構築し、その真髄を深く追求しているのです。</p>
 <img alt="新世界鄭溶鎮会長のサイン入りメッセージ - K-Life Hack: 優水屋 亭子本店、格式と伝統の極上韓国料理体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/woosoook-jeongja-premium-hanwoo-naengmyeon/khack_1777411829_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>自家製の深い出汁と香ばしい蕎麦麺が特徴の平壌冷麺は、淡麗ながら奥深い味わい。韓牛スユクと合わせれば、肉の旨味と麺の爽やかさが織りなす極上のハーモニーを堪能できます。</p>
@@ -41,7 +41,7 @@ author: "K-Life Hack"
 ## プライベートな空間で味わう：特別な日のための設え 🥂
 
 <p>優水屋の最大の魅力は、4名から16名まで対応可能な多様なプライベート個室。窓際個室の開放感や鄭溶鎮会長が頻繁に利用されるという逸話が、その質の高さを物語ります。</p>
-<img alt="柔らかく煮込まれた韓牛スユクと自家製マンドゥ - K-Life Hack: 優水屋 亭子本店、格式と伝統の極上韓国料理体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/woosoook-jeongja-premium-hanwoo-naengmyeon/khack_1777411841_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
 <p>静かで落ち着いた個室は、ビジネス接待から家族の祝い事まで、特別なシーンに最適。空間が提供する安らぎと品格、そしてメイン料理を引き立てる洗練された伝統小皿料理が、食卓を豊かに彩ります。</p>
 <img alt="食卓を彩る洗練された伝統小皿料理 - K-Life Hack: 優水屋 亭子本店、格式と伝統の極上韓国料理体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/woosoook-jeongja-premium-hanwoo-naengmyeon/khack_1777411844_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
@@ -49,7 +49,7 @@ author: "K-Life Hack"
 
 <p>亭子洞は、都会の喧騒を忘れさせるソウル近郊の落ち着いたエリア。優水屋 亭子本店は、この地の美食の中心として最高の料理とサービス、品格ある空間を提供し、訪れるすべての人に忘れられない体験を約束します。</p>
 <p>ディレクターKとして、優水屋で過ごす時間が単なる食事を超え、人生の節目を彩る特別な思い出となることを願っています。細部にまで気を配られたおもてなしは、K-ライフハックが提案する「上質」そのもの。ぜひ一度、その本質を体感しに足を運んでみてください。</p>
-<img alt="優水屋 亭子本店のモダンな外観 - K-Life Hack: 優水屋 亭子本店、格式と伝統の極上韓国料理体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/woosoook-jeongja-premium-hanwoo-naengmyeon/khack_1777411847_9.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
 - 住所: 京畿道城南市盆唐区亭子一路120 2階 (三星アデナルーチェ商業ビル2階)
