@@ -25,6 +25,10 @@ author: "K-Life Hack"
 <div class="psImg"><img alt='alt="伝統的な韓国のモチーフを取り入れた洗練された個室空間" - 1988年から続く伝統の味、松島カルメギ本店で堪能する至高のガストロノミー' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/songdo-galmaegi-charcoal-grilled-heritage-incheon/khack_1777338163_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="ゲストを温かく迎えるヘリテージブランドのシグネチャーエントランス" - 1988年から続く伝統の味、松島カルメギ本店で堪能する至高のガストロノミー' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/songdo-galmaegi-charcoal-grilled-heritage-incheon/khack_1777338165_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 <p>プライバシーが保たれた個室は、ビジネスの会食や大切な家族の記念日にふさわしい格調を湛えています。温もりのある木材と、計算し尽くされた間接照明。これらが料理の色彩をより鮮やかに引き立て、視覚的な愉悦をも提供します。細部にまで宿る真摯なホスピタリティこそが、感度の高い人々を惹きつけてやまない理由なのです。</p>
 
+
+
+<img alt="alt: A refined private dining space showcasing clean lines and traditional Korean design motifs, ensuring a sophisticated atmosphere. - Songdo Galmaegi Main Branch: The Zenith of Charcoal-Grilled Heritage in Incheon" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/songdo-galmaegi-charcoal-grilled-heritage-incheon/sodo_gal.webp" style="border-radius: 12px; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 15px; display: block; height: auto; margin: 35px auto; max-width: 100%; object-fit: contain; width: auto;" />
+
 ## 黄金の比率が解き放つ「伝統カルメギ」の旨味
 
 <p>この店のアイデンティティを語る上で欠かせないのが、看板メニューの「伝統カルメギ」です。厳選された肉に施された繊細な包丁仕事、そして1988年から継承される秘伝の醤油ベースのタレ。これらが炭火の上で出会い、完璧なまでのハーモニーを奏でます。溢れ出す芳醇な肉汁と、リズミカルな弾力。それはまさに、五感を震わせる官能的な食体験に他なりません。</p>
