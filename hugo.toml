@@ -128,3 +128,9 @@ disqusShortname = "klifehack-com"
     enable = true
     type = "fuse"
     content = true
+	
+[security]
+  enableInlineShortcodes = false
+  [security.http]
+    methods = ['(?i)GET|POST']
+    urls = ['.*'] # 모든 외부 URL 자원 접근 허용 (또는 '^https://cdn\\.jsdelivr\\.net/.*')
