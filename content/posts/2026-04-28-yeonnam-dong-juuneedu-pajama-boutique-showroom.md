@@ -6,7 +6,7 @@ draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/yeonnam-dong-juuneedu-pajama-boutique-showroom/khack_1777376160_0.webp"
 description: "延南洞の路地裏に佇むパジャマブティック「Juuneedu（ジュニジュ）」。上質な素材と洗練されたデザインが織りなす、韓国発のハイエンドなルームウェア体験をディレクターKが紐解きます。"
 categories: ["K-Beauty Insider"]
-tags: []
+tags: [ジュニジュ, 延南洞, パジャマ, ソウルショッピング, 韓国ライフスタイル, ヨンナムドン, 弘大, 韓国ファッション]
 author: "K-Life Hack"
 ---
 
@@ -20,14 +20,14 @@ author: "K-Life Hack"
 
 ## 延南洞の路地裏で輝く「Juuneedu（ジュニジュ）」とは
 
-<img alt="パステルカラー의 파ジャマ가 정연하게 늘어선, 주니쥬 쇼룸의 광활한 파노라마 뷰. - 延南洞の隠れ家で出会う至福の休息。パジャマブティック「Juuneedu（ジュニジュ）」ショールームガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/yeonnam-dong-juuneedu-pajama-boutique-showroom/khack_1777376163_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="パステルカラ - 延南洞の隠れ家で出会う至福の休息。パジャマブティック「Juuneedu（ジュニジュ）」ショールームガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/yeonnam-dong-juuneedu-pajama-boutique-showroom/khack_1777376163_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>韓国のMZ世代を中心に、圧倒的な支持を得ているセルフプロデュースのパジャマブランド、それが「Juuneedu」です。オンラインでの名声はさることながら、ここ延南洞のショールームは、ブランドが追求する「日常の中の贅沢」を物理的に体現した空間となっています。白を基調とした洗練されたファサードは、訪れる者の期待感を高めてくれます。公式情報によると、この空間は2026年現在も、その独自の美学で多くのインフルエンサーや審美眼を持つ旅人たちを引き寄せてやみません。</p>
 
 ## 素材へのこだわり：肌に触れる瞬間の贅沢
 
 <div class="psImg"><img alt="デコレーションランプやシックなバッグと共に、丁寧に畳まれたパジャマがディスプレイされたテーブル。 - 延南洞の隠れ家で出会う至福の休息。パジャマブティック「Juuneedu（ジュニジュ）」ショールームガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/yeonnam-dong-juuneedu-pajama-boutique-showroom/khack_1777376165_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="爽やかなフルーツ柄が施されたクリーム色のパジャマセット。柔らかく通気性の良い素材感が際立つ。 - 延南洞の隠れ家で出会う至福の休息。パジャマブティック「Juuneedu（ジュニジュ）」ショールームガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/yeonnam-dong-juuneedu-pajama-boutique-showroom/khack_1777376168_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 <p>私がこのブランドを高く評価する最大の理由は、その「テクスチャー」にあります。直接肌に触れるパジャマにおいて、化学的な機能性だけでなく、天然素材に近い柔らかさと通気性は譲れない条件です。ジュニジュの製品は、独自の工程を経て作られたコットンやレーヨン素材を使用しており、驚くほど軽量で、かつ耐久性に優れています。</p>
-<p>特に、肌が敏感な方や睡眠の質を追求する方にとって、この「솝티（ソプティ）」ラインのような滑らかな質感は、一度体験すると手放せなくなるはずです。デザイン面でも、甘すぎないフレンチシックなフラワーパターンや、洗練されたミニマリズムを感じさせる無地シリーズなど、大人の女性が自信を持って選べるラインナップが揃っています。</p>
+<p>特に、肌が敏感な方や睡眠の質を追求する方にとって、この「ソプティ」ラインのような滑らかな質感は、一度体験すると手放せなくなるはずです。デザイン面でも、甘すぎないフレンチシックなフラワーパターンや、洗練されたミニマリズムを感じさせる無地シリーズなど、大人の女性が自信を持って選べるラインナップが揃っています。</p>
 
 ## ショールームならではのパーソナルな体験
 
