@@ -53,6 +53,58 @@ author: "K-Life Hack"
 
 </div></blockquote>
 
+<div class="k-weather-section" style="margin-top:15px;margin-bottom:10px;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:5px;">📅 Local Weather Guide</h3><a class="weatherwidget-io" href="https://forecast7.com/en/37d46126d71/incheon/" data-label_1="INCHEON" data-label_2="WEATHER" data-theme="original" style="display:block;position:relative;">Incheon Weather</a>
+        <script>
+        !function(d,s,id){
+            var js,fjs=d.getElementsByTagName(s)[0];
+            if(!d.getElementById(id)){
+                js=d.createElement(s);js.id=id;
+                js.src='https://weatherwidget.io/js/widget.min.js';
+                fjs.parentNode.insertBefore(js,fjs);
+            } else if(typeof __weatherwidget_init === 'function') {
+                __weatherwidget_init();
+            }
+        }(document,'script','weatherwidget-io-js');
+        </script>
+        </div>
+<div class="k-map-box">
+<div class="k-map-header">
+<h3 class="k-map-title">📍 Inspire Entertainment Resort</h3>
+<p class="k-map-address">127 Gonghangmunhwa-ro, Jung-gu, Incheon</p>
+</div>
+<div class="k-map-iframe-wrap">
+<iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=인스파이어 오로라나이트마켓&output=embed"></iframe>
+</div>
+<div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ Traveler's Note:</span>Google Maps may have outdated information or missing listings. For the most accurate locations in Korea, we highly recommend using <b>Naver Maps</b>.</div>
+<div class="k-map-buttons">
+<a href="https://www.google.com/maps/search/?api=1&query=인스파이어 오로라나이트마켓" class="btn-google" target="_blank" rel="noopener noreferrer">Google Maps</a>
+<a href="https://map.naver.com/p/search/인스파이어 오로라나이트마켓" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver Maps</a>
+</div>
+</div>
+
+
+<div class="k-weather-section" style="margin-top:15px;margin-bottom:10px;">
+<h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:5px;">📅 現地の天気ガイド</h3>
+{{< weather loc="37d46126d71/incheon" name="仁川" >}}
+</div>
+
+<div class="k-map-box">
+<div class="k-map-header">
+<h3 class="k-map-title">📍 インスパイア・エンターテインメント・リゾート</h3>
+<p class="k-map-address">仁川広域市 中区 空港文化路 127</p>
+</div>
+<div class="k-map-iframe-wrap">
+<iframe frameborder="0" scrolling="no" src="https://www.google.com/maps/search/?api=1&query=인스파이어 엔터테인먼트 리조트"></iframe>
+</div>
+<div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;">
+<span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者へのアドバイス:</span>
+Googleマップは韓国国内において最新の情報が反映されていない、あるいは正確な位置が表示されない場合があります。より正確なナビゲーションには、現地で最も信頼されている<b>Naver Map</b>の使用を強く推奨します。
+</div>
+<div class="k-map-buttons">
+<a href="https://www.google.com/maps/search/?api=1&query=인스파이어 엔터테인먼트 리조트" class="btn-google" target="_blank" rel="noopener noreferrer">Google Maps</a>
+<a href="https://map.naver.com/p/search/인스파이어+오로라+나이트+마켓" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver Map</a>
+</div>
+</div>
 
 ---
 
