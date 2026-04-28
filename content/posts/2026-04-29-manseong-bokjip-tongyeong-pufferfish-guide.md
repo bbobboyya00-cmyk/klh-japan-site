@@ -29,7 +29,7 @@ author: "K-Life Hack"
 ## ジョルボクク：透明なスープに隠された重層的な旨味
 
 <p>この店のシグネチャーである「ジョルボクク（シマフグのスープ）」は、視覚的な静謐さと味覚的な衝撃を併せ持っています。クリスタルのように澄み渡ったスープを一口運べば、河豚特有の滋味深いコクが五臓六腑に染み渡ります。それは、前夜の祝祭による疲れを優しく、かつ完璧に洗い流してくれる「解毒の芸術」です。</p>
-<img alt="朝の活気あふれる西湖市場の風景 - 【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成河豚店」で触れる五感の美食" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413984_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
 <p>スープの土台を支えるのは、驚くほどシャキシャキとした食感を保った豆もやしと、香りのアクセントを添えるセリ（ミナリ）です。シマフグの身は小さくとも、その凝縮されたタンパク質の弾力は、噛むほどに海のエネルギーを感じさせてくれます。添加物に頼らない、素材本来の力が生み出す黄金比の味わいです。</p>
 <img alt="ふっくらとした身が特徴のチャムボクク（トラフグのスープ） - 【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成河豚店」で触れる五感の美食" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413990_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
@@ -38,7 +38,7 @@ author: "K-Life Hack"
 <p>マンソン・ボッチッの凄みは、主役の河豚スープだけでなく、脇を固める小皿料理の完成度にもあります。席に座ると同時に並べられる約8種類のパンチャンは、それ自体が完成された一つのコースのようです。特に、トンヨン（統営）名物のカタクチイワシの刺身和えは、甘辛い味付けと新鮮な身の調和が絶品です。</p>
 <img alt="テーブルを彩る統営ならではの精進料理と海の幸 - 【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成河豚店」で触れる五感の美食" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413994_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>また、自家製のイカの塩辛や、ほどよく熟成されたガッキムチ（からし菜のキムチ）は、白米との相性が抜群です。店主の細やかな配慮が感じられるこれらの料理は、ハイエンドなライフスタイルにおいて、いかに「誠実な食卓」が重要であるかを再認識させてくれます。一皿一皿に宿る手作りの温もりが、旅の記憶をより豊かなものにします。</p>
-<img alt="鮮度抜群のカタクチイワシの刺身和え - 【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成河豚店」で触れる五感の美食" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413997_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
 
 ## ディレクターKの美食儀式：味の階層を愉しむ
 
