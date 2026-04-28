@@ -94,7 +94,7 @@ author: "K-Life Hack"
 <p class="k-map-address">仁川広域市 中区 空港文化路 127</p>
 </div>
 <div class="k-map-iframe-wrap">
-<iframe frameborder="0" scrolling="no" src="https://www.google.com/maps/search/?api=1&query=인스파이어 엔터테인먼트 리조트"></iframe>
+<iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%84%EC%A3%BC%ED%95%9C%EB%B2%BD%EB%AC%B8%ED%99%94%EA%B4%80&amp;output=embed"></iframe>
 </div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;">
 <span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者へのアドバイス:</span>
