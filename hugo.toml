@@ -39,7 +39,7 @@ disqusShortname = "klifehack-com"
     mainSections = ["posts"]
     featuredImageField = "image"
     favicon = "favicon.ico"
-
+	
     [params.dateFormat]
         published = "2006/01/02"
         lastUpdated = "2006/01/02"
@@ -68,7 +68,7 @@ disqusShortname = "klifehack-com"
 		related = true
 		
     [params.comments]
-        enabled = false
+        enabled = true
         type = "disqus"
 
 [menu]
