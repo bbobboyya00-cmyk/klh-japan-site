@@ -65,7 +65,6 @@ author: "K-Life Hack"
 <p>1. **ヨンドゥサン（龍頭山）公園**: 店から徒歩数分。釜山タワーがそびえ立ち、海沿いの都市ならではの開放感を味わえます。</p>
 <p>2. **ククチェ（国際）市場**: 歴史を感じさせる迷路のような市場で、掘り出し物を探す楽しみがあります。</p>
 <p>3. **チャガルチ市場**: 活気ある魚市場の雰囲気は、食の都・釜山を象徴するもう一つの顔です。</p>
-<img alt="活気溢れるナンポドンの街並みとショッピングエリア - 釜山・南浦洞の聖地「イジェモピザ本店」：究極のチーズが奏でるハイエンド・ガストロノミーガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/lee-jae-mo-pizza-busan-main/khack_1777448847_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>最高の食材と最新のシステム、そして変わらぬ伝統。イジェモピザ本店での体験は、あなたの釜山旅行をより豊かで贅沢なものにしてくれるはずです。次回の渡韓リストに、この場所を加えない理由はありません。</p>
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.catchtable.net/shop/leejaemo" 
