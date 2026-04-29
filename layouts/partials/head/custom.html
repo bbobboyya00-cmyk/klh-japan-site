@@ -13,7 +13,7 @@
   <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
 {{ end }}
 
-{{ if or .IsTaxonomy .IsTerm }}
+{{ if or (eq .Kind "taxonomy") (eq .Kind "term") }}
   <meta name="robots" content="noindex, follow">
 {{ end }}
 
@@ -28,13 +28,12 @@
 {{ end }}
 
 {{/* =============================================================================
-    [DEACTIVATED] Reading Progress Bar (v2504.30.10 TA)
+    [DEACTIVATED] Reading Progress Bar (v2504.30.11 TA)
     -----------------------------------------------------------------------------
-    🎯 Rationale: Deactivated to maintain structural integrity of <head> during 
-    AdSense review. Elements like <div> must be placed within <body>.
+    애드고시 심사 기간 동안 <head> 내 구조적 결함 방지를 위해 비활성화 유지.
     =============================================================================
 
-    {{ if .IsPage }}
+    {{ if eq .Kind "page" }}
     <style>
         #reading-progress-bar {
             position: fixed !important;
