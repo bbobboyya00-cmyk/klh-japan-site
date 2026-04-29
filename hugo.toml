@@ -1,5 +1,5 @@
 baseURL = 'https://klifehack.com/'
-title = 'K-Life Hack'
+title = 'K-Life Hack | 韓国ハイエンド・ライフスタイルガイド'
 theme = 'hugo-theme-stack'
 publishDir = 'docs'
 #languageCode = 'ja'             # 👈 'en-us'에서 변경
