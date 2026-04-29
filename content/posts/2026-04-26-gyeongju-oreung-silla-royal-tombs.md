@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/gyeongju-oreung-architectural-silence.html"
 title: "慶州オヌン（五陵）の静寂と白木蓮｜新羅の始まりを歩く、究極のヒーリングガイド"
 slug: "gyeongju-oreung-silla-royal-tombs"
 date: 2026-04-26T10:08:18+09:00

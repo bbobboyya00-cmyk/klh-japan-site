@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/inside-salon-de-rlux-pinnacle-of.html"
 title: "聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨"
 slug: "seongsu-salon-rlux-popup"
 date: 2026-04-19T19:02:53+09:00

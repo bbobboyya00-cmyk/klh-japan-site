@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/sculpting-perfection-insider-guide-to.html"
 title: "江南の美の殿堂｜Cclime Beauty Museumで体験する究極の小顔デザイン"
 slug: "cclime-beauty-museum-gangnam-small-face-aesthetic"
 date: 2026-04-20T22:57:37+09:00

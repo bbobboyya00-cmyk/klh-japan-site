@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/beyond-grid-why-setlog-is-redefining.html"
 title: "2026年韓国トレンド！友人との日常を刻む共有Vlogアプリ「setlog（セットログ）」の魅力"
 slug: "korea-trend-setlog-vlog-app"
 date: 2026-04-19T12:51:28+09:00

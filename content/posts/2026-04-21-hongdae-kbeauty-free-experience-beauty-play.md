@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/unlocking-k-beauty-ethos-discerning.html"
 title: "弘大でKビューティーを無料で体験！パーソナルカラー診断から肌診断まで、ディレクターKが深掘りする『ビューティープレイ弘大店』"
 slug: "hongdae-kbeauty-free-experience-beauty-play"
 date: 2026-04-21T09:14:06+09:00

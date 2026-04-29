@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/a-cinematic-postal-experience-in-heart.html"
 title: "郵便局がカフェに？ソウル・新堂洞(シンダンドン)の隠れ家『メールルーム』で体験する非日常"
 slug: "sindang-mailroom-cafe"
 date: 2026-04-15T19:32:15+09:00

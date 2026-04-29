@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/k-beauty-deep-dive-navigating-massive.html"
 title: "聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨"
 slug: "seongsu-off-beauty-shopping-guide"
 date: 2026-04-19T13:03:29+09:00

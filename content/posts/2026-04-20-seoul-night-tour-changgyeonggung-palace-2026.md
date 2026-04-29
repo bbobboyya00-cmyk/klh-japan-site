@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/changgyeonggung-palace-luminous-night.html"
 title: "2026年ソウル、夜の王宮を彩る光の祭典。昌慶宮'水光蓮花'完全ガイド"
 slug: "seoul-night-tour-changgyeonggung-palace-2026"
 date: 2026-04-20T22:26:18+09:00

@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/unveiling-joseon-era-revival.html"
 title: "安東・先聖県文化団地：湖畔に佇む歴史と自然の静寂"
 slug: "seonseonghyeon-cultural-complex-andong-heritage"
 date: 2026-04-26T13:52:19+09:00

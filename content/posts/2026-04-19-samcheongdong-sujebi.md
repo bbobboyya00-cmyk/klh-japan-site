@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/samcheongdong-sujebi-michelin.html"
 title: "ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験"
 slug: "samcheongdong-sujebi"
 date: 2026-04-19T20:17:01+09:00

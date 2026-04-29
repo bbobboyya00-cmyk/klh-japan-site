@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/royal-filial-piety-reimagined-2026.html"
 title: "2026年ソウル・昌慶宮「夜宴」ガイド：親への最高の孝行、朝鮮王朝の主人公になる一夜"
 slug: "changgyeonggung-night-banquet-2026-guide"
 date: 2026-04-24T07:05:25+09:00

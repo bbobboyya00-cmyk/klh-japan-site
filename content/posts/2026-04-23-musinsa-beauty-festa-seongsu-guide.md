@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/the-2026-aesthetic-frontier-curators.html"
 title: "2026年最新 | 聖水洞「ムシンサ・ビューティーフェスタ」完全ガイド：K-Beautyの聖地を巡る"
 slug: "musinsa-beauty-festa-seongsu-guide"
 date: 2026-04-23T19:04:31+09:00

@@ -1,4 +1,15 @@
-{{/* [v2504.27 TA] 404 페이지 빌드 에러 대응: .Kind 속성 사용 */}}
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="alternate" hreflang="ja" href="{{ .Permalink }}" />
+
+{{ if .Params.en_url }}
+  <link rel="alternate" hreflang="en" href="{{ .Params.en_url }}" />
+{{ else }}
+  <link rel="alternate" hreflang="en" href="https://en.klifehack.com/" />
+{{ end }}
+
+<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
+
 {{ if or (eq .Kind "taxonomy") (eq .Kind "term") }}
   <meta name="robots" content="noindex, follow">
 {{ end }}
@@ -53,5 +64,3 @@
 </script>
 {{ end }}
 
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">

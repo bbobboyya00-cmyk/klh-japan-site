@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/architectural-volume-discerning-expats.html"
 title: "ソウル・清潭洞の隠れ家。至高のプライベートヘアサロン THE OBJET 完全ガイド"
 slug: "the-objet-cheongdam-k-beauty-luxury-salon"
 date: 2026-04-21T16:31:34+09:00

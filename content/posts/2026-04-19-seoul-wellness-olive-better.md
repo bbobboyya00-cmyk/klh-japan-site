@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/unlocking-korean-wellness-deep-dive.html"
 title: "ソウル発、美しさのその先へ。オリーブヤングが手掛ける「Olive Better」で出会う最旬ウェルネス習慣"
 slug: "seoul-wellness-olive-better"
 date: 2026-04-19T07:21:30+09:00

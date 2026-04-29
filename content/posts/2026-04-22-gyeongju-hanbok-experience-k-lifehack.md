@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/gyeongju-hanbok-experience-unveiling.html"
 title: "慶州で優雅な韓服体験：『K-Life Hack』ディレクターKが贈る極上ガイド"
 slug: "gyeongju-hanbok-experience-k-lifehack"
 date: 2026-04-22T09:12:05+09:00

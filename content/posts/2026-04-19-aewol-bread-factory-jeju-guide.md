@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/coastal-crust-and-artisanal-calm.html"
 title: "済州・エウォルの海を一望。至福のベーカリー「エウォルパンゴンジャン」完全ガイド"
 slug: "aewol-bread-factory-jeju-guide"
 date: 2026-04-19T12:13:16+09:00

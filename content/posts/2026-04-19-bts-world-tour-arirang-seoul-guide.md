@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/bts-arirang-world-tour-masterpiece-of.html"
 title: "2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨"
 slug: "bts-world-tour-arirang-seoul-guide"
 date: 2026-04-19T21:54:17+09:00

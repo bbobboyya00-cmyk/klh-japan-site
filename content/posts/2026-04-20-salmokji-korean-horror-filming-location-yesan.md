@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/discerning-shadows-of-salmokji-curated.html"
 title: "韓国を震撼させる映画『サルモクチ』の世界。忠清南道・礼山への聖地巡礼ガイド"
 slug: "salmokji-korean-horror-filming-location-yesan"
 date: 2026-04-20T22:32:54+09:00

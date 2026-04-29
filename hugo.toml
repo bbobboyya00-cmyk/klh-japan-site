@@ -2,7 +2,7 @@ baseURL = 'https://klifehack.com/'
 title = 'K-Life Hack'
 theme = 'hugo-theme-stack'
 publishDir = 'docs'
-languageCode = 'ja'             # 👈 'en-us'에서 변경
+#languageCode = 'ja'             # 👈 'en-us'에서 변경
 defaultContentLanguage = 'ja'   # 👈 'en'에서 변경
 hasCJKLanguage = true
 
@@ -36,6 +36,8 @@ disqusShortname = "klifehack-com"
     posts = "/p/:slug/"
 
 [params]
+	locale = "ja"             # 👈 구글 봇에게 명확한 일본어 사이트임을 선언 (languageCode 대체)
+    enableRobotsTXT = true    # 👈 [핵심] 자동으로 완전한 robots.txt를 생성하여 색인 속도 향상
     mainSections = ["posts"]
     featuredImageField = "image"
     favicon = "favicon.ico"
@@ -114,14 +116,12 @@ disqusShortname = "klifehack-com"
     endLevel = 4
     startLevel = 2
 
-[params.analytics]
-    enabled = true      # 'enable'이 아닌 'enabled'
-    provider = "google" # 반드시 명시
-    [params.analytics.google]
-        id = "G-4KGC4HJF0E"
+[services]
+  [services.googleAnalytics]
+    ID = 'G-4KGC4HJF0E'
 
 [outputs]
-    home = ["HTML", "RSS", "JSON"]
+    home = ["HTML", "RSS", "JSON", "Sitemap"]  # 👈 Sitemap 추가
     page = ["HTML"]
 
 [params.search]

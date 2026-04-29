@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/the-scent-of-sophistication-deep-dive.html"
 title: "漢南洞の美学に触れる。フレグランスブランド 'Pesade' と感性を磨くソウル散策ガイド"
 slug: "pesade-hannam-seoul-guide"
 date: 2026-04-15T13:28:17+09:00

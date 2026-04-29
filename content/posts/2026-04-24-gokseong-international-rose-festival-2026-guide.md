@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/the-floral-monarchy-rediscovering.html"
 title: "2026年「谷城世界バラまつり」完全ガイド：1,004種の香りに包まれる韓国最高峰のローズガーデンへ"
 slug: "gokseong-international-rose-festival-2026-guide"
 date: 2026-04-24T22:10:36+09:00

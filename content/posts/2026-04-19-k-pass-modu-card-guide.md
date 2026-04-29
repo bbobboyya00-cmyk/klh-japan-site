@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/modoo-ui-card-k-pass-guide-maximizing.html"
 title: "韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨"
 slug: "k-pass-modu-card-guide"
 date: 2026-04-19T01:04:09+09:00

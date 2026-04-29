@@ -1,5 +1,6 @@
 ---
 title: "K-Life Hack: 優水屋 亭子本店、格式と伝統の極上韓国料理体験"
+en_url: "https://en.klifehack.com/2026/04/woosoook-jeongja-definitive-guide-to.html"
 slug: "woosoook-jeongja-premium-hanwoo-naengmyeon"
 date: 2026-04-29T06:32:00+09:00
 draft: false

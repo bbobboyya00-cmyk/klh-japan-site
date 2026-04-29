@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/k-life-hack.html"
 title: "高敞（コチャン）下田しじみ・あさり五感体験祭り：ユネスコ遺産の干潟で楽しむ洗練された旅"
 slug: "hajeon-clam-festival-gochang-guide"
 date: 2026-04-21T14:55:20+09:00

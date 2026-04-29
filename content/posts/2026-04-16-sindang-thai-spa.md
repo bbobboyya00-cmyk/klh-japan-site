@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/cassia-thai-wangsimni-premier.html"
 title: "ソウル新堂洞（シンダンドン）で見つける極上タイマッサージ：カシアタイでの癒し体験 ✨"
 slug: "sindang-thai-spa"
 date: 2026-04-16T01:30:10+09:00

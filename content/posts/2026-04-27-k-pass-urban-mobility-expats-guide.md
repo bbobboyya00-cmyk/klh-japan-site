@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/seamless-journeys-across-urban-korea-k.html"
 title: "ソウル首都圏通勤を賢く：K-パス『みんなのカード』完全攻略ガイド"
 slug: "k-pass-urban-mobility-expats-guide"
 date: 2026-04-27T01:05:35+09:00

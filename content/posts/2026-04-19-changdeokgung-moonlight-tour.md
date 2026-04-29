@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/changdeokgung-moonlight-tour-2026.html"
 title: "【2026年版】昌徳宮 月明かり紀行：ソウルの夜を彩る幻想的な王宮の旅 ✨"
 slug: "changdeokgung-moonlight-tour"
 date: 2026-04-19T08:42:20+09:00

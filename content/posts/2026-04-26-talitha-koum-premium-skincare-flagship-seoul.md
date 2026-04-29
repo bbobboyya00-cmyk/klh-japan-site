@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/beyond-surface-ritual-of-resilience-at.html"
 title: "ソウル・新沙洞の隠れ家で研ぎ澄まされる美意識。タリタクム（Talitha Koum）が提案する真のヴィーガン・ライフスタイル"
 slug: "talitha-koum-premium-skincare-flagship-seoul"
 date: 2026-04-26T16:09:13+09:00

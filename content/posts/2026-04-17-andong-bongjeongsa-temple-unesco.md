@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/bongjeongsa-temple-unesco-heritage-site.html"
 title: "時を止めた千年古刹、安東・鳳停寺(ポンジョンサ)へ。韓国最古の木造建築と出会う静謐な旅"
 slug: "andong-bongjeongsa-temple-unesco"
 date: 2026-04-17T06:25:29+09:00

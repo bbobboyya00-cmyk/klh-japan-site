@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/a-sanctuary-of-plant-based-heritage.html"
 title: "益善洞の築100年韓屋で味わう、進化系ヴィーガン・ダイニング「Vegan Insa」"
 slug: "ikseon-vegan-insa-guide"
 date: 2026-04-21T11:38:09+09:00

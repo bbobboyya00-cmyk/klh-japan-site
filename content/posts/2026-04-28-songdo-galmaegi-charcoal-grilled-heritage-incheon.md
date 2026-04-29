@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/songdo-galmaegi-main-branch-zenith-of.html"
 title: "1988年から続く伝統の味、松島カルメギ本店で堪能する至高のガストロノミー"
 slug: "songdo-galmaegi-charcoal-grilled-heritage-incheon"
 date: 2026-04-28T10:04:28+09:00

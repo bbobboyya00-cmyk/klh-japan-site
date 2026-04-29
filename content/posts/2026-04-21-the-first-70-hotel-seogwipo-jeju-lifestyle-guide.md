@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/a-curated-stay-in-seogwipo-unrivaled.html"
 title: "西帰浦の空と海に抱かれる至福の拠点｜ザ・ファースト70ホテル深層ガイド"
 slug: "the-first-70-hotel-seogwipo-jeju-lifestyle-guide"
 date: 2026-04-21T19:09:32+09:00

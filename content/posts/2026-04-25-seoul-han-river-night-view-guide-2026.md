@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/the-2026-han-river-night-view-tour.html"
 title: "ソウル漢江の夜景に酔いしれる：2026年度版ナイトビュー完全ガイド"
 slug: "seoul-han-river-night-view-guide-2026"
 date: 2026-04-25T04:04:55+09:00

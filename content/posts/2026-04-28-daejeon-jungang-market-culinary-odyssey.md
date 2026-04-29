@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/daejeon-jungang-market-culinary-odyssey.html"
 title: "大田中央市場：五感を刺激する美食と伝統が息づくハイエンド・ローカルガイド"
 slug: "daejeon-jungang-market-culinary-odyssey"
 date: 2026-04-28T22:07:22+09:00

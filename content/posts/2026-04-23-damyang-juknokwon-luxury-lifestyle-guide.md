@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/the-vertical-elegance-of-2026.html"
 title: "竹林の静寂と美食の極致。ディレクターKが贈る、潭陽（タミャン）ハイエンド・トラベルガイド"
 slug: "damyang-juknokwon-luxury-lifestyle-guide"
 date: 2026-04-23T22:05:52+09:00

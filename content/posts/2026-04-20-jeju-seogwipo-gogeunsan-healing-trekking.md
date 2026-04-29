@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/gogeunsan-oreum-jejus-alpine-sanctuary.html"
 title: "済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack"
 slug: "jeju-seogwipo-gogeunsan-healing-trekking"
 date: 2026-04-20T07:57:50+09:00

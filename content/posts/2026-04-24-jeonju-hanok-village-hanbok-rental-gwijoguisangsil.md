@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/noble-boutique-elevating-your-jeonju.html"
 title: "全州韓屋村で優雅な韓服体験：『貴族衣装室』で叶える特別な一日"
 slug: "jeonju-hanok-village-hanbok-rental-gwijoguisangsil"
 date: 2026-04-24T13:06:27+09:00

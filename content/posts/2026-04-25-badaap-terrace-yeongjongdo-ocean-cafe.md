@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/badaap-terrace-yeongjongdos-premier.html"
 title: "永宗島「바다앞테라스」：絶景と非日常を楽しむ韓国オーシャンビューカフェ"
 slug: "badaap-terrace-yeongjongdo-ocean-cafe"
 date: 2026-04-25T22:05:12+09:00

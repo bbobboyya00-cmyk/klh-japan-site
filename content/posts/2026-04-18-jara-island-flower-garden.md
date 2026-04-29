@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/jaraseom-namdo-flower-garden-k-travel.html"
 title: "加平 (カピョン) 🪷 楽園「Jara Island 南島花園」で巡る、息をのむ絶景の秘密"
 slug: "jara-island-flower-garden"
 date: 2026-04-18T13:32:43+09:00

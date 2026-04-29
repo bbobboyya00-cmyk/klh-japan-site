@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/beyond-aesthetics-how-seouls-juel-color.html"
 title: "ソウル・宣陵で自分磨き。ジュエルカラーで体験する「美のロジカル・診断」完全ガイド"
 slug: "seoul-personal-color-juel-color"
 date: 2026-04-18T09:49:54+09:00

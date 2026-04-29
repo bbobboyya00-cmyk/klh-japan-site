@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/architectural-harmony-and-sonic.html"
 title: "西帰浦を象徴する光の彫刻、セヨンギョで迎える究極の週末：2026 金土金土セヨンショー"
 slug: "saeyeongyo-bridge-night-performance-show"
 date: 2026-04-27T16:03:49+09:00

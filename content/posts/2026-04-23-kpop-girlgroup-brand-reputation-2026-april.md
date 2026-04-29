@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/unpacking-april-2026-k-pop-girl-group.html"
 title: "K-POPガールズグループブランド評判：2026年4月度、市場の動向と注目すべきスターたち"
 slug: "kpop-girlgroup-brand-reputation-2026-april"
 date: 2026-04-23T07:04:35+09:00

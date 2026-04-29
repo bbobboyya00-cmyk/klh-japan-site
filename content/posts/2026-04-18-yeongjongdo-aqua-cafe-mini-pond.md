@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/finding-inner-peace-at-mini-pond.html"
 title: "水中の楽園へようこそ。永宗島のアクアカフェ「小さな池」で心洗われるひとときを ✨"
 slug: "yeongjongdo-aqua-cafe-mini-pond"
 date: 2026-04-18T13:51:26+09:00

@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/21st-century-grand-princes-lady-royal.html"
 title: "21世紀の皇室ロマンス「21世紀の大君夫人」：現代韓国が恋に落ちた、美しき禁忌の物語"
 slug: "21st-century-grand-prince-wife-review"
 date: 2026-04-19T11:25:12+09:00

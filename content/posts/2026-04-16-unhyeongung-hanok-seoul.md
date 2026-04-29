@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/unhyeongung-deep-dive-into-joseons.html"
 title: "麗しき「雲峴宮（ウニョングン）」で辿る、朝鮮王朝の残り香と春の静寂"
 slug: "unhyeongung-hanok-seoul"
 date: 2026-04-16T21:06:05+09:00

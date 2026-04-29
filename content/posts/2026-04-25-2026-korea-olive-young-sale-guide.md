@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/the-2026-olive-young-day-guide.html"
 title: "2026年韓国オリーブヤングセール完全攻略ガイド：日程・おすすめ・裏技まとめ"
 slug: "2026-korea-olive-young-sale-guide"
 date: 2026-04-25T01:09:16+09:00

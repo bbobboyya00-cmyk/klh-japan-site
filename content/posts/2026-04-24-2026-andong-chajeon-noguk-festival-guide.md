@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/kinetic-heritage-2026-andong-general.html"
 title: "2026年5月の韓国旅行、安東（アンドン）へ。伝統と遊びが融合する「車戦将軍・魯国公主祭り」完全ガイド"
 slug: "2026-andong-chajeon-noguk-festival-guide"
 date: 2026-04-24T19:10:06+09:00

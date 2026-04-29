@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/moma-bookstore-seoul-curated-sanctuary.html"
 title: "ソウルに誕生、MoMAブックストア：アートとデザインを巡る洗練された旅"
 slug: "moma-bookstore-seoul-art-curation"
 date: 2026-04-25T14:38:22+09:00

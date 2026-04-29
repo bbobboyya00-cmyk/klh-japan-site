@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/experience-hottest-k-pop-festival-2026.html"
 title: "2026 SBS歌謡大典 Summer：K-POPの熱気を体感する夏の祭典"
 slug: "sbs-kpop-summer"
 date: 2026-04-19T13:41:14+09:00

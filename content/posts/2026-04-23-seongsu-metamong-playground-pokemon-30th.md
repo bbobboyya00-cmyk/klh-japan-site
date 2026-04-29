@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/metamong-playground-in-seongsu-decoding.html"
 title: "ソンス洞が紫に染まる！ポケモン30周年記念「メタモン遊び場」徹底解説"
 slug: "seongsu-metamong-playground-pokemon-30th"
 date: 2026-04-23T15:36:00+09:00

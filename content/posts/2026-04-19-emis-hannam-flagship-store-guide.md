@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/defining-new-standard-of-k-streetwear.html"
 title: "漢南洞で出会う、自分だけの特別なキャップ。EMIS（エミス）フラッグシップストア訪問記 🧢"
 slug: "emis-hannam-flagship-store-guide"
 date: 2026-04-19T18:39:37+09:00

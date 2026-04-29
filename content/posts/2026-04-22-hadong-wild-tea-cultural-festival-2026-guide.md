@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/terroir-of-time-29th-hadong-wild-tea.html"
 title: "2026年河東野生茶文化祭ガイド：韓国伝統茶の聖地で楽しむハイエンドな癒やしの旅"
 slug: "hadong-wild-tea-cultural-festival-2026-guide"
 date: 2026-04-22T05:03:03+09:00

@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/gyeongju-golgulsa-temple-guide-sunmudo.html"
 title: "慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ"
 slug: "gyeongju-golgulsa-temple"
 date: 2026-04-16T22:29:41+09:00

@@ -1,4 +1,5 @@
 ---
+en_url: "https://en.klifehack.com/2026/04/gyeongju-woljeonggyo-luminous-echo-of.html"
 title: "慶州 月精橋：新羅の美が息づく夜景と歴史散策ガイド"
 slug: "gyeongju-woljeonggyo-night-view-history"
 date: 2026-04-25T08:48:23+09:00
