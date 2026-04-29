@@ -1,5 +1,6 @@
 ---
 title: "龍仁『金星食堂』：45年の伝統が息づく、発酵の芸術を識る"
+en_url: "https://en.klifehack.com/2026/04/ancestral-umami-geumseong-restaurant.html"
 slug: "geumseong-restaurant-yongin-soybean-stew"
 date: 2026-04-29T10:46:42+09:00
 draft: false
@@ -51,7 +52,7 @@ author: "K-Life Hack"
 <img alt="チョングッチャンや手作り豆腐料理に焦点を当てた2026年のメニューボード - 龍仁『金星食堂』：45年の伝統が息づく、発酵の芸術を識る" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/geumseong-restaurant-yongin-soybean-stew/khack_1777427110_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt="土の香りと風味豊かな深みを際立たせる理想的な温度で提供される、代表的なチゲの心温まる一皿 - 龍仁『金星食堂』：45年の伝統が息づく、発酵の芸術を識る" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/geumseong-restaurant-yongin-soybean-stew/khack_1777427104_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>ディレクターKは、この『金星食堂』を訪れるたびに、韓国の食文化の奥深さと、変わらぬ伝統を守り続けることの尊さを再認識します。発酵食品が持つ生命力と、職人の技が織りなすハーモニーは、単なる食事を超えた感動を与えてくれることでしょう。ぜひ一度、この特別な場所で、五感を研ぎ澄まし、本物の味に出会う旅に出てみてはいかがでしょうか。</p>
-<img alt="金星食堂の視覚資料 - 龍仁『金星食堂』：45年の伝統が息づく、発酵の芸術を識る" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/geumseong-restaurant-yongin-soybean-stew/khack_1777427114_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
 - 住所: 京畿道 龍仁市 処仁区 陽智邑 南平路 16
@@ -63,15 +64,7 @@ author: "K-Life Hack"
 
 </div></blockquote>
 
-<div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
-<a href="https://www.catchtable.net/ja-JP/shop/geumseong_han_u" 
-target="_blank" 
-rel="noopener noreferrer" 
-style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); color: #ffffff; display: inline-block; font-weight: 800; letter-spacing: -0.5px; padding: 16px 32px; text-decoration: none; transition: all 0.3s ease;">
-今すぐ予約 (Book Now)
-</a>
-</div>
-    <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="YONGIN" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="YONGIN" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header">
 <h3 class="k-map-title">📍 금성식당</h3>
