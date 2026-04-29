@@ -2,14 +2,18 @@
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
 <link rel="alternate" hreflang="ja" href="{{ .Permalink }}" />
-<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
 
 {{ if .Params.en_url }}
   <link rel="alternate" hreflang="en" href="{{ .Params.en_url }}" />
+  <link rel="alternate" hreflang="x-default" href="{{ .Params.en_url }}" />
 {{ else if .IsHome }}
   <link rel="alternate" hreflang="en" href="https://en.klifehack.com/" />
+  <link rel="alternate" hreflang="x-default" href="https://en.klifehack.com/" />
+{{ else }}
+  <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
 {{ end }}
-{{ if or (eq .Kind "taxonomy") (eq .Kind "term") }}
+
+{{ if or .IsTaxonomy .IsTerm }}
   <meta name="robots" content="noindex, follow">
 {{ end }}
 
@@ -23,43 +27,48 @@
 </script>
 {{ end }}
 
-{{ if .IsPage }}
-<div id="reading-progress-bar"></div>
+{{/* =============================================================================
+    [DEACTIVATED] Reading Progress Bar (v2504.30.10 TA)
+    -----------------------------------------------------------------------------
+    🎯 Rationale: Deactivated to maintain structural integrity of <head> during 
+    AdSense review. Elements like <div> must be placed within <body>.
+    =============================================================================
 
-<style>
-    #reading-progress-bar {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 0%;
-        height: 4px !important;
-        background: linear-gradient(to right, #3b82f6, #60a5fa) !important;
-        box-shadow: 0 1px 8px rgba(59, 130, 246, 0.4) !important;
-        z-index: 2147483647 !important; 
-        transition: width 0.1s ease-out;
-        pointer-events: none;
-        margin-top: env(safe-area-inset-top, 0);
-    }
-</style>
+    {{ if .IsPage }}
+    <style>
+        #reading-progress-bar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 0%;
+            height: 4px !important;
+            background: linear-gradient(to right, #3b82f6, #60a5fa) !important;
+            box-shadow: 0 1px 8px rgba(59, 130, 246, 0.4) !important;
+            z-index: 2147483647 !important; 
+            transition: width 0.1s ease-out;
+            pointer-events: none;
+            margin-top: env(safe-area-inset-top, 0);
+        }
+    </style>
 
-<script>
-    (function() {
-        const bar = document.getElementById("reading-progress-bar");
-        if (!bar) return;
+    <script>
+        (function() {
+            const bar = document.getElementById("reading-progress-bar");
+            if (!bar) return;
 
-        const updateProgress = () => {
-            const winScroll = window.pageYOffset || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - window.innerHeight;
-            if (height > 0) {
-                const scrolled = (winScroll / height) * 100;
-                bar.style.width = Math.min(scrolled, 100) + "%";
-            }
-        };
+            const updateProgress = () => {
+                const winScroll = window.pageYOffset || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - window.innerHeight;
+                if (height > 0) {
+                    const scrolled = (winScroll / height) * 100;
+                    bar.style.width = Math.min(scrolled, 100) + "%";
+                }
+            };
 
-        window.addEventListener('scroll', updateProgress, { passive: true });
-        window.addEventListener('resize', updateProgress);
-        updateProgress();
-    })();
-</script>
-{{ end }}
-
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            window.addEventListener('resize', updateProgress);
+            updateProgress();
+        })();
+    </script>
+    {{ end }}
+*/}}
