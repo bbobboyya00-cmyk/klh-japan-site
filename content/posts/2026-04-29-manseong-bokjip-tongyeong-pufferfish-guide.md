@@ -1,10 +1,10 @@
 ---
-title: "【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成河豚店」で触れる五感の美食"
+title: "【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成フグ店」で触れる五感の美食"
 slug: "manseong-bokjip-tongyeong-pufferfish-guide"
 date: 2026-04-29T07:07:43+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413976_0.webp"
-description: "統営（トンヨン）の西湖市場に佇む「万成河豚店（マンソンボッチッ）」。50年守り抜かれた澄み渡る河豚スープの神髄と、洗練された美食の時間をディレクターKが紐解きます。"
+description: "統営（トンヨン）の西湖市場に佇む「万成フグ店（マンソンボッチッ）」。50年守리抜かれた澄み渡るフグスープの神髄と、洗練された美食の時間をディレクターKが紐解きます。"
 categories: ["K-Food Insider"]
 tags: ["統営グルメ", "万成河豚店", "韓国河豚スープ", "西湖市場", "統営旅行"]
 author: "K-Life Hack"
@@ -16,7 +16,7 @@ author: "K-Life Hack"
 <li>💡 酢の一滴が魔法のようにスープの深みを変える美食体験</li>
 </div></blockquote>
 <p>霧に包まれたトンヨン（統営）の海辺、その中心に位置するソホ（西湖）市場の朝は、一椀のスープから始まります。旅情と日常が交差するこの場所で、半世紀以上にわたり食通たちの心を満たしてきた「マンソン・ボッチッ（万成河豚店）」は、単なる飲食店を超えた美食の聖地と言えるでしょう。</p>
-
+<img alt="万成フグ店の伝統的な外観 - 【統営・西湖市場】50年の歳月" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413976_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
 ## 伝統の息吹が息づくソホ（西湖）市場と「マンソン」の邂逅
@@ -35,8 +35,8 @@ author: "K-Life Hack"
 ## 南海の恵みが凝縮された八つの小皿（パンチャン）
 
 <p>マンソン・ボッチッの凄みは、主役の河豚スープだけでなく、脇を固める小皿料理の完成度にもあります。席に座ると同時に並べられる約8種類のパンチャンは、それ自体が完成された一つのコースのようです。特に、トンヨン（統営）名物のカタクチイワシの刺身和えは、甘辛い味付けと新鮮な身の調和が絶品です。</p>
-<img alt="テーブルを彩る統営ならではの精進料理と海の幸 - 【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成河豚店」で触れる五感の美食" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413994_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-<p>また、自家製のイカの塩辛や、ほどよく熟成されたガッキムチ（からし菜のキムチ）は、白米との相性が抜群です。店主の細やかな配慮が感じられるこれらの料理は、ハイエンドなライフスタイルにおいて、いかに「誠実な食卓」が重要であるかを再認識させてくれます。一皿一皿に宿る手作りの温もりが、旅の記憶をより豊かなものにします。</p>
+<img alt="テーブルを彩る統営ならではの郷土料理と海の幸 - 【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成フグ店」で触れる五感の美食" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413994_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<p>また、自家製のイカの塩辛や、ほどよく熟成されたガッキムチ（からし菜のキムチ）は、白米との相性が抜群です。店主의細やかな配慮が感じられるこれらの料理は、ハイエンドなライフスタイルにおいて、いかに「誠実な食卓」が重要であるかを再認識させてくれます。一皿一皿に宿る手作りの温もりが、旅の記憶をより豊かなものにします。</p>
 
 
 ## ディレクターKの美食儀式：味の階層を愉しむ
