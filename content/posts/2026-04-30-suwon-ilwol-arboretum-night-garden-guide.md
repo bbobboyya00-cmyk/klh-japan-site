@@ -63,8 +63,6 @@ author: "K-Life Hack"
 
 散策の最後を飾るのは、人為的な光が自然の息吹に溶け込む瞬間だ。デジタルアートとオーガニックな風景の融合は、未来の植物園が目指すべき一つの解を示している。
 
-<img alt="水原・日月植物園の全景ビジュアル - 水原の夜を彩る幻想的な光のシンフォニー「日月植物園」ナイトガーデン完全ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/suwon-ilwol-arboretum-night-garden-guide/khack_1777527505_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
 樫の木の枝葉の間で明滅する電球は、まるで深き森に棲むホタルの群れのように、静かに夜を彩る。ウッドデッキから望む植物園の全景は、水面に映る都市の灯火と共鳴し、完璧な調和を見せる。ここでの体験は、一過性の観光ではなく、自らの感性を研ぎ澄ますための洗練された儀式に他ならない。
 
 ## 感性を満たすプレミアムな夜の散策
