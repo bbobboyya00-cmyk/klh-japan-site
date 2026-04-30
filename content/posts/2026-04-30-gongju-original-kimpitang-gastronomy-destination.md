@@ -77,8 +77,6 @@ author: "K-Life Hack"
 
 週末にこの地を訪れるなら、スマートな旅のパートナーとして「キャッチテーブル」の活用をお忘れなく。限られた時間を有効に使い、全国から集うゲストを魅了する元祖の味に浸る。それこそが、洗練された旅人のスタイルです。
 
-<img alt="alt:ピタンキムタンを象徴する鮮やかなビジュアル - 公州の美食遺産、元祖キムピタンの深淵に触れる：ピタンキムタン" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/gongju-original-kimpitang-gastronomy-destination/khack_1777517503_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
 ピタンキムタンでの体験は、単なる食事を超えた、ある種の文化的発見です。伝統が独創的なインスピレーションと出会い、公州という土地でどのように昇華されたのか。その答えは、熱を帯びたプレートの上に美しく描き出されています。<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="DAEJEON" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header">
