@@ -58,7 +58,6 @@ author: "K-Life Hack"
 
 最後に、この聖地をスマートに楽しむためのアドバイスを。週末や祝日は現場での待機が必須となりますが、平日は「キャッチテーブル」アプリを活用したリモート待機が可能です。特に生カルビは、1〜2週間前の電話予約が必須のドレスコードと心得てください。待機スペースも十分に確保されており、併設されたカフェ「アンジッ」でコーヒーを楽しみながら優雅に待つことができます。待ち時間さえも、期待感を高めるエッセンスとして味わう。それこそが、ハイエンドな旅人の嗜みと言えるでしょう。
 
-<img alt="コンクリートの壁に沿って並ぶ、ブラウンのクッションが置かれた長い待機用ベンチ - 釜山の伝説、海雲台アムソカルビチッで極める最高峰の韓牛ガストロノミー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/haeundae-amso-galbijip-luxury-korean-bbq/khack_1777521811_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
 - 住所: 釜山広域市 海雲台区 海雲台海岸路 333
