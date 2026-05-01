@@ -74,6 +74,14 @@ disqusShortname = "klifehack-com"
         type = "disqus"
 
 [menu]
+	[[menu.main]]
+        identifier = "search"
+        name = "検索"
+        url = "/search/"
+        weight = 5           # 홈(10)보다 위에 배치하려면 낮은 숫자 부여
+        [menu.main.params]
+            icon = "search"
+			
     [[menu.main]]
         identifier = "home"
         name = "ホーム"         # 👈 Home -> ホーム
