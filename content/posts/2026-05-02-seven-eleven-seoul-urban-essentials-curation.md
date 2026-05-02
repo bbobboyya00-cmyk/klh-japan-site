@@ -67,28 +67,9 @@ author: "K-Life Hack"
 
 ディレクターKが選ぶこの場所は、あなたのソウル滞在をより豊かに、そしてスタイリッシュに彩る。進化し続けるリテールの最前線で、新しいライフスタイルのヒントを見出すことだ。
 
-<blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市 松坡区 オリンピック路 300</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 24時間営業</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 地下鉄2号線・8号線 蚕室(チャムシル)駅直結</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: ロッテワールドモール内駐車場利用可能</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>公式サイト</b>: http://www.7-eleven.co.kr/</li></ul>
-</div></blockquote>
 
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 
-<div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
-<a href="https://www.klook.com/ko/activity/69276-7-eleven/" 
-target="_blank" 
-rel="noopener noreferrer" 
-style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); color: #ffffff; display: inline-block; font-weight: 800; letter-spacing: -0.5px; padding: 16px 32px; text-decoration: none; transition: all 0.3s ease;">
-今すぐ予約 (Book Now)
-</a>
-</div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-<div class="k-map-box">
-<div class="k-map-header"><h3 class="k-map-title">📍 7-Eleven Premium Flagship Store</h3><p class="k-map-address">300 Olympic-ro, Songpa-gu, Seoul (서울특별시 송파구 신천동 29)</p></div>
-<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=Songpa-gu%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%8B%A0%EC%B2%9C%EB%8F%99%2029&output=embed"></iframe></div>
-<div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-<div class="k-map-buttons">
-<a href="https://www.google.com/maps/search/?api=1&query=Songpa-gu%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%8B%A0%EC%B2%9C%EB%8F%99%2029" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84%20%ED%94%8C%EB%9E%98%EA%B7%B8%EC%8B%AD" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
-</div>
-</div>
 
 ---
 
