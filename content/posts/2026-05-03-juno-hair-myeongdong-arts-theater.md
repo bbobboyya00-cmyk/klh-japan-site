@@ -54,15 +54,7 @@ author: "K-Life Hack"
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市 中区 明洞7ギル 8 3階</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 毎日 10:00 - 21:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 地下鉄4号線 明洞駅 6番出口より徒歩約5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: 駐車場はございません</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>電話番号</b>: 02-318-0605</li></ul>
 </div></blockquote>
 
-
-<div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
-<a href="https://www.114.co.kr/search/detail?comp_id=18044021&comp_tp_cd=GOV&godata_tp_cd=LOCALDATA&upjong_cd=842299" 
-target="_blank" 
-rel="noopener noreferrer" 
-style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); color: #ffffff; display: inline-block; font-weight: 800; letter-spacing: -0.5px; padding: 16px 32px; text-decoration: none; transition: all 0.3s ease;">
-公式サイトを見る
-</a>
-</div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 준오헤어 명동예술극장점</h3><p class="k-map-address">서울특별시 중구 명동7길 8 3층 (서울특별시 중구 명동1가 48-2 3층)</p></div>
 <div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%A4%80%EC%98%A4%ED%97%A4%EC%96%B4%20%EB%AA%85%EB%8F%99%EC%98%88%EC%88%A0%EA%B7%B9%EC%9E%A5%EC%A0%90%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%A4%91%EA%B5%AC%20%EB%AA%85%EB%8F%991%EA%B0%80%2048-2&output=embed"></iframe></div>
