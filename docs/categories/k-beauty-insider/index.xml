@@ -29,14 +29,7 @@
 &lt;blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"&gt;&lt;div class="alert-header"&gt;&lt;span class="alert-icon"&gt;💡&lt;/span&gt;&lt;span class="alert-title"&gt;訪問ガイド (Tip)&lt;/span&gt;&lt;/div&gt;&lt;div class="alert-body"&gt;
 &lt;ul style="margin:0;padding:0;list-style:none;"&gt;&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;&lt;b&gt;所在地&lt;/b&gt;: ソウル特別市 中区 明洞7ギル 8 3階&lt;/li&gt;&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;&lt;b&gt;営業時間&lt;/b&gt;: 毎日 10:00 - 21:00&lt;/li&gt;&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;&lt;b&gt;アクセス&lt;/b&gt;: 地下鉄4号線 明洞駅 6番出口より徒歩約5分&lt;/li&gt;&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;&lt;b&gt;駐車場&lt;/b&gt;: 駐車場はございません&lt;/li&gt;&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;&lt;b&gt;電話番号&lt;/b&gt;: 02-318-0605&lt;/li&gt;&lt;/ul&gt;
 &lt;/div&gt;&lt;/blockquote&gt;
-&lt;div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;"&gt;
-&lt;a href="https://www.114.co.kr/search/detail?comp_id=18044021&amp;comp_tp_cd=GOV&amp;godata_tp_cd=LOCALDATA&amp;upjong_cd=842299" 
-target="_blank" 
-rel="noopener noreferrer" 
-style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); color: #ffffff; display: inline-block; font-weight: 800; letter-spacing: -0.5px; padding: 16px 32px; text-decoration: none; transition: all 0.3s ease;"&gt;
-公式サイトを見る
-&lt;/a&gt;
-&lt;/div&gt;&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
+&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
  data-label_1="SEOUL" data-label_2="WEATHER" data-theme="original" &gt;
  SEOUL WEATHER
 &lt;/a&gt;
