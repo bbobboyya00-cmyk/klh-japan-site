@@ -53,8 +53,6 @@ author: "K-Life Hack"
 
 木製の棚に整然と並べられた陶磁器たちは、一つとして同じ表情を持っていない。展示ブースを巡り、名匠たちの傑作の中から自分だけの一点を見つけ出す時間は、至高の知的遊戯である。
 
-<img alt="木棚に並ぶ伝統的な陶磁器展示" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/mungyeong-tea-bowl-festival-guide/khack_1777807506_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
 巨大なキャンバスに描かれる茶碗の壁画は、伝統と現代美術が交差する新たな試みだ。筆致の勢いは、聞慶の陶芸文化が未来へと向かう力強い意志を象徴している。
 
 <img alt="巨大な茶碗の壁画を描く芸術家" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/mungyeong-tea-bowl-festival-guide/khack_1777807509_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
@@ -66,11 +64,11 @@ author: "K-Life Hack"
 </div></blockquote><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="MUNGYEONG" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 Mungyeongsaejae Open Set</h3><p class="k-map-address">932, Saejae-ro, Mungyeong-eup, Mungyeong-si, Gyeongsangbuk-do (경상북도 문경시 문경읍 상초리 84-2)</p></div>
-<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=Mungyeong-eup%20%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EB%AC%B8%EA%B2%BD%EC%8B%9C%20%EB%AC%B8%EA%B2%BD%EC%9D%8D%20%EC%83%81%EC%B4%88%EB%A6%AC%2084-2&output=embed"></iframe></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=경상북도 문경시 문경읍 새재로 932&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
-<a href="https://www.google.com/maps/search/?api=1&query=Mungyeong-eup%20%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EB%AC%B8%EA%B2%BD%EC%8B%9C%20%EB%AC%B8%EA%B2%BD%EC%9D%8D%20%EC%83%81%EC%B4%88%EB%A6%AC%2084-2" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EB%AC%B8%EA%B2%BD%EC%83%88%EC%9E%AC%20%EC%98%A4%ED%94%88%EC%84%B8%ED%8A%B8%EC%9E%A5" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=경상북도 문경시 문경읍 새재로 932" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://map.naver.com/p/search/경상북도 문경시 문경읍 새재로 932" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 
