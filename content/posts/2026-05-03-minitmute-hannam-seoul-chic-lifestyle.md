@@ -23,8 +23,6 @@ author: "K-Life Hack"
 
 ミニミュートは、イタリアの上質なレザーとソウルのモダンな感性を融合させた、世界的に注目されるライフスタイルブランドである。特に漢南フラッグシップストアは、ブランドの哲学を最も純粋に体感できる聖地として、多くの訪問者が列を成す。
 
-<img alt='最新のハンドバッグを引き立てる洗練されたメタリックなディスプレイ"' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/minitmute-hannam-seoul-chic-lifestyle/khack_1777786186_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
 店内に入ると、まず目に飛び込むのは、計算し尽くされたディスプレイの美しさだ。1階では、ブランドのアイコニックな最新ハンドバッグが洗練されたメタリックな什器に整然と並び、柔らかなレザーの質感が訪れる人々の五感を刺激する。
 
 <img alt='機能性とスタイルを兼ね備えたレザーポーチの鮮やかなパレット"' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/minitmute-hannam-seoul-chic-lifestyle/khack_1777786187_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
@@ -34,8 +32,6 @@ author: "K-Life Hack"
 ## 漢南洞フラッグシップストアで体験する空間の美学 ✨
 
 このストアの最大の特徴は、地下1階から2階まで続く立体的な空間構成にある。各フロアごとに異なるテーマが設けられており、移動するたびに新しいブランドの表情に出会えるのが魅力だ。
-
-<img alt='ガラスブロックの壁を背景にしたプレミアムな質感のバッグ"' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/minitmute-hannam-seoul-chic-lifestyle/khack_1777786189_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 特に、光を透過するガラスブロックの壁際に配置されたバッグたちは、自然光を浴びてその美しい色彩をより鮮明に放つ。プレミアムな質感を持つこれらのバッグは、2026年のトレンドであるニュアンスカラーのラインナップを最も美しく輝かせる。
 
