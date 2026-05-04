@@ -37,7 +37,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;/script&gt;&lt;/div&gt;
 &lt;div class="k-map-box"&gt;
 &lt;div class="k-map-header"&gt;&lt;h3 class="k-map-title"&gt;📍 Olive Young Myeongdong Town&lt;/h3&gt;&lt;p class="k-map-address"&gt;서울특별시 중구 명동길 53 (서울특별시 중구 명동2가 32-2)&lt;/p&gt;&lt;/div&gt;
-&lt;div class="k-map-iframe-wrap"&gt;&lt;iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%A4%91%EA%B5%AC%20%EB%AA%85%EB%8F%99%EC%B1%8C%2053&amp;output=embed"&gt;&lt;/iframe&gt;&lt;/div&gt;
+&lt;div class="k-map-iframe-wrap"&gt;&lt;iframe frameborder="0" scrolling="no" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.6528935683373!2d126.98247626138446!3d37.563240924200535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca2efe0d570f5%3A0x1ed61ca1e03d322a!2z7Jis66as67iM7JiBIOuqheuPmSDtg4DsmrQ!5e0!3m2!1sko!2sus!4v1777881776172!5m2!1sko!2sus"&gt;&lt;/iframe&gt;&lt;/div&gt;
 &lt;div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"&gt;&lt;span style="display:block;font-weight:700;margin-bottom:2px;"&gt;⚠️ 旅行者のための注意&lt;/span&gt;Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、&lt;b&gt;Naverマップ&lt;/b&gt;の使用を強く推奨します。&lt;/div&gt;
 &lt;div class="k-map-buttons"&gt;
 &lt;a href="https://www.google.com/maps/search/?api=1&amp;query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%A4%91%EA%B5%AC%20%EB%AA%85%EB%8F%99%EA%B8%B8%2053" class="btn-google" target="_blank" rel="noopener noreferrer"&gt;Google マップ&lt;/a&gt;
