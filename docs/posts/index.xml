@@ -28,13 +28,7 @@
 &lt;blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"&gt;&lt;div class="alert-header"&gt;&lt;span class="alert-icon"&gt;💡&lt;/span&gt;&lt;span class="alert-title"&gt;訪問ガイド (Tip)&lt;/span&gt;&lt;/div&gt;&lt;div class="alert-body"&gt;
 &lt;ul style="margin:0;padding:0;list-style:none;"&gt;&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;&lt;b&gt;📍 Address&lt;/b&gt;: 서울특별시 종로구 자하문로6길 6 2, 3층&lt;/li&gt;&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;&lt;b&gt;⏰ Hours&lt;/b&gt;: 11:30 - 21:30 (ブレイクタイム 14:30 - 17:00 / 整理券配布は午前10時〜)&lt;/li&gt;&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;&lt;b&gt;🚉 Transport&lt;/b&gt;: 地下鉄3号線 景福宮駅 3番出口から徒歩約5分&lt;/li&gt;&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;&lt;b&gt;💳 Payment&lt;/b&gt;: クレジットカード利用可、各種モバイル決済対応&lt;/li&gt;&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;&lt;b&gt;💡 Notes&lt;/b&gt;: 確実に席を確保するなら、朝10時の整理券配布に合わせて訪問するのが鉄則です。&lt;/li&gt;&lt;/ul&gt;
 &lt;/div&gt;&lt;/blockquote&gt;
-&lt;div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;"&gt;
-&lt;a href="http://sunduksa.org/main" 
-target="_blank" 
-rel="noopener noreferrer" 
-style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); color: #ffffff; display: inline-block; font-weight: 800; letter-spacing: -0.5px; padding: 16px 32px; text-decoration: none; transition: all 0.3s ease;"&gt;
-&lt;/a&gt;
-&lt;/div&gt;&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
+&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
  data-label_1="SEOUL" data-label_2="WEATHER" data-theme="original" &gt;
  SEOUL WEATHER
 &lt;/a&gt;
