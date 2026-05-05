@@ -21,7 +21,7 @@ author: "K-Life Hack"
 
 景福宮（キョンボックン）駅の近くを歩いていると、ひときわ存在感を放つ建物が見えてきます。
 
-
+<img alt="兵馬俑の像は" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/doryang-seochon-chinese-dining-guide/khack_1777973884_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 入り口で護衛のように立っている兵馬俑の像は、2026年の今も変わらず訪れる人を圧倒しています（これ、初見だと結構びっくりしますよねww）。黄金に輝く看板を目印に階段を上がれば、そこには本格的な中華の世界が広がっています。
 
