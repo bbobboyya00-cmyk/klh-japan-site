@@ -5,7 +5,7 @@ slug: "doryang-seochon-chinese-dining-guide"
 date: 2026-05-05T18:40:23+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/doryang-seochon-chinese-dining-guide/khack_1777973886_1.webp"
-description: "人気番組『白と黒の泥棒たち』で話題のイム・テフンシェフの店「度量」。2026年5月の訪問に向けて、伝説の東坡肉や海老の茄子包み揚げの魅力を、過去の感動体験をベースにプレビューガイドとしてお届けします。"
+description: "Netflix『白と黒の料理人』で一躍スターとなったイム・テフンシェフの店「度量」。2026年5月の訪問に向けて、伝説の東坡肉や海老の茄子包み揚げの魅力を、過去の感動体験をベースにプレビューガイドとしてお届けします。"
 categories: ["K-Food Insider"]
 tags: ["西村グルメ", "ソウル中華料理", "東坡肉", "イムテフンシェフ", "度量"]
 author: "K-Life Hack"
@@ -15,15 +15,15 @@ author: "K-Life Hack"
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 予約困難店！伝説の東坡肉（トンポーロー）は、2026年も絶対に外せないシグネチャーメニューです。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">👨‍🍳 シェフの気配り：イム・テフンシェフが各テーブルを回り、最高の食べ方を直接伝授してくれる温かいサービスが魅力。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📝 2026年攻略法：ディナー利用でも午前10時からの整理券配布に合わせて並ぶのが、確実に入店するための鉄則です。</li></ul>
 </div></blockquote>
 
-最近、ソウルの西村（ソチョン）界隈で一番熱い場所といえば、間違いなくここ「度量（ドリャン）」ですよね。
+西村（ソチョン）の静かな路地裏で今、最も熱い視線を浴びているのが中華ダイニング「度量（ドリャン）」です。Netflix『白と黒の料理人』で話題の鉄袋シェフ、イム・テフン氏が手掛ける伝説の東坡肉を求め、今日も朝早くから多くの美食家たちが列を成しています。
 
 ## 西村の街に佇む風格漂うエントランス
 
 景福宮（キョンボックン）駅の近くを歩いていると、ひときわ存在感を放つ建物が見えてきます。
 
-<img alt="兵馬俑の像は" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/doryang-seochon-chinese-dining-guide/khack_1777973884_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="度量の外観と入り口の像" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/doryang-seochon-chinese-dining-guide/khack_1777973884_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-入り口で護衛のように立っている兵馬俑の像は、2026年の今も変わらず訪れる人を圧倒しています（これ、初見だと結構びっくりしますよねww）。黄金に輝く看板を目印に階段を上がれば、そこには本格的な中華の世界が広がっています。
+景福宮（キョンボックン）駅から徒歩数分、歴史を感じさせる建物と入り口に鎮座する兵馬俑の像がゲストを迎え入れます。黄金に輝く看板を目印に階段を上がれば、そこは都会の喧騒を忘れるような本格的な中華の世界が広がっています。
 
 ## 箸で解ける柔らかさ！伝説の東坡肉
 
