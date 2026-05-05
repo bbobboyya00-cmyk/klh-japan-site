@@ -19,25 +19,24 @@ author: "K-Life Hack"
 
 ## 聖水洞の伝説「ソムンナン聖水カムジャタン」って知ってる？
 
-
+<img alt="行列のできるレストランの外観" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/seongsu-legendary-gamjatang-pork-stew/khack_1777957815_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ソウル地下鉄2号線聖水駅の4番出口からほど近い場所にある「ソムンナン聖水カムジャタン」は、1983年の創業以来、40年以上にわたって聖水洞の味を守り続けてきた老舗なんです。本館と別館があって、いつ行っても多くのお客さんで賑わっている様子は、まさに聖水洞のランドマークって感じですよね。
 去年訪れた時も、雨の日だったのにすごい人でした。特に、このお店、テレビ番組でも紹介された実績があって、スターシェフも認める味として結構有名なんですよ。今年もきっと、その変わらぬ美味しさで私たちを魅了してくれるはず（期待大！）。
 
 ## 行列必至！期待のカムジャタン
 
-<img alt="行列のできるレストランの外観" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/seongsu-legendary-gamjatang-pork-stew/khack_1777957815_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="エゴマの葉がのった名物カムジャタン鍋" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/seongsu-legendary-gamjatang-pork-stew/khack_1777957804_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 「ソムンナン聖水カムジャタン」は、その人気の高さから、時間帯によっては待ち時間が発生することも珍しくありません。でもね、その待ち時間を乗り越えてでも「これは食べたい！」って思わせる魅力が、このお店にはぎゅっと詰まってるんです。聖水駅からのアクセスも良くて、徒歩5分圏内っていう立地も、多くの人が訪れる理由の一つでしょうね。
 食後には、おしゃれなカフェが立ち並ぶ聖水洞カフェ通りを散策するのもおすすめ。去年もそうだったんですけど、雨の日でも、むしろそれがカムジャタンの温かさを一層引き立ててくれるような、特別な体験になりました。次に訪れる時も、この活気ある雰囲気の中で、美味しいカムジャタンを味わいたいなぁって思ってます (笑)。
 
+<img alt="濃厚な豚骨スープの俯瞰図" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/seongsu-legendary-gamjatang-pork-stew/khack_1777957806_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
 ## 秘伝のタレが決め手！絶品ポークボーンスープ
 
-<img alt="エゴマの葉がのった名物カムジャタン鍋" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/seongsu-legendary-gamjatang-pork-stew/khack_1777957804_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 この店のカムジャタンの最大の魅力は、他にはない独特のスープと、それをさらに引き立てる秘伝のタレにあります。グツグツと煮える鍋から立ち上る香りは、もうたまらない！一口食べたらその深みのある味わいに感動すること間違いなしですよ。特に、青唐辛子と醤油ベースで作られた特製ソースは、豚の背骨肉の旨みを最大限に引き出してくれて、まさに「これが核心！」って感じです。
-
-<img alt="濃厚な豚骨スープの俯瞰図" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/seongsu-legendary-gamjatang-pork-stew/khack_1777957806_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 お肉はね、驚くほど柔らかくて、パサつきが一切ないんですよ。スープは刺激的すぎず、それでいて箸が止まらない中毒性のある味わい。去年の訪問時も、このバランスの取れた味が忘れられなくて、「またすぐ行きたい！」って思ったほどです。次に訪れる時も、この変わらぬ味が私たちを待っていると確信しています。
 
@@ -79,11 +78,11 @@ author: "K-Life Hack"
 </div></blockquote><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 소문난성수감자탕 별관</h3><p class="k-map-address">서울특별시 성동구 연무장7길 4 해피드림 (서울특별시 성동구 연무장7길 4 해피드림)</p></div>
-<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%97%B0%EB%AC%B4%EC%9E%A57%EA%B8%B8%204%20%ED%95%B4%ED%94%BC%EB%93%9C%EB%A6%BC%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%97%B0%EB%AC%B4%EC%9E%A57%EA%B8%B8%204&output=embed"></iframe></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=소문난 성수 감자탕&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%97%B0%EB%AC%B4%EC%9E%A57%EA%B8%B8%204%20%ED%95%B4%ED%94%BC%EB%93%9C%EB%A6%BC%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%97%B0%EB%AC%B4%EC%9E%A57%EA%B8%B8%204" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%97%B0%EB%AC%B4%EC%9E%A57%EA%B8%B8%204%20%ED%95%B4%ED%94%BC%EB%93%9C%EB%A6%BC" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=소문난 성수 감자탕" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://map.naver.com/p/search/소문난 성수 감자탕" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 
