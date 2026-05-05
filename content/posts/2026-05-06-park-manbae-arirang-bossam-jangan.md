@@ -67,7 +67,7 @@ author: "K-Life Hack"
 
 注文を受けてから丁寧に切り分けられるお肉からは、食欲をダイレクトに刺激する湯気が立ち上ります。木製の器に無造作ながらも美しく盛られた姿は、35年続く職人の矜持を感じさせます。
 
-<img alt="艶やかに輝くスライスされた肉의接写" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/park-manbae-arirang-bossam-jangan/khack_1778008014_10.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="艶やかに輝くスライスされた肉の接写" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/park-manbae-arirang-bossam-jangan/khack_1778008014_10.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 この艶、写真越しでも伝わるでしょうか。箸で持ち上げるだけで崩れそうなほど繊細で、噛むほどに溢れ出す肉汁は、まさに「ポッサムの終着駅」と呼ぶにふさわしい完成度です。
 
