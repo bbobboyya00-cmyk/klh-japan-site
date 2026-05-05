@@ -69,15 +69,7 @@ author: "K-Life Hack"
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>📍 Address</b>: 서울특별시 종로구 자하문로6길 6 2, 3층</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>⏰ Hours</b>: 11:30 - 21:30 (ブレイクタイム 14:30 - 17:00 / 整理券配布は午前10時〜)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🚉 Transport</b>: 地下鉄3号線 景福宮駅 3番出口から徒歩約5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💳 Payment</b>: クレジットカード利用可、各種モバイル決済対応</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💡 Notes</b>: 確実に席を確保するなら、朝10時の整理券配布に合わせて訪問するのが鉄則です。</li></ul>
 </div></blockquote>
 
-
-<div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
-<a href="http://sunduksa.org/main" 
-target="_blank" 
-rel="noopener noreferrer" 
-style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); color: #ffffff; display: inline-block; font-weight: 800; letter-spacing: -0.5px; padding: 16px 32px; text-decoration: none; transition: all 0.3s ease;">
-
-</a>
-</div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 서울 종로 도량</h3><p class="k-map-address">서울특별시 종로구 자하문로6길 6 2, 3층 (서울특별시 종로구 통의동 35-12 2, 3층)</p></div>
 <div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EB%8F%84%EB%9F%89%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%ED%86%B5%EC%9D%98%EB%8F%99%2035-12&output=embed"></iframe></div>
