@@ -19,8 +19,6 @@ author: "K-Life Hack"
 
 ## ソウル近郊で出会える、異次元の開放感と絶景プール
 
-
-
 まず目に飛び込んでくるのは、雄大な山々に抱かれたクリスタルブルーの屋外プールです。この圧倒的なロケーションで泳ぐ開放感は、マジで異次元レベルの美しさですよ！！ ✨ 2026年のシーズンも、感度の高い人たちがこぞって訪れること間違いなしのホットスポットです。
 
 プールの周りを少し歩けば、韓国の伝統的な甕（オンギ）が並ぶ風情たっぷりの小道に出会えます。特に秋の紅葉シーズンは、燃えるような赤と伝統建築が織りなす色彩のコントラストが完璧すぎて、どこを撮っても人生最高の1枚が撮れちゃいます(笑)
@@ -34,8 +32,6 @@ author: "K-Life Hack"
 <img alt="伝統的な韓屋の建築美" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/yangpyeong-ordaon-hanok-resort-healing/khack_1778065084_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 さらに、ここには神秘的な雰囲気の熱帯植物園まで併設されているんです。ガラス張りの温室に一歩足を踏み入れると、そこには緑の宇宙が広がっています。水面に反射する光と植物たちが作り出す幻想的な風景は、天候に関係なく最高の癒やしを与えてくれますよ。
-
-<img alt="植物園の温室内部の風景" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/yangpyeong-ordaon-hanok-resort-healing/khack_1778065087_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 建物の細部にまで宿る装飾美も見逃せません。洗練された木彫りや、空へと優雅に伸びる瓦屋根のラインは、韓国の伝統美を現代的な感性で見事に表現しています。静かな朝、この建物の周りをゆっくり散策するだけで、エネルギーがチャージされるのを感じるはずです。
 
