@@ -5,6 +5,7 @@ slug: "yangpyeong-ordaon-hanok-resort-healing"
 date: 2026-05-06T19:59:26+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/yangpyeong-ordaon-hanok-resort-healing/khack_1778065079_1.webp"
+hide_featured: true
 description: "都会の喧騒を忘れさせてくれる楊平の「オルダオン」。広大な植物園、伝統的な韓屋、そして絶景のプールまで。大切な人にだけ教えたい、2026年最新のローカルヒーリングスポットをエディターが徹底解説します。"
 categories: ["K-Pulse Trending"]
 tags: ["楊平", "オルダオン", "韓国旅行", "ヒーリングスポット", "韓屋ステイ"]
