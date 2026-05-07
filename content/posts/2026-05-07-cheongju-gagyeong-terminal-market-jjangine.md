@@ -78,7 +78,13 @@ author: "K-Life Hack"
 加慶ターミナル市場は、ただ買い物をするだけでなく、清州の日常と文化を肌で感じられる特別な場所です。新鮮な食材との出会い、そして地元で愛される絶品グルメの数々。2026年も、清州を訪れる際には、ぜひこの市場に足を運んで、あなただけの「K-Life Hack」を見つけてみてくださいね！
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>📍 住所</b>: 忠清北道 清州市 興徳区 加慶洞 ⏰ 営業時間: 毎日 11:00 - 20:20 (チャンイネ加慶店の情報に基づきます) 🚇 アクセス: 清州高速バスターミナルから徒歩約3分 (西武消防署、加慶ターミナル市場バス停からもアクセス可能) 💳 支払い: 現金、主要クレジットカード 📝 その他: 市場内には多様な店舗があり、駐車場は限られているため公共交通機関の利用をお勧めします。</li></ul>
+<ul style="margin:0;padding:0;list-style:none;">
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>📍 住所</b>: 忠清北道 清州市 興徳区 加慶洞</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>⏰ 営業時間</b>: 毎日 11:00 - 20:20 (チャンイネ加慶店の情報に基づきます)</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🚇 アクセス</b>: 清州高速バスターミナルから徒歩約3分 (西武消防署、加慶ターミナル市場バス停からもアクセス可能)</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💳 支払い</b>: 現金、主要クレジットカード</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>📝 その他</b>: 市場内には多様な店舗があり、駐車場は限られているため公共交通機関の利用をお勧めします。</li>
+</ul>
 </div></blockquote><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="CHEONGJU" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 가경 터미널시장</h3><p class="k-map-address">충청북도 청주시 흥덕구 가경동</p></div>
@@ -86,7 +92,7 @@ author: "K-Life Hack"
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
 <a href="https://www.google.com/maps/search/?api=1&query=%EA%B0%80%EA%B2%BD%20%ED%84%B0%EB%AF%B8%EB%84%90%EC%8B%9C%EC%9E%A5" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84%20%EC%B2%AD%EC%A3%BC%EC%8B%9C%20%ED%9D%A5%EB%8D%95%EA%B5%AC%20%EA%B0%80%EA%B2%BD%EB%8F%99" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://map.naver.com/p/search/ 가경터미널시장" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 
