@@ -49,7 +49,7 @@ author: "K-Life Hack"
 
 <img alt="加慶市場内のレストランのインテリア" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/07/cheongju-gagyeong-terminal-market-jjangine/khack_1778130250_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-市場の近くには、地元の人々に長年愛される「チャンイネ手作りトンカツ＆칡冷麺（チルレンミョン）」という名店があるんです。ここは、清州のトンカツ맛집（美味しい店）として以前から超有名で、本店の「ソンアンギル店」にはよく足を運んでいました。今回は初めて加慶店を訪れてみたんですが、期待を裏切らない美味しさで、やっぱり「チャンイネ」は外せないスポットだと再確認しましたね。
+市場の近くには、地元の人々に長年愛される「チャンイネ手作りトンカツ＆葛（くず）冷麺」という名店があるんです。ここは、清州のトンカツの名店として以前から超有名で、本店にはよく足を運んでいました。今回は初めて加慶店を訪れてみたんですが、期待を裏切らない美味しさで、やっぱり「チャンイネ」は外せないスポットだと再確認しましたね。
 
 <img alt="レストランのメニューボードと料理の価格" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/07/cheongju-gagyeong-terminal-market-jjangine/khack_1778130261_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
