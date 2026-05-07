@@ -2,6 +2,14 @@ body.article-page .article-header .article-image {
     display: none !important;
 }
 
+.disqus-container {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 .article-content {
     ul, ol {
         padding-left: 1.5rem !important; /* 기존 40px(약 2.5rem)에서 1.5rem으로 축소 */
