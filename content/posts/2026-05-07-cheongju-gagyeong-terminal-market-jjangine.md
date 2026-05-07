@@ -12,7 +12,11 @@ author: "K-Life Hack"
 ---
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 新鮮な旬の食材が手に入る！活気あふれる伝統市場の魅力に浸れます。 🍜 地元で大人気の「チャンイネ」のトンカツと冷麺の組み合わせは、一度食べたら忘れられない絶品。 🚶‍♀️ 清州高速バスターミナルから徒歩圏内！アクセス抜群で、旅行者でも気軽に立ち寄れるのが嬉しいポイント。</li></ul>
+<ul style="margin:0;padding:0;list-style:none;">
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 新鮮な旬の食材が手に入る！活気あふれる伝統市場の魅力に浸れます。</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">🍜 地元で大人気の「チャンイネ」のトンカツと冷麺の組み合わせは、一度食べたら忘れられない絶品。</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">🚶‍♀️ 清州高速バスターミナルから徒歩圏内！アクセス抜群で、旅行者でも気軽に立ち寄れるのが嬉しいポイント。</li>
+</ul>
 </div></blockquote>
 
 最近、ソウルっ子の間で密かに話題沸騰中なのが、清州（チョンジュ）の「加慶（カギョン）ターミナル市場」って知ってた？ただの市場じゃない、ここはもうローカルグルメの宝庫で、一度行ったら絶対ハマる次世代のホットプレイスなんだ。新鮮な食材からSNS映えする絶品まで、清州のリアルな魅力をギュッと凝縮した、まさに「本気の穴場」って感じ！
@@ -92,7 +96,7 @@ author: "K-Life Hack"
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
 <a href="https://www.google.com/maps/search/?api=1&query=%EA%B0%80%EA%B2%BD%20%ED%84%B0%EB%AF%B8%EB%84%90%EC%8B%9C%EC%9E%A5" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/ 가경터미널시장" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://map.naver.com/p/search/가경터미널시장" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 
