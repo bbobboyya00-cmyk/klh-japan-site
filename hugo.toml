@@ -6,7 +6,7 @@ publishDir = 'docs'
 defaultContentLanguage = 'ja'   # 👈 'en'에서 변경
 hasCJKLanguage = true
 
-disqusShortname = "klifehack-com"
+#disqusShortname = "klifehack-com"
 
 
 [related]
