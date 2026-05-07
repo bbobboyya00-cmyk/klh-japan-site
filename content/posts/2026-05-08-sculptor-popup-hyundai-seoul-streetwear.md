@@ -12,7 +12,10 @@ author: "K-Life Hack"
 ---
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">・オンラインで完売したアーカイブアイテムや幻のバディースーツが奇跡の再入荷・10万ウォン以上の購入でアームチューブや限定キーリングなどの豪華特典を先着順で贈贈・SNSで話題の「クロススタッズウォレット」新色ミントがオフライン先行販売で登場</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">
+-オンラインで完売したアーカイブアイテムや幻のバディースーツが奇跡の再入荷
+-10万ウォン以上の購入でアームチューブや限定キーリングなどの豪華特典を先着順で贈贈
+-SNSで話題の「クロススタッズウォレット」新色ミントがオフライン先行販売で登場</li></ul>
 </div></blockquote>
 
 韓国ストリート界の絶対王者、スカルプター（SCULPTOR）がザ・現代ソウルを完全にジャックしました。オンラインでは秒で完売した伝説のアーカイブから、ここでしか手に入らない限定ノベルティまで、まさにファンの聖地と化しています。今ソウルで最も熱い視線を浴びている、この圧倒的な空間の熱気をリアルにお届けします。

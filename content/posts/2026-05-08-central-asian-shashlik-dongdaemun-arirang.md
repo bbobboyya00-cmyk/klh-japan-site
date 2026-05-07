@@ -51,7 +51,7 @@ author: "K-Life Hack"
 
 目の前で豪快に肉を串から外す瞬間は、まさに本格的な中央アジア料理を楽しんでいるという実感が湧いてくる最高にワクワクする時間です。この圧倒的なボリューム感は、写真に収めずにはいられません。
 
-<img alt="中央アジア의 전통적인 소皿料理" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/central-asian-shashlik-dongdaemun-arirang/khack_1778191686_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="alt="中央アジアの伝統的な小皿料理" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/central-asian-shashlik-dongdaemun-arirang/khack_1778191686_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 キムチや玉ねぎ、そして特製のソースなど、テーブルを彩る小皿料理の一つひとつに丁寧な手仕事が感じられ、飽きることなく食事を楽しめます。特製ソースにディップして食べれば、新しい味の発見にワクワクが止まりません。
 
@@ -64,11 +64,11 @@ author: "K-Life Hack"
 </div></blockquote><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 동대문 아리랑</h3><p class="k-map-address">서울특별시 중구 장충단로 221 명봉빌딩 2층 아리랑 (서울특별시 중구 광희동1가 194-1 명봉빌딩 2층 아리랑)</p></div>
-<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EB%8F%99%EB%8C%80%EB%AC%B8%20%EC%95%84%EB%A6%AC%EB%9E%91&output=embed"></iframe></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=광희동1가 194-1&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
-<a href="https://www.google.com/maps/search/?api=1&query=%EB%8F%99%EB%8C%80%EB%AC%B8%20%EC%95%84%EB%A6%AC%EB%9E%91" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EC%95%84%EB%A6%AC%EB%9E%91" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=광희동1가 194-1" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://map.naver.com/p/search/동대문 아리랑" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 
