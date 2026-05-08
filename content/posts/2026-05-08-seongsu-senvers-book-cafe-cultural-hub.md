@@ -88,11 +88,11 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 </a>
 </div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
-<div class="k-map-header"><h3 class="k-map-title">📍 SENUERS</h3><p class="k-map-address">서울특별시 성동구 아차산로13길 31 (서울특별시 성동구 성수동2가 302-36)</p></div>
-<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%84%B1%EC%88%98%20%EC%84%BC%EB%B2%84%EC%8A%A4&output=embed"></iframe></div>
+<div class="k-map-header"><h3 class="k-map-title">📍 SENUERS</h3><p class="k-map-address">서울특별시 성동구 아차산로13길 31 (서울 성동구 성수동2가 278-35)</p></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=서울 성동구 성수동2가 278-35&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%84%B1%EC%88%98%20%EC%84%BC%EB%B2%84%EC%8A%A4" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=서울 성동구 성수동2가 278-35" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%84%BC%EB%B2%84%EC%8A%A4" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
