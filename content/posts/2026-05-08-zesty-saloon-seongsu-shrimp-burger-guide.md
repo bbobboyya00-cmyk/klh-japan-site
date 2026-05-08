@@ -60,8 +60,24 @@ author: "K-Life Hack"
 仲間と一緒に訪れるなら、看板メニューをいくつか頼んでシェアするのが正解です。ガツンと肉の旨みを感じるゼスティガーリックや、チーズたっぷりのメニューなど、バリエーション豊かなラインナップを一度に味わえるのは、まさに至福の瞬間です。
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">住所：서울특별시 성동구 서울숲4길 13 (성수동1가)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間：11</b>: 30 - 21:00 (ラストオーダー 20:30)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">アクセス：地下鉄 水仁</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">盆唐線「ソウルスプ駅」5番出口から徒歩約5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">支払い：クレジットカード、モバイル決済対応</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">備考：キャッチテーブル（Catchtable）アプリでの事前予約を推奨。週末は非常に混雑するため、午後の早い時間帯を狙うのがコツです。</li></ul>
+<ul style="margin:0;padding:0;list-style:none;">
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>住所</b>：서울특별시 성동구 서울숲4길 13 (聖水洞1街)</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>：11:30 - 21:00 (ラストオーダー 20:30)</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>：地下鉄 水仁・盆唐線「ソウルスプ駅」5番出口から徒歩約5分</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>支払い</b>：クレジットカード、モバイル決済(TravelLog/TravelWallet)対応</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>備考</b>：キャッチテーブル（Catchtable）アプリでのリモート待機を推奨。週末は非常に混雑するため、オフピークの時間を狙うのがコツです。</li>
+</ul>
 </div></blockquote>
+
+<div class="k-map-box">
+<div class="k-map-header"><h3 class="k-map-title">📍 ゼスティサルーン 聖水 (Zesty Saloon)</h3><p class="k-map-address">서울특별시 성동구 서울숲4길 13</p></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%8A%A4%ED%8B%B0%EC%82%B4%EB%A3%AC%20%EC%84%B1%EC%88%98&output=embed"></iframe></div>
+<div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
+<div class="k-map-buttons">
+<a href="https://www.google.com/maps/search/?api=1&query=%EC%A0%9C%EC%8A%A4%ED%8B%B0%EC%82%B4%EB%A3%AC%20%EC%84%B1%EC%88%98" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://map.naver.com/p/search/%EC%A0%9C%EC%8A%A4%ED%8B%B0%EC%82%B4%EB%A3%AC%20%EC%84%B1%EC%88%98" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+</div>
+</div>
 
 ## 2026年の聖水洞を満喫するためのパーフェクトプラン
 
@@ -77,7 +93,7 @@ author: "K-Life Hack"
 
 夜になると、赤と緑のネオンがより一層輝きを増し、昼間とはまた違った幻想的な表情を見せてくれます。ソウルのトレンドは移り変わりが激しいですが、ゼスティサルーンが提供する本物の味と体験は、これからも色褪せることはありません。😍<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
-<div class="k-map-header"><h3 class="k-map-title">📍 제스티살룬 성수</h3><p class="k-map-address">서울특별시 성동구 서울숲4길 13 (성수동1가)</p></div>
+<div class="k-map-header"><h3 class="k-map-title">📍 ゼスティサルーン 聖水 (Zesty Saloon)</h3><p class="k-map-address">서울특별시 성동구 서울숲4길 13 (성수동1가)</p></div>
 <div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%8A%A4%ED%8B%B0%EC%82%B4%EB%A3%AC%20%EC%84%B1%EC%88%98&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
