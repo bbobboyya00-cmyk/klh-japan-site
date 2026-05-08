@@ -87,11 +87,11 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 </div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 Viva Trade Eulji Dundenjeom</h3><p class="k-map-address">서울특별시 중구 을지로 264 (서울특별시 중구 을지로6가 21-31)</p></div>
-<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EB%8F%99%EB%8C%80%EB%AC%B8%20%EB%B9%84%EB%B0%94%EB%AC%B4%EC%97%AD%20%EC%9D%84%EC%A7%80%20%EB%8D%98%EB%8D%98%EC%A0%90&output=embed"></iframe></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=비바무역 을지 던던 동대문점&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
-<a href="https://www.google.com/maps/search/?api=1&query=%EB%8F%99%EB%8C%80%EB%AC%B8%20%EB%B9%84%EB%B0%94%EB%AC%B4%EC%97%AD%20%EC%9D%84%EC%A7%80%20%EB%8D%98%EB%8D%98%EC%A0%90" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EB%B9%84%EB%B0%94%EB%AC%B4%EC%97%AD%20%EC%9D%84%EC%A7%80%20%EB%8D%98%EB%8D%98%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=비바무역 을지 던던 동대문점" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://map.naver.com/p/search/비바무역 을지 던던 동대문점" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 

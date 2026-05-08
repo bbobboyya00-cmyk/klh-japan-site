@@ -64,7 +64,13 @@ author: "K-Life Hack"
 ドラマのシーンと実際の場所を見比べると、制作陣がいかにこの場所の魅力を最大限に引き出していたかがよく分かるよね。放送から時間は経ったけど、ここは今も色褪せない感動を与えてくれる特別な場所。ソウルに行くなら、この空間をぜひ自分の目で確かめてみてほしいな。
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">住所：ソウル特別市 鍾路区 三一大路 460</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間：09</b>: 00 - 18:00 (月曜定休)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">アクセス：地下鉄3号線 安国(アングッ)駅 4番出口から徒歩1分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">支払い：入場無料</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">備考：徳成女子大学のキャンパス内にあるため、平日は学生の学習の妨げにならないよう、静かに見学するのがローカルなマナーです。</li></ul>
+<ul style="margin:0;padding:0;list-style:none;">
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>住所</b>: ソウル特別市 鍾路区 三一大路 460</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 09:00 - 18:00 (月曜定休)</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 地下鉄3号線 安国(アングッ)駅 4番出口から徒歩1分</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>支払い</b>: 入場無料</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>備考</b>: 徳成女子大学のキャンパス内にあるため、平日は学生の学習の妨げにならないよう、静かに見学するのがローカルなマナーです。</li>
+</ul>
 </div></blockquote>
 
 
@@ -78,10 +84,10 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 </div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 Unhyeongung Yanggwan</h3><p class="k-map-address">서울특별시 종로구 삼일대로 460 (서울특별시 종로구 운니동 114-10)</p></div>
-<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%5B%EB%93%9C%EB%9D%BC%EB%A7%88%20%EC%B4%AC%EC%98%81%EC%A7%80%5D%20%EC%84%9C%EC%9A%B8%20%EB%8F%84%EA%B9%A8%EB%B9%84%20%EA%B3%B5%EC%9C%A0%20%EC%A7%91&output=embed"></iframe></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=운형궁 양관&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
-<a href="https://www.google.com/maps/search/?api=1&query=%5B%EB%93%9C%EB%9D%BC%EB%A7%88%20%EC%B4%AC%EC%98%81%EC%A7%80%5D%20%EC%84%9C%EC%9A%B8%20%EB%8F%84%EA%B9%A8%EB%B9%84%20%EA%B3%B5%EC%9C%A0%20%EC%A7%91" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=운형궁 양관" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%9A%B4%ED%98%84%EA%B6%81%20%EC%96%91%EA%B4%80" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
