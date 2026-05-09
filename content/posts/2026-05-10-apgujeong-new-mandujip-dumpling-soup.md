@@ -69,11 +69,21 @@ author: "K-Life Hack"
 狎鴎亭に立ち寄るなら、この「ニューマンドゥチプ」はマストで訪れてほしい場所です。伝統と温かさが息づくこの場所で、心ゆくまで美味しいマンドゥクッを堪能して、忘れられない思い出を作ってください。2026年も、きっとあなたの期待を裏切らないはずです。 (未来の自分に感謝すること間違いなしです！)
 
 <img alt="手書きのメニューボード" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/10/apgujeong-new-mandujip-dumpling-soup/khack_1778364305_11.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-<blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
+<blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;">
+<div class="alert-header">
+<span class="alert-icon">💡</span>
+<span class="alert-title">訪問ガイド (Tip)</span>
+</div>
+<div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
-<li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 <b>住所</b>: ソウル特別市 江南区 狎鴎亭路 338</li> <li="" style="margin-bottom:12px; list-style:none; line-height:1.4;">⏰ <b>営業時間</b>: 毎日 11:00 - 21:00 (ラストオーダー 20:30) ※休憩時間 15:00 - 17:00 (月～金)</li> <li="" style="margin-bottom:12px; list-style:none; line-height:1.4;">🚇 <b>交通</b>: 狎鴎亭ロデオ駅 5番出口から徒歩約10分、または狎鴎亭駅 2番出口から徒歩約10分。バス停「狎鴎亭駅」すぐ裏手。</li> <li="" style="margin-bottom:12px; list-style:none; line-height:1.4;">💳 <b>支払い</b>: クレジットカード、現金 (TravelLogやTravelWalletカードも利用可能)</li> <li="" style="margin-bottom:12px; list-style:none; line-height:1.4;">📝 <b>備考</b>: マンドゥクッ、コチュジョン、ピンデトックはハーフサイズでの注文も可能です。待ち時間が発生する場合があるため、時間に余裕を持って訪問することをおすすめします。</line_end]></line_end]></line_end]></line_end]></li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 <b>住所</b>: ソウル特別市 江南区 狎鴎亭路 338</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">⏰ <b>営業時間</b>: 毎日 11:00 - 21:00 (ラストオーダー 20:30) ※休憩時間 15:00 - 17:00 (月～金)</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">🚇 <b>交通</b>: 狎鴎亭ロデオ駅 5番出口から徒歩約10分、または狎鴎亭駅 2番出口から徒歩約10分。バス停「狎鴎亭駅」すぐ裏手。</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">💳 <b>支払い</b>: ク레ジットカード、現金 (TravelLogやTravelWalletカードも利用可能)</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">📝 <b>備考</b>: マンドゥクッ、コチュジョン、ピンデトックはハーフサイズでの注文も可能です。待ち時間が発生する場合があるため、時間に余裕を持って訪問することをおすすめします。</li>
 </ul>
-</div></blockquote><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+</div>
+</blockquote><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 압구정 뉴만두집</h3><p class="k-map-address">서울특별시 강남구 압구정로 338 (서울특별시 강남구 신사동 661-1)</p></div>
 <div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%95%95%EA%B5%AC%EC%A0%95%20%EB%89%B4%EB%A7%8C%EB%91%90%EC%A7%91&output=embed"></iframe></div>
