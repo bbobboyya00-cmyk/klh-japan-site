@@ -72,7 +72,7 @@ author: "K-Life Hack"
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%B2%AD%EB%9F%89%EB%A6%AC%20%EC%B6%A9%EC%B2%AD%EB%8F%84%EC%8B%9D%EB%8B%B9" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EC%B6%A9%EC%B2%AD%EB%8F%84%EC%8B%9D%EB%8B%B9" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://map.naver.com/p/search/청량리 충청도식당" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 
