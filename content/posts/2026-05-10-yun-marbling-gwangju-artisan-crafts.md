@@ -64,11 +64,11 @@ author: "K-Life Hack"
 昨シーズンも大好評だった「ユン・マーブリング」の体験プログラムは、さらに進化してるらしいですよ！ただの観光じゃなくて、自分の感性を水面に映して、世界に一つだけの作品を作るって、めちゃくちゃ素敵な思い出になりますよね。日常に隠れた美しさを再発見して、自分だけの物語をデザインする休日、最高じゃないですか？ぜひ、光州で特別なアート体験をしてみてくださいね！<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="GWANGJU" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 Yun Marbling</h3><p class="k-map-address">광주광역시 서구 상무오월로3번길 24-11</p></div>
-<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=Yun%20Marbling&output=embed"></iframe></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=윤마블링&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
-<a href="https://www.google.com/maps/search/?api=1&query=Yun%20Marbling" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/Yun%20Marbling" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=윤마블링" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://map.naver.com/p/search/윤마블링" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 
