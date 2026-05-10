@@ -368,7 +368,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;li&gt;&lt;strong&gt;決済案内&lt;/strong&gt;: 現金不可、カード決済のみ対応&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;&lt;/blockquote&gt;
-&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
+&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
  data-label_1="YONGIN" data-label_2="WEATHER" data-theme="original" &gt;
  YONGIN WEATHER
 &lt;/a&gt;
@@ -377,7 +377,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;/script&gt;&lt;/div&gt;
 &lt;div class="k-map-box"&gt;
  &lt;div class="k-map-header"&gt;
- &lt;h3 class="k-map-title"&gt;📍 조아용in스토어 용인시청점
+ &lt;h3 class="k-map-title"&gt;📍 조아용in스토어 용인시청점&lt;/h3&gt;
  &lt;p class="k-map-address"&gt;경기도 용인시 처인구 중부대로 1199&lt;/p&gt;
  &lt;/div&gt;
  &lt;div class="k-map-iframe-wrap"&gt;
@@ -453,7 +453,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;li&gt;&lt;strong&gt;注意点&lt;/strong&gt;: 飲食物の持ち込みはご遠慮ください。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;&lt;/blockquote&gt;
-&lt;p&gt;ニューヨークとソウルの感性が交錯するこの特別な空間で、あなただけのインスピレーションを見つけてみてはいかがでしょうか。&lt;/p&gt;&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
+&lt;p&gt;ニューヨークとソウルの感性が交錯するこの特別な空間で、あなただけのインスピレーションを見つけてみてはいかがでしょうか。&lt;/p&gt;&lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;&lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
  data-label_1="SEOUL" data-label_2="WEATHER" data-theme="original" &gt;
  SEOUL WEATHER
 &lt;/a&gt;
@@ -462,7 +462,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;/script&gt;&lt;/div&gt;
 &lt;div class="k-map-box"&gt;
  &lt;div class="k-map-header"&gt;
- &lt;h3 class="k-map-title"&gt;📍 MoMA Bookstore Seoul
+ &lt;h3 class="k-map-title"&gt;📍 MoMA Bookstore Seoul&lt;/h3&gt;
  &lt;p class="k-map-address"&gt;ソウル特別市 江南区 道山大路45キル 18-10 (서울 강남구 신사동 668-23)&lt;/p&gt;
  &lt;/div&gt;
  &lt;div class="k-map-iframe-wrap"&gt;
@@ -525,18 +525,18 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;/div&gt;&lt;/blockquote&gt;
 &lt;div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"&gt;
  &lt;h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;"&gt;📅 現地のお天気ガイド
- &lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
+ &lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
  data-label_1="SEOUL" data-label_2="WEATHER" data-theme="original" &gt;
  SEOUL WEATHER
- &lt;/a&gt;
- &lt;script&gt;
- !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
- &lt;/script&gt;
+&lt;/a&gt;
+&lt;script&gt;
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+&lt;/script&gt;
 &lt;/div&gt;
 &lt;h2 id="-地図アクセス"&gt;📍 地図・アクセス
 &lt;/h2&gt;&lt;div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;"&gt;
  &lt;div style="padding:20px 20px 10px;"&gt;
- &lt;h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;"&gt;📍 メタモン遊び場 (聖水洞)
+ &lt;h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;"&gt;📍 メタモン遊び場 (聖水洞)&lt;/h3&gt;
  &lt;p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;"&gt;ソウル特別市 城東区 聖水二路7街キル 9 (서울특별시 성동구 성수동 성수이로7가길 9)&lt;/p&gt;
  &lt;/div&gt;
  &lt;div style="background:var(--themeBg-sec);height:350px;width:100%;"&gt;
@@ -668,7 +668,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
  &lt;p&gt;🌐 &lt;strong&gt;Read this post in other languages:&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://en.klifehack.com/2026/04/the-curated-sanctuary-of-k-design.html" target="_blank" rel="noopener"
- &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"&gt;&lt;h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;"&gt;📅 現地のお天気ガイド&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d26127d03/suwon-si/" 
+ &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"&gt;&lt;h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d26127d03/suwon-si/" 
  data-label_1="GYEONGGI-SOUTH" data-label_2="WEATHER" data-theme="original" &gt;
  GYEONGGI-SOUTH WEATHER
 &lt;/a&gt;
@@ -681,7 +681,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;h2 id="-地図アクセス"&gt;📍 地図・アクセス
 &lt;/h2&gt;&lt;div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;"&gt;
 &lt;div style="padding: 20px 20px 10px;"&gt;
-&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 ムーブメントラボ 義王フラッグシップストア
+&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 ムーブメントラボ 義王フラッグシップストア&lt;/h3&gt;
 &lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;韓国京畿道義王市白雲路 588&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background: var(--themeBg-sec); height: 350px; width: 100%;"&gt;
@@ -826,7 +826,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;/ul&gt;
 
  &lt;/blockquote&gt;
-&lt;div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"&gt;&lt;h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;"&gt;📅 現地のお天気ガイド&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/35d18129d08/busan/" 
+&lt;div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"&gt;&lt;h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/35d18129d08/busan/" 
  data-label_1="BUSAN" data-label_2="WEATHER" data-theme="original" &gt;
  BUSAN WEATHER
 &lt;/a&gt;
@@ -836,7 +836,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;h2 id="-地図アクセス"&gt;📍 地図・アクセス
 &lt;/h2&gt;&lt;div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;"&gt;
 &lt;div style="padding: 20px 20px 10px;"&gt;
-&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 ROSÉ Encore Pop-up at BUSAN X the SKY (부산 엑스더스카이)
+&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 ROSÉ Encore Pop-up at BUSAN X the SKY (부산 엑스더스카이)&lt;/h3&gt;
 &lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;부산 해운대구 달맞이길 30&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background: var(--themeBg-sec); height: 350px; width: 100%;"&gt;
@@ -908,7 +908,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
  &lt;p&gt;🌐 &lt;strong&gt;Read this post in other languages:&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://en.klifehack.com/2026/04/inside-salon-de-rlux-pinnacle-of.html" target="_blank" rel="noopener"
- &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"&gt;&lt;h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;"&gt;📅 現地のお天気ガイド&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
+ &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"&gt;&lt;h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
  data-label_1="SEOUL" data-label_2="WEATHER" data-theme="original" &gt;
  SEOUL WEATHER
 &lt;/a&gt;
@@ -921,7 +921,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;h2 id="-地図アクセス"&gt;📍 地図・アクセス
 &lt;/h2&gt;&lt;div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;"&gt;
 &lt;div style="padding: 20px 20px 10px;"&gt;
-&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 サロンド・アルラックス (Salon de R.LUX)
+&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 サロンド・アルラックス (Salon de R.LUX)&lt;/h3&gt;
 &lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;서울 성동구 성수동2가 317-7&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background: var(--themeBg-sec); height: 350px; width: 100%;"&gt;
@@ -990,7 +990,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
  &lt;p&gt;🌐 &lt;strong&gt;Read this post in other languages:&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://en.klifehack.com/2026/04/a-panoramic-sanctuary-ultimate-guide-to.html" target="_blank" rel="noopener"
- &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"&gt;&lt;h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;"&gt;📅 現地のお天気ガイド&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d26127d03/suwon-si/" 
+ &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"&gt;&lt;h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d26127d03/suwon-si/" 
  data-label_1="GYEONGGI-SOUTH" data-label_2="WEATHER" data-theme="original" &gt;
  GYEONGGI-SOUTH WEATHER
 &lt;/a&gt;
@@ -1003,7 +1003,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;h2 id="-地図アクセス"&gt;📍 地図・アクセス
 &lt;/h2&gt;&lt;div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;"&gt;
 &lt;div style="padding: 20px 20px 10px;"&gt;
-&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 쏠스트릿
+&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 쏠스트릿&lt;/h3&gt;
 &lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;경기도 수원시 장안구 팔달로 255 우솔빌딩 3층&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background: var(--themeBg-sec); height: 350px; width: 100%;"&gt;
@@ -1077,7 +1077,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
  &lt;p&gt;🌐 &lt;strong&gt;Read this post in other languages:&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://en.klifehack.com/2026/04/a-new-paradigm-of-modular-utility.html" target="_blank" rel="noopener"
- &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin-top: 35px; margin-bottom: 20px;"&gt;&lt;h3 style="font-size: 1.2rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 15px;"&gt;📅 現地のお天気ガイド&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
+ &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;div class="k-weather-section" style="margin-top: 35px; margin-bottom: 20px;"&gt;&lt;h3 style="font-size: 1.2rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 15px;"&gt;📅 現地のお天気ガイド&lt;/h3&gt;&lt;a class="weatherwidget-io" href="https://forecast7.com/ja/37d57126d98/seoul/" 
  data-label_1="SEOUL" data-label_2="WEATHER" data-theme="original" &gt;
  SEOUL WEATHER
 &lt;/a&gt;
@@ -1090,7 +1090,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;h2 id="-地図アクセス"&gt;📍 地図・アクセス
 &lt;/h2&gt;&lt;div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;"&gt;
 &lt;div style="padding: 20px 20px 10px;"&gt;
-&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 토폴로지
+&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 토폴로지&lt;/h3&gt;
 &lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;서울특별시 성동구 서울숲길 54 1층 토폴로지&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background: var(--themeBg-sec); height: 350px; width: 100%;"&gt;
@@ -1139,8 +1139,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;p&gt;&lt;strong&gt;おすすめの時間帯:&lt;/strong&gt; ショールームがオープンする11:00〜12:00頃が狙い目。お昼を過ぎるとカフェや路地が非常に混雑するため、朝一番に買い物を済ませ、午後はゆっくりと食事や散策を楽しむのが、エディターK流の賢いソウルの歩き方です。2026年春、あなただけの特別な一着を漢南洞で見つけてみませんか？&lt;/p&gt;
 &lt;div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;"&gt;
 &lt;div style="padding: 20px 20px 10px;"&gt;
-&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 漢南洞ショールームエリア (Hannam-dong Showroom Area)
-&lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;ソウル特別市 龍山区 漢南大路&lt;/p&gt;
+&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 漢南洞ショールームエリア (Hannam-dong Showroom Area)&lt;/h3&gt;&lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;ソウル特別市 龍山区 漢南大路&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background: var(--themeBg-sec); height: 350px; width: 100%;"&gt;
 &lt;iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=글로니 한남 쇼룸&amp;t=&amp;z=18&amp;ie=UTF8&amp;iwloc=&amp;output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"&gt;&lt;/iframe&gt;
@@ -1192,7 +1191,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;p&gt;ソウルは今、華やかな表層の下で、より深く、より賢く進化しようとしています。次にあなたがソウルを訪れるとき、その街角で新しい&amp;rsquo;持続可能な美しさ&amp;rsquo;に出会えることを、エディターKも心から願っています。&lt;/p&gt;
 &lt;div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;"&gt;
 &lt;div style="padding: 20px 20px 10px;"&gt;
-&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt;📍 ムシンサストア 聖水 (Musinsa Store Seongsu)
+&lt;h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;"&gt; 📍 ムシンサストア 聖水 Musinsa Store Seongsu &lt;/h3&gt;
 &lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;ソウル特別市 城東区 聖水二路 108&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background: var(--themeBg-sec); height: 350px; width: 100%;"&gt;
