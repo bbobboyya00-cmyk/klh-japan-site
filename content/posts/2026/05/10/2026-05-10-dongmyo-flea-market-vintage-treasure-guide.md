@@ -94,7 +94,7 @@ author: "K-Life Hack"
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%20%EB%8F%99%EB%AC%98%20%EA%B5%AC%EC%A0%9C%EC%8B%9C%EC%9E%A5" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/Sungin-dong%20%EB%8F%99%EB%AC%98%20%EA%B5%AC%EC%A0%9C%EC%8B%9C%EC%9E%A5" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://map.naver.com/p/search/%EB%8F%99%EB%AC%98%20%EA%B5%AC%EC%A0%9C%EC%8B%9C%EC%9E%A5" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 

@@ -73,7 +73,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
 <a href="https://www.google.com/maps/search/?api=1&query=2026%20%EA%B5%AC%EB%A6%AC%20%EC%9C%A0%EC%B1%84%EA%BD%83%20%EC%B6%95%EC%A0%9C" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/Topyeong-dong%20%EA%B5%AC%EB%A6%AC%ED%95%9C%EA%B0%95%EC%8B%9C%EB%AF%BC%EA%B3%B5%EC%9B%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://map.naver.com/p/search/%EA%B5%AC%EB%A6%AC%ED%95%9C%EA%B0%95%EC%8B%9C%EB%AF%BC%EA%B3%B5%EC%9B%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 
