@@ -17,39 +17,33 @@ author: "K-Life Hack"
 </ul>
 </div></blockquote>
 
-皆さんは最近、聖水洞（ソンスドン）に行きましたか？今、SNSで一番話題と言っても過言ではない、あの「セリ」のお店が気になっている方も多いはず。今日は私が実際に足を運んで感動した、とっておきのグルメスポットを皆さんにだけシェアしちゃいますね！(本当は秘密にしておきたいくらい素敵なお店なんです！)
+皆さんは最近、聖水洞（ソンスドン）に行きましたか？今、SNSで一番話題と言っても過言ではない、あの「セリ」のお店が気になっている方も多いはず。今日は私が実際に足を運んで感動した、とっておきのグルメスポットを皆さんにだけシェアしちゃいますね！本当は秘密にしておきたいくらい素敵なお店なんですが、この反則級に美味しそうなビジュアルを見たら、きっと皆さんも行きたくなるはずです🤤
 
 ## 聖水洞で今一番アツい！緑の看板が目印の「ヌンドンミナリ」
 
 <img alt="聖水洞のヌンドンミナリの外観と行列" fetchpriority="high" height="432" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429089_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" width="352"/>
 
-(聖水洞のメインストリートで一際目立っています！)
-
-私がお店の前に到着すると、まずその活気に驚かされました。平日のお昼時を少し過ぎた時間でしたが、お店の前にはこの味を求めて集まった人々でいっぱい！でも、聖水洞らしいおしゃれなショップを眺めながら待っていたので、待ち時間も全然苦になりませんでした。(むしろ期待が高まってワクワクしちゃいました！)
+私がお店の前に到着すると、まずその活気に驚かされました。聖水洞のメインストリートで一際目立つ鮮やかな緑の看板と、平日のお昼時を少し過ぎた時間にも関わらずこの味を求めて集まった人々の行列！でも、聖水洞らしいおしゃれなショップを眺めながら待っていたので、待ち時間も全然苦になりませんでした。むしろ期待が高まってワクワクしちゃいましたよ！
 
 <img alt="豪華なユッケとセリのテーブルセッティング" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429091_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-(このビジュアル、反則級に美味しそうじゃないですか？ 🤤)
+### レトロで温かみのある店内と安心のオープンキッチン
 
-一歩足を踏み入れると、外の喧騒を忘れさせてくれるような落ち着いた空間が広がっています。木材を基調としたインテリアは、どこか懐かしい韓国の伝統家屋を現代風にアレンジしたような温かみがあり、友人や恋人とゆっくり食事を楽しむのにぴったりな雰囲気です。
+一歩足を踏み入れると、外の喧騒を忘れさせてくれるような落ち着いた空間が広がっています。木材を基調としたインテリアは、どこか懐かしい韓国の伝統家屋を現代風にアレンジしたような温かみがあり、友人や恋人とゆっくり食事を楽しむのにぴったりな雰囲気です。活気があるのにどこか落ち着く、不思議な魅力があるんですよね。
 
 <img alt="活気あふれる店内の様子" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429093_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-(活気があるのにどこか落ち着く、不思議な空間です)
 
 店内は1階と2階に分かれていて、開放感のある設計になっていました。スタッフの方々の動きも非常にキビキビとしていて、行列店でありながらも行き届いたサービスを感じることができたのが、このお店が長く愛され続ける理由なんだなと実感しました。
 
 <img alt="清潔感のあるオープンキッチン" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429094_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-(調理の様子が見えるので、安心感も抜群です！)
+オープンキッチンからは、次々と運ばれていく料理の香ばしい匂いが漂ってきます。清潔に保たれた調理スペースで、新鮮なセリが手際よく盛り付けられていく様子など、調理のプロセスが直接見えるので安心感も抜群です。見ているだけでお腹が空いてきちゃいますよね。
 
-オープンキッチンからは、次々と運ばれていく料理の香ばしい匂いが漂ってきます。清潔に保たれた調理スペースで、新鮮なセリが手際よく盛り付けられていく様子は、これから出てくる料理への期待をさらに高めてくれます。見ているだけでお腹が空いてきちゃいますよね。
+### 待機時間も嬉しい！心配りが行き届いたサービス
 
 <img alt="待ち時間に提供される五味子茶" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429095_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-(この一杯で、待ち時間の疲れも吹き飛びます！)
-
-行列が絶えないお店だからこその粋な計らいも忘れてはいけません。待機しているお客さんのために、甘酸っぱくて爽やかな「五味子（オミジャ）茶」が用意されていました。こうした細やかな配慮が、訪れる人の心を掴んで離さないポイントですね。(未来の自分に感謝すること間違いなしです！)
+行列が絶えないお店だからこその粋な計らいも忘れてはいけません。待機しているお客さんのために、甘酸っぱくて爽やかな「五味子（オミジャ）茶」が用意されていました。この一杯で待ち時間の疲れも吹き飛びますし、こうした細やかな配慮が、訪れる人の心を掴んで離さないポイントですね。
 
 ## 素材の味を最大限に引き出した、究極のメニュー構成
 
@@ -57,37 +51,29 @@ author: "K-Life Hack"
 
 <img alt="写真付きの分かりやすいメニュー板" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429097_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-(どれにしようか迷っちゃうほど魅力的なラインナップ！)
-
-伝統的な韓国の建築様式を取り入れた外観は、青空の下でさらに美しく映えます。夜遅くまで営業しているので、聖水洞でショッピングをたっぷり楽しんだ後のディナーや、お酒を飲んだ後のシメとして訪れる現地の方も非常に多いそうですよ。
+どれにしようか迷っちゃうほど魅力的なラインナップですが、伝統的な韓国の建築様式を取り入れた外観は青空の下でさらに美しく映えます。夜に見るこの外観もきっとロマンチックなはずです！夜遅くまで営業しているので、聖水洞でショッピングをたっぷり楽しんだ後のディナーや、お酒を飲んだ後のシメとして訪れる現地の方も非常に多いそうですよ。
 
 <img alt="伝統的な屋根が特徴的な店舗外観" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429099_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-(夜に見るこの外観も、きっとロマンチックなはず！)
+### 必食！宝石のように輝く絶品ユッケとセリのハーモニー
 
-テーブルいっぱいに並べられた料理は、まさに圧巻の一言でした。メインの料理はもちろん、付け合わせのカクテキ（大根キムチ）も絶品！大きな容器から好きなだけ取り分けて食べられるスタイルなので、ついつい食べ過ぎてしまいそうになります。
+テーブルいっぱいに並べられた料理は、まさに圧巻の一言でした。これぞ韓国グルメの醍醐味といったボリューム感！メインの料理はもちろん、付け合わせのカクテキ（大根キムチ）も絶品で、大きな容器から好きなだけ取り分けて食べられるスタイルなので、ついつい食べ過ぎてしまいそうになります。
 
 <img alt="ボリューム満点の牛肉鍋とビビンバ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429101_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-(これぞ韓国グルメの醍醐味、といったボリューム感！)
-
-特に私が感動したのは、この宝石のように輝くユッケです！新鮮な牛肉に濃厚な卵黄がのせられ、その下にはシャキシャキとした食感のセリがたっぷり。一口食べれば、肉の旨味とセリの爽やかな香りが口いっぱいに広がって、もう箸が止まりません！
+特に私が感動したのは、この宝石のように輝くユッケです！新鮮な牛肉に濃厚な卵黄がのせられ、その下にはシャキシャキとした食感のセリがたっぷり。一口食べれば、肉の旨味とセリの爽やかな香りが口いっぱいに広がって、もう箸が止まりません。混ぜて食べる瞬間の幸福感、ぜひ皆さんにも味わってほしいです！
 
 <img alt="卵黄がのった新鮮なユッケ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429103_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-(混ぜて食べる瞬間の幸福感、ぜひ味わってほしいです！)
-
-黄金色の器に盛られた料理たちは、見た目の美しさだけでなく栄養バランスも抜群です。セリにはデトックス効果もあると言われているので、旅行中の疲れた胃腸にも優しく、心身ともにリフレッシュできる最高の食事になりました。(自分へのご褒美にぴったりです！)
+黄金色の器に盛られた料理たちは、見た目の美しさだけでなく栄養バランスも抜群です。セリの香りが食欲をそそる良いアクセントになっていて、セリにはデトックス効果もあると言われているので、旅行中の疲れた胃腸にも優しく、心身ともにリフレッシュできる最高の食事になりました。
 
 <img alt="セリたっぷりのコムタンとビビンバ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429105_9.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-(セリの香りが、食欲をそそる良いアクセントになっています)
+### コスパ最強！何度でも通いたくなる理由
 
-メニューには限定販売の特別なコムタンなどもあり、何度訪れても新しい発見がありそうです。価格帯も聖水洞という人気エリアを考えると非常にリーズナブルで、そのコストパフォーマンスの高さも人気の秘訣なんだなと納得してしまいました。
+メニューには限定販売の特別なコムタンなどもあり、何度訪れても新しい発見がありそうです。聖水洞という人気エリアを考えると、このクオリティでこの価格は本当にお得感があります。そのコストパフォーマンスの高さも、行列が途絶えない人気の秘訣なんだなと納得してしまいました。
 
 <img alt="詳細な価格が記載されたメニュー表" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429107_10.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-(このクオリティでこの価格は、本当にお得感があります！)
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
