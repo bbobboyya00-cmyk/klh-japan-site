@@ -78,11 +78,6 @@ author: "K-Life Hack"
 
 市場の奥へ続く細い路地は、なんだか秘密の通路みたい。伝統的な石壁に挟まれて、雨よけのひさしの下にはヴィンテージの服がずらり。ちょっと薄暗い光が、さらに「何か見つけたい！」っていう探索心をくすぐってくるんですよね。路地ごとに全然違う雰囲気を持つ東廟の魅力を、ぜひ隅々まで探検してみてほしいです！
 
-<img alt="屋内ヴィンテージ衣料品店のインテリア" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/10/dongmyo-flea-market-vintage-treasure-guide/khack_1778407693_11.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-屋外の活気ある露店とは対照的に、広々として明るい店内のヴィンテージショップでは、丁寧にセレクトされた品々が並んでます。きっちり整理整頓されたディスプレイは、より落ち着いてゆっくり買い物できる空間を提供してくれますよね。東廟って、こういう色々なスタイルのショップを楽しめるのも大きな魅力なんです。2026年も、きっとまた新しいお気に入りのお店が見つかるはず！
-ソウルで「ちょっと他とは違う特別な体験がしたい！」って思ってるなら、東廟フリーマーケットは絶対外せないスポットですよ。過去と現在がごちゃ混ぜになってるこの場所で、あなただけの「とっておきの宝物」を見つけてみませんか？親しい友達との週末のお出かけにも最高にぴったりです。去年訪れた時の感動を胸に、今年の東廟も心から楽しみにしています！
-
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 <b>住所</b>: ソウル特別市 鍾路区 崇仁洞一帯</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">⏰ <b>営業時間</b>: 各店舗により異なる（一般的に午前10時～午後6時頃）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🚇 <b>交通</b>: 地下鉄1号線・6号線東廟前駅3番出口直結</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">💳 <b>支払い</b>: 現金推奨、一部店舗でカード利用可</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📝 <b>備考</b>: 週末は特に混雑しますので、午前中の訪問がおすすめです。</li>
