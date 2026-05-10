@@ -63,7 +63,7 @@ author: "K-Life Hack"
         <a class="btn-google" href="https://www.google.com/maps/search/?api=1&amp;query=조아용in스토어 용인시청점" target="_blank">Google Maps</a>
         <a class="btn-naver" href="https://map.naver.com/p/search/조아용in스토어 용인시청점" target="_blank">Naver Maps</a>
     </div>
-</div>
+</div></div>
 
 ---
 
