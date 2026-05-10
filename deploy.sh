@@ -7,10 +7,9 @@ cd "$SITE_DIR" || { echo "❌ Directory not found"; exit 1; }
 echo "🚀 Starting Clean Deployment Process..."
 
 # ==========================================
-# [NEW] 스마트 삭제 감지 및 DB 자동 청소 엔진
-# WinSCP에서 .md 파일을 삭제하면, Git이 변경사항을 추적하여 자동으로 DB를 말소합니다.
+# [NEW] 스마트 삭제 감지 및 DB 자동 청소 엔진 (v2605.225 TA 패치)
+# 파일 이동(Move)으로 인한 오탐지를 방어하기 위해 물리적 생존 여부를 교차 검증합니다.
 # ==========================================
-# 아직 commit되지 않은(삭제된) md 파일 목록 추출
 DELETED_FILES=$(git ls-files --deleted | grep 'content/posts/.*\.md$')
 
 if [ -n "$DELETED_FILES" ]; then
@@ -19,24 +18,25 @@ if [ -n "$DELETED_FILES" ]; then
     echo "=========================================="
     
     for FILE in $DELETED_FILES; do
-        # 파일명 추출 (예: 2026-04-18-yangpyeong-song-barbecue-backribs.md)
         BASENAME=$(basename "$FILE")
-        # 날짜(YYYY-MM-DD-) 및 확장자(.md)를 잘라내어 순수 슬러그만 확보
         SLUG=$(echo "$BASENAME" | sed -E 's/^[0-9]{4}-[0-9]{2}-[0-9]{2}-//' | sed 's/\.md$//')
         
         if [ -n "$SLUG" ]; then
+            # 🛡️ [TA 안전 가드] Git이 삭제됐다고 해도, 하위 폴더 어딘가에 물리적 파일이 살아있는지 전수 조사
+            ALIVE_FILE=$(find content/posts -name "*${SLUG}.md" -print -quit)
+            
+            if [ -n "$ALIVE_FILE" ]; then
+                echo "[!] 파일 이동 감지: '$SLUG' 파일이 삭제되지 않고 하위 폴더로 이동되었습니다. DB 말소를 방어(Bypass)합니다."
+                continue # DB 삭제 로직을 건너뜀
+            fi
+
             echo "[-] 삭제 타겟 감지: $SLUG"
             
-            # 1. DB에서 해당 슬러그를 보유한 레코드의 '공통 키워드(예: 쏭바베큐)'를 역추적
             TARGET_KEYWORD=$(sqlite3 /home/ubuntu/k_life/khack_posts.db "SELECT keywords FROM published_posts WHERE url LIKE '%$SLUG%' LIMIT 1;")
             
             if [ -n "$TARGET_KEYWORD" ]; then
                 echo "[-] 연동된 키워드 획득: '$TARGET_KEYWORD'. 관련 EN/JP 트랙 전체를 말소합니다."
-                
-                # 2. 해당 키워드로 엮인 모든 포스팅(영어, 일어)의 source_history 삭제
                 sqlite3 /home/ubuntu/k_life/khack_posts.db "DELETE FROM source_history WHERE post_id IN (SELECT id FROM published_posts WHERE keywords = '$TARGET_KEYWORD');"
-                
-                # 3. published_posts에서 해당 키워드 기록 영구 삭제
                 sqlite3 /home/ubuntu/k_life/khack_posts.db "DELETE FROM published_posts WHERE keywords = '$TARGET_KEYWORD';"
             else
                 echo "[-] DB 매칭 키워드 없음. 슬러그 기반 단독 삭제를 진행합니다."
