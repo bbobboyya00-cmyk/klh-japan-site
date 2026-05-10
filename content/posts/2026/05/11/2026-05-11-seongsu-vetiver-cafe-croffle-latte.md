@@ -74,11 +74,11 @@ author: "K-Life Hack"
 聖水洞の喧騒から少し離れて、本当に美味しいデザートと静かな時間を楽しみたいなら、ベティバーは絶対に外せない場所ですよ。今度の週末、大切な人を誘って足を運んでみてはいかがでしょうか？<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 베티버</h3><p class="k-map-address">서울특별시 성동구 성덕정11길 18 (성수동2가)</p></div>
-<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EB%B2%A0%ED%8B%B0%EB%B2%84&output=embed"></iframe></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=성수 베티버&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
-<a href="https://www.google.com/maps/search/?api=1&query=%EB%B2%A0%ED%8B%B0%EB%B2%84" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EB%B2%A0%ED%8B%B0%EB%B2%84" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=성수 베티버" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://map.naver.com/p/search/성수 베티버" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
 
