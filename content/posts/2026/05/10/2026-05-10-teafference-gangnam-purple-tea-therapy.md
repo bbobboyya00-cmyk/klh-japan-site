@@ -69,7 +69,7 @@ author: "K-Life Hack"
 
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
-<a href="https://www.teafference.com/product/goods_detail?goods_no=138" 
+<a href="https://www.teafference.com/" 
 target="_blank" 
 rel="noopener noreferrer" 
 style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); color: #ffffff; display: inline-block; font-weight: 800; letter-spacing: -0.5px; padding: 16px 32px; text-decoration: none; transition: all 0.3s ease;">
