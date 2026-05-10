@@ -72,10 +72,10 @@ author: "K-Life Hack"
 - 所要時間: 約5分
 
 </div></blockquote>
-<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 Songdo Yeokjeon Market
+        <h3 class="k-map-title">📍 Songdo Yeokjeon Market</h3>
         <p class="k-map-address">인천광역시 연수구 한나루로 202-6 (인천광역시 연수구 옥련동)</p>
     </div>
     <div class="k-map-iframe-wrap">

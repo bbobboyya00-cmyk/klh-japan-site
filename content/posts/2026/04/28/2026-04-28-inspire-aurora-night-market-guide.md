@@ -86,7 +86,7 @@ author: "K-Life Hack"
 
 <div class="k-weather-section" style="margin-top:15px;margin-bottom:10px;">
 <h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:5px;">📅 現地の天気ガイド</h3>
-{{< weather loc="37d46126d71/incheon" name="仁川" >}}
+</h3>{{< weather loc="37d46126d71/incheon" name="仁川" >}}
 </div>
 
 <div class="k-map-box">

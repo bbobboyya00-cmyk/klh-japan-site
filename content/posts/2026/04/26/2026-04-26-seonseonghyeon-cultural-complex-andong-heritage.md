@@ -72,10 +72,10 @@ author: "K-Life Hack"
 
 ## 旅の締めくくりに：内省と癒しが共存するハイエンドな時間
 <p>先聖県文化団地は、都会の喧騒から離れ、心ゆくまで静けさと美しさに浸りたい方にぜひおすすめしたい場所です。歴史的な趣を求める方には最高の癒しを提供してくれますが、一方で、きらびやかなエンターテイメントを期待する方には少し物足りなく感じるかもしれません。しかし、だからこそ、自分自身と向き合い、内省を深める貴重な時間を過ごせるのです。真の豊かさとは何かを問い直す、そんな贅沢な時間がここにあります。</p>
-<p>自然と歴史、そして現代のアートが調和したこの安東の地で、忘れかけていた感性を取り戻す旅へ出かけてみませんか。この地で過ごす時間は、単なる観光に留まらず、内なる豊かさを再発見する、まさにディレクターKが追求するハイエンドなライフスタイルそのものです。</p><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="ANDONG" >}}</div>
+<p>自然と歴史、そして現代のアートが調和したこの安東の地で、忘れかけていた感性を取り戻す旅へ出かけてみませんか。この地で過ごす時間は、単なる観光に留まらず、内なる豊かさを再発見する、まさにディレクターKが追求するハイエンドなライフスタイルそのものです。</p><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="ANDONG" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 先聖県文化団地
+        <h3 class="k-map-title">📍 先聖県文化団地</h3>
         <p class="k-map-address">경상북도 안동시 도산면 선성중앙길 77 (경상북도 안동시 도산면 선성중앙길 77)</p>
     </div>
     <div class="k-map-iframe-wrap">

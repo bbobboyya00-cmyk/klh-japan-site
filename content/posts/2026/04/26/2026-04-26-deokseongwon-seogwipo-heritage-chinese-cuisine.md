@@ -54,10 +54,10 @@ author: "K-Life Hack"
 <li>駐車場：店舗前の路上または近隣の公営駐車場を利用</li>
 <li>店舗展開：本店のほか、済州市内や中門にも公式支店を運営</li>
 </div></blockquote>
-<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
 <div class="k-map-box">
     <div class="k-map-header">
-        <h3 class="k-map-title">📍 덕성원
+        <h3 class="k-map-title">📍 덕성원</h3>
         <p class="k-map-address">제주특별자치도 서귀포시 태평로401번길 4 (제주특별자치도 서귀포시 서귀동 474)</p>
     </div>
     <div class="k-map-iframe-wrap">

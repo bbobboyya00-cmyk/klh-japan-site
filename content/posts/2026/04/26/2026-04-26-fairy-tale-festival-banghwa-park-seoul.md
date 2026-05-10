@@ -21,7 +21,7 @@ author: "K-Life Hack"
 <li>誰でも参加可能、無料で心ゆくまで楽しめる祭典です。
 <li>家族の思い出を刻む、美しいフォトスポットも充実。
 
-</li></li></li></li></li></div></blockquote>
+</li></div></blockquote>
 <p>K-Life Hackをご覧の皆様、ディレクターKです。ソウルの江西区で毎年開催され、多くの家族で賑わう「江西区子ども童話祭り」は、単なるイベントの枠を超え、子どもたちの夢と想像力を育む特別な場所です。</p>
 <p>2026年は「子どもとAIが共に描く童話の物語」というテーマを掲げ、最先端のテクノロジーと温かい物語の世界が融合した、かつてない体験を提供しました。未来の主役である子どもたちの創造力を刺激し、家族の絆を深める素晴らしい機会となったことでしょう。このガイドが、来年以降の皆様の訪問の道標となれば幸いです。</p>
 
@@ -76,10 +76,10 @@ author: "K-Life Hack"
 - **臨時駐車場**：三政小学校、三政中学校の運動場 (満車の場合は利用不可、祭り運営時間外の出庫不可)
 
 </div></blockquote>
-<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header">
-<h3 class="k-map-title">📍 江西区子ども童話祭り
+<h3 class="k-map-title">📍 江西区子ども童話祭り</h3>
 <p class="k-map-address">서울특별시 강서구 금낭화로 178 (서울특별시 강서구 금낭화로 178)</p>
 </div>
 <div class="k-map-iframe-wrap">
