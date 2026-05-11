@@ -13,24 +13,19 @@ author: "K-Life Hack"
 
 {{< alert type="success" >}}
 
-
-**📌 Quick Summary**
+****
 - 韓国伝統医療の歴史と文化を学べる博物館
 - リーズナブルな価格で多様な韓方体験が可能
 - 伝統衣装「韓服」の試着体験で写真撮影も楽しめる
 - 薬草足浴や韓方マッサージで心身のリフレッシュ
 - ソウル薬令市場の活気ある雰囲気も一緒に満喫できる
 
-
 {{< /alert >}}
-
 
 ソウル・東大門区にある「ソウル韓方振興センター」内にある「ソウル薬令市韓医学博物館」をご存知でしょうか。ここは、朝鮮時代に庶民の健康を支えた医療機関「普済院（ポジェウォン）」の精神を受け継ぐ場所です。
 最近では、韓国ドラマの舞台になったことでも知られ、海外からの訪問者も増えている人気のスポットなんですよ。伝統的な韓方医学の奥深さに触れながら、心身を癒す特別な体験ができると聞き、私も実際に足を運んでみました。
 
 <img alt="서울한방진흥센터와 서울약령시한의약박물관의 현대적인 입구 전경. 물리적 간판이 주제를 명확히 보여줍니다. - ソウル薬令市韓医学博物館：五感で巡る、韓国伝統医療の魅力と癒し体験🌿" fetchpriority="high" height="719" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seoul-hanbang-healing/khack_1776551318_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="538"/>
-
-
 
 ## 活気あふれる薬材市場に佇む、癒しの複合文化空間 ✨
 ソウルの中心部に位置するこの施設は、現代的な外観と伝統的な要素が見事に融合しています。最先端の設備を備えつつも、どこか懐かしさを感じる空間が広がっていました。
@@ -43,8 +38,6 @@ author: "K-Life Hack"
 
 この場所では、単に展示を見るだけでなく、様々な体験プログラムを通じて韓方文化を深く理解できるのが魅力です。
 
-
-
 ## 歴史と文化を肌で感じる、韓服体験と博物館見学 🌸
 博物館では、朝鮮時代の医官や女医官（医女）の衣装を無料で試着できる伝統衣装体験が人気です。色鮮やかな韓服を身につけ、館内を散策すれば、まるでタイムスリップしたような気分を味わえます。
 
@@ -54,16 +47,12 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="전시된 고문서 유물. 오래된 종이의 질감과 상세한 내용을 고화질로 담아 전통 한의약의 역사를 엿볼 수 있습니다. - ソウル薬令市韓医学博物館：五感で巡る、韓国伝統医療の魅力と癒し体験🌿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seoul-hanbang-healing/khack_1776551325_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="다양한 약재가 진열된 전시관을 한복 입은 관람객의 뒷모습 시점에서 바라본 전경. 체험적 요소를 암시합니다. - ソウル薬令市韓医学博物館：五感で巡る、韓国伝統医療の魅力と癒し体験🌿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seoul-hanbang-healing/khack_1776551326_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## 奥深い韓方医学の世界へ：薬材と伝統薬局の展示
 さらに、昔の薬局を忠実に再現した「薬廛韓薬房（ヤクジョンハンヤクバン）」では、当時の様子をリアルに感じられ、写真スポットとしても最適です。ここでは、現代の薬局とは異なる、伝統的な韓方薬局の独特な雰囲気を肌で感じることができます。
 
 <img alt="전통 한약방의 모습을 재현한 전시 모형. '약전 한약방' 간판과 디테일한 소품들이 현장감을 생생하게 전달합니다. - ソウル薬令市韓医学博物館：五感で巡る、韓国伝統医療の魅力と癒し体験🌿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seoul-hanbang-healing/khack_1776551328_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 細部にまでこだわった展示品は、まるで本当にタイムスリップしたかのような感覚を与えてくれます。韓方医学の知識がなくても、視覚的に楽しめる工夫が随所に凝らされています。
-
-
 
 ## 心身を癒す、至福の韓方ウェルネス体験 ♨️
 #
@@ -79,8 +68,6 @@ author: "K-Life Hack"
 ## おすすめの時間帯
 足浴体験は、特に午後の日差しが差し込む時間帯がおすすめです。窓から入る自然光が、空間全体を温かく包み込み、より一層リラックス効果を高めてくれます。事前のオンライン予約が推奨されており、週末や祝日は特に混み合いますので、早めの予約をお勧めします。
 
-
-
 ## 韓方文化の拠点、ソウル薬令市での体験を締めくくる 🛍️
 他にも、体全体を温めながらデトックス効果が期待できる「座薫（좌훈）」体験や、手足のマッサージと温熱セラピーを組み合わせた「普済院韓方体験」など、様々なプログラムが用意されています。これらの体験を通じて、韓国伝統医療が提供する深い癒しを実感できるでしょう。
 
@@ -95,7 +82,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/discover-traditional-korean-medicine-at.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

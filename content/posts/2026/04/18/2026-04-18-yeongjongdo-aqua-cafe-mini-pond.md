@@ -13,22 +13,15 @@ author: "K-Life Hack"
 
 仁川の海風を感じる永宗島に、都会の喧騒を忘れさせてくれる魔法のような空間があります。ここは単なるカフェではなく、水中の生命と触れ合える小さな水族館のような場所です。日常の疲れを癒したい大人から、好奇心旺盛な子供たちまで、誰もが夢中になれる特別なひとときが待っています。
 
-
 {{< alert type="success" >}}
 
-
-📌 Quick Summary
 - 仁川・永宗島のグウッベトエリアに位置する癒しのアクアライフ空間
 - 入場料なし、24ヶ月以上は1人1ドリンク制で気軽に観賞可能
 - 魚への餌やりやトカゲ、亀との触れ合い体験プログラムが充実
 - 授乳室や充電コーナー完備で、家族連れやカップルにも安心の施設
 - 厳選されたコーヒー豆と、丸ごとフルーツを使った贅沢なドリンクが自慢
 
-
 {{< /alert >}}
-
-
-
 
 ## 永宗島の静かな路地裏に佇む、青く透き通る秘密の空間 ✨
 
@@ -39,8 +32,6 @@ author: "K-Life Hack"
 店内に一歩足を踏み入れると、アクアショップ特有の水臭さが全くないことに驚かされます。徹底した水質管理と清掃が行き届いており、清潔感あふれる空間でゆったりとコーヒーを楽しむことができます。座席は水槽を囲むように配置されており、どの席に座っても色とりどりの熱帯魚たちの動きを眺めることができます。
 
 <img alt="수조와 좌석 배치를 한눈에 조망할 수 있어 매장의 전체적인 규모와 분위기를 전달하는 파노라마 컷 - 水中の楽園へようこそ。永宗島のアクアカフェ「小さな池」で心洗われるひとときを ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/yeongjongdo-aqua-cafe-mini-pond/khack_1776487873_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 中央に鎮座するシグネチャー、巨大な生命の輪 ✨
 
@@ -57,8 +48,6 @@ author: "K-Life Hack"
 初めて訪れる方も迷わないよう、入口には分かりやすい案内バナーと最新のキオスクシステムが設置されています。24ヶ月以上のお子様からは1人1ドリンクの注文が必要ですが、入場料が別途かからないことを考えると、非常にリーズナブルにこの豪華な展示を楽しむことができます。
 
 <img alt="입구의 이용 안내 배너와 키오스크 시스템을 안내하여 방문객의 원활한 입장을 돕는 이정표 컷 - 水中の楽園へようこそ。永宗島のアクアカフェ「小さな池」で心洗われるひとときを ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/yeongjongdo-aqua-cafe-mini-pond/khack_1776487881_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 命と触れ合う体験、五感で感じる水中の物語 ✨
 
@@ -80,7 +69,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/finding-inner-peace-at-mini-pond.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

@@ -19,7 +19,6 @@ author: "K-Life Hack"
 
 ## 聖水の街に溶け込む、グリーンの癒やし空間「ランベル」
 
-
 聖水のヨンムジャンギルを歩いていると、パッと目を引く爽やかなグリーンの建物が見えてくるんだけど、それが今回紹介する「ランベル」のポップアップストアなんだ。この外観からして、もうセンスが爆発してるでしょ？（笑）
 入り口からすでに洗練された雰囲気が漂っていて、まさに聖水（ソンス）らしいトレンド感満載！前回のポップアップもオープン直後から行列ができてたけど、今年もその期待を裏切らない、自然と調和したブランドの世界観にどっぷり浸れる空間になってるよ。🌿
 
@@ -49,7 +48,6 @@ author: "K-Life Hack"
 展示の最後には、みんなが夢中になる「9.98秒タイマーゲーム」が待ってるよ。ピッタリ止めることができたら現品プレゼントっていう、マジで太っ腹な企画！！✨たとえ失敗しても可愛いヘアクリップやクリームのサンプルが貰えるから、ぜひ運試しに挑戦してみてね！
 <img alt="街中に置かれた巨大なクレンジングオイルのオブジェ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/lanbelle-popup-seongsu-skincare-preview/khack_1778039086_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 外に出ると、道行く人の目を引く巨大なクレンジングオイルのオブジェが！聖水の洗練された街並みと、ランベルのナチュラルな世界観が見事に調和してて、ここもフォトスポットとして最高だよ。2026年の開催時も、さらにパワーアップした体験が待ってるに違いないから、今から楽しみだね！🙌
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://lanbelle.com/" 

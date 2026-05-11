@@ -18,10 +18,7 @@ author: "K-Life Hack"
 <li>日没30分前の入園こそが完璧な光を捉える唯一の条件</li>
 </div></blockquote>
 
-
 水原は今、歴史の枠を超え、洗練された都市美を追求する人々の目的地へと塗り替えられている。その象徴たる日月植物園は、計算された自然とモダンな建築が交差する、静謐なる審美の空間だ。特に秋の深まりとともに始まる夜間開園は、日常の輪郭を鮮やかに、そして美しく定義し直す。
-
-
 
 ## 都市と野生が共生するミニマリズムの極致
 
@@ -68,7 +65,6 @@ author: "K-Life Hack"
 ## 感性を満たすプレミアムな夜の散策
 
 日月植物園の夜間開園は、単なる観光地巡りを超えた、五感を満たす特別な体験を提供してくれる。2026年の秋、水原の夜を彩るこの光の祭典で、日常を忘れるひとときを過ごしてみてはいかがだろうか。
-
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <li>所在地：京畿道 水原市 長安区 日月路 61</li>

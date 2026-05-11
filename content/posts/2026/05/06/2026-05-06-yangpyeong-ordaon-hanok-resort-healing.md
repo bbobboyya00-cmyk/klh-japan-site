@@ -73,7 +73,6 @@ author: "K-Life Hack"
 
 <img alt="韓屋の屋根の軒先のディテール" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/yangpyeong-ordaon-hanok-resort-healing/khack_1778065118_11.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="http://ordaon.com/" 
 target="_blank" 

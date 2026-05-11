@@ -18,11 +18,8 @@ author: "K-Life Hack"
 <li>💡 ディレクターKのTips: キャッチテーブルを使いこなし、スマートに名店の門を叩く</li>
 </div></blockquote>
 
-
 百済の息吹が残る古都、公州（コンジュ）の街角で、常識を覆す一皿に出会いました。それは、韓国のソウルフードであるキムチとタンスユクが、西洋のピザと運命的な邂逅を果たした「キムピタン」という名の芸術です。
 今回は、この独創的なガストロノミーの聖地として知られる「ピタンキムタン（PiTanKimTan）」を訪れ、その深淵なる魅力に迫ります。
-
-
 
 ## 元祖の品格：公州を象徴する独創的ガストロノミー
 
@@ -57,7 +54,6 @@ author: "K-Life Hack"
 
 さらに、店内ゲストに提供されるフリードリンクのサービスが、この美食体験に清涼感を添えます。炭酸の刺激がチーズの余韻を優しくリセットし、再び次の一口へと誘う。こうした細やかな配慮こそが、多くの美食家を惹きつけてやまない理由なのです。
 
-
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
 - 住所：忠清南道 公州市 閑寂2ギル 47-5
@@ -67,7 +63,6 @@ author: "K-Life Hack"
 - サービス：店内飲食時、ソフトドリンク飲み放題無料
 
 </div></blockquote>
-
 
 ## アクセスと周辺情報：公州のモダンなインフラを享受する
 

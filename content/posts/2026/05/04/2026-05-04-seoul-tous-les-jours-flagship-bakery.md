@@ -17,8 +17,6 @@ author: "K-Life Hack"
 
 ソウルの食文化は、フラッグシップストアの質によって定義される。CJ第一製糖センターに位置するこの場所は、既存のベーカリーの概念を書き換える空間だ。トゥレジュール本店は、韓国を代表する製パン技術の粋を集めたプレミアムな聖域である。
 
-
-
 ## 欧州の美学が宿る建築的佇まい
 
 レンガ造りの外壁と深いグリーンのオーニングが織りなす外観は、ソウルの中心部において異彩を放つ。テラス席を備えたその佇まいは、単なる店舗ではなく、都市の風景に静謐な品格を与えている。ここでは、焼き立てのパンが放つ芳醇な香りが、訪れる者の感覚を研ぎ澄ませる。
@@ -58,7 +56,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市 中区 東湖路 330 CJ第一製糖センター 1階</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 06:30 - 21:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>最寄駅</b>: トンデムン・ヨクサムナ・コンウォン(東大門歴史文化公園)駅 6番出口から徒歩5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>決済手段</b>: トラベルログ、トラベルウォレット対応</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>戦略</b>: 人気のアグジャクシリーズは午前中の訪問が必須</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="http://www.tlj.co.kr/" 

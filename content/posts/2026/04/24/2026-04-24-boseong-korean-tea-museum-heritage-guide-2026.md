@@ -17,9 +17,7 @@ author: "K-Life Hack"
 
 韓国で最も美しい茶畑を誇る宝城（ポソン）に位置する、韓国茶博物館の魅力をディレクターの視点で紐解きます。
 
-
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-
 
 **韓国茶の真髄に触れるプレミアム・モーメント**
 
@@ -27,11 +25,7 @@ author: "K-Life Hack"
 - 2026年3月15日まで、明・清時代の貴重な茶器を集めた特別展が開催されます。
 - 伝統茶道から最新のメディアアートまで、五感で茶文化を体験できる唯一無二の空間です。
 
-
 </div></blockquote>
-
-
-
 
 #
 
@@ -79,7 +73,6 @@ author: "K-Life Hack"
 
 ## 韓国茶博物館を深く楽しむためのガイド ###
 
-
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
 **2026年度 訪問情報**
@@ -93,7 +86,6 @@ author: "K-Life Hack"
 - 宝城茶香大祭り（2026年度 開催予定）：2026年5月上旬
 
 </div></blockquote>
-
 
 韓国の茶の歴史は、ただの飲み物の記録ではなく、人々がどのように自然と調和し、心の平安を求めてきたかの記録でもあります。宝城の深い緑の中で、本物の「休息」を見つけてみてはいかがでしょうか。
 

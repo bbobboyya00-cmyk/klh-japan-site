@@ -18,14 +18,12 @@ author: "K-Life Hack"
 一見するとカフェには見えない、細部まで作り込まれたその世界観を、エディターKが詳しく紐解きます。
 
 {{< alert type="success" >}}
-**📌 Quick Summary**
+****
 - ヨーロッパの郵便局を完璧に再現した没入型コンセプトカフェ
 - 秘密の扉や、ポストからドリンクを受け取るユニークな体験が魅力
 - 南山タワーを一望できる開放的なルーフトップテラスを完備
 - 絶品のソルトエッグタルトやシグネチャーラテが人気メニュー
 {{< /alert >}}
-
-
 
 ## 1. 秘密の扉を開けて。古き良きヨーロッパの郵便局へトリップ ✨
 
@@ -35,8 +33,6 @@ author: "K-Life Hack"
 
 建物の外観には'Mail Room'の看板がありますが、どこにも入り口らしきドアが見当たりません。実は、右側に並んでいる木製の郵便ポストそのものが、店内へと続く'隠し扉'になっているのです。実際にその壁を押し、秘密の空間へと足を踏み入れる瞬間の高揚感は、まるで映画の主人公になったような気分にさせてくれます。
 
-
-
 ## 2. 鍵とポストが導く、新感覚のオーダーシステム 📸
 
 1階の注文カウンターもまた、郵便局の受付のような趣です。ここでは注文を口頭で伝えるのではなく、専用の用紙に手書きで記入して提出します。このアナログな手間が、かえってこの場所の物語性を深めてくれます。
@@ -44,8 +40,6 @@ author: "K-Life Hack"
 <div class="psImg"><img alt="A wall of wooden mailboxes with small numbered compartments - 郵便局がカフェに？ソウル・新堂洞(シンダンドン)の隠れ家『メールルーム』で体験する非日常" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776249117_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="A vintage key with a leather tag embossed with the Mail Room logo and number 03 - 郵便局がカフェに？ソウル・新堂洞(シンダンドン)の隠れ家『メールルーム』で体験する非日常" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776249119_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
 支払いを済ませると、振動ベルと共に一本のヴィンテージ風の鍵を渡されます。鍵にはレザーのタグが付いており、そこには番号が刻印されています。この鍵こそが、後ほどドリンクを受け取るための重要なアイテムとなるのです。
-
-
 
 ## 3. スロットから現れる一杯。五感を刺激するティータイム ☕️
 
@@ -55,8 +49,6 @@ author: "K-Life Hack"
 
 狭いデリバリースロットから慎重にトレーを引き出す体験は、単なる'カフェでの受取'を超えたエンターテインメントです。今回は、オレンジエードとアイスコーヒーを注文しましたが、メタル製のトレーがインダストリアルな空間と見事に調和していました。
 
-
-
 ## 4. 宝石のようなスイーツ。ソルトエッグタルトの誘惑 🍱
 
 こちらのカフェで絶対に外せないのが、ガラスケースの中に整然と並べられたベーカリー類です。特に、甘じょっぱい味わいがクセになる'ソルトエッグタルト'は、ここを訪れる多くのゲストが注文する名物メニューです。
@@ -64,8 +56,6 @@ author: "K-Life Hack"
 <img alt="Rows of egg tarts and cookies on wooden trays inside a glass display case - 郵便局がカフェに？ソウル・新堂洞(シンダンドン)の隠れ家『メールルーム』で体験する非日常" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776249125_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 外側はカリッと香ばしく、中は驚くほどとろけるようなフィリングが詰まっており、一度食べると忘れられない味わいです。他にもクッキーやケーキなど、コーヒーとの相性を考え抜かれたスイーツが揃っています。
-
-
 
 ## 5. 都会の喧騒を忘れる、絶景のルーフトップテラス 🚩
 
@@ -84,7 +74,6 @@ author: "K-Life Hack"
 
 ## おすすめの時間帯と注意点
 平日の午後は比較的ゆったりとしていますが、週末は非常に多くの人で賑わいます。特に2階・3階の座席数は限られているため、まずは席を確保してから1階で注文することをお勧めします。手書きのオーダーやポストでの受取など、ここだけの体験は誰かに教えたくなること間違いなしです。
-
 
 ---
 

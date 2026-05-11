@@ -17,8 +17,6 @@ author: "K-Life Hack"
 
 ソウルの中心に位置するソウル森は、既存の緑地を超えた都市の肺として機能しています。2026年、この広大な敷地は世界的な造園技術が集う舞台となり、洗練された休息を求める人々を迎え入れます。自然とインフラが交差するこの空間は、現代の都市生活における真の豊かさを定義し直すでしょう。
 
-
-
 ## 都市の呼吸を感じる、ソウル森のプレミアムな休息
 
 かつての競馬場から再生されたこの地は、今やソウルを代表する文化的ランドマークとしての地位を確立しました。澄み渡る青空の下、背景にそびえるNソウルタワーと高層ビルのコントラストは、ここが都市のただ中であることを強く意識させます。
@@ -54,7 +52,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市 城東区 뚝섬路 273</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 10:00から19:00まで</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 水仁・盆唐線 ソウル森(ソウルスプ)駅 3番出口より徒歩5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: ソウル森公営駐車場を利用</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>決済</b>: 気候同行カードまたはトラベログ、トラベルウォレットを推奨</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.seoul.go.kr/festa/garden/y2026" 

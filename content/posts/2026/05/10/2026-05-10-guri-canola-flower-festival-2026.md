@@ -58,7 +58,6 @@ author: "K-Life Hack"
 
 菜の花の花言葉って「明るさ」や「快活」なんだって。ここ九里で過ごす時間は、まさにその言葉通り、明日へのエネルギーをガッツリ充電できること間違いなし！2026年の春は、大切な人と一緒にこの黄金色の絶景を体験しに行こうよ。きっと忘れられない思い出になるはずだよ！！🌻 (行かなきゃ損、損！)
 
-
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.guri.go.kr/festival/index.do" 
 target="_blank" 

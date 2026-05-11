@@ -21,8 +21,6 @@ author: "K-Life Hack"
 
 会場の入り口に立つだけで、作家特有のシュールで温かい雰囲気が全身を包み込みます。
 
-
-
 一歩足を踏み入れた瞬間に広がる独特な世界観は、写真で見るよりもずっと雄大で、まるで漫画の1ページに迷い込んだような錯覚に陥ります（この没入感、本当に鳥肌ものです）。顔の見えない作家として知られる彼が、ファンの悩みやリクエストに応えて描いてきた物語が、DDPという現代的な空間で見事に具現化されています。
 
 ## 漫画から飛び出したキャラクターたち
@@ -82,7 +80,6 @@ author: "K-Life Hack"
 <img alt="感情が詰まった展示の壁面" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/keykney-special-exhibition-ddp-seoul/khack_1777986503_11.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 最後に出会うのは、無数のエピソードが敷き詰められた圧倒的な壁面です。誰かの実話が自分の物語と重なり、会場を出る頃には世界が少しだけ優しく見えるようになっているはず。2026年のソウル観光で、最も心温まる体験をしたいなら、迷わずここへ足を運んでみてください 🍀
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://ddp.or.kr" 

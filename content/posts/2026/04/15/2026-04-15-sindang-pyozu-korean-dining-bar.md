@@ -26,8 +26,6 @@ author: "K-Life Hack"
 
 {{< /alert >}}
 
-
-
 ## 懐かしくも新しい、新堂洞の『ヒップ』な夜の始まり ✨
 
 かつては米問屋や台所用品店が並んでいた新堂洞(シンダンドン)。今はそのレトロな景観を活かしたギャラリーやカフェが点在し、若者たちの間では『ヒップダンドン』と呼ばれ親しまれています。夜の帳が下りる頃、路地の角でふと目を引くのが、温かな光を放つ黄色い看板です。
@@ -35,8 +33,6 @@ author: "K-Life Hack"
 <img alt="A glowing yellow square signboard with the text 표주 - 2026年ソウル・新堂洞の最旬スポット。伝統酒ソムリエが贈る至福の韓食ダイニング『ピョジュ(表酒)』へ。" fetchpriority="high" height="1004" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776238263_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="752"/>
 
 この小さな正方形の看板が、本日ご紹介する韓食ダイニング『ピョジュ(表酒)』の目印。店名は、伝統的なお酒を酌み交わす際に使われる『ひょうたんの柄杓』を意味します。その名の通り、ここでは韓国の伝統酒を現代的なスタイルで楽しむことができます。
-
-
 
 ## 伝統酒ソムリエと巡る、未知なる味覚の旅 🥂
 
@@ -52,8 +48,6 @@ author: "K-Life Hack"
 
 <img alt="Two hands toasting with glasses of clear alcohol over a table of food - 2026年ソウル・新堂洞の最旬スポット。伝統酒ソムリエが贈る至福の韓食ダイニング『ピョジュ(表酒)』へ。" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776238273_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
 ## 五感を満たす『シグネチャー・チュアンサン』の魔法 🍱
 
 こちらで必ず注文していただきたいのが、コース仕立ての『シグネチャー・チュアンサン（酒案床）』です。韓国の伝統的なお酒の供を意味するこのコースは、前菜からデザートまで隙のない構成になっています。
@@ -63,8 +57,6 @@ author: "K-Life Hack"
 <img alt="Sliced pork rolls filled with green vegetables on a white plate - 2026年ソウル・新堂洞の最旬スポット。伝統酒ソムリエが贈る至福の韓食ダイニング『ピョジュ(表酒)』へ。" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776238266_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 脂の乗った柔らかな豚トロを、シャキシャキとした食感のセリが爽やかに包み込みます。特製のタレとセリの香りが伝統酒のキレを引き立て、箸が止まらなくなる美味しさです。さらに、追加料金でオーダーできる『水炊きリゾット（ペッスッ・リゾット）』は、テレビ番組でも絶賛された看板メニュー。濃厚な鶏の旨味がお米一粒一粒に染み渡り、食事の締めくくりに最高の満足感を与えてくれます。
-
-
 
 ## 空間とディテールに宿る、エディターのこだわり 📸
 

@@ -19,8 +19,6 @@ author: "K-Life Hack"
 
 ## 聖水の街に現れるピクセルアートの楽園
 
-
-
 聖水洞の青空の下に、あの「スナリ・ジン・アイランド」が帰ってくるみたいです。ピクセルアートをテーマにした独創的な外観は、通りがかる人がみんな足を止めて見てしまうほどの存在感（笑）かなり目立っているので、迷うことはなさそうです。
 
 <img alt="スナリの飲料缶と都市のミニチュアジオラマ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/soonhari-jin-island-seongsu-popup/khack_1777953933_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
@@ -56,7 +54,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">Address ソウル特別市城東区演武場キル一帯</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Hours 11</b>: 00 - 20:00 (予定)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">Transport 地下鉄2号線 聖水駅 3番出口から徒歩圏内</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">Payment クレジットカード・モバイル決済対応</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">Notes 週末は混雑が予想されるため早めの訪問がおすすめです</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.lotteliquor.com/" 

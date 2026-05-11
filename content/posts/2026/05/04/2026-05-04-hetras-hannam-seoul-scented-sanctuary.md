@@ -17,8 +17,6 @@ author: "K-Life Hack"
 
 ソウル、漢南洞。この街の潮流を牽引する地で、『ヘトラス漢南』は日常に香りの深みを添える、洗練されたライフスタイルショップとして存在します。単なる消費の場ではなく、五感を研ぎ澄まし、訪れる者に豊かな時間を提供する特別な空間です。ディレクターKは、厳選された香りのアイテムが、貴方の毎日を一層輝かせることを確信しています。
 
-
-
 店内に足を踏み入れると、まず目を奪われるのは、堂々たる木製テーブル上に整然と並べられた無数の白い陶器製テスターカップです。これらは香りの世界への扉を開き、訪れる者を静かな探求へと誘います。その奥では、女性たちが穏やかに製品を選び、空間全体に洗練された空気が満ちています。
 
 ## ヘトラス漢南とは
@@ -70,7 +68,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市龍山区梨泰院路255-1</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 毎日 11:00～21:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 漢南駅より徒歩約10分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>支払い</b>: 主要クレジットカード、モバイル決済に対応予定</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>備考</b>: 年中無休で営業しており、店内で様々なイベントが実施されています。</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://hetras.co.kr/" 

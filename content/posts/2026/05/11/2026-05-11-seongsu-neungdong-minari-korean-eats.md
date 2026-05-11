@@ -83,7 +83,6 @@ author: "K-Life Hack"
 
 最新のトレンドと伝統的な味が融合した「ヌンドンミナリ」は、今のソウルを象徴するような場所でした。美味しい料理はもちろん、空間そのものが持つエネルギーを感じながら、特別な時間を過ごしてみてください。聖水洞を訪れる際は、絶対にリストに入れておくべき一軒ですよ！
 
-
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.instagram.com/ndminari/" 
 target="_blank" 

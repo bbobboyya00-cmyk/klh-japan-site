@@ -13,18 +13,13 @@ author: "K-Life Hack"
 
 {{< alert type="success" >}}
 
-
-**📌 Quick Summary**
+****
 - 済州島の古いみかん倉庫を改装した、温かみのあるヴィンテージな空間
 - 自家栽培の新鮮なみかんを使ったジュースや、独創的なシグネチャーコーヒーが人気
 - 庭園にはヤシの木と石畳の道が続き、まるで東南アジアのリゾートのような雰囲気
 - 2025年6月よりノージャンルから14歳以上の「ノーキッズゾーン」へ変更。静かな大人の休息に最適
 
-
 {{< /alert >}}
-
-
-
 
 ## 涯月の路地裏に佇む、時を刻む石造りの倉庫 ✨
 
@@ -34,10 +29,7 @@ author: "K-Life Hack"
 
 建物の前に置かれた素朴な木のベンチと、壁に刻まれた「mikkang storage」の文字。かつて蜜柑の保管庫として使われていたこの場所は、現在、島の中でも指折りの感性を放つカフェへと生まれ変わりました。「ミッカン」とは済州島の方言で「蜜柑」を意味します。その名の通り、建物の裏手には広大な蜜柑畑が広がっており、一歩足を踏み入れる前から甘酸っぱい香りが漂ってくるようです。
 
-
 店内に一歩入ると、高い天井を支える立派な梁と、大きな窓から差し込む柔らかな光に包まれます。木製のテーブルと椅子、そして所々に配された瑞々しい観葉植物が、古い倉庫特有の無機質さに温もりを添えています。都会の喧騒を忘れ、ただ静かに流れる時間を感じる。そんな贅沢なひとときを約束してくれる空間です。
-
-
 
 ## 五感を満たす、こだわりのシグネチャーメニュー 🍊
 
@@ -51,8 +43,6 @@ author: "K-Life Hack"
 
 朝のひとときをゆったり過ごすなら、フレッシュな蜜柑を添えたクロワッサンサンドイッチもおすすめです。済州の太陽をたっぷり浴びた蜜柑のジューシーな甘みが、旅の疲れを優しく癒してくれます。店内にはシャンデリアや、窓辺を彩る大きなピンクのリボンなど、乙女心をくすぐるデコレーションが施されており、どこを切り取っても絵になる美しさです。
 
-
-
 ## 異国情緒が漂う、秘密の庭園を散策して 🌿
 
 コーヒーを片手に、ぜひ裏手の庭園へ出てみてください。そこには、韓国であることを忘れてしまうような、異国情緒あふれる光景が広がっています。
@@ -60,8 +50,6 @@ author: "K-Life Hack"
 <img alt="A stone path winding through a tangerine garden with palm trees - 済州島・涯月(エウォル)の静かな休息地。ミッカン倉庫(Mikkang Changgo)で過ごす、蜜柑の香りに包まれた休日" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/mikkang-changgo-jeju-cafe/khack_1776436554_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 ヤシの木が風に揺れ、丁寧に敷き詰められた石畳の道が蜜柑畑へと続いています。10月から1月頃にかけては、鮮やかなオレンジ色の蜜柑が実り、より一層済州らしい風景を楽しむことができます。以前は子供たちが駆け回る光景も見られましたが、現在は14歳以上のみが利用できる「ノーキッズゾーン」として運営されており、大人が静かに思索にふけるための聖域となっています。自然の音に耳を澄ませながら、この美しい小道を歩くだけで、心がゆっくりとほどけていくのを感じるでしょう。
-
-
 
 ## お腹が空いたら訪れたい、近隣の温かな家庭料理 🍴
 
@@ -91,7 +79,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/k-travel-hacks-ultimate-aewol-guide-to.html)<div class="k-weather-section" style="margin-top: 15px; margin-bottom: 10px;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 5px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

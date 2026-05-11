@@ -21,25 +21,15 @@ author: "K-Life Hack"
 
 <img alt="Traditional wooden entrance gate of Golgulsa Temple with a nameplate in Hanja and stone statues - 慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ" fetchpriority="high" height="555" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346165_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
 
-
-
 {{< alert type="success" >}}
 
-
-
-**📌 Quick Summary**
+****
 - 韓国唯一の石窟寺院であり、その異国情緒漂う風景から「韓国の敦煌」とも称される聖地です
 - 伝統武術「禅武道（ソンムド）」の総本山で、ダイナミックな演武を間近で見学できます
 - 1500年の歴史を持つ磨崖如来坐像は、統一新羅時代の美意識を今に伝える至宝です
 - 外国人にも人気のテンプルステイでは、精進料理や瞑想を通じて心身をリセットできます
 
-
-
 {{< /alert >}}
-
-
-
-
 
 ## 1500年の歴史が息づく、韓国の「敦煌」骨窟寺へ ✨
 
@@ -48,8 +38,6 @@ author: "K-Life Hack"
 骨窟寺を象徴するのは、その名の通り「骨（白い石灰岩）」に刻まれた「窟（石窟）」です。インドの石窟寺院を彷彿とさせるその姿は、韓国の他の寺院とは一線を画す圧倒的な存在感を放っています。凝灰岩の断崖に穿たれた12の石窟は、かつて修行僧たちが瞑想に励んだ祈りの空間。一歩足を踏み入れると、時が止まったかのような静寂に包まれます。
 
 <img alt="A wooden framed map showing the layout and paths of the Golgulsa Temple grounds - 慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346176_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 断崖に刻まれた祈り：磨崖如来坐像と12の石窟 📸
 
@@ -67,8 +55,6 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="Detail of natural rock grottoes and weathered stone surfaces on the temple cliff - 慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346175_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="A row of orange lotus lanterns attached to a wooden fence next to a pond - 慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346172_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## 動く瞑想、禅武道（ソンムド）の精神に触れる 🧘
 
 骨窟寺が「韓国の少林寺」と呼ばれる最大の理由は、韓国伝統の仏教随行法「禅武道（ソンムド）」の総本山であるためです。禅武道は、単なる格闘技ではなく、呼吸と動作、そして心の静寂を一致させる「動く瞑想」です。
@@ -85,13 +71,9 @@ author: "K-Life Hack"
 
 <img alt="A large multi-story traditional building with a stone pagoda and a bronze martial arts statue - 慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346169_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
 ## 伝説の「冬児（ドンア）菩薩」：寺院を見守る賢い犬 🐕
 
 骨窟寺を訪れると、一匹の犬の銅像に目が留まるはずです。これは、かつてこの寺で暮らしていた伝説の犬「冬児（ドンア）」を記念したものです。冬児は、明け方の礼拝に一度も欠かさず参列し、参拝客を道案内したという賢い犬で、テレビ番組でも紹介され、多くの人々に愛されました。現在はその遺志を継ぐ新しい犬たちが境内をのんびりと守っており、訪れる人々の心を和ませてくれます。
-
-
 
 ## テンプルステイで体験する、心洗われる朝食と沈黙の時間 🍱
 
@@ -108,7 +90,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/gyeongju-golgulsa-temple-guide-sunmudo.html)
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

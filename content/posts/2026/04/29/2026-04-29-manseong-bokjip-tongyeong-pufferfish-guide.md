@@ -19,7 +19,6 @@ author: "K-Life Hack"
 <p>霧に包まれたトンヨン（統営）の海辺、その中心に位置するソホ（西湖）市場の朝は、一椀のスープから始まります。旅情と日常が交差するこの場所で、半世紀以上にわたり食通たちの心を満たしてきた「マンソン・ボッチッ（万成河豚店）」は、単なる飲食店を超えた美食の聖地と言えるでしょう。</p>
 <img alt="万成フグ店の伝統的な外観 - 【統営・西湖市場】50年の歳月" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413976_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-
 ## 伝統の息吹が息づくソホ（西湖）市場と「マンソン」の邂逅
 
 <p>トンヨン（統営）の旅を彩る「ソホ（西湖）市場」は、現代的なインフラと伝統的な市場の熱気が絶妙に調和した空間です。多くの観光客が訪れる中央市場とは一線を画し、より深淵な地元の情緒を纏っています。この市場の細い路地を抜けると、歳月の重みを感じさせる「マンソン・ボッチッ」の看板が私たちを迎えてくれます。</p>
@@ -38,7 +37,6 @@ author: "K-Life Hack"
 <p>マンソン・ボッチッの凄みは、主役の河豚スープだけでなく、脇を固める小皿料理の完成度にもあります。席に座ると同時に並べられる約8種類のパンチャンは、それ自体が完成された一つのコースのようです。特に、トンヨン（統営）名物のカタクチイワシの刺身和えは、甘辛い味付けと新鮮な身の調和が絶品です。</p>
 <img alt="テーブルを彩る統営ならではの郷土料理と海の幸 - 【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成フグ店」で触れる五感の美食" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413994_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>また、自家製のイカの塩辛や、ほどよく熟成されたガッキムチ（からし菜のキムチ）は、白米との相性が抜群です。店主의細やかな配慮が感じられるこれらの料理は、ハイエンドなライフスタイルにおいて、いかに「誠実な食卓」が重要であるかを再認識させてくれます。一皿一皿に宿る手作りの温もりが、旅の記憶をより豊かなものにします。</p>
-
 
 ## ディレクターKの美食儀式：味の階層を愉しむ
 

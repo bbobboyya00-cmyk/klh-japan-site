@@ -21,8 +21,6 @@ author: "K-Life Hack"
 
 店内に入ってまず驚くのが、天井を埋め尽くす赤い和傘をモチーフにしたランタンの装飾です。
 
-
-
 中華料理店というよりは、洗練されたモダンな空間といった印象で、デートや家族での食事にもぴったりな雰囲気ですね。2026年の今も、このプレミアムな空気感の中で食事ができるのは本当に贅沢なことだと思います。
 
 <img alt="丸ごとイカが載った石焼ジャジャン麺" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/daejeon-dunsan-dol-jjajang-noodles-guide/khack_1777975522_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>

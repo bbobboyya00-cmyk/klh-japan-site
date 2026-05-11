@@ -18,10 +18,7 @@ author: "K-Life Hack"
 <li>💡 路地裏に潜む老舗が紡ぐ、本物の味に触れる至福</li>
 </div></blockquote>
 
-
 ## 時を超えて愛される「大田の台所」：中央市場のアイデンティティ
-
-
 
 <p>デジョン（大田）駅のほど近くに広がる「デジョン（大田）中央市場」は、単なる伝統市場という枠を超え、この街の食文化を牽引する巨大なガストロノミー・ハブです。一歩足を踏み入れれば、活気ある商人たちの声と共に、香ばしい油の匂いや深い出汁の香りが鼻腔をくすぐります。ここでは、ソウルの市場とはまた異なる、忠清道（チュンチョンド）特有のゆったりとした時間の流れと、妥協のない味の追求を感じることができるでしょう。</p>
 <img alt="活気に満ちた大田中央市場のストリート景観。歴史ある商圏と市民の日常が交差する風景。 - 大田中央市場：五感を刺激する美食と伝統が息づくハイエンド・ローカルガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/daejeon-jungang-market-culinary-odyssey/khack_1777381429_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
@@ -63,7 +60,6 @@ author: "K-Life Hack"
 - 2026年 夜市場スケジュール: 2026.06.20 ~ 10.25 (毎週金・土 18:00 - 22:00 開催予定)
 
 </div></blockquote>
-
 
 ## 伝統と革新が交差する、デジョン（大田）中央市場の歩き方
 

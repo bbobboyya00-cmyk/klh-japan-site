@@ -19,8 +19,6 @@ author: "K-Life Hack"
 
 ## 聖水の路地裏で見つけた、洗練された黒の空間
 
-
-
 夕暮れ時の黄金色の光に照らされた「イリデセント」の外観は、モダンな建築ラインが際立つシックな黒のファサードが印象的です。全面ガラス張りの入り口からは温かみのある光が漏れ出し、通りがかる人々を優しく迎え入れてくれるような開放感があります。一歩足を踏み入れる前から、ここでの時間が特別なものになることを予感させる、非常に洗練された佇まいが魅力的です (正直、外観だけで期待値マックスです)。
 
 <img alt="シグネチャーのエゴマの葉グラニータ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/iridescent-seongsu-seoul-forest-cafe/khack_1778056703_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
@@ -55,7 +53,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Address</b>: 서울특별시 성동구 서울숲4길 20-1 1층</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Hours</b>: 10:00 - 22:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Transport</b>: 地下鉄水仁・盆唐線ソウル森駅5番出口より徒歩5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Payment</b>: TravelLog, TravelWallet カード利用可能</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Notes</b>: ペット同伴可能、2026年ブルーリボン選定予定、手作りスイーツ完売注意</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.instagram.com/iridescent_seongsu" 

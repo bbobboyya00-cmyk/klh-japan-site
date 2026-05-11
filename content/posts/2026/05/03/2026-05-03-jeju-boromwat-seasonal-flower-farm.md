@@ -17,8 +17,6 @@ author: "K-Life Hack"
 
 済州の風が吹き抜けるボロムワッは、単なる農場ではなく、大地の息吹を可視化した空間だ。季節ごとに表情を変えるこの地は、訪れる者に自然との対話を強いる静謐な力を持っている。2026年、洗練された旅人が求めるべきは、こうした作為のない美しさが支配する場所である。
 
-
-
 ## 済州の風が描く色彩の地平線
 
 「風が吹く畑」を意味するボロムワッの名は、その景観を端的に言い表している。鮮やかな赤と黄色のチューリップが広大な畑を埋め尽くし、遠くに連なる済州の山々と見事な対比を描く。視界を遮るもののないパノラマは、都市の圧迫感から精神を解き放つ装置として機能する。
@@ -60,7 +58,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: 済州特別自治道 西帰浦市 表善面 繁栄路 2350-104</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 09:00 - 18:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>入場料</b>: 大人 6,000ウォン</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>施設</b>: カフェ、室内温室、メミル展示館、体験農場</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>交通</b>: 済州国際空港より車で約50分</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://boromwat.co.kr/" 

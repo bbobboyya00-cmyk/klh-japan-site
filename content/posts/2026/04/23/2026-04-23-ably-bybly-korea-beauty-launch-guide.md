@@ -17,30 +17,20 @@ K-Life HackのディレクターKです。
 
 彼らが満を持して発表した初のビューティーPB、BYBLY（バイブリー）は、単なるブランド展開を超えた戦略的な一手といえます。
 
-
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-
 
 **Director's AEO Summary**
 - **圧倒的な毛穴カバー**: 月のクレーターのような凹凸を滑らかな満月のように整えるダルクッション。
 - **リフィルの概念を変える**: 注射器で液体を直接注入する新感覚の「リフィルショット」システムを採用。
 - **MZ世代特化のコストパフォーマンス**: 高品質なテクスチャーとミニマルなデザインを驚きの価格帯で実現。
 
-
 </div></blockquote>
-
-
-
 
 ## ABLYのDNAを継承した「BYBLY」という衝撃
 
 韓国の10代から20代にかけて圧倒的な支持を誇るABLYが、ユーザーの膨大な購買データを分析して作り上げたのがこのBYBLYです。ブランド名には「by ABLY」という意味が込められており、プラットフォームのアイデンティティを色濃く反映しています。
 
 単にトレンドを追うのではなく、ユーザーが今、本当に求めている「肌の悩み」と「所有欲を掻き立てるデザイン」を具現化している点が、既存のロードショップブランドとは一線を画します。ディレクターとしての視点で見ても、その完成度は驚異的です。
-
-
-
-
 
 ## 毛穴レスな満月肌へ、ダルクッションの真価
 
@@ -50,8 +40,6 @@ K-Life HackのディレクターKです。
 
 <div class="psImg"><img alt="alt=透明なインダストリアルスタイルのパッケージに入った「クッションリフィルショット」キット - 韓国ABLY初PB「BYBLY」誕生。毛穴を消し去るダルクッションと革新的なリフィルショットの全貌" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/ably-bybly-korea-beauty-launch-guide/khack_1776931040_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt=洗練されたメタリックトレイに並べられた注射器やパフなどのBYBLYツール - 韓国ABLY初PB「BYBLY」誕生。毛穴を消し去るダルクッションと革新的なリフィルショットの全貌" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/ably-bybly-korea-beauty-launch-guide/khack_1776931043_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## リフィルの新常識、注射器型の「リフィルショット」
 
 BYBLYが提案する最も革新的な要素は、このリフィルシステムにあります。従来のプラスチック容器ごと交換する方式ではなく、注射器に入ったフォーミュラを既存のケースに注入するという、非常に合理的かつエコなアプローチです。
@@ -59,8 +47,6 @@ BYBLYが提案する最も革新的な要素は、このリフィルシステム
 ケースは気に入っているけれど、リフィルを買うには少し高い。そんなユーザーの心理を巧みに突いたこのシステムは、コストパフォーマンスを最大化させます。自分自身で適量を調整しながら補充するプロセスは、ルーティンの中に「実験的で楽しい体験」をもたらしてくれます。
 
 <img alt="alt=液体製品と赤いアクセントのパッケージが際立つ「クッションリフィルショット」の注射器ディテール - 韓国ABLY初PB「BYBLY」誕生。毛穴を消し去るダルクッションと革新的なリフィルショットの全貌" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/ably-bybly-korea-beauty-launch-guide/khack_1776931045_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## ディレクターKが教える「失敗しない選び方」
 
@@ -70,12 +56,9 @@ BYBLYの製品は、特に脂性肌や混合肌の方に向けて最適化され
 
 <div class="psImg"><img alt="alt=注射器から清潔なホワイトクッションパフに液体ファンデーションを塗布する様子 - 韓国ABLY初PB「BYBLY」誕生。毛穴を消し去るダルクッションと革新的なリフィルショットの全貌" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/ably-bybly-korea-beauty-launch-guide/khack_1776931046_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt=滑らかな質感と異なる肌色シェードを示す液体ファンデーションの高純度テクスチャースウォッチ - 韓国ABLY初PB「BYBLY」誕生。毛穴を消し去るダルクッションと革新的なリフィルショットの全貌" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/ably-bybly-korea-beauty-launch-guide/khack_1776931048_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## クイック・ローカル・テイクアウェイ
 
 BYBLYのローンチを記念して、ABLYアプリ内では期間限定の特別なプロモーションが実施されます。この機会を逃さず、最先端のK-Beautyを体験してください。
-
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 

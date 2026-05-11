@@ -13,9 +13,7 @@ author: "K-Life Hack"
 
 『K-Life Hack』ディレクターのKです。本日は、2026年のソウルで最も注目すべきハイエンドなライフスタイルイベントをご紹介します。都市の喧騒を離れ、洗練された緑の世界へと皆様を誘います。
 
-
 {{< alert type="success" >}}
-
 
 **2026 ソウル国際庭園博覧会 (Seoul International Garden Show 2026)**
 - 開催期間：2026年5月1日 〜 10月27日 (180日間)
@@ -24,31 +22,21 @@ author: "K-Life Hack"
 - 入場料：無料 (事前予約不要)
 - ポイント：歴代最大規模の163の庭園と、ENHYPEN ジョンウォンが親善大使を務める特別な空間。
 
-
 {{< /alert >}}
-
-
-
 
 ## 都市と自然が共鳴する「ソウル流」の美学 🌿
 
 2026年の春、ソウルの森がひとつの巨大な芸術作品へと姿を変えます。今回の博覧会の核心となるキーワードは「ソウル流（流：The Wave of Seoul）」です。これは単なるガーデニングの枠を超え、K-カルチャーが持つダイナミックなエネルギーを庭園という言語で再解釈した試みです。
 
-
-
 世界的な造園家アンリ・ババ（Henri Bava）をはじめとするトップクリエイターたちが参加し、都市の構造と自然の調和を追求した「作家庭園」は必見です。彼らの手によって生み出される空間は、訪れる人々に深い思索と安らぎを与えてくれるでしょう。
 
 <div class="psImg"><img alt="alt:精교に設計された庭園のディテールカット - 2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830751_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:自然素材を活用したモダンな庭園の構造物 - 2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830755_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## クイック・ローカル・テイクアウト：訪問前に知っておくべきこと 📍
 
 博覧会をスマートに楽しむための実用的な情報をまとめました。2026年度の最新スケジュールに基づいたデータです。
 
 <div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;"><table style="width: 100%; min-width: 500px; border-collapse: collapse; color: var(--themeC); text-align: left;"><thead style="border-bottom: 2px solid var(--themeBd-color);"><tr><th style="padding: 12px;">項目</th><th style="padding: 12px;">詳細内容</th></tr></thead><tbody><tr><td data-label="項目" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">イベント名</td><td data-label="詳細内容" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">2026 ソウル国際庭園博覧会</td></tr><tr><td data-label="項目" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">公式期間</td><td data-label="詳細内容" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">2026年5月1日 〜 10月27日 (公式データ)</td></tr><tr><td data-label="項目" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">観覧時間</td><td data-label="詳細内容" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">12:00 〜 19:00 (季節により変動の可能性あり)</td></tr><tr><td data-label="項目" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">主なプログラム</td><td data-label="詳細内容" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">作家庭園、企業協力庭園、学生・市民同行庭園、庭園産業展、体験公演</td></tr><tr><td data-label="項目" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">入場料</td><td data-label="詳細内容" style="padding: 12px; border-bottom: 1px solid var(--themeBd-color);">無料 (どなたでも自由に入場可能です)</td></tr></tbody></table></div>
-
-
 
 ## ソウル国際庭園博覧会への行き方とは？ 🚉
 
@@ -66,8 +54,6 @@ author: "K-Life Hack"
 
 <img alt="alt:ソウルの森に広がる色とりどりのチューリップ畑の風景 - 2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830760_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
 ## 五感で楽しむハイエンドな体験 🌸
 
 今回の博覧会は、単に花を見るだけのものではありません。GS建設やSMエンターテインメント、MUSINSAといった韓国を代表する企業が参加し、それぞれのブランドストーリーを庭園に溶け込ませています。最新のトレンドを反映した「企業庭園」は、SNS映えするスポットとしても注目されています。
@@ -76,8 +62,6 @@ author: "K-Life Hack"
 
 また、親善大使であるENHYPENのジョンウォンによる案内放送が会場内で流れる予定です。彼の穏やかな声に耳を傾けながら、15万坪という広大な敷地を散策するのは、ファンならずとも特別な体験になるはずです。
 
-
-
 ## ヒーリングと共生：家族やペットと一緒に 🦌
 
 ソウルの森は、もともと「生態の森」としても知られています。博覧会の期間中も、澄んだ瞳を持つシカたちに会うことができます。自然と動物、そして人が共生する姿は、この博覧会が目指す究極の「グリーンカルチャー」の象徴です。
@@ -85,8 +69,6 @@ author: "K-Life Hack"
 <img alt="alt:ソウルの森の生態林で平和に過ごすシカたちの様子 - 2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830769_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 愛犬家の方々にとっても、ここは天国のような場所です。リードの着用と排泄物の処理という基本的なルールさえ守れば、大切な家族である愛犬と一緒に美しい花道を歩くことができます。
-
-
 
 ## Final Thoughts
 
@@ -99,7 +81,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/the-2026-seoul-international-garden.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">

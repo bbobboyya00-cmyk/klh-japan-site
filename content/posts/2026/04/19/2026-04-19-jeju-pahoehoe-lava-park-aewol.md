@@ -13,7 +13,7 @@ author: "K-Life Hack"
 
 {{< alert type="success" >}}
 
-**📌 Quick Summary**
+****
 - 数千年前の火山活動が作り出したパホイホイ溶岩地質を間近で体験できる唯一無二の公園
 - 建築家と自然が対話したかのようなミニマルでモダンな施設デザイン
 - 溶岩フィールドのトレッキングから瞑想空間、アートなカフェまで多彩なコンテンツ
@@ -32,8 +32,6 @@ author: "K-Life Hack"
 <img alt="공원 입구의 현대적인 타이포그래피가 새겨진 대형 석조 표지석" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554883_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
-
-
 ## 荒々しい自然とモダンデザインの境界 ✨
 
 公園のアイデンティティは、その建築デザインにも色濃く反映されています。石造りの重厚なサインや、直線を活かしたミニマルなチケットオフィスは、周囲の溶岩フィールドと見事な調和を見せています。無機質なコンクリートやスチールといった素材が、太古の岩石と出会うことで、これまでにない現代的な美しさが生まれています。
@@ -50,8 +48,6 @@ author: "K-Life Hack"
 地形を傷つけないように設置されたインダ스트리얼なムードの鉄製デッキは、この公園の象徴的な風景の一つです。足元に広がる溶岩のディテールを安全に観察しながら、心地よい風を感じるウォーキングは、日常の喧騒を忘れさせてくれる至福の時間です。
 
 <img alt="지형을 보호하며 보행의 편의를 더한 인더스트리얼 무드의 철제 데크" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554891_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 溶岩フィールドを歩く、特別な体験 🗿
 
@@ -70,8 +66,6 @@ author: "K-Life Hack"
 </div>
 
 <img alt="ガラス窓越しに映る清潔感のある無人チケット発券システム" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554903_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 五感で楽しむ地質の物語 🌿
 
@@ -92,8 +86,6 @@ author: "K-Life Hack"
 <img alt="瞑想的な雰囲気を醸し出す石造りの香炉と煙" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554914_16.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt="石造構造物の内部から空を見上げた芸術的な視線" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554916_17.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
-
-
 
 ## ライフスタイルに寄り添う休息の時間 ☕
 
@@ -137,8 +129,6 @@ author: "K-Life Hack"
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-journey-into-jejus-volcanic-soul.html)
 
 <div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
-
-
 
 ## 📍 地図・アクセス
 

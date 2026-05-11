@@ -17,7 +17,6 @@ author: "K-Life Hack"
 
 全羅南道の静謐な風景に、現代アートが息吹を吹き込む場所。それが海南に位置する「サニ庭園」です。5万坪の広大な敷地は、自然と建築、そして芸術が織りなす空間美を提示し、訪れる者に深い洞察と静寂をもたらします。
 
-
 ## サニ庭園（산이정원）とは 🌿
 
 サニ庭園は、全羅南道海南郡に広がる約5万坪、韓国最大級の私設庭園です。自然の地形を尊重しつつ、現代的な造形美を融合させたこの空間は、訪れる者に静謐な思索と新たな視点を提供します。2026年春、この庭園は一層洗練されたプログラムで、来訪者を迎えるでしょう。
@@ -58,7 +57,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: 全羅南道 海南郡 山二面 構成里 664</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 08:00〜18:00 (夏季 3月〜10月) / 入場締切 17:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>入場料</b>: 平日 10,000ウォン / 週末 12,000ウォン</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: 専用駐車場完備</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 海南ターミナルよりタクシーまたはレンタカー利用を推奨</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.sanigarden.co.kr/pages/notice-cont.html?tname=reg_notice&mode=view&idx=17" 

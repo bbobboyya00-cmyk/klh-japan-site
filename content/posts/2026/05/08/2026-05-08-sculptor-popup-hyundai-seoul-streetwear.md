@@ -70,7 +70,6 @@ author: "K-Life Hack"
 
 過去の廃盤アイテムが奇跡の復刻を遂げているので、二次流通でしか見られなかったバディースーツなどを定価で狙える大チャンスです。汝矣島(ヨイド)の立地を活かして、ショッピングの後はザ・現代ソウルの最新スイーツ巡りを楽しむプランがおすすめですよ。
 
-
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://sculptorpage.com" 
 target="_blank" 

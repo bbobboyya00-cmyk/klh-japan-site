@@ -67,7 +67,6 @@ author: "K-Life Hack"
 </ul>
 </div></blockquote>
 
-
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.teafference.com/" 
 target="_blank" 

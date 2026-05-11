@@ -11,16 +11,12 @@ tags: []
 author: "K-Life Hack"
 ---
 
-
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏙️ 150mのLED天井が描くオーロラと没入型ライブの圧倒的な響宴。</li>
 <li>🗓️ 2026年4月18日（土）より、毎週土曜日に開催される特別な夜。</li>
 <li>📍 インスパイア・エンターテインメント・リゾート2階、オーロラストリートが舞台。</li>
 <li>💡 21時のメイン公演に合わせ、オーロラバーの特等席を予約すべきです。</li>
 </div></blockquote>
-
-
-
 
 ## 幻想的な光の街：インスパイア・オーロラ・ナイトマーケット
 
@@ -82,7 +78,6 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/인스파이어 오로라나이트마켓" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver Maps</a>
 </div>
 </div>
-
 
 <div class="k-weather-section" style="margin-top:15px;margin-bottom:10px;">
 <h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:5px;">📅 現地の天気ガイド</h3>

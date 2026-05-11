@@ -13,11 +13,9 @@ author: "K-Life Hack"
 
 {{< alert type="success" >}}
 
-
 - 400年の歴史を持つ慶州崔氏の伝統集姓村、大邱・漆谷（オッコル）村の深層ガイドです。
 - 国家登録文化財に指定された美しい土塀の道や、大邱最古の建築物を巡るコースを提案します。
 - 混雑を避けた静かな散策と、地元の食材を活かした郷土料理を楽しむ大人向けの旅をご案内します。
-
 
 {{< /alert >}}
 
@@ -28,10 +26,6 @@ K-Life Hackのシニアディレクター、Kです。
 今回ご紹介するのは、韓国・大邱の北東に位置する漆谷村です。
 
 ここは単なる観光地ではなく、今もなお人々が生活を営みながら伝統を守り続けている、生きた歴史の断片です。
-
-
-
-
 
 ## 悠久の歴史が息づく慶州崔氏の集姓村 🏛️
 
@@ -44,8 +38,6 @@ K-Life Hackのシニアディレクター、Kです。
 この木は、村に悪い気が入らないように植えられた「備補林（ピボリム）」の一部であり、当時の人々の風水的な知恵を今に伝えています。
 
 <div class="psImg"><img alt="青空の下、豊かな緑と古い石垣に囲まれた伝統的な韓屋の威厳ある入り口 - 400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/otgol-village-daegu-hanok-travel-guide/khack_1776777865_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="複雑な木造建築と瓦屋根の壮大さを示す歴史的な韓屋の全景 - 400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/otgol-village-daegu-hanok-travel-guide/khack_1776777867_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## 漆谷（オッコル）村とは？行き方とおすすめの時間帯 🕒
 
@@ -63,8 +55,6 @@ K-Life Hackのシニアディレクター、Kです。
 
 <div class="psImg"><img alt="伝統的な石と瓦の壁に垂れ下がる鮮やかなオレンジ色のノウゼンカズラ - 400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/otgol-village-daegu-hanok-travel-guide/khack_1776777873_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="伝統的な瓦壁を背景に咲くノウゼンカズラの詳細なクローズアップ - 400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/otgol-village-daegu-hanok-travel-guide/khack_1776777880_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## 歴史的建築「百弗庵古宅」と実学の精神 📜
 
 村の最も奥まった場所に位置するのが、大邱広域市で最も古い住宅建築である「百弗庵（ペクブラム）古宅」です。
@@ -77,9 +67,7 @@ K-Life Hackのシニアディレクター、Kです。
 
 <div class="psImg"><img alt="開放された伝統的な門から見える内庭と韓屋の構造美 - 400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/otgol-village-daegu-hanok-travel-guide/khack_1776777869_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="村の伝統を物語る韓屋ステイの古びた木製看板 - 400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/otgol-village-daegu-hanok-travel-guide/khack_1776777875_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
-## Quick Local Takeaways - 旅のインフォメーション 📍
+ - 旅のインフォメーション 📍
 
 漆谷村をより深く理解し、快適に滞在するための公式データをまとめました。
 
@@ -90,8 +78,6 @@ K-Life Hackのシニアディレクター、Kです。
 | プログラム (Programs) | 文化観光解説（要予約）、韓屋ステイ体験、伝統婚礼、伝統遊び体験 |
 | 入場料・利用料 (Fee) | 村内散策は無料（韓屋ステイや特定プログラムは別途料金） |
 | 公式施設 | 漆谷村歴史館、カフェ・モミ、広報館、無料駐車場完備 |
-
-
 
 ## 郷土の温もりに触れる美食体験 🥢
 
@@ -104,8 +90,6 @@ K-Life Hackのシニアディレクター、Kです。
 また、地元の食材をふんだんに使ったビビンバや、丁寧に手打ちされたカルグクスも、飾らない大邱の味として人気を集めています。
 
 <img alt="真鍮やステンレスの器に盛られた韓国の伝統的な食事 - 400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/otgol-village-daegu-hanok-travel-guide/khack_1776777877_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 季節を巡る感性の旅を終えて 🌸
 
@@ -123,7 +107,6 @@ K-Life Hackのシニアディレクター、Kです。
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-sanctuary-of-scholarly-grace.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="35d87128d60/daegu" name="GYEONGSANG" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">

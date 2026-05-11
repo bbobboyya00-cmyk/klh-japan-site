@@ -13,18 +13,13 @@ author: "K-Life Hack"
 
 {{< alert type="success" >}}
 
-
-**📌 Quick Summary**
+****
 - 3年9ヶ月ぶりの完全体復活、韓国の魂を再解釈したARIRANGプロジェクトの幕開け
 - 光化門広場から高陽スタジアムまで、ソウル全土が熱狂に包まれた記念碑的瞬間
 - 伝統的な韓服をモチーフにした衣装と、圧巻のライブパフォーマンスが融合したステージ
 - KINTEXで開催された公式MDショップの混雑状況とおすすめの限定アイテム情報
 
-
 {{< /alert >}}
-
-
-
 
 ## ソウルの中心で響き渡る、新しい時代の鼓動 ✨
 
@@ -34,8 +29,6 @@ author: "K-Life Hack"
 <!---->
 
 ソウルの街を歩けば、至る所で彼らの帰還を祝うフラッグやバナーを目にします。特に主競技場周辺に集まったファンの表情には、何年もの月日を待ち続けた深い愛情と、再会への純粋な喜びが溢れていました。今回のプロジェクトは、BTS 2.0の始まりを告げる重要なステップとなっています。
-
-
 
 ## 伝統と現代が交差する、光化門の奇跡 🏯
 
@@ -47,8 +40,6 @@ author: "K-Life Hack"
 伝統的な建築物と、最先端のレーザー照明が作り出すコントラストは、目を見張るほどの芸術性でした。彼らが歌う『ARIRANG』のメロディは、古い形式を借りつつも、サウンド自体は非常に洗練されたグローバルポップへと昇華されています。自身のアイデンティティを誇り高く表現する姿に、多くの観客が涙を流しました。
 
 <img alt="伝統建築のセットの上で、華やかな照明と共に繰り広げられる大規模な野外パフォーマンスの現場 - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603246_9.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 高陽スタジアム、数万人のアミ밤が描く銀河系 🌌
 
@@ -63,8 +54,6 @@ author: "K-Life Hack"
 
 公演が進むにつれ、メンバーたちのパフォーマンスはさらに熱を帯びていきます。特にアンコールで見せた、肩の力の抜けた自然体な姿は、ファンとの距離をより一層縮めてくれました。彼らがステージの端から端まで駆け巡り、一人一人の顔を見つめようとする姿に、長年の絆の深さを感じずにはいられません。
 
-
-
 ## プレミアムなディテールに宿る、ARIRANGの美学 ✨
 
 今回のコンサートをより特別なものにしていたのは、細部までこだわり抜かれた公式グッズ（MD）の数々です。KINTEX Hall 6に設置された特設ショップには、早朝から整理券を求める長蛇の列ができていました。今回のデザインテーマは、深みのあるレッドと洗練されたグレーのコントラストです。
@@ -75,8 +64,6 @@ author: "K-Life Hack"
 特に、伝統的なパターンを取り入れたトートバッグや、シンプルながらも高級感のあるフーディーは、日常使いもできる高いデザイン性が話題となっています。これほどの大規模な人数を収容するため、会場内の動線管理も非常に緻密に計算されていました。
 
 <img alt="大規模な観客をスムーズに誘導するために、室内広場に設置された圧倒的なスケールのフェンスガイドライン - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603239_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 記録よりも記憶に残る、7人の旅路 🦋
 
@@ -99,7 +86,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/bts-arirang-world-tour-masterpiece-of.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

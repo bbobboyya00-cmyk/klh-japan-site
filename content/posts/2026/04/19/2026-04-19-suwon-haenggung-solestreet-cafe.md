@@ -13,16 +13,13 @@ author: "K-Life Hack"
 
 {{< alert type="success" >}}
 
-
-**📌 Quick Summary**
+****
 - 世界遺産・水原華城の城郭を目の前に望む絶景ロケーション
 - モノトーンを基調としたミニマルで洗練されたインテリア
 - 季節の果実を贅沢に使った店主こだわりのハンドメイドスイーツ
 - 愛犬や子供と一緒に楽しめる開放的な空間作り
 
-
 {{< /alert >}}
-
 
 水原（スウォン）の街を歩くと、歴史と現代が交差する不思議な感覚に包まれます。特に、壮大な水原華城の城郭が続く行宮洞（ヘングンドン）エリアは、今や韓国を代表するおしゃれなカフェの激戦区として知られています。その中でも、圧倒的な眺望と洗練された空間作りで高い支持を得ているのが「ソルストリート（Sole Street）」です。
 
@@ -31,8 +28,6 @@ author: "K-Life Hack"
 ビルの3階へとエレベーターで上がると、そこには都会の喧騒を忘れさせる静寂な空間が広がっています。扉を開けた瞬間に目に飛び込んでくるのは、大きな窓一面に広がる歴史的な城郭の風景です。この景色を最大限に活かすため、店内は無駄を削ぎ落としたモノトーンで統一されています。
 
 <img alt="水原華城の城郭を一望する開放的なフロントウィンドウとモダンなインテリア - 水原（スウォン）の城郭を借景に。モダンな空間と絶品スイーツが奏でる「Sole Street（ソルストリート）」の誘惑 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/suwon-haenggung-solestreet-cafe/khack_1776569460_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 歴史を眺める特等席。計算されたミニマリズム ✨
 
@@ -44,8 +39,6 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="機能美を感じさせるウォーターステーションとスタッフエリアのディテール - 水原（スウォン）の城郭を借景に。モダンな空間と絶品スイーツが奏でる「Sole Street（ソルストリート）」の誘惑 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/suwon-haenggung-solestreet-cafe/khack_1776569465_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="注文をスムーズにする直感的なデジタルメニュー案内板 - 水原（スウォン）の城郭を借景に。モダンな空間と絶品スイーツが奏でる「Sole Street（ソルストリート）」の誘惑 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/suwon-haenggung-solestreet-cafe/khack_1776569471_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## 職人技が光る。五感を満たすシグネチャーメニュー 🍓
 
 景色だけでも訪れる価値は十分にありますが、ここ「ソルストリート」の名声を揺るぎないものにしているのは、店内で丹精込めて作られる自家製デザートです。特に季節ごとに内容が変わるフルーツケーキやプディングは、甘さ控えめで素材の味を最大限に引き出した逸品ばかりです。
@@ -55,8 +48,6 @@ author: "K-Life Hack"
 多くのファンが絶賛する「ソルストリート・ラテ」は、香ばしいアーモンドクリームと濃厚なエスプレッソが重なり合う至福の一杯です。グラスの縁にあしらわれたアーモンドの食感が心地よく、飲み進めるごとに異なる表情を見せてくれます。また、美しくディスプレイされたショーケースを眺めるだけでも、オーナーの美意識の高さが伝わってきます。
 
 <div class="psImg"><img alt="旬のイチゴを贅沢に使ったケーキやデザートが並ぶショーケース - 水原（スウォン）の城郭を借景に。モダンな空間と絶品スイーツが奏でる「Sole Street（ソルストリート）」の誘惑 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/suwon-haenggung-solestreet-cafe/khack_1776569473_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="ルーフトップの利用ルールを記したシックな案内フォトフレーム - 水原（スウォン）の城郭を借景に。モダンな空間と絶品スイーツが奏でる「Sole Street（ソルストリート）」の誘惑 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/suwon-haenggung-solestreet-cafe/khack_1776569482_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## 光と影が織りなす、韓国的情緒の新しい形 ☀️
 
@@ -84,12 +75,10 @@ author: "K-Life Hack"
 
 水原という街の歴史をリスペクトしつつ、現代的な感性で再解釈した「ソルストリート」。ここで過ごす一時間は、あなたの韓国旅行にきっと深い余韻を残してくれるはずです。季節が移ろうごとに、窓の外に見える木々の色も変わります。ぜひ、それぞれの季節の美しさを探しに訪れてみてください。
 
-
 ---
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-panoramic-sanctuary-ultimate-guide-to.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d26127d03/suwon-si" name="GYEONGGI-SOUTH" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

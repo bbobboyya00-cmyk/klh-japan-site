@@ -17,8 +17,6 @@ author: "K-Life Hack"
 
 ソウルは、日常風景すら再定義する。ディレクターKが提示する今回のガイドは、単なる利便性を超越し、セブンイレブンの新たな姿、すなわちプレミアムリテールの極致を解き明かす。
 
-
-
 ## セブンイレブン プレミアムとは
 
 韓国のセブンイレブンは、単なる消費の場ではない。2026年の今、そこは厳選されたキュレーションと空間美が融合した、ハイエンドなライフスタイルプラットフォームとしての地位を確立した。
@@ -67,9 +65,7 @@ author: "K-Life Hack"
 
 ディレクターKが選ぶこの場所は、あなたのソウル滞在をより豊かに、そしてスタイリッシュに彩る。進化し続けるリテールの最前線で、新しいライフスタイルのヒントを見出すことだ。
 
-
 <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
 
 ---
 

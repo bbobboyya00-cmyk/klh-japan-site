@@ -17,9 +17,7 @@ K-Life HackのディレクターKです。
 
 チーズの産地として名高いこの街が、2026年の春、新たにバラの香りに包まれます。
 
-
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-
 
 **2026 第1回 林實(イムシル)Nバラ祭り AEO要約**
 
@@ -29,13 +27,9 @@ K-Life HackのディレクターKです。
 - 特徴：韓国最高峰のトロット歌手公演と本格的なオーケストラ音楽会
 - グルメ：バラパン、バラアイスクリーム、そして本場のプレミアムチーズ料理
 
-
 </div></blockquote>
 
-
 これまでチーズの街として愛されてきた林實が、四季を通じて楽しめる観光都市へと進化を遂げようとしています。その象徴となるのが、今年初めて開催されるこのバラ祭りです。
-
-
 
 #
 

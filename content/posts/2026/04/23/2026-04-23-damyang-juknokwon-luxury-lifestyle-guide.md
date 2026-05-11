@@ -17,9 +17,7 @@ author: "K-Life Hack"
 
 ソウルから少し足を延ばすだけで出会える、洗練された禅の世界と美食の記録をディレクターKの視点で綴ります。
 
-
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-
 
 **エグゼクティブ・サマリー**
 
@@ -28,11 +26,7 @@ author: "K-Life Hack"
 - フィンランド式サウナを備えた最新プライベート・フルヴィラでの宿泊
 - 2026年度も休まず運営される安定した観光インフラ
 
-
 </div></blockquote>
-
-
-
 
 ## 静寂を歩く：竹緑苑（チュンノグォン）の深淵 🎍
 
@@ -53,8 +47,6 @@ author: "K-Life Hack"
 <img alt='alt="竹緑苑内の絵画のような風景。伝統的な東屋と木の橋が穏やかな池に映る" - 竹林の静寂と美食の極致。ディレクターKが贈る、潭陽（タミャン）ハイエンド・トラベルガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/damyang-juknokwon-luxury-lifestyle-guide/khack_1776949494_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <div style="text-align:center;margin:45px 0 20px;"><a href="http://www.juknokwon.go.kr/" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div>
 
-
-
 ## 美食の極み：五感を満たす「玉賓館（オクビングァン）」 🥢
 
 潭陽を訪れて、トッカルビを食さずに帰ることはできません。竹緑苑から徒歩数分の場所に位置する「玉賓館」は、地元の人々からも長年愛されている名店です。オーナーシェフが厳選した最高品質の肉を、代々伝わる秘伝のタレで焼き上げたトッカルビは、一口食べた瞬間に芳醇な肉汁が溢れ出し、口の中でとろけるような食感が楽しめます。
@@ -72,8 +64,6 @@ author: "K-Life Hack"
 最後に、大筒ご飯の竹の器は、食後に持ち帰ることも可能です。旅の思い出として、あるいは自宅での日常に潭陽の香りを取り入れるアイテムとして、ぜひ検討してみてください。名店の矜持を感じさせる店構えも、旅の気分を高めてくれます。
 
 <img alt='alt="竹緑苑の近くに位置する、トッカルビ専門店『玉賓館』の外観" - 竹林の静寂と美食の極致。ディレクターKが贈る、潭陽（タミャン）ハイエンド・トラベルガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/damyang-juknokwon-luxury-lifestyle-guide/khack_1776949518_14.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 究極のリトリート：プライベート・セカンドハウスでの滞在 🏡
 
@@ -94,8 +84,6 @@ author: "K-Life Hack"
 
 <img alt='alt="黄昏時のプライベートヴィラの入り口にある石柱とランプ。深いブルーの空の下に佇む" - 竹林の静寂と美食の極致。ディレクターKが贈る、潭陽（タミャン）ハイエンド・トラベルガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/damyang-juknokwon-luxury-lifestyle-guide/khack_1776949535_21.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
 ## 潭陽・竹緑苑へのアクセスとベストシーズン 📅
 
 #
@@ -114,8 +102,6 @@ author: "K-Life Hack"
 竹緑苑の散策路は「竹馬故友（ちくばこうゆう）の道」など8つの名前が付けられており、自分の体調や興味に合わせてコースを選べるのが魅力です。また、韓国の著名な芸術家であるイ・イナム氏のアートセンターも敷地内にあり、デジタルアートと自然の融合も体験できます。
 
 <div class="psImg"><img alt='alt="竹林を背景に満開の桜の木を捉えた垂直ショット" - 竹林の静寂と美食の極致。ディレクターKが贈る、潭陽（タミャン）ハイエンド・トラベルガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/damyang-juknokwon-luxury-lifestyle-guide/khack_1776949544_25.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="竹林の地面にある竹の根と落ち葉のクローズアップ。自然の質感を捉えている" - 竹林の静寂と美食の極致。ディレクターKが贈る、潭陽（タミャン）ハイエンド・トラベルガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/damyang-juknokwon-luxury-lifestyle-guide/khack_1776949547_26.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## 伝統と現代の融合：鳳凰楼と記念碑 🏛️
 
@@ -147,9 +133,7 @@ author: "K-Life Hack"
 
 </div></blockquote>
 
-
 潭陽の旅は、単なる観光ではなく、自分への「リセット」です。次の週末、竹の香りに誘われて南へと向かってみてはいかがでしょうか。ディレクターKがお届けしました。<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="GWANGJU" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">

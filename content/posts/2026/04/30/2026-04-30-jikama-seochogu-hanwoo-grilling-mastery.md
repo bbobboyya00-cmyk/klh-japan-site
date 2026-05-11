@@ -20,7 +20,6 @@ author: "K-Life Hack"
 
 ソウルの中心、キョデ（教大）駅に位置する「直火匠人」は、単なる焼肉店ではありません。五感を刺激し、和牛の真髄を体験させるための美食の殿堂です。ディレクターKが、本物の味を追求するあなたのために、この隠れた名店の魅力を余すところなくご紹介しましょう。
 
-
 ## 直火匠人とは：キョデ（教大）に息づく和牛の殿堂 ✨
 
 「直火匠人」は、ソウルのキョデ（教大）駅にほど近い場所に佇む、最高級韓牛専門のプレミアム焼肉店です。肉のプロフェッショナルが厳選した「1++等級」の雌牛のみを使用し、その品質への徹底したこだわりが、訪れる人々を魅了します。肉本来の豊かな風味と美しい霜降りが織りなす極上のハーモニーは、一度味わえば忘れられない感動を約束するでしょう。
@@ -66,7 +65,6 @@ author: "K-Life Hack"
 - 予約Tip: オンライン予約サイトからの事前予約をお勧めします。
 
 </div></blockquote>
-
 
 <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">

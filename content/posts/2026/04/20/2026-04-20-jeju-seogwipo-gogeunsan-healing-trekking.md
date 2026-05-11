@@ -13,21 +13,16 @@ author: "K-Life Hack"
 
 {{< alert type="success" >}}
 
-
 - 済州島西帰浦市に位置する高根山（コグンサン）は、漢拏山と西帰浦海岸線を一望できる絶景のオオルムです。
 - 豊かな杉林の道を歩く森林セラピー体験は、心と体を癒す特別な時間を提供します。
 - 四季折々の自然の美しさと、地元の住民にも愛されるハイキングコースとしての魅力をご紹介します。
 - 頂上からは、文島（ムンソム）、虎島（ポムソム）、森島（ソプソム）など、西帰浦沖の島々まで見渡せます。
 
-
 {{< /alert >}}
-
 
 皆様、こんにちは。『K-Life Hack』ディレクターのKです。2026年4月20日の今日、私は皆様に済州島の隠れた宝石、西帰浦（ソギポ）の高根山（コグンサン）をご紹介したいと思います。済州島が持つ計り知れない魅力の中でも、高根山は特別なヒーリング体験を提供してくれる場所です。
 
 ここでは、壮大な自然の中でリラックスし、日々の喧騒から離れて心を浄化することができます。私は、この素晴らしいオオルムが皆様の済州島旅行をさらに豊かにする一手になることを願っています。
-
-
 
 ## 高根山（コグンサン）とは？ ✨
 高根山は、済州島にある多くの寄生火山（オオルム）の一つで、西帰浦市街地に隣接しています。標高は比較的低いですが、頂上からの眺望は圧巻の一言です。済州島の象徴である漢拏山（ハルラサン）の雄大な姿と、南海岸線の美しいパノラマを一望できます。
@@ -36,8 +31,6 @@ author: "K-Life Hack"
 
 <img alt="alt - 済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639461_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <!---->: ドラマチックな雲間から太陽光が差し込む、海岸都市と火山島の息をのむような空撮。
-
-
 
 ## オオルムへの道のり：ヒーリングと探検のコース 🌿
 高根山は、傾斜が比較的緩やかで、様々な登山道が整備されているため、老若男女問わず楽しむことができます。特に、杉の木が鬱蒼と茂る森の中を歩く体験は、心身に活力を与えるフィトンチッドをたっぷりと感じられるでしょう。
@@ -66,8 +59,6 @@ author: "K-Life Hack"
 
 また、登山道の途中や頂上付近には、簡単な運動器具や足裏を刺激する石の指圧路も設置されており、景色を楽しみながら軽く体を動かすことができます。ここはまさに、広大な自然の中に位置するヒーリングセンターと言えるでしょう。季節や時間帯によって変わる空の色は、訪れるたびに異なる感動を与えてくれます。
 
-
-
 ## 四季折々の高根山の魅力 🍂
 高根山は、季節ごとにその姿を変え、いつ訪れても新しい発見があります。
 - 春: 頂上には美しいツツジが咲き誇り、淡いピンク色が山を彩ります。
@@ -85,7 +76,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/gogeunsan-oreum-jejus-alpine-sanctuary.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

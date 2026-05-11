@@ -17,9 +17,7 @@ author: "K-Life Hack"
 
 ソウルから少し離れた場所にある、静かで美しい村「谷城（コクソン）」が、一年で最も華やかに輝く瞬間を共に分かち合いましょう。
 
-
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-
 
 **2026 谷城世界バラまつり (Gokseong International Rose Festival)**
 
@@ -27,13 +25,7 @@ author: "K-Life Hack"
 - 見どころ: バラだけでなく、実際に運行されている蒸気機関車やレールバイク、多様なフォトスポットが融合したテーマパーク。
 - 訪問のヒント: 5月の強い日差しに備え、帽子や日傘は必須です。混雑を避けるなら平日午前中の訪問をおすすめします。
 
-
 </div></blockquote>
-
-
-
-
-
 
 ## 1,004種の香りが織りなす圧倒的なスケール感
 
@@ -47,8 +39,6 @@ author: "K-Life Hack"
 
 広大な敷地を歩くのは少し大変かもしれませんが、その分、自分だけのお気に入りの一輪を見つける喜びは格別なものになるはずです。
 
-
-
 ## 感性を刺激するアートと自然の融合
 
 園内には、バラの美しさをさらに際立たせるモダンで独創的な彫刻作品が点在しています。
@@ -60,8 +50,6 @@ author: "K-Life Hack"
 こうした現代的なアートピースと、古き良き韓国の伝統建築である「昭江亭（ソガンジョン）」が見事に共存している点も、谷城ならではの魅力と言えるでしょう。
 
 <div class="psImg"><img alt="alt:計算された美しさを見せる水路と手入れの行き届いた芝生。 - 2026年「谷城世界バラまつり」完全ガイド：1,004種の香りに包まれる韓国最高峰のローズガーデンへ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/gokseong-international-rose-festival-2026-guide/khack_1777036196_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:鮮やかな赤と黄色のバラが織りなすタペストリー。季節の生命力を感じさせます。 - 2026年「谷城世界バラまつり」完全ガイド：1,004種の香りに包まれる韓国最高峰のローズガーデンへ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/gokseong-international-rose-festival-2026-guide/khack_1777036199_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## 蒸気機関車が走り抜けるノスタルジックな体験
 
@@ -102,8 +90,6 @@ author: "K-Life Hack"
 会場内は非常に広いため、歩きやすい靴での訪問を強く推奨します。また、現地の特産品である「メロン」や「里芋（トラン）」を使ったスイーツもぜひ試してみてください。火照った体に冷たいメロンジュースは最高の贅沢です。
 
 <div class="psImg"><img alt="alt:公園の風景に溶け込むアートオブジェの数々。 - 2026年「谷城世界バラまつり」完全ガイド：1,004種の香りに包まれる韓国最高峰のローズガーデンへ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/gokseong-international-rose-festival-2026-guide/khack_1777036219_13.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:園内の案内をサポートする鮮やかな黄色のサインボード。 - 2026年「谷城世界バラまつり」完全ガイド：1,004種の香りに包まれる韓国最高峰のローズガーデンへ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/gokseong-international-rose-festival-2026-guide/khack_1777036221_14.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## 最後に、ディレクターKからのアドバイス
 

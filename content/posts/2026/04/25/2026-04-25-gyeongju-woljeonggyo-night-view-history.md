@@ -17,9 +17,7 @@ author: "K-Life Hack"
 
 このガイドでは、月精橋の魅力を深く掘り下げ、訪れる方々が最高の体験をできるよう、詳細な情報と私ディレクターKならではの視点でお伝えします。新羅のロマンを感じる旅へ、一緒に出かけましょう。
 
-
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-
 
 **月精橋（ウォルチョンギョ）ハイライト**
 
@@ -29,11 +27,7 @@ author: "K-Life Hack"
 - 周辺には黄理団通り（ファンリダンギル）や慶州郷校（キョンジュヒャンギョ）など、見どころが満載です。
 - 訪問は無料。公共交通機関でのアクセスも良好で、広い駐車場も完備されています。
 
-
 </div></blockquote>
-
-
-
 
 ## 新羅の息吹を感じる月精橋とは？ 🌉
 
@@ -56,8 +50,6 @@ author: "K-Life Hack"
 <div class="psImg"><img alt="alt - 慶州 月精橋：新羅の美が息づく夜景と歴史散策ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/gyeongju-woljeonggyo-night-view-history/khack_1777074489_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt - 慶州 月精橋：新羅の美が息づく夜景と歴史散策ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/gyeongju-woljeonggyo-night-view-history/khack_1777074493_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div><p>夜の橋の上に掲げられた「月精橋」の看板を詳細に捉えたショット。軒先に施された丹青（伝統的な韓国の彩色装飾）の繊細な芸術性が明らかになり、新羅の豊かな遺産を証している。</p><p>橋の構造物に大きく表示された「月精橋」の銘板のクローズアップ。優雅な伝統書道でそのアイデンティティと歴史的重要性を示している。</p>
 
 楼閣の看板には「月精橋」という文字が書かれていますが、東側と西側では筆致が異なると言われています。これは、細部にまでこだわり、歴史的な情緒を再現しようとする努力の表れです。こうした小さな発見も、旅の楽しみを深めてくれますね。
-
-
 
 ## 幻想的な夜景：ライトアップされた月精橋の魅力 ✨
 
@@ -82,8 +74,6 @@ author: "K-Life Hack"
 <img alt="alt - 慶州 月精橋：新羅の美が息づく夜景と歴史散策ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/gyeongju-woljeonggyo-night-view-history/khack_1777074487_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>月精橋内の長く光り輝く通路。伝統的な木製の柱と華麗な天井の模様が展示され、旅人を時間と建築美の旅へと誘う。
 
 内部は比較的長いですが、休憩できるスペースも設けられています。ゆっくりと歩きながら、古代の建築技術に思いを馳せてみてはいかがでしょうか。雨の日でも濡れることなく橋を渡れるのも、覆屋橋ならではの利点です。
-
-
 
 ## 月精橋への行き方と周辺スポット 🗺️
 
@@ -111,7 +101,6 @@ author: "K-Life Hack"
 - **慶州郷校（キョンジュヒャンギョ）**: 新羅時代から朝鮮時代にかけて教育機関として使われた場所で、歴史的な建造物が残っています。静かで落ち着いた雰囲気を楽しみたい方におすすめです。
 - **鶏林（ケリム）と瞻星台（チョムソンデ）**: 月精橋からさらに足を延ばせば、新羅の始祖伝説が残る鶏林や、東洋最古の天文台とされる瞻星台を訪れることができます。これらのスポットも、夜には美しくライトアップされ、昼間とは異なる表情を見せます。
 
-
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
 - **営業時間**: 09:00 〜 22:00 (橋の観覧は終日可能ですが、楼閣内の展示室は20:00までです)
@@ -119,7 +108,6 @@ author: "K-Life Hack"
 - **駐車場**: 月精橋公営駐車場を利用（有料または無料の臨時駐車場が利用可能な場合もあります）
 
 </div></blockquote>
-
 
 慶州の月精橋は、昼夜を問わずその美しさを堪能できる場所です。特に夜は、ライトアップされた橋が水面に映る光景が息をのむほど美しく、ディレクターKは日本の皆様にもぜひ一度訪れていただきたいと願っています。周辺観光地と合わせて、新羅の歴史と文化に触れる慶州旅行をお楽しみください。
 <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="GYEONGJU" >}}</div>

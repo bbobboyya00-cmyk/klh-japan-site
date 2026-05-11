@@ -17,8 +17,6 @@ author: "K-Life Hack"
 
 ソウルの中心、光化門(クァンファムン)広場が2026年の春、緻密に設計された巨大な遊び場へと姿を変える。歴史の重みと現代の洗練が同居するこの場所で、家族というコミュニティが主役となる特別な時間が動き出す。単なるイベントの枠を超え、都市の記憶に刻まれるべきハイエンドな体験の核心を、ディレクターKの視点で紐解いていく。
 
-
-
 ## 伝統と革新が描く光化門の新しい風景
 
 光化門(クァンファムン)広場は、韓国の精神性を象徴する不動のランドマークだ。背後に控える北岳山の稜線と、周囲を固める無機質なビル群が織りなす対比は、この都市が持つ特有の緊張感と開放感を同時に提示している。
@@ -64,7 +62,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市鍾路区世宗大路172</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 11:00 - 19:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>交通</b>: 地下鉄5号線光化門(クァンファムン)駅2番・9番出口直結</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: 世宗路公営駐車場利用</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>予約</b>: 体験公演はソウル市公共予約サービスにて事前予約制</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://blog.naver.com/legoblog/224243552964" 

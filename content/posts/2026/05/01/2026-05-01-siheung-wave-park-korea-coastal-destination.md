@@ -57,7 +57,6 @@ author: "K-Life Hack"
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: 京畿道シフン市亀甲島路135</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 09:00~18:00（季節および施設により変動あり）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>交通</b>: オイド(烏耳島)駅よりタクシーで約15分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: 完備（地下駐車場利用可能）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>予約</b>: 公式サイトによる事前予約制</li></ul>
 </div></blockquote>
 
-
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.klook.com/ko/hotels/detail/1266741-le-collective-siheung-wavepark/" 
 target="_blank" 

@@ -17,9 +17,7 @@ author: "K-Life Hack"
 
 今回は、大切なお父様やお母様へ贈る最高の「孝行」として名高い、昌慶宮の夜宴（ヤヨン）をご紹介します。
 
-
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-
 
 **2026年度 昌慶宮 夜宴 (ヤヨン) 概要**
 
@@ -27,21 +25,13 @@ author: "K-Life Hack"
 - 参加者が当時の官吏や外命婦の衣装を纏い、宴の主人公として宮殿に座します。
 - 伝統舞踊、宮中菓子の試食、専門家による記念撮影がすべて含まれた豪華な内容です。
 
-
 </div></blockquote>
-
-
-
 
 ## 朝鮮王朝の華やかな夜へ誘う「夜宴」の由来 🌙
 
 夜宴（ヤヨン）とは、文字通り「夜の宴会」を意味します。19世紀、朝鮮王朝の孝明世子が父である純祖王のために、その孝心を込めて主催した宮中宴会がそのルーツです。
 
 単に伝統的な公演を鑑賞するだけのものではありません。このプログラムの真髄は、ゲストが歴史の一部としてその場に「存在する」ことにあります。文政殿の石畳の上に座り、ライトアップされた宮殿を背景に受けるもてなしは、まさに時空を超えた体験と言えるでしょう。
-
-
-
-
 
 ## 参加者が「王室の賓客」となる至福の体験 👑
 
@@ -55,12 +45,9 @@ author: "K-Life Hack"
 
 <img alt="丁寧に盛り付けられた宮中菓子の数々 - 2026年ソウル・昌慶宮「夜宴」ガイド：親への最高の孝行、朝鮮王朝の主人公になる一夜" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/changgyeonggung-night-banquet-2026-guide/khack_1776981893_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
 ## 2026年度の開催スケジュールと予約の戦略 📅
 
 このイベントは非常に人気が高く、チケットの入手は至難の業です。2026年度のスケジュールを事前に把握し、準備を怠らないようにしましょう。
-
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
@@ -78,8 +65,6 @@ author: "K-Life Hack"
 
 予約には、本人のアカウント作成と迅速な決済が必要です。特に週末の回は数分で完売するため、平日の回を狙うのが賢明な選択です。また、天候によって中止になる場合もあるため、予備の日程も検討しておくと良いでしょう。
 
-
-
 ## 完璧な一夜を過ごすためのディレクターKのアドバイス 💡
 
 まず、足元への注意が必要です。昌慶宮の地面は未舗装の場所が多く、伝統衣装の裾が長いため、歩きやすさを優先した履物を準備することをお勧めします。衣装の下に隠れる範囲で、履き慣れたフラットシューズを選ぶのがコツです。
@@ -93,8 +78,6 @@ author: "K-Life Hack"
 さらに、写真撮影についてはプロのカメラマンが同行しますが、自分たちでも最高の瞬間を残したいはずです。スマートフォンでの撮影は可能ですが、フラッシュや三脚の使用は厳禁です。暗所での撮影に強いカメラを準備するか、夜景モードの操作を事前に練習しておくと、忘れられない一枚が手に入ります。
 
 <img alt="夜の昌慶宮を照らす伝統的な灯籠 - 2026年ソウル・昌慶宮「夜宴」ガイド：親への最高の孝行、朝鮮王朝の主人公になる一夜" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/changgyeonggung-night-banquet-2026-guide/khack_1776981915_9.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 歴史の余韻に浸りながら歩く昌慶宮の夜 🌌
 

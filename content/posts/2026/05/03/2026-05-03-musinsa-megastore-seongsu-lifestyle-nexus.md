@@ -20,7 +20,6 @@ author: "K-Life Hack"
 ディレクターKは、この類稀なるハイエンドな空間の真価を、独自の視点から提示する。
 ムシンサ メガストア聖水は、聖水洞の活気あるストリートに面し、壮大なガラスファサードを構えている。その透明な建築は、ソウルの主要ファッション地区が持つダイナミックな活力を象徴する。この記念碑的な構造は、内部へと誘う入口であり、日常からの明確な逸脱を予感させる。
 
-
 ## 聖水洞を彩るファッションの最前線
 
 ムシンサ メガストア聖水は、聖水洞のストリートに新たな潮流を注入する存在である。このエリア特有の創造的な雰囲気と巧みに調和し、最先端のファッションカルチャーを牽引している。訪問者は、ここでしか得られない独自の体験を求め、自然と集結する。
@@ -59,7 +58,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市 城東区 阿嵯山路13ギル 11</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 11:00～20:00（2026年5月3日現在、変更の可能性あり）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 地下鉄2号線 聖水(ソンス)駅 3番出口より徒歩約5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: 近隣の有料駐車場をご利用ください。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>公式サイト</b>: ムシンサの最新情報を確認できます。</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.musinsa.com/offline" 

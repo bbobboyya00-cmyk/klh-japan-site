@@ -17,21 +17,13 @@ author: "K-Life Hack"
 
 今回は、光化門の路地裏で見つけた隠れ家のようなスパと、感性を刺激する美食空間を巡る、特別な1日をご提案します。
 
-
-
 {{< alert type="success" >}}
 
-
-📌 Quick Summary<br>
+<br>
 ・ スポセラピー（Spot Therapy）で受ける、韓国人熟練テラピストによる精密なパーソナルボディケア。<br>
 ・ 全席個室のプレミアム韓食ダイニング、ウアラ（Uara）で堪能する、五感で楽しむ10コースの贅沢な時間。<br>
 
-
 {{< /alert >}}
-
-
-
-
 
 ## 光化門のビル群に隠れた、身体の調律師 ✨
 
@@ -44,8 +36,6 @@ author: "K-Life Hack"
 <div class="psImg"><img alt="Interior wall featuring the Spot Therapy logo and a list of massage services - 2026年、光化門で心身を解きほぐす。究極のウェルネスと美食を巡るソウル・エディターズ・ガイド" fetchpriority="high" height="240" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776259902_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="322"/><img alt="Spa hallway with wooden door frames and a long perspective view - 2026年、光化門で心身を解きほぐす。究極のウェルネスと美食を巡るソウル・エディターズ・ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776259910_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
 壁に掲げられたロゴとメニューリストを見ながら、まずは自分の身体の状態をチェック。エディターKも実際に体験しましたが、院長先生が歩き方や立ち姿を一目見ただけで、どこが凝っていて、どの方向に骨格が歪んでいるかをズバリ言い当てたのには驚かされました。
-
-
 
 ## 熟練の指先が届ける、極上のリセット時間 💆‍♀️
 
@@ -62,8 +52,6 @@ author: "K-Life Hack"
 <img alt="Two pairs of indoor slippers in grey and pink on a tiled floor - 2026年、光化門で心身を解きほぐす。究極のウェルネスと美食を巡るソウル・エディターズ・ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776259916_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 ふかふかのスリッパを履き替えてお店を出る頃には、足取りが驚くほど軽くなっているはずです。
-
-
 
 ## 五感を満たす、現代韓食の新しいカタチ 🍱
 

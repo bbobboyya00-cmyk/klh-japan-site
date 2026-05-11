@@ -76,7 +76,6 @@ author: "K-Life Hack"
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">住所：대전광역시 서구 계룡로 598 1층</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間：08</b>: 00〜22:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">アクセス：ロッテ百貨店大田店1階（駐車場完備）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">支払い：現金、クレジットカード、その他モバイル決済</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">備考：本店とほぼ同等の品揃えで、マンゴーシルトなどの季節限定メニューも楽しめます。</li></ul>
 </div></blockquote>
 
-
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="http://sungsimdang.co.kr/31/18" 
 target="_blank" 

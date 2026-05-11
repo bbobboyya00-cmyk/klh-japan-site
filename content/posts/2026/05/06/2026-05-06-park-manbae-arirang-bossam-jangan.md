@@ -19,8 +19,6 @@ author: "K-Life Hack"
 
 ## 35年の伝統が語る、ソウル東部・長安洞の隠れた名店
 
-
-
 夜の帳が下りる頃、看板に灯がともると同時に店前には活気が溢れ出します。この「いかにも地元の名店」という佇まいを見ただけで、今夜のディナーが成功することを確信できるはずです。
 
 <img alt="新鮮なキムチと並ぶシグネチャーポッサム皿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/park-manbae-arirang-bossam-jangan/khack_1778007984_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
@@ -74,7 +72,6 @@ author: "K-Life Hack"
 <img alt="シャキシャキ野菜のビビンククス" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/park-manbae-arirang-bossam-jangan/khack_1778008018_11.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 最後はシャキシャキの野菜がたっぷりのビビンククスで、口の中をさっぱりとリセット。この完璧なコース仕立ての食体験を終えた時、あなたはきっと「次は誰を連れてこようか」と考えているはずです。
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://manbaefood.com/" 

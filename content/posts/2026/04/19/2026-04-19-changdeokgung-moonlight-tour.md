@@ -16,10 +16,8 @@ author: "K-Life Hack"
 ソウル都心に位置するユネスコ世界文化遺産、昌徳宮。
 昼間とは異なる、月明かりの下で繰り広げられる特別な夜の旅へとご案内します。今回は、2026年の『昌徳宮 月明かり紀行』の魅力と深層を、ソウルの真の価値を知る洗練された読者の皆様へ、ディレクターK独自の視点でお届けします。
 
-
 {{< alert type="success" >}}
 
-📌 Quick Summary
 - ユネスコ世界文化遺産「昌徳宮」の特別夜間観覧
 - 専門ガイドによる歴史解説と伝統芸術公演
 - 普段非公開の秘苑を巡る感動体験
@@ -27,9 +25,6 @@ author: "K-Life Hack"
 - 抽選制で予約が困難なプレミアムツアー
 
 {{< /alert >}}
-
-
-
 
 ## はじめに：古宮で過ごす、忘れられないソウルの夜 ✨
 
@@ -49,8 +44,6 @@ author: "K-Life Hack"
 
 『昌徳宮 月明かり紀行』は、ユネスコ世界文化遺産に登録されている昌徳宮を、夜間に特別公開するガイド付きツアーです。約100分間にわたり、普段は非公開の秘苑（フウォン）を含む宮殿の奥深くまで巡ることができます。参加者は少人数に限定されており、都会の喧騒を離れ、静かで幻想的な時間を過ごすことができるでしょう。
 
-
-
 ## 闇夜に浮かび上がる、荘厳な宮殿の姿 🏮
 
 ツアーは通常、敦化門（トンファムン）ではなく、西側の琴湖門（クモムン）から始まります。入口で手渡される伝統的な青紗提灯（チョンサチョロン）を手にすると、まるで朝鮮時代にタイムスリップしたかのような気分に包まれます。一つ一つ丁寧に説明をしてくれる専門ガイドの声が、イヤホンを通して耳に心地よく響きます。
@@ -67,8 +60,6 @@ author: "K-Life Hack"
 
 <img alt="韓紙の格子窓から漏れる温かい照明が印象的な楽善斎の夜景 - 【2026年版】昌徳宮 月明かり紀行：ソウルの夜を彩る幻想的な王宮の旅 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/changdeokgung-moonlight-tour/khack_1776555736_9.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <p>韓紙의 格子窓から漏れる温かい照明が印象的な楽善斎의 夜景</p>
-
-
 
 ## 秘苑（ピウォン）：王家の歴史が息づく静寂の森へ 🚶‍♀️
 
@@ -95,8 +86,6 @@ author: "K-Life Hack"
 </div>
 <p>古風な宮殿의 石垣と鮮やかなコントラストをなす紅梅의 姿</p>
 <p>瓦塀越しにしなやかに咲き誇る梅의 枝의 韓国的な美しさ</p>
-
-
 
 ## 延慶堂（ヨンギョンタン）で伝統芸術に触れる時間 🍵
 
@@ -149,8 +138,6 @@ author: "K-Life Hack"
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/changdeokgung-moonlight-tour-2026.html)
 
 <div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
-
 
 ## 📍 地図・アクセス
 

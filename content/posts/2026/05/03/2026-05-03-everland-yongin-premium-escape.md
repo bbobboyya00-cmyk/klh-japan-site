@@ -17,8 +17,6 @@ author: "K-Life Hack"
 
 ディレクターKが今、注目するのは龍仁エバーランドだ。ここは単なる遊園地ではない。四季の自然美と最先端のアトラクションが融合した、大人の感性を刺激する極上の空間である。
 
-
-
 ## エバーランドとは？四季が織りなす感動の舞台
 
 エバーランドは、京畿道龍仁市に位置する韓国最大級のテーマパークである。壮大な敷地には、グローバルフェア、アメリカンアドベンチャー、マジックランド、ヨーロピアンアドベンチャー、ズートピアの5つのテーマゾーンが広がる。各ゾーンでは、世界各国の文化や自然をテーマにしたアトラクションやエンターテイメントが楽しめる。
@@ -61,7 +59,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: 京畿道龍仁市処仁区蒲谷邑エバーランド路199</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 日によって異なる。公式サイトを確認のこと。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: エバーライン「エバーランド(愛宝楽園)駅」下車後、シャトルバス利用。またはシャトルバス、自家用車利用。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: 1A, 1B駐車場は有料、無料駐車場からのシャトルバスも運行。公式アプリで満車状況を確認。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>公式予約</b>: 公式サイトでチケットの事前購入が可能。</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.everland.com/" 

@@ -17,9 +17,7 @@ author: "K-Life Hack"
 
 今回は、韓国茶の真髄を五感で堪能できる場所をご紹介します。
 
-
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-
 
 **河東（ハドン）野生茶博物館のエッセンス**
 
@@ -29,13 +27,7 @@ author: "K-Life Hack"
 
 - 智異山（チリサン）の稜線を眺めながら、自分だけの茶葉を作る時間は、都会の喧騒を忘れさせる究極のリラクゼーションとなるでしょう。
 
-
 </div></blockquote>
-
-
-
-
-
 
 ## 1200年の歴史が息づく韓国茶の故郷へ 🍃
 
@@ -45,8 +37,6 @@ author: "K-Life Hack"
 
 <img alt='alt="青空の下、建物の規模とプレミアムな雰囲気を強調する河東野生茶博物館のモダンな白い建築外観" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960231_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
 ## 五感を研ぎ澄ます「ドックム」体験 🍵
 
 ここでのハイライトは、何と言っても自分でお茶を作る「製茶体験」です。特に、熱い鉄釜で茶葉を手早く炒る「ドックム」という伝統技法を体験できるのは、河東ならではの贅沢です。釜の温度は200度から300度にも達するため、慎重さとリズムが求められます。
@@ -54,8 +44,6 @@ author: "K-Life Hack"
 正直に申し上げれば、この作業は決して楽ではありません。熱気の中で手を動かし続けるのは体力を消耗しますが、その過程で立ち上る鮮烈な茶の香りは、既製品では決して味わえない生命力に満ちています。自分で炒り、揉み、乾燥させた茶葉を持ち帰る喜びは、高級なブランド茶を購入するのとは全く別の感動を与えてくれるはずです。
 
 <img alt='alt="博物館の体験センターで、大きな鉄釜を使って手作業で茶葉を焙煎する伝統的な「ドックム」工程のクローズアップ" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960237_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 智異山を望むテラスで究極の一杯を ⛰️
 
@@ -65,8 +53,6 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt='alt="智異山と地元の茶畑の息を呑むようなパノラマ風景を見渡すバルコニーでの穏やかなティーテイスティング体験" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960233_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="伝統的な韓国茶、薬菓（ヤックァ）、繊細な椿の花のアレンジメントが並ぶ、プレミアムなお茶文化を紹介する美しい木製トレイ" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960235_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## 職人の技に触れるギャラリーショップ 🏺
 
 博物館の内外にあるショップでは、河東の地元の陶芸家たちが作った茶器や、厳選された最高級の茶葉を購入することができます。特に、雨の前に摘み取られた希少な「雨前（ウジョン）」茶は、茶の宝石と呼ばれるほど価値が高いものです。
@@ -75,10 +61,7 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt='alt="職人による韓国の茶器や陶器の多様なコレクションを展示する博物館内のエレガントなギャラリーショップ" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960240_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="地元の収穫物の有機的な質感と品質を強調する、ほうじ茶や発酵茶を含む乾燥した河東茶葉のマクロショット" - 智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960242_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## 訪れる前に知っておきたいローカルTips 💡
-
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
@@ -93,11 +76,9 @@ author: "K-Life Hack"
 
 </div></blockquote>
 
-
 河東は、派手な観光地ではありません。しかし、本物を知る大人にとっては、これほど豊かで贅沢な時間を過ごせる場所は他にありません。次の韓国旅行では、ソウルの喧騒を離れ、智異山の麓で歴史と香りに身を委ねてみてはいかがでしょうか。
 
 <div style="text-align:center;margin:45px 0 20px;"><a href="https://www.hadong.go.kr/tea.web" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d46126d71/incheon" name="INCHEON" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">

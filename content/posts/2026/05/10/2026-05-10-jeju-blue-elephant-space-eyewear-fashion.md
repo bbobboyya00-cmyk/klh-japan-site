@@ -85,7 +85,6 @@ author: "K-Life Hack"
 </ul>
 </div></blockquote>
 
-
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://blueelephant.co/product/vera-s-black/4903/?srsltid=AfmBOoogN2uR6gEHFZiFsr3_KczRHiM6ighjIH55-6re5yU0O6Urd2de" 
 target="_blank" 

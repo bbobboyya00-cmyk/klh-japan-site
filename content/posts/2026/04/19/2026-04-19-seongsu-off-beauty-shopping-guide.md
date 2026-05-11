@@ -13,20 +13,14 @@ author: "K-Life Hack"
 
 ソウルのトレンドセッターが集まる街、聖水洞。日々新しいショップが誕生するこのエリアで、今ひときわ注目を集めているのが、倉庫型ビューティーショップ「オフビューティー（Off-Beauty）聖水メガファクトリー店」です。かつてライフスタイル空間として人気を博したPeaches DOWONの跡地に位置し、その圧倒的なスケールと独自の世界観で訪れる人々を魅了しています。
 
-
 {{< alert type="success" >}}
 
-
-**📌 Quick Summary**
+****
 - 聖水洞の最大級の規模を誇る倉庫型Kビューティーアウトレット
 - 午前11時30分までの入店でさらに10パーセント割引される早朝特典あり
 - スキンケアからインナービューティーまで網羅した圧倒的な品揃え
 
-
 {{< /alert >}}
-
-
-
 
 ## 街の視線を釘付けにする、鮮やかなパープルの外観 ✨
 
@@ -38,8 +32,6 @@ author: "K-Life Hack"
 
 <img alt="入口側から見た店舗全景と洗練されたブランドロゴのディスプレイ - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571380_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
 ## 倉庫型コンセプトが生み出す、圧倒的な没入感 ✨
 
 店内に入ると、まずその天井の高さと、壁一面に整然と並べられた商品の多さに驚かされます。アウトレットというコンセプト通り、装飾を最小限に抑えた無骨なインテリアが、かえって一つ一つの製品を際立たせています。特に人気を集めているのが、美しさを内側からサポートするインナービューティーのコーナーです。
@@ -49,8 +41,6 @@ author: "K-Life Hack"
 1階はスキンケアを中心に、クレンジング、サンケア、ボディ、ヘア、そしてサプリメントまでが揃うメインフロアとなっています。一方、2階にはメイクアップブランドや美容機器が並び、美に関するあらゆるニーズに応える構成となっています。広々とした通路はカートを押しながらでもゆったりと買い物を楽しむことができ、時間を忘れて商品選びに没頭してしまいます。
 
 <img alt="2階建ての広大な店内とタイムセールを知らせる案内板が置かれた活気ある風景 - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571386_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 選びやすさを追求した、プロフェッショナルな棚割り ✨
 
@@ -62,8 +52,6 @@ author: "K-Life Hack"
 
 <img alt="大容量のトナーやクレンジング製品が並ぶスキンケアセクションの詳細ビュー - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571403_13.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
 ## 賢く買い物をするための、スマートなヒント ✨
 
 オフビューティーをより楽しむために、いくつかのポイントを押さえておきましょう。まず注目したいのが、棚に貼られたランキングタグです。No.1からNo.3まで、今どの製品が支持されているのかが一目で分かるため、お土産選びの強い味方になってくれます。また、セット商品はギフトにも最適で、特別な日のプレゼントとしても喜ばれるでしょう。
@@ -74,8 +62,6 @@ author: "K-Life Hack"
 
 <img alt="午前11時30分まで適用される早朝割引のプロモーション案内板 - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571398_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
 ## マスクパックの壁と、細やかな価格表示 ✨
 
 韓国ショッピングの定番であるシートマスクの充実ぶりも特筆すべき点です。壁一面を埋め尽くす色彩豊かなマスクパックの数々は、圧巻の一言。JMソリューションなどの人気ブランドが10枚セットでリーズナブルに提供されており、オンラインショップでの欠品商品が見つかることも珍しくありません。
@@ -85,8 +71,6 @@ author: "K-Life Hack"
 各棚には価格がはっきりと表示されており、割引率も一目で分かります。クレンジングティッシュなどの消耗品も、驚くような価格で販売されていることがあるため、細かくチェックすることをおすすめします。自分の肌の悩みに合わせて、じっくりと比較検討できる環境が整っています。
 
 <div class="psImg"><img alt="マスクパックの製品と価格表が鮮明に確認できるクローズアップカット - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571392_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="割引価格が強調されたクレンジングティッシュ製品のディテール - 聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571405_14.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## 美しさをトータルでサポートする、ライフスタイル提案 ✨
 
@@ -105,7 +89,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/k-beauty-deep-dive-navigating-massive.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

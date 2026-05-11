@@ -13,21 +13,14 @@ author: "K-Life Hack"
 
 {{< alert type="success" >}}
 
-
-
-**📌 Quick Summary**
+****
 - 全州(チョンジュ)の隠れた名刹、西古寺(ソゴサ)でのテンプルステイ
 - 喧騒を離れ、自然の中で心身のリフレッシュを体験
 - お一人様でも安心の休息型プログラムが充実
 - 僧侶との茶談や写経、精進料理など、多彩な体験が可能
 - 清潔で快適な宿泊施設で、心ゆくまで休息
 
-
-
 {{< /alert >}}
-
-
-
 
 「K」です。今日のテーマは、忙しい日常に疲れた現代人にぴったりの韓国のヒーリングトレンド、'テンプルステイ'です。
 
@@ -37,8 +30,6 @@ author: "K-Life Hack"
 
 全州市内から少し離れた黄榜山(ファンバンサン)の麓にひっそりと佇む西古寺は、都会の喧騒を忘れさせてくれる、まさに隠れ家のような存在でした。
 
-
-
 ## 西古寺(ソゴサ)とは？ 心を落ち着かせる場所へ ✨
 
 全州革新都市の中心にありながら、最も古い息吹を秘めた古刹、西古寺(ソゴサ)。大韓仏教曹渓宗(テハンブルギョジョゲジョン)に属するこのお寺は、新羅末期に創建されたと言われています。私が訪れた日は少し霞んでいましたが、晴れた日には素晴らしい景色が広がるだろうと感じました。
@@ -46,8 +37,6 @@ author: "K-Life Hack"
 広大な敷地に入ると、まず目に入ったのが、大きな木の下に立つ石碑です。そこには「서고사 일주문 (西古寺 一柱門)」と刻まれており、聖なる空間への入口であることを静かに示していました。一歩足を踏み入れると、ひんやりとした山の空気が心を洗い流してくれるようでした。
 
 <img alt="A stone monument with '서고사 일주문' (Seogosa Iljumun) text, positioned under a large tree on a mountain path. - 全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" fetchpriority="high" height="538" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385504_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
-
-
 
 ## 静寂に包まれた伝統建築の美 📸
 
@@ -63,8 +52,6 @@ author: "K-Life Hack"
 
 <img alt="Multiple traditional Korean temple buildings with red and yellow accents, built into a rocky hillside with sparse winter vegetation. - 全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385514_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
 ## テンプルステイで体験する韓国仏教文化 🙏
 
 私が申し込んだのは「休息型」のテンプルステイでした。到着後、案内されたのは清潔で広々としたオンドル部屋。部屋にはチョッキが用意されており、申し出るとズボンと水も提供していただきました。宿泊施設はとてもきれいで、ヒーターや暖房も完備。一人には十分すぎるほど快適な空間でした。
@@ -74,8 +61,6 @@ author: "K-Life Hack"
 <img alt="A grey stone Buddha statue seated inside a temple hall, flanked by two candle holders and incense burners on a table. - 全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385512_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 夕食は精進料理。肉はありませんが、どれも野菜の旨味が詰まった滋味深い味わいで、特に白菜チヂミがとても美味しかったです。普段の食生活では味わえない、心と体に優しい食事に感謝しました。夕食後は、希望者のみ参加できる夕方の礼仏へ。少し慌ただしく参加しましたが、終わった後に僧侶が境内を案内してくださり、その美しさに感動しました。
-
-
 
 ## 穏やかな時間の中で、自分と向き合う 🧘‍♀️
 
@@ -88,8 +73,6 @@ author: "K-Life Hack"
 朝食もまた精進料理で、優しい味のヌルンジ（おこげスープ）とポテトスープをいただきました。その後、僧侶との短いティータイムを過ごし、部屋に戻ってまた少し仮眠。こんなにも心地よく眠れるのは、心が安らいでいるからだと感じました。チェックアウトの際、荷物をまとめ、部屋の掃除とゴミの分別を済ませて、軽くなった心で西古寺を後にしました。
 
 この体験を通して、本当に多くの学びがありました。僧侶が贈ってくださった数珠のブレスレットと「ヘインさん、ファイト！」という温かい言葉に、思わず涙が出そうになりました。心が軽くなり、新たな気持ちで日常に戻れる準備ができた気がします。
-
-
 
 ## 西古寺(ソゴサ)へのアクセスと訪問のヒント 🚩
 
@@ -105,12 +88,10 @@ author: "K-Life Hack"
 
 持ち物としては、タオルやドライヤーは持参が必要です。季節によっては朝晩冷え込むこともありますので、羽織るものがあると良いでしょう。心穏やかな時間を過ごしたい方、忙しい日常に쉼（シィム＝休息）が必要な方には、西古寺でのテンプルステイを心からおすすめします。ぜひ、韓国で心に残るヒーリング体験をしてみてください。
 
-
 ---
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/seogosa-temple-stay-pan-gyo-locals.html)
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

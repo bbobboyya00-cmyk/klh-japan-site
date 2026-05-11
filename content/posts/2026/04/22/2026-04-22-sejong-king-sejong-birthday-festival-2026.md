@@ -15,9 +15,7 @@ author: "K-Life Hack"
 
 文化と芸術が交差する世宗特別自治市の中心で、現代に息づく伝統の息吹を感じる時間は、あなたの感性をより深く豊かにしてくれるはずです。喧騒を離れ、洗練された知識人のように過ごすひとときをご堪能ください。
 
-
 {{< alert type="success" >}}
-
 
 **2026年度 開催概要ハイライト**
 - 開催期間：2026年5月15日（金）～5月16日（土）
@@ -25,21 +23,13 @@ author: "K-Life Hack"
 - 核心内容：ハングル文化商品販売、歴史トークコンサート、伝統落火体験
 - 入場料：無料（一部体験プログラムは有料）
 
-
 {{< /alert >}}
-
-
-
 
 ## ハングルの聖地、世宗で迎える特別な朝 🌿
 
 韓国の知性を象徴する世宗（セジョン）市は、その名の通り世宗大王の精神を継承する都市として設計されました。5月の陽光が湖水に反射する中、開催される誕辰記念行事は、単なる祭りを超えた文化的な社交場としての側面を持っています。
 
-
-
 広大な公園を背景に広がるのは、ハングルの造形美を再解釈したアートワークの数々です。特に今年は、第629回という歴史的な節目を迎え、これまで以上に多彩なプログラムが用意されています。日常の喧騒から切り離されたこの場所で、文字という芸術に触れる贅沢を味わってください。
-
-
 
 ## 知的好奇心を満たす「クイック・ローカル・テイクアウェイ」 📍
 
@@ -55,8 +45,6 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="alt:セ宗湖水公園の歴史的なアーカイブビジュアル - 2026年5月、世宗特別自治市で出会うハングルの美学。第629回 世宗大王誕辰記念ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/sejong-king-sejong-birthday-festival-2026/khack_1776819883_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:セ宗湖水公園の歴史的なアーカイブビジュアル - 2026年5月、世宗特別自治市で出会うハングルの美学。第629回 世宗大王誕辰記念ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/sejong-king-sejong-birthday-festival-2026/khack_1776819885_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## 幻想的な夜を彩る「世宗落火（ナックァ）祭り」 ✨
 
 祭りのクライマックスは、5月16日の19時30分から始まる「落火祭り」です。これは韓国伝統の火遊びを芸術へと昇華させたもので、湖畔の夜空に火花が滝のように降り注ぐ光景は、言葉を失うほどの美しさです。恋人や大切な友人と、ロマンチックな夜の散歩を楽しむのにこれ以上の演出はありません。
@@ -69,8 +57,6 @@ author: "K-Life Hack"
 
 ソウルから世宗市へは、KTX（高速鉄道）や高速バスで快適にアクセス可能です。会場となる世宗中央公園は、市内バスの路線も充実しており、大規模な臨時駐車場も用意される予定です。ただし、落火祭りの時間は非常に混雑するため、大衆交通の利用をお勧めします。
 
-
-
 ## 旅の質を高める周辺の美食と空間 ☕
 
 イベントを満喫した後は、地元の高級レストラン「ヨンワジョン（연와종）」での食事がお勧めです。地域の特産物を活かした上品な韓定食は、旅の疲れを優雅に癒してくれます。食後には「セカンドセカンド」や「ラ・フォレスタ」といった洗練されたカフェで、庭園を眺めながら一杯のコーヒーを愉しむのも良いでしょう。
@@ -80,8 +66,6 @@ author: "K-Life Hack"
 また、時間に余裕があれば「大統領記録館」への訪問も検討してみてください。韓国の現代史を俯瞰できるこの場所は、建築美としても評価が高く、静謐な思考の時間を与えてくれます。
 
 <div class="psImg"><img alt="alt:セ宗湖水公園の歴史的なアーカイブビジュアル - 2026年5月、世宗特別自治市で出会うハングルの美学。第629回 世宗大王誕辰記念ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/sejong-king-sejong-birthday-festival-2026/khack_1776819895_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:セ宗湖水公園の歴史的なアーカイブビジュアル - 2026年5月、世宗特別自治市で出会うハングルの美学。第629回 世宗大王誕辰記念ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/sejong-king-sejong-birthday-festival-2026/khack_1776819897_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## 終わりに：未来へと繋がる文字の祝祭
 
@@ -93,7 +77,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/sejongs-legacy-illuminated-cultural.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="36d35127d38/daejeon" name="CHUNGCHEONG" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">

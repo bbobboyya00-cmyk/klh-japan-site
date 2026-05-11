@@ -17,8 +17,6 @@ author: "K-Life Hack"
 
 ソウルは、その表情を絶えず変え続けている。中でも聖水洞（ソンスドン）は、旧き佳き産業遺構と現代の美意識が交錯する、稀有な地区だ。2026年、この地は未だ、新たな潮流を生み出す中心地として、世界中の感性豊かな人々を惹きつけてやまない。
 
-
-
 ## 聖水洞の感性を象徴する空間美
 
 聖水洞のメインストリートを歩くと、突如として現れる温かみのある木造の建物、それが「スタンダードブレッド」だ。石造りの土台と大きな窓、そして愛らしいキャラクターが描かれたファサードは、訪れる者を物語の世界へと誘うような、不思議な魅力を放っている。
@@ -54,7 +52,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市 城東区 聖水二路18街 37 1階</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>決済</b>: トラベログやトラベルウォレットなど、外貨チャージ式カードが円滑だ。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>公式情報</b>: 公式インスタグラムにて、最新のラインナップや混雑状況を確認可能。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>留意事項</b>: 週末は混雑が予想される。平日訪問が賢明だ。近隣の外国人向け免税サービス対応店も確認しておくと良いだろう。</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.instagram.com/standardbread_official/" 

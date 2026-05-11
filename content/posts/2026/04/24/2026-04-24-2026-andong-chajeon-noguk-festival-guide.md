@@ -17,9 +17,7 @@ author: "K-Life Hack"
 
 精神文化の首都と呼ばれる慶尚北道の安東（アンドン）で、ダイナミックな伝統と現代的な楽しさが融合した祝祭が幕を開けます。
 
-
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-
 
 **2026 車戦将軍・魯国公主祭り AEO要約**
 
@@ -28,17 +26,13 @@ author: "K-Life Hack"
 - おすすめポイント：子供連れの家族旅行から、韓国の深い伝統に触れたい大人の一人旅まで幅広く対応
 - 特徴：中央線1942安東駅、仮面劇公園、旧市街の3拠点を巡る都市回遊型フェスティバル
 
-
 </div></blockquote>
-
 
 安東は、韓国の中でも最も伝統が息づく場所として知られています。
 
 しかし、この祭りは単に静かに伝統を鑑賞するだけのものではありません。
 
 勇猛な将軍の気概を感じる「車戦遊び」と、高麗時代の王女の物語が刻まれた「魯国公主」の伝統が、現代的な体験コンテンツとして生まれ変わりました。
-
-
 
 祭りのメイン舞台となるのは、歴史的な意味を持つ「中央線1942安東駅」と「仮面劇（タルチュム）公園」です。
 
@@ -47,8 +41,6 @@ author: "K-Life Hack"
 特に、今回の「2026 車戦将軍・魯国公主祭り」では、参加者が直接体を動かして楽しむプログラムが大幅に強化されています。
 
 <div class="psImg"><img alt='alt="伝統的な道袍を身に纏い、祭りの開会を宣言する安東の長老たちと参加者の厳かな様子" - 2026年5月の韓国旅行、安東（アンドン）へ。伝統と遊びが融合する「車戦将軍・魯国公主祭り」完全ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/2026-andong-chajeon-noguk-festival-guide/khack_1777025388_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="魯国公主のテーマに合わせて、鮮やかなピンク色の韓服を纏い優雅に踊るパフォーマーたちの円陣" - 2026年5月の韓国旅行、安東（アンドン）へ。伝統と遊びが融合する「車戦将軍・魯国公主祭り」完全ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/2026-andong-chajeon-noguk-festival-guide/khack_1777025389_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## 伝統を遊びに変える「K-PLAY」の魅力 🎡
 
@@ -70,8 +62,6 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt='alt="安東の祝祭会場を背景に、公式ガイドブックを手にして旅を楽しむ観光客の姿" - 2026年5月の韓国旅行、安東（アンドン）へ。伝統と遊びが融合する「車戦将軍・魯国公主祭り」完全ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/2026-andong-chajeon-noguk-festival-guide/khack_1777025393_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="河回仮面をモチーフにしたキーリングや伝統小物を販売する、地元の職人による体験ブース" - 2026年5月の韓国旅行、安東（アンドン）へ。伝統と遊びが融合する「車戦将軍・魯国公主祭り」完全ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/2026-andong-chajeon-noguk-festival-guide/khack_1777025396_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## 安東を味わい、夜を彩る 🍱
 
 祭りの楽しみは体験だけではありません。安東といえば、韓国屈指のグルメ都市でもあります。
@@ -83,8 +73,6 @@ author: "K-Life Hack"
 昼間の活気ある雰囲気とは一転し、ライトアップされた会場は非常にエモーショナルな空間となります。
 
 <img alt='alt="インストラクターの指導のもと、真剣な表情で韓国の伝統的な弓術を体験する少年" - 2026年5月の韓国旅行、安東（アンドン）へ。伝統と遊びが融合する「車戦将軍・魯国公主祭り」完全ガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/2026-andong-chajeon-noguk-festival-guide/khack_1777025398_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 安東への行き方と楽しみ方のヒント 💡
 
@@ -108,7 +96,6 @@ author: "K-Life Hack"
 - 主要ラインナップ：チャン・ミンホ、パク・ソジン、ポッピン・ヒョンジュン、ラポエム等
 
 </div></blockquote>
-
 
 安東の祭りは、単なる過去の再現ではありません。
 

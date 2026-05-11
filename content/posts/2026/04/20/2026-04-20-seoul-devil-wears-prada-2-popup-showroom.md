@@ -15,9 +15,7 @@ author: "K-Life Hack"
 
 『プラダを着た悪魔』シリーズのファンの方も、これから映画をご覧になる方も、きっとその魅力に引き込まれることでしょう。まるでニューヨークのファッション業界に足を踏み入れたかのような、洗練されたひとときを味わってください。
 
-
 {{< alert type="success" >}}
-
 
 - **開催期間**: 2026年4月16日（木）～2026年4月27日（月）
 - **営業時間**: 毎日11:00～20:00
@@ -25,11 +23,7 @@ author: "K-Life Hack"
 - **アクセス**: 聖水駅4番出口より徒歩1分
 - **見どころ**: 映画の世界観を再現した没入型展示、フォトゾーン、限定コラボアイテム、100%当選のラッキードローイベント
 
-
 {{< /alert >}}
-
-
-
 
 ## 見どころ：『プラダを着た悪魔2』ポップアップショールームとは？👠
 
@@ -55,8 +49,6 @@ author: "K-Life Hack"
 空間は決して広大ではありませんが、細部にまでこだわり抜かれた装飾とレイアウトによって、密度の高い没入感を演出しています。訪れる人々は皆、その空間の持つ特別なオーラに引き込まれている様子でした。
 
 <div class="psImg"><img alt="alt:ショールーム内に設置された'プラダを着た悪魔'ロゴのデジタルディスプレイ - K-Life Hack独占: 聖水洞『プラダを着た悪魔2』ポップアップで感じるハイエンドなソウル体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-devil-wears-prada-2-popup-showroom/khack_1776621882_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:ショールームの内部配置図と利用情報を掲載した案内板 - K-Life Hack独占: 聖水洞『プラダを着た悪魔2』ポップアップで感じるハイエンドなソウル体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-devil-wears-prada-2-popup-showroom/khack_1776621872_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## 『プラダを着た悪魔2』の世界観を体験する展示内容✨
 
@@ -110,8 +102,6 @@ author: "K-Life Hack"
 <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド
 </h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}
 </div>
-
-
 
 ## 📍 地図・アクセス
 

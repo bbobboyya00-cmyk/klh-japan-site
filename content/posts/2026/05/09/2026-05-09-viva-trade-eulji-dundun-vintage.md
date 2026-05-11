@@ -76,7 +76,6 @@ author: "K-Life Hack"
 
 鏡張りの近未来的なインテリアやアートなオブジェが、ショッピング体験をさらに特別なものへと昇華させてくれます。広々とした試着室で心ゆくまで自分に合うスタイルを探求できる、この贅沢な時間をぜひ現地で体感してみてください。
 
-
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://vivatrade.co.kr/" 
 target="_blank" 

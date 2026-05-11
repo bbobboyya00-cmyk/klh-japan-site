@@ -17,8 +17,6 @@ author: "K-Life Hack"
 
 ソウルの脈動を映す漢南洞。その中心に、ミニミュートのフラッグシップストアが、鮮烈なピンクのアイコンとして存在感を示す。2026年の今もなお、この空間は単なる商業施設ではなく、韓国を代表するバッグブランドの哲学を体現する芸術的聖域だ。
 
-
-
 ## ソウルのトレンドを象徴するミニミュート 👜
 
 ミニミュートは、イタリアの上質なレザーとソウルのモダンな感性を融合させた、世界的に注目されるライフスタイルブランドである。特に漢南フラッグシップストアは、ブランドの哲学を最も純粋に体感できる聖地として、多くの訪問者が列を成す。
@@ -62,7 +60,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市龍山区梨泰院路230-2 1階</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 11:30 - 20:00（年中無休）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 地下鉄6号線 漢江鎮(ハンガンジン)駅 3番出口から徒歩約5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>予約</b>: 週末や混雑時は店頭のウェイティングシステムにて登録（外国人利用可）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>免税</b>: 外国人観光客向けの即時還付または事後免税対応可能</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://minitmute.com" 

@@ -17,8 +17,6 @@ author: "K-Life Hack"
 
 広安里の海岸線に沿い、一際異彩を放つエンターテイメント空間「ワクワク広安里店」が姿を現した。広安大橋の壮麗な夜景を背景に、この地は常に特別な体験を求める人々で賑わいを見せる。K-Life HackシニアディレクターKとして、私はこのハイエンドな遊びの殿堂を深掘りし、その本質を解き明かす。
 
-
-
 ## 広安里の夜を彩る光と遊びの殿堂とは 🌟
 
 「ワクワク広安里店」のファサードは、現代的な多層構造が特徴だ。夜には鮮烈なネオンが煌めき、広安里の夜景に新たな表情を与える。その活気ある佇まいは、訪れる者を魅惑的なエンターテイメントの世界へと誘うだろう。
@@ -64,7 +62,6 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: 釜山広域市水営区広安海辺路255番街 5 1階、2階</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 毎日 10:00 - 24:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 広安(クァンアン)駅3番出口より924m</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>公式SNS</b>: Instagram (@wakuwakuofficial)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>特徴</b>: 正規IP景品専門、QRコード呼び出しサービス、広々としたフォトゾーン</li></ul>
 </div></blockquote>
-
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
 <a href="https://www.instagram.com/wakuwaku__official" 

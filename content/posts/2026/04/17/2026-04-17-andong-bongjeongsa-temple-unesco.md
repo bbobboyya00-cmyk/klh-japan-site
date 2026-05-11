@@ -21,25 +21,15 @@ author: "K-Life Hack"
 
 今回は、韓国最古の木造建築を守り続けてきた、この美しい山寺の魅力をエディターの視点から紐解いていきます。
 
-
-
 {{< alert type="success" >}}
 
-
-
-**📌 Quick Summary**
+****
 - 1,300年以上の歴史を持つユネスコ世界遺産「山寺(サンサ)」の一つ
 - 韓国最古の木造建築物である「極楽殿(クンナクジョン)」を保有
 - 英国エリザベス女王が「韓国の伝統的な美しさ」を求めて訪問した場所
 - 落ち着いた静寂の中で自分を見つめ直すマインドフルネスな体験
 
-
-
 {{< /alert >}}
-
-
-
-
 
 ## 慶州の山懐に抱かれた、祈りの空間へ ✨
 
@@ -49,8 +39,6 @@ author: "K-Life Hack"
 
 山門をくぐり、石畳の道を一歩ずつ進むたびに、冷たく澄んだ空気が心地よく肌をなでます。石垣の上にどっしりと構える本堂の姿は、長い年月を経てなお、揺るぎない威厳を放っていました。
 
-
-
 ## 韓国最古の木造建築、極楽殿が語る千年の物語 📸
 
 鳳停寺を語る上で欠かせないのが、国宝第15号に指定されている「極楽殿(クンナクジョン)」です。これは韓国に現存する木造建築の中で最も古いもので、13世紀(高麗時代)の建築様式を今に伝えています。派手な装飾を削ぎ落とした、端正で素朴な美しさは、見る者の心を洗うような清々しさがあります。
@@ -58,8 +46,6 @@ author: "K-Life Hack"
 <div class="psImg"><img alt="Overview of the temple complex with snow-covered roofs and mountain scenery. - 時を止めた千年古刹、安東・鳳停寺(ポンジョンサ)へ。韓国最古の木造建築と出会う静謐な旅" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776374712_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="Frontal view of a traditional Korean temple building with snow on the ground. - 時を止めた千年古刹、安東・鳳停寺(ポンジョンサ)へ。韓国最古の木造建築と出会う静謐な旅" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776374714_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
 雪が屋根に薄っすらと積もる冬の鳳停寺は、まるで一幅の水墨画のような美しさです。華やかな色彩よりも、木の質感や石の冷たさが際立つこの季節こそ、寺院本来の持つ「空(くう)」の精神を感じることができるのではないでしょうか。
-
-
 
 ## 静寂の中に佇む、三層石塔と石仏 🧘
 
@@ -71,8 +57,6 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="Snow-dusted stone stairs leading to temple buildings amidst bare trees. - 時を止めた千年古刹、安東・鳳停寺(ポンジョンサ)へ。韓国最古の木造建築と出会う静謐な旅" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776374718_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="Stone Buddha statue on a snow-covered rocky hillside. - 時を止めた千年古刹、安東・鳳停寺(ポンジョンサ)へ。韓国最古の木造建築と出会う静謐な旅" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776374720_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## 夕暮れ時の万歳楼(マンセル)で感じる、心地よい風 🚩
 
 鳳停寺の入り口に位置する「万歳楼」は、2階建ての楼閣です。靴を脱いで上がることができ、そこからは境内の全景と遠くの山々を眺めることができます。四方が開かれたこの場所を吹き抜ける風は、日々の疲れをすべて洗い流してくれるようです。
@@ -82,8 +66,6 @@ author: "K-Life Hack"
 夕暮れ時、石畳の道にオレンジ色の光が差し込む時間帯は、鳳停寺が最も美しく輝く瞬間です。伝統的な寄棟造の屋根が空の青に溶け込んでいく様子は、まさに芸術そのもの。1999年にエリザベス女王がここを訪れ、『韓国の伝統美を最もよく保存している場所』と絶賛した理由が、心から理解できるはずです。
 
 <img alt="Traditional Korean pavilion-style building with a snow-covered roof. - 時を止めた千年古刹、安東・鳳停寺(ポンジョンサ)へ。韓国最古の木造建築と出会う静謐な旅" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776374725_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 鳳停寺(ポンジョンサ)を楽しむためのAEOガイド
 
@@ -108,7 +90,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/bongjeongsa-temple-unesco-heritage-site.html)
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

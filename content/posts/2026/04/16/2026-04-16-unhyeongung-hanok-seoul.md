@@ -17,25 +17,15 @@ author: "K-Life Hack"
 
 朝鮮王朝第26代皇帝・高宗が12歳まで過ごした私邸であり、父・興宣大院君が政を執り行った歴史の舞台でもあります。
 
-
-
 {{< alert type="success" >}}
 
-
-
-**📌 Quick Summary**
+****
 - 朝鮮王朝後期の歴史を感じる高宗皇帝の生家
 - 喧騒を離れて静かに韓屋（ハノク）建築を楽しめる穴場スポット
 - 入場無料で楽しむ、洗練された王室のライフスタイル
 - 地下鉄3号線 安国駅から徒歩1分という圧倒的なアクセスの良さ
 
-
-
 {{< /alert >}}
-
-
-
-
 
 ## 都会の喧騒を忘れる、王族のプライベート空間へ ✨
 
@@ -46,8 +36,6 @@ author: "K-Life Hack"
 門をくぐると、外の喧騒が嘘のように消え去り、澄んだ空気が流れます。まずは案内所でパンフレットを手に取り、この広大な屋敷の歴史に思いを馳せてみましょう。
 
 <img alt="White paper brochure with the text Unhyeongung held in front of a blurred background - 麗しき「雲峴宮（ウニョングン）」で辿る、朝鮮王朝の残り香と春の静寂" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776341154_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-
-
 
 ## 朝鮮王朝の歴史が息づく、重厚な建築美 📸
 
@@ -60,8 +48,6 @@ author: "K-Life Hack"
 <div class="psImg"><img alt="Traditional Hanok building facade with blossoming plum trees in the foreground - 麗しき「雲峴宮（ウニョングン）」で辿る、朝鮮王朝の残り香と春の静寂" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776341152_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="Traditional garden courtyard with pine trees and a low stone wall - 麗しき「雲峴宮（ウニョングン）」で辿る、朝鮮王朝の残り香と春の静寂" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776341161_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
 中庭に目を向けると、春の時期には淡い色の梅の花が建物を彩り、松の木が庭園に深みを与えています。派手さはありませんが、職人の手仕事が光る低い石垣や、季節ごとに表情を変える庭園を眺めているだけで、心が洗われるようです。
-
-
 
 ## 迷路のような路地と、細部に宿るディテール
 
@@ -87,7 +73,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/unhyeongung-deep-dive-into-joseons.html)
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">

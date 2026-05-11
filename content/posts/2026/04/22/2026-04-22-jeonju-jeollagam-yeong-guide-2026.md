@@ -17,14 +17,9 @@ author: "K-Life Hack"
 </div>
 </blockquote>
 
-
 『K-Life Hack』のシニアディレクター、Kです。皆様に、韓国の伝統と現代が交差する全州の新しい象徴、全羅監営の世界をご案内いたします。
 
 全州を訪れる多くの旅行者が韓屋村を歩きますが、真の文化的高潔さを求める方々が今、最も注目しているのがこの場所です。かつて全羅道全体を統括した最高行政機関としての威厳が、緻密な考証を経て現代に蘇りました。
-
-
-
-
 
 ## 歴史の深淵に触れる、全州の新たな顔 🏛️
 
@@ -34,8 +29,6 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt='alt="伝統的な韓屋の軒先越しに美しく切り取られた東屋の夜景。" - 2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852251_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="伝統的な木造建築の美しさと空間の広がりを感じさせる日中の本殿。" - 2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852253_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-
-
 ## 建築の美学：宣化堂と観風閣 🎨
 
 中心的な建物である宣化堂（ソナダン）は、観察使が業務を遂行した場所です。この建物の興味深い点は、入り口の軸が建物の中央から微妙にずれていることです。これは王宮ではない地方官庁としての謙虚さ、あるいは実務的な非対称性の美学であると言われています。
@@ -43,8 +36,6 @@ author: "K-Life Hack"
 細部まで目を向けると、韓国伝統建築の神髄を感じることができます。釘を一本も使わずに組み上げられた木材の継ぎ目や、歳月を感じさせる扁額の文字。これらは単なる再現ではなく、当時の職人の魂を2026年の技術で現代に繋いだ証でもあります。
 
 <div class="psImg"><img alt='alt="木目の質感と伝統的な書体の美しさが際立つ「宣化堂」の扁額。" - 2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852258_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt='alt="伝統的な木造天井の複雑で幾何学的な構造美を捉えた内部視点。" - 2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852260_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
-
-
 
 ## 春の訪れと夜の魔法：2026年度の見どころ 🌸
 
@@ -54,9 +45,7 @@ author: "K-Life Hack"
 
 <img alt='alt="伝統的な石垣と木造建築を背景に、満開の紅梅が彩る春の風景。" - 2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852255_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-
-
-## Quick Local Takeaways: 2026年度 訪問ガイド 📅
+: 2026年度 訪問ガイド 📅
 
 現地での時間を効率的に使うための基本情報をまとめました。2026年度の最新スケジュールに基づいています。
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;">
@@ -86,8 +75,6 @@ author: "K-Life Hack"
 
 最もおすすめなのは、日没の30分前です。明るい時間帯の建築美を確認した後、徐々にライトアップされていく魔法のような変化を楽しむことができます。また、夜は比較的空いているため、静かな散策が可能です。
 
-
-
 ## 旅の余韻を楽しむ周辺スポット ☕
 
 全羅監営を堪能した後は、すぐ近くの「デュロスター（Dew Roaster）」で本格的なロースタリーコーヒーを味わうのが定番のコースです。こちらの抹茶ラテは、日本産の高級抹茶を使用しており、非常に濃厚で風味が豊かです。また、話題の「タオルケーキ」や「パッパン（クリームパン）」は、SNSでも人気の逸品です。
@@ -102,7 +89,6 @@ author: "K-Life Hack"
 
 > 🌐 **Read this post in other languages:**
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/beyond-palace-walls-reclaiming.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="35d16126d85/gwangju" name="JEOLLA" >}}</div>
-
 
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
