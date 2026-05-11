@@ -26,7 +26,7 @@
 &lt;p&gt;1992年から続くこのお店の長い歴史は、壁に掲げられた年季の入ったメニュー表からもひしひしと伝わってきます。2026年になっても、店主の温かい笑顔とリーズナブルな価格設定は変わらず、一人で訪れても全く気兼ねなく食事ができる雰囲気はソロトラベラーにとっても心強い味方です。&lt;/p&gt;
 &lt;blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"&gt;&lt;div class="alert-header"&gt;&lt;span class="alert-icon"&gt;💡&lt;/span&gt;&lt;span class="alert-title"&gt;訪問ガイド (Tip)&lt;/span&gt;&lt;/div&gt;&lt;div class="alert-body"&gt;
 &lt;ul style="margin:0;padding:0;list-style:none;"&gt;
-&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;📍 &lt;b&gt;住所&lt;/b&gt;: 서울특별시 동대문구 경동시장로12길 26&lt;/li&gt;
+&lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;📍 &lt;b&gt;住所&lt;/b&gt;: ソウル特別市 東大門区 京東市場路12ギル 26&lt;/li&gt;
 &lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;⏰ &lt;b&gt;営業時間&lt;/b&gt;: 06:00 - 19:00&lt;/li&gt;
 &lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;🚃 &lt;b&gt;アクセス&lt;/b&gt;: 地下鉄1号線・京義中央線「清涼里駅」から徒歩圏内&lt;/li&gt;
 &lt;li style="margin-bottom:12px; list-style:none; line-height:1.4;"&gt;💳 &lt;b&gt;決済&lt;/b&gt;: 現金、カード、ソウルペイ利用可能&lt;/li&gt;
@@ -41,7 +41,7 @@
 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 &lt;/script&gt;&lt;/div&gt;&lt;/p&gt;
 &lt;div class="k-map-box"&gt;
-&lt;div class="k-map-header"&gt;&lt;h3 class="k-map-title"&gt;📍 청량리 충청도식당&lt;/h3&gt;&lt;p class="k-map-address"&gt;서울특별시 동대문구 경동시장로12길 26 (서울특별시 동대문구 제기동 549)&lt;/p&gt;&lt;/div&gt;
+&lt;div class="k-map-header"&gt;&lt;h3 class="k-map-title"&gt;📍 청량리 충청도식당&lt;/h3&gt;&lt;p class="k-map-address"&gt;ソウル特別市 東大門区 京東市場路12ギル 26 (서울특별시 동대문구 제기동 549)&lt;/p&gt;&lt;/div&gt;
 &lt;div class="k-map-iframe-wrap"&gt;&lt;iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%B2%AD%EB%9F%89%EB%A6%AC%20%EC%B6%A9%EC%B2%AD%EB%8F%84%EC%8B%9D%EB%8B%B9&amp;output=embed"&gt;&lt;/iframe&gt;&lt;/div&gt;
 &lt;div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"&gt;&lt;span style="display:block;font-weight:700;margin-bottom:2px;"&gt;⚠️ 旅行者のための注意&lt;/span&gt;Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、&lt;b&gt;Naverマップ&lt;/b&gt;の使用を強く推奨します。&lt;/div&gt;
 &lt;div class="k-map-buttons"&gt;
