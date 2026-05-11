@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/architectural-harmony-and-sonic.html"
 title: "西帰浦を象徴する光の彫刻、セヨンギョで迎える究極の週末：2026 金土金土セヨンショー"
 slug: "saeyeongyo-bridge-night-performance-show"
-date: 2026-04-27T16:03:49+09:00
+date: 2026-04-08T10:46:06+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/saeyeongyo-bridge-night-performance-show/khack_1777273359_0.webp"
 description: "2026年4月に開幕した済州島・西帰浦の夜を彩る「金土金土セヨンショー」。ドラマのロケ地としても名高い新縁橋（セヨンギョ）で、花火と音楽が融合する贅沢なひとときをディレクターKがナビゲートします。"

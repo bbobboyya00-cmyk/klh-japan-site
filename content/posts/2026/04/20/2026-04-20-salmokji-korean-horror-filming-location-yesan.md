@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/discerning-shadows-of-salmokji-curated.html"
 title: "韓国を震撼させる映画『サルモクチ』の世界。忠清南道・礼山への聖地巡礼ガイド"
 slug: "salmokji-korean-horror-filming-location-yesan"
-date: 2026-04-20T22:32:54+09:00
+date: 2026-03-18T10:10:12+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/1776690868-/khack_1776691938_0.webp"
 description: "2026年、韓国で社会現象を巻き起こしているホラー映画『サルモクチ』。その舞台となった忠清南道・礼山の撮影地情報やアクセス、周辺観光地をK-Life HackのディレクターKが徹底解説します。"

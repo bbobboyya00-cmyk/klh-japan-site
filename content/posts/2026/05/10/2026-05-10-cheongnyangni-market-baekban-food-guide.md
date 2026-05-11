@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/the-ultimate-6000-won-feast-why-seoul.html"
 title: "清涼里の隠れ家！6,000ウォンの幸せ「忠清道食堂」現地エディターの秘密のガイド"
 slug: "cheongnyangni-market-baekban-food-guide"
-date: 2026-05-10T01:09:22+09:00
+date: 2026-05-09T19:14:06+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/10/cheongnyangni-market-baekban-food-guide/khack_1778342900_1.webp"
 description: "ソウルの京東市場に佇む、知る人ぞ知る名店「忠清道食堂」を徹底解説。わずか6,000ウォンで楽しめる豪華な韓国定食（ペッパン）の魅力から、セレブも訪れる2026年の最新情報まで、現地エディターが特別に公開します。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/mastering-ergonomic-comfort-deep-dive.html"
 title: "デスクワークの悩みを解決！韓国で話題の「メディエイド スタイルケア 背中ストレッチバンド」を徹底解説"
 slug: "medi-aid-posture-care-korea"
-date: 2026-04-19T20:01:23+09:00
+date: 2026-03-14T19:33:58+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/medi-aid-posture-care-korea/khack_1776596468_0.webp"
 description: "ソウルのハイエンドな日常を届ける『K-Life Hack』のディレクターKが、長時間のデスクワークによる姿勢の悩みを解決する「メディエイド スタイルケア 背中ストレッチバンド」を深掘り。日本発の医療技術と韓国での最新 정보를 独自の視点で詳しくご紹介します。"

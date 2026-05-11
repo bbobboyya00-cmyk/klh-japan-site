@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/myeongdongs-culinary-gem-myth-jokbals.html"
 title: "明洞の喧騒で味わう至高の豚足、ミ쓰족발（ミスチョッパル）ソウル明洞店パーフェクトガイド"
 slug: "myeongdong-myth-jokbal-elevated-experience"
-date: 2026-05-03T07:04:21+09:00
+date: 2026-04-25T19:45:01+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/myeongdong-myth-jokbal-elevated-experience/khack_1777759392_0.webp"
 description: "2026年最新、ソウル明洞の『ミ쓰족발（ミスチョッパル）』を徹底解説。30年の伝統が息づく柔らかな豚足と、洗練された空間で楽しむハイエンドな韓国美食体験をお届けします。"

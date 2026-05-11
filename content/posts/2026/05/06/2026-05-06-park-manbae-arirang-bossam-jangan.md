@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/the-ultimate-melt-in-your-mouth-bossam.html"
 title: "35年の伝統が語る本物の味！ソウル長安洞で出会う「パク・マンベアリランポッサム」の絶品ガブリサル体験"
 slug: "park-manbae-arirang-bossam-jangan"
-date: 2026-05-06T04:07:58+09:00
+date: 2026-04-30T10:28:17+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/park-manbae-arirang-bossam-jangan/khack_1778007984_1.webp"
 description: "ソウル長安洞で35年間愛され続けるポッサムの名店をエディターが厳選。希少部位ガブリサルを使用したとろける肉質と、メイン注文で無料提供されるカルグクスやマッククスの驚愕コスパを2026年最新版ガイドとしてお届けします。"

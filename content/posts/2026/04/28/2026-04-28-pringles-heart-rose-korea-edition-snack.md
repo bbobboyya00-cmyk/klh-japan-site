@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/seouls-sweetest-secret-pringles-heart.html"
 title: "韓国限定・世界初の上陸。メガボックスとGSザ・フレッシュで出会う「プリングルズ・ハート・ミニ・ローズ」の誘惑"
 slug: "pringles-heart-rose-korea-edition-snack"
-date: 2026-04-28T09:30:14+09:00
+date: 2026-04-11T19:34:01+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/pringles-heart-rose-korea-edition-snack/khack_1777336150_0.webp"
 description: "世界初、韓国で独占先行販売された「プリングルズ・ハート・ミニ・ローズ」をディレクターKが徹底解剖。ピンクのハート型チップスが放つ圧倒的な視覚的魅力と、賛否両論を呼ぶ優雅なバラの香りの正体に迫ります。"

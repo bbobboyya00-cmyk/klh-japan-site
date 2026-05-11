@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/spot-therapy-gwanghwamun-seouls-secret.html"
 title: "2026年、光化門で心身を解きほぐす。究極のウェルネスと美食を巡るソウル・エディターズ・ガイド"
 slug: "gwanghwamun-wellness-guide"
-date: 2026-04-15T22:32:01+09:00
+date: 2026-03-02T19:43:02+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776259902_0.webp"
 description: "ソウルの中心、光化門で見つけた熟練セラピストによる本格スパと、五感を刺激するプレミアム韓食ダイニング。『K-Life Hack』のディレクターKが、独自の視点でその魅力を深掘り紹介します。"

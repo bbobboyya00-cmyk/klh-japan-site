@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/healing-art-therapy-at-ddp-keykney.html"
 title: "DDPで心温まる癒やしを。2026年「キークニ特別展」の見どころと現地レポート"
 slug: "keykney-special-exhibition-ddp-seoul"
-date: 2026-05-05T22:12:37+09:00
+date: 2026-04-28T10:31:55+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/keykney-special-exhibition-ddp-seoul/khack_1777986475_1.webp"
 description: "SNSで話題のイラストレーター、キークニ（Keykney）の特別展がDDPで開催。笑いと涙が交差する共感度100%の展示空間を、ソウルのトレンドに敏感なエディターが詳しくご紹介します。2026年の最新イベント情報をお見逃しなく。"

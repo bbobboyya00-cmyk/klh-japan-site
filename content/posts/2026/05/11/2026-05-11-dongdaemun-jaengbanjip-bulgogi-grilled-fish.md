@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/authentic-charcoal-bulgogi-and-stew.html"
 title: "【東大門】地元っ子がこっそり教える名店！「ジェンバンジッ」の絶品プルコギ定食"
 slug: "dongdaemun-jaengbanjip-bulgogi-grilled-fish"
-date: 2026-05-11T04:19:20+09:00
+date: 2026-05-11T07:19:56+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/dongdaemun-jaengbanjip-bulgogi-grilled-fish/khack_1778440643_1.webp"
 description: "東大門の路地裏に佇む「ジェンバンジッ」は、炭火香るプルコギとスンドゥブチゲが絶品のローカル食堂。1人旅でも安心の豪華定食を、ソウル在住インフルエンサーが徹底レポートします！"

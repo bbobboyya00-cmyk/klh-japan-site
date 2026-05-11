@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/hetras-hannam-seouls-scented-sanctuary.html"
 title: "ヘトラス漢南：洗練された香りが織りなす極上のライフスタイル空間"
 slug: "hetras-hannam-seoul-scented-sanctuary"
-date: 2026-05-04T14:16:29+09:00
+date: 2026-04-25T16:09:22+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/hetras-hannam-seoul-scented-sanctuary/khack_1777871711_0.webp"
 description: "ヘトラス漢南は、香水、ハンドクリーム、ライフスプレーなど、上質な香りのアイテムが揃うライフスタイルショップです。特別な空間で心豊かな体験をお楽しみください。"

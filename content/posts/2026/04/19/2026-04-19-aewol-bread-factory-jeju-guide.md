@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/coastal-crust-and-artisanal-calm.html"
 title: "済州・エウォルの海を一望。至福のベーカリー「エウォルパンゴンジャン」完全ガイド"
 slug: "aewol-bread-factory-jeju-guide"
-date: 2026-04-19T12:13:16+09:00
+date: 2026-03-11T16:35:55+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/aewol-bread-factory-jeju-guide/khack_1776568380_0.webp"
 description: "済州島・エウォルにある絶景ベーカリーカフェ「エウォルパンゴンジャン」を徹底取材。名物の玄武岩米パンやオーシャンビューのフォトスポット、BTSファン必見の聖地まで詳しくご紹介します。"

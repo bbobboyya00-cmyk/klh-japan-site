@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/discover-traditional-korean-medicine-at.html"
 title: "ソウル薬令市韓医学博物館：五感で巡る、韓国伝統医療の魅力と癒し体験🌿"
 slug: "seoul-hanbang-healing"
-date: 2026-04-19T07:29:22+09:00
+date: 2026-03-16T16:41:07+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seoul-hanbang-healing/khack_1776551318_0.webp"
 description: "ソウル薬令市韓医学博物館で、韓方文化の奥深さに触れる旅へ。伝統衣装体験から薬草足浴、韓方マッサージまで、心と体を癒す特別な時間をご紹介します。"

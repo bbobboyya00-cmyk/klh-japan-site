@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/unlocking-seongsus-hidden-gem-senvers.html"
 title: "聖水の隠れ家「SENVERS」：本と香りと音楽が溶け合う、感性を満たす没入型ブックカフェ"
 slug: "seongsu-senvers-book-cafe-cultural-hub"
-date: 2026-05-08T22:06:59+09:00
+date: 2026-05-04T10:12:25+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/seongsu-senvers-book-cafe-cultural-hub/khack_1778245470_1.webp"
 description: "聖水洞（ソンスドン）の喧騒を離れ、五感で本を楽しむ特別な場所「SENVERS」。2026年の最新トレンドを先取りした、音楽と香りのペアリング体験を現地エディターが詳しくご紹介します。"

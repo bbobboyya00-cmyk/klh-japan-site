@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/a-thousand-years-of-stillness.html"
 title: "癒やしと歴史が交差する、忠清北道・堤川「義林池」の極上トラベルガイド"
 slug: "premium-k-travel-jecheon-uirimji"
-date: 2026-04-21T17:04:15+09:00
+date: 2026-03-22T10:06:35+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/premium-k-travel-jecheon-uirimji/khack_1776758635_0.webp"
 description: "韓国最古の貯水池「義林池」で、千年の松林と龍秋滝の絶景を堪能する大人の週末。最新のガラス展望台や100%純メミルの名物グルメ、ラグジュアリーなリゾート情報まで凝縮した、ディレクターKによる特別ガイド。"

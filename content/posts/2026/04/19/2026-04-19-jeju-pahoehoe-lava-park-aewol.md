@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/a-journey-into-jejus-volcanic-soul.html"
 title: "済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ"
 slug: "jeju-pahoehoe-lava-park-aewol"
-date: 2026-04-19T08:28:56+09:00
+date: 2026-03-13T19:53:39+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554878_0.webp"
 description: "済州島・崖月(エウォル)に誕生したパホイホイ溶岩地質公園を徹底ガイド。数千年前の溶岩が描く神秘的な地質と、モダンな建築美が融合した新感覚のライフスタイルスポット。予約方法から見どころ、カフェ情報まで現地のKが詳しく紹介します。"

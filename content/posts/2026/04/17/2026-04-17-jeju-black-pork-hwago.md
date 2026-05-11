@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/exploring-hwago-art-of-barley-straw.html"
 title: "済州島・西帰浦で見つけた、至高の黒豚体験。麦わらの香りを纏う「Hwago(ファゴ)」の誘惑"
 slug: "jeju-black-pork-hwago"
-date: 2026-04-17T13:03:48+09:00
+date: 2026-03-07T19:34:36+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-black-pork-hwago/khack_1776431007_0.webp"
 description: "済州島・西帰浦の「ファゴ(Hwago)」で、麦わら燻製の極上黒豚を堪能。プロのスタッフによるグリルサービスと、こだわりの出汁ご飯まで詳しくレポートします。"

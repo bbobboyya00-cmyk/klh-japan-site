@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/waku-waku-gwangalli-high-end.html"
 title: "広安里に輝くエンターテイメントの聖地「ワクワク広安里店」ハイエンドガイド"
 slug: "waku-waku-gwangalli-entertainment-oasis"
-date: 2026-05-04T07:06:19+09:00
+date: 2026-04-27T16:01:50+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/waku-waku-gwangalli-entertainment-oasis/khack_1777845893_0.webp"
 description: "広安里ビーチのすぐそばに位置する「ワクワク広安里店」は、高品質な正規IPの景品と、忘れられない思い出を作るための最先端アトラクションが満載の、まさに大人の遊び場です。"

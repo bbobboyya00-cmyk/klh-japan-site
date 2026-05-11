@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/chasing-iron-bag-chef-2026-guide-to.html"
 title: "2026年も行列必至！西村「度量（ドリャン）」の絶品東坡肉とシェフの温かいおもてなし"
 slug: "doryang-seochon-chinese-dining-guide"
-date: 2026-05-05T18:40:23+09:00
+date: 2026-04-28T19:38:22+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/doryang-seochon-chinese-dining-guide/khack_1777973886_1.webp"
 description: "Netflix『白と黒の料理人』で一躍スターとなったイム・テフンシェフの店「度量」。2026年5月の訪問に向けて、伝説の東坡肉や海老の茄子包み揚げの魅力を、過去の感動体験をベースにプレビューガイドとしてお届けします。"

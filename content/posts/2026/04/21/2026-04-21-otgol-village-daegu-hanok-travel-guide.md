@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/a-sanctuary-of-scholarly-grace.html"
 title: "400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地"
 slug: "otgol-village-daegu-hanok-travel-guide"
-date: 2026-04-21T22:24:47+09:00
+date: 2026-03-22T16:41:58+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/otgol-village-daegu-hanok-travel-guide/khack_1776777863_0.webp"
 description: "慶州崔氏の集姓村として知られる大邱・漆谷村の魅力をディレクターKが徹底解説。美しい土塀の道、歴史的な韓屋、季節の花々が彩る特別な風景と、現地で味わうべき伝統の味を紹介します。"

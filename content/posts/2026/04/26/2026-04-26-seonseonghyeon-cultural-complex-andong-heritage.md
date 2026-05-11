@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/unveiling-joseon-era-revival.html"
 title: "安東・先聖県文化団地：湖畔に佇む歴史と自然の静寂"
 slug: "seonseonghyeon-cultural-complex-andong-heritage"
-date: 2026-04-26T13:52:19+09:00
+date: 2026-04-06T19:28:56+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/seonseonghyeon-cultural-complex-andong-heritage/khack_1777179061_0.webp"
 description: "K-Life Hack ディレクターKが安東の先聖県文化団地を深掘り。伝統的な韓屋、水上道、そして書生体験で、知られざる韓国の美を再発見するハイエンドガイド。"

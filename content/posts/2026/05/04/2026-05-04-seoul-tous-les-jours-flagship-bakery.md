@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/seouls-culinary-landmark-tous-les-jours.html"
 title: "芸術的なパンの聖地、ソウル・東大門の「トゥレジュール本店」完全ガイド"
 slug: "seoul-tous-les-jours-flagship-bakery"
-date: 2026-05-04T04:08:26+09:00
+date: 2026-04-26T10:22:13+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/seoul-tous-les-jours-flagship-bakery/khack_1777835226_0.webp"
 description: "ソウル中区のCJ第一製糖センター内に位置するトゥレジュール本店は、韓国ベーカリーの頂点です。話題の「アグジャク」ケーキから、職人の技が光る12種類のシグネチャーメニューまで、2026年の最新トレンドをディレクターKが徹底解説。洗練された空間で贅沢なひとときを。"

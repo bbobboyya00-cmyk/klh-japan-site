@@ -3,7 +3,7 @@
 en_url: "https://en.klifehack.com/2026/04/gastronomic-icon-definitive-guide-to.html"
 title: "釜山・南浦洞の聖地「イジェモピザ本店」：究極のチーズが奏でるハイエンド・ガストロノミーガイド"
 slug: "lee-jae-mo-pizza-busan-main"
-date: 2026-04-29T16:48:33+09:00
+date: 2026-04-13T19:55:11+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/lee-jae-mo-pizza-busan-main/khack_1777448814_0.webp"
 description: "釜山を代表するグルメの殿堂「イジェモピザ本店」。2026年度も変わらぬ人気を誇る究極のチーズ体験、ウェイティングの極意、おすすめメニューをディレクターKが徹底解説します。"

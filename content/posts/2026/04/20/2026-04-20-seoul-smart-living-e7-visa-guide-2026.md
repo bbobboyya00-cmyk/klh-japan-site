@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/mastering-e-7-professional-visa.html"
 title: "ソウルでプロフェッショナルとして生きるためのE-7ビザ完全ガイド 2026年度版"
 slug: "seoul-smart-living-e7-visa-guide-2026"
-date: 2026-04-20T07:05:31+09:00
+date: 2026-03-20T19:49:42+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-smart-living-e7-visa-guide-2026/khack_1776636323_0.webp"
 description: "K-Life HackディレクターKが、ソウルのハイエンドライフを支えるE-7ビザの最新要件、給与基準、申請プロセスを徹底解説します。2026年最新のGNI基準や専門職採用の秘訣を網羅。"

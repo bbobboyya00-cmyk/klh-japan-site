@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/neon-gastronomy-inspire-aurora-night.html"
 title: "インスパイア・オーロラ・ナイトマーケット：五感を揺さぶるK-FOODの聖地"
 slug: "inspire-aurora-night-market-guide"
-date: 2026-04-28T16:05:49+09:00
+date: 2026-04-10T19:10:37+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/inspire-aurora-night-market-guide/khack_1777359882_0.webp"
 description: "2026年、永宗島インスパイア・リゾートで体験するハイエンドな実内型夜市。K-FOOD、デジタルアート、ライブ公演が融合した至福のひとときをディレクターKがナビゲートします。"

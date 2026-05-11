@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/escape-to-verdant-sanctuary-suak-oreum.html"
 title: "済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿"
 slug: "jeju-forest-healing-suak-meochewat"
-date: 2026-04-17T07:33:38+09:00
+date: 2026-03-07T16:16:33+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378798_0.webp"
 description: "『K-Life Hack』のディレクターKがおすすめする、済州島の隠れた森林浴スポット「水岳（スアク）オルム」と「モチェワッ森の道」。家族連れにも優しい緩やかなコースで、自然の中で心ゆくまで癒される特別なハイキングコースをご紹介します。"

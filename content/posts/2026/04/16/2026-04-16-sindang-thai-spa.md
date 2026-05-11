@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/cassia-thai-wangsimni-premier.html"
 title: "ソウル新堂洞（シンダンドン）で見つける極上タイマッサージ：カシアタイでの癒し体験 ✨"
 slug: "sindang-thai-spa"
-date: 2026-04-16T01:30:10+09:00
+date: 2026-03-05T10:22:53+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776270600_0.webp"
 description: "ソウル新堂洞にあるカシアタイ王十里店は、心と体を癒すタイマッサージスパ。疲れた日常を忘れ、穏やかな空間で極上のリラックスタイムを過ごしてみませんか。カップルや友人との訪問にも最適です。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/the-climate-card-revolution-navigating.html"
 title: "【2026最新】ソウル気候同行カードで月3万ウォン還元！外国人向け完全申請ガイド"
 slug: "seoul-climate-card-refund-guide-2026"
-date: 2026-04-25T19:04:23+09:00
+date: 2026-04-03T19:14:25+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/seoul-climate-card-refund-guide-2026/khack_1777111377_0.webp"
 description: "2026年4月から6月まで実施される「気候同行カード」の月3万ウォンキャッシュバック特典。ソウル在住の日本人が確実に現金還元を受けるための登録方法と申請手順をディレクターKが徹底解説します。"

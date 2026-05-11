@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/bongjeongsa-temple-unesco-heritage-site.html"
 title: "時を止めた千年古刹、安東・鳳停寺(ポンジョンサ)へ。韓国最古の木造建築と出会う静謐な旅"
 slug: "andong-bongjeongsa-temple-unesco"
-date: 2026-04-17T06:25:29+09:00
+date: 2026-03-06T16:13:13+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776374710_0.webp"
 description: "韓国・安東にあるユネスコ世界遺産『鳳停寺(ポンジョンサ)』。韓国最古の木造建築『極楽殿』やエリザベス女王も訪れた名刹の魅力を、冬の美しい風景と共に紹介します。"

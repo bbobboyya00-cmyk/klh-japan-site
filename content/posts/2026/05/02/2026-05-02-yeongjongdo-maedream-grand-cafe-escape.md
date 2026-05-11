@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/yeongjongdos-maedream-grand.html"
 title: "永宗島 メイドリーム：教会を再生した幻想的な空間で味わうハイエンドな休息"
 slug: "yeongjongdo-maedream-grand-cafe-escape"
-date: 2026-05-02T22:04:10+09:00
+date: 2026-04-22T19:26:09+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/yeongjongdo maedream grand cafe escape/khack_1777726972_0.webp"
 description: "仁川・永宗島に位置する「メイドリーム」は、教会をリノベーションした神秘的な大型カフェ。巨大な生命の樹とステンドグラスが織りなす幻想的な空間で、2026年のトレンドを先取りする至高のひとときを提案します。"

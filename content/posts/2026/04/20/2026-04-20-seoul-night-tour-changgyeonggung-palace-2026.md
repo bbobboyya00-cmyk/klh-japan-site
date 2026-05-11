@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/changgyeonggung-palace-luminous-night.html"
 title: "2026年ソウル、夜の王宮を彩る光の祭典。昌慶宮'水光蓮花'完全ガイド"
 slug: "seoul-night-tour-changgyeonggung-palace-2026"
-date: 2026-04-20T22:26:18+09:00
+date: 2026-03-19T16:38:42+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/1776690958-/khack_1776691542_0.webp"
 description: "2026年4月に開催される昌慶宮の夜間特別公開'水光蓮花'。予約不要、入場料1,000ウォンで楽しめるメディアアートの見どころ、アクセス、混雑回避のコツをディレクターKが徹底解説します。"

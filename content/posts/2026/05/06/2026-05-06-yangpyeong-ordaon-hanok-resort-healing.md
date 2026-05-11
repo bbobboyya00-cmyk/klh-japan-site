@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/hidden-mountain-sanctuary-your-2026.html"
 title: "楊平の隠れ家リゾート「オルダオン」完全ガイド！2026年に行くべき癒やしの聖地"
 slug: "yangpyeong-ordaon-hanok-resort-healing"
-date: 2026-05-06T19:59:26+09:00
+date: 2026-05-01T10:41:34+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/yangpyeong-ordaon-hanok-resort-healing/khack_1778065079_1.webp"
 hide_featured: true

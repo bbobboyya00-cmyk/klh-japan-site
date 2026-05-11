@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/happy-chowon-ranch-chuncheons-highland.html"
 title: "春川のアルプス、ハッピーチョウォン牧場で出逢う極上のパノラマ"
 slug: "happy-chowon-ranch-chuncheon-highland"
-date: 2026-04-30T19:06:52+09:00
+date: 2026-04-15T16:04:14+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/happy-chowon-ranch-chuncheon-highland/khack_1777543491_0.webp"
 description: "春川の「韓国のアルプス」と呼ばれるハッピーチョウォン牧場。大自然の中での動物との交流と、山頂から望む絶景フォトスポットをディレクターKがナビゲートします。"

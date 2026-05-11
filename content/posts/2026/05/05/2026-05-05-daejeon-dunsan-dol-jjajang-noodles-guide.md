@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/sizzling-stone-plate-black-bean-noodles.html"
 title: "大田で熱々の感動を！「ドゥンサン石焼ジャジャン」2026年最新プレビューガイド"
 slug: "daejeon-dunsan-dol-jjajang-noodles-guide"
-date: 2026-05-05T19:06:47+09:00
+date: 2026-04-27T10:46:08+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/daejeon-dunsan-dol-jjajang-noodles-guide/khack_1777975522_1.webp"
 description: "大田の炭坊洞（タンバンドン）で絶大な人気を誇る「ドゥンサン石焼ジャジャン」。最後まで熱々の石焼プレートに丸ごと一杯のイカがのった贅沢な一皿を、2026年の最新トレンドとともにご紹介します。"

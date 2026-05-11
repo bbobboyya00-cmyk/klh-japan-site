@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/maedrim-120-year-old-church-reimagined.html"
 title: "メイドリム（Made 林）：120年の歴史を刻む教会がカフェへ、永宗島の文化空間"
 slug: "maedrim-incheon-church-cafe-guide"
-date: 2026-04-21T14:10:00+09:00
+date: 2026-03-22T19:16:20+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776745187-/maderim.webp"
 description: "仁川・永宗島にある120年の歴史を持つ教会をリノベーションした複合文化空間「メイドリム（Made 林）」をご紹介。ステンドグラスが輝く大聖堂、地下の洞窟、鹿の庭園など、アートと美食が融合した韓国屈指のホットスポットをディレクターKがナビゲートします。"

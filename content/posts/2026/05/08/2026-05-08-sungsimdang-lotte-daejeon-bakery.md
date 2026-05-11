@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/sungsimdang-lotte-daejeon-your-secret.html"
 title: "親友だけに教える！大田ロッテ百貨店「聖心堂」で出会う絶品パン体験"
 slug: "sungsimdang-lotte-daejeon-bakery"
-date: 2026-05-08T10:08:33+09:00
+date: 2026-05-05T19:59:28+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/sungsimdang-lotte-daejeon-bakery/khack_1778202400_1.webp"
 description: "大田のローカルが愛する名店「聖心堂」のロッテ百貨店大田店を徹底ガイド。揚げパンからマンゴースイーツまで、昨年大ヒットしたメニューと2026年の注目ポイントをいち早くご紹介します。"

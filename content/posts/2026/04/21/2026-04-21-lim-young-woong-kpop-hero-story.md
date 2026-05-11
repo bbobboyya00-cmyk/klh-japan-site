@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/lim-young-woong-shatters-streaming.html"
 title: "イム・ヨンウン：K-POPの新たな歴史を刻む'英雄時代'の軌跡と次なる伝説"
 slug: "lim-young-woong-kpop-hero-story"
-date: 2026-04-21T07:57:06+09:00
+date: 2026-03-21T10:36:05+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776725542-/khack_1776725815_0.webp"
 description: "韓国の国民的歌手イム・ヨンウンの驚異的な記録達成とその魅力を、K-Life HackディレクターKが深掘り。彼の音楽がなぜK-POP界で特別な存在なのかをご紹介します。"

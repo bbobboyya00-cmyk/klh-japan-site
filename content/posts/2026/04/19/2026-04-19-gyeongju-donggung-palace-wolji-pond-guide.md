@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/beyond-moonlight-timeless-allure-of.html"
 title: "慶州・東宮と月池：新羅の黄金夜景に酔いしれる、春のロマンチック散歩 ✨"
 slug: "gyeongju-donggung-palace-wolji-pond-guide"
-date: 2026-04-19T13:26:05+09:00
+date: 2026-03-12T10:24:13+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/gyeongju-donggung-palace-wolji-pond-guide/khack_1776572736_0.webp"
 description: "慶州を代表する夜景の名所「東宮と月池」を徹底ガイド。2026年4月の最新桜情報やマジックアワーの楽しみ方、新羅時代の歴史的背景まで、洗練されたエディトリアル視点でご紹介します。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/seocho-gus-jikhwa-jangin-masterclass-in.html"
 title: "直火匠人 教大店：ソウルの美食家を唸らせる極上の和牛体験"
 slug: "jikama-seochogu-hanwoo-grilling-mastery"
-date: 2026-04-30T06:47:34+09:00
+date: 2026-04-16T19:02:59+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/jikama-seochogu-hanwoo-grilling-mastery/khack_1777499142_0.webp"
 description: "ソウルの教大駅に佇む「直火匠人」は、最高級韓牛1++等級のみを厳選した美食の殿堂です。職人によるプレミアムグリリングサービスと洗練された空間で、五感を刺激する極上の和牛体験を。ディレクターKが推薦する、ソウルで味わうべき至福の味を堪能ください。"

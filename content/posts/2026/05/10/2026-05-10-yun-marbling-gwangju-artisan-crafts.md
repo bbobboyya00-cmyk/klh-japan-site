@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/discover-yun-marbling-gwangjus-hidden.html"
 title: "世界に一つだけのアート！光州の隠れ家工房「ユン・マーブリング」で体験する特別な日常"
 slug: "yun-marbling-gwangju-artisan-crafts"
-date: 2026-05-10T04:07:28+09:00
+date: 2026-05-10T10:20:23+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/10/yun-marbling-gwangju-artisan-crafts/khack_1778353470_1.webp"
 description: "光州（クァンジュ）の静かな路地裏で見つけた、魔法のようなマーブリングの世界。自分だけのオリジナル雑貨作りから、洗練されたギャラリー鑑賞まで、トレンドセッターが密かに通うローカルホットプレイス「ユン・マーブリング」の魅力を詳しくご紹介します。"

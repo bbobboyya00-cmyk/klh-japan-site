@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/a-curated-stay-in-seogwipo-unrivaled.html"
 title: "西帰浦の空と海に抱かれる至福の拠点｜ザ・ファースト70ホテル深層ガイド"
 slug: "the-first-70-hotel-seogwipo-jeju-lifestyle-guide"
-date: 2026-04-21T19:09:32+09:00
+date: 2026-03-23T16:06:15+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/the-first-70-hotel-seogwipo-jeju-lifestyle-guide/khack_1776766162_0.webp"
 description: "西帰浦中心部に位置するザ・ファースト70ホテルをディレクターKが徹底解説。オルレ市場徒歩5分、絶景ルーフトップと洗練された客室で済州島の旅を格上げします。"

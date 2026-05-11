@@ -1,7 +1,7 @@
 ---
 title: "延南洞の新名物！モッチパンアッカンの100%グルテンフリー・もちもち鯛焼きガイド"
 slug: "yeonnam-mochi-taiyaki-guide"
-date: 2026-04-15T10:29:27+09:00
+date: 2026-03-03T10:59:32+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776216556_0.webp"
 description: "ソウル・延南洞で話題のモッチパンアッカンを徹底取材。100%グルテンフリーのもちもち食感と焦がしバターの香りがたまらない新感覚の鯛焼きを紹介します。"

@@ -2,7 +2,7 @@
 title: "【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成フグ店」で触れる五感の美食"
 en_url: "https://en.klifehack.com/2026/04/tongyeong-gastronomy-transcendent.html"
 slug: "manseong-bokjip-tongyeong-pufferfish-guide"
-date: 2026-04-29T07:07:43+09:00
+date: 2026-04-13T16:07:17+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/manseong-bokjip-tongyeong-pufferfish-guide/khack_1777413976_0.webp"
 description: "統営（トンヨン）の西湖市場に佇む「万成フグ店（マンソンボッチッ）」。50年守리抜かれた澄み渡るフグスープの神髄と、洗練された美食の時間をディレクターKが紐解きます。"

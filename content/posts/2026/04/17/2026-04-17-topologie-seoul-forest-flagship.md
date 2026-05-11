@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/a-new-paradigm-of-modular-utility.html"
 title: "ソウルの森に誕生した Topologie 韓国初フラッグシップ：2026 SS ‘The Starbound’ の世界 🧭"
 slug: "topologie-seoul-forest-flagship"
-date: 2026-04-17T13:30:41+09:00
+date: 2026-03-08T10:43:34+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/topologie-seoul-forest-flagship/khack_1776400226_0.webp"
 description: "ソウルの森にオープンした Topologie の韓国初フラッグシップストア。2026 SS コレクション 'The Starbound' や、独自のモジュールシステム、店内の見どころを詳細にレポート。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/musinsa-megastore-seongsu-curated.html"
 title: "聖水洞のファッション聖地：ムシンサメガストア完全攻略ガイド"
 slug: "musinsa-megastore-seongsu-lifestyle-nexus"
-date: 2026-05-03T22:12:40+09:00
+date: 2026-04-24T10:36:22+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/musinsa-megastore-seongsu-lifestyle-nexus/khack_1777813878_0.webp"
 description: "ソウル聖水洞に誕生したムシンサメガストア。最新ファッションとライフスタイルを体験できる、ディレクターKによるハイエンドガイドです。"

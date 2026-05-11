@@ -2,7 +2,7 @@
 title: "龍仁『金星食堂』：45年の伝統が息づく、発酵の芸術を識る"
 en_url: "https://en.klifehack.com/2026/04/ancestral-umami-geumseong-restaurant.html"
 slug: "geumseong-restaurant-yongin-soybean-stew"
-date: 2026-04-29T10:46:42+09:00
+date: 2026-04-12T16:35:02+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/geumseong-restaurant-yongin-soybean-stew/khack_1777427099_0.webp"
 description: "ディレクターKが案内する、龍仁『金星食堂』のハイエンド美食ガイド。45年の伝統が織りなす極上のチョングッチャンと手作り豆腐の世界へ。"

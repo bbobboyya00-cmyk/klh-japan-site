@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/seoul-forest-urban-oasis-of.html"
 title: "ソウル森で紡がれる緑の叙事詩：2026年ソウル国際庭園博覧会ガイド"
 slug: "seoul-forest-garden-expo-grandeur"
-date: 2026-05-02T13:11:26+09:00
+date: 2026-04-21T19:52:24+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/seoul-forest-garden-expo-grandeur/khack_1777695015_0.webp"
 description: "2026年、ソウル森で開催される国際庭園博覧会のハイエンドガイド。ポケモンとのコラボレーションから洗練された造園美まで、都会のオアシスで楽しむ特別な休息をディレクターKが提案します。"

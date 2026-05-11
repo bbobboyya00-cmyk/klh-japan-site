@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/aewols-sunset-sanctuary-why-haejigae.html"
 title: "済州島・涯月（エウォル）の海を飲み込む贅沢。韓屋と絶景が織りなす『ヘジゲ（海知開）』完全ガイド"
 slug: "jeju-aewol-haejigae-cafe-guide"
-date: 2026-04-17T11:29:44+09:00
+date: 2026-03-06T10:41:23+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-aewol-haejigae-cafe-guide/khack_1776392960_0.webp"
 description: "済州島の人気スポット、涯月カフェ通りの「ヘジゲ（Haejigae）」を徹底解説。伝統的な韓屋の趣とオーシャンビュー、絶品ベーカリーや限定の「ノウルサンド」まで、編集者Kがその魅力を綴ります。"

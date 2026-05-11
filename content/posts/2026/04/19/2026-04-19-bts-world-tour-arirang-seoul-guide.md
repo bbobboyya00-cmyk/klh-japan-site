@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/bts-arirang-world-tour-masterpiece-of.html"
 title: "2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨"
 slug: "bts-world-tour-arirang-seoul-guide"
-date: 2026-04-19T21:54:17+09:00
+date: 2026-03-11T10:45:30+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603225_0.webp"
 description: "2026年4月、3年9ヶ月の沈黙を破り完全体で帰還したBTS。伝統と現代を融合させた『ARIRANG』プロジェクトの全貌と、ソウル・高陽で開催された歴史的な公演、限定グッズ情報をエディターKが徹底解説します。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/navigating-pause-essential-2026-guide.html"
 title: "ソウル生活の必須知識：韓国の「右折一時停止」完全攻略ガイド"
 slug: "korea-right-turn-stop-rules-2026"
-date: 2026-04-21T06:35:56+09:00
+date: 2026-03-21T16:09:50+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776720425-/khack_1776720927_0.webp"
 description: "ソウルでの運転をより安全に。2026年最新の韓国右折一時停止ルール、反則金、罰点から注意点まで、K-Life HackディレクターKが徹底解説します。"

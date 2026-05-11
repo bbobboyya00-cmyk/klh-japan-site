@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/unveiling-apgujeongs-best-kept-secret.html"
 title: "狎鴎亭ニューマンドゥチプ：地元民が愛する絶品マンドゥクッの隠れ家"
 slug: "apgujeong-new-mandujip-dumpling-soup"
-date: 2026-05-10T07:06:17+09:00
+date: 2026-05-08T16:35:39+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/10/apgujeong-new-mandujip-dumpling-soup/khack_1778364285_1.webp"
 description: "2026年も変わらぬ美味しさ！ミシュラン掲載の老舗「狎鴎亭ニューマンドゥチプ」で、心温まる北朝鮮式マンドゥクッを堪能。ソウルのトレンドセッターが密かに教える、通好みの名店を徹底ガイド。"

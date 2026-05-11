@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/gyeongju-oreung-architectural-silence.html"
 title: "慶州オヌン（五陵）の静寂と白木蓮｜新羅の始まりを歩く、究極のヒーリングガイド"
 slug: "gyeongju-oreung-silla-royal-tombs"
-date: 2026-04-26T10:08:18+09:00
+date: 2026-04-05T19:57:46+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/gyeongju-oreung-silla-royal-tombs/khack_1777165630_0.webp"
 description: "慶州の隠れた名所、五陵（オヌン）。新羅の始祖が眠る聖域で、春の白木蓮と静寂に包まれる贅沢なひとときを。ディレクターKが贈る、ハイエンドな慶州散策ガイド。2026年最新情報。"

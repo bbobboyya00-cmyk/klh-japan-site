@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/siheung-wave-park-koreas-premier.html"
 title: "シフン・ウェーブパーク：都会のオアシスで波に乗るハイエンド体験"
 slug: "siheung-wave-park-korea-coastal-destination"
-date: 2026-05-01T13:06:45+09:00
+date: 2026-04-19T19:18:40+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/siheung-wave-park-korea-coastal-destination/khack_1777608315_0.webp"
 description: "ディレクターKが提案するシフン・ウェーブパーク。世界最大級の人工サーフィンラグーンで、極上の波と非日常を体験するハイエンドガイド。"

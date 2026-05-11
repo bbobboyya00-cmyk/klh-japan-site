@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/beyond-palace-walls-reclaiming.html"
 title: "2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド"
 slug: "jeonju-jeollagam-yeong-guide-2026"
-date: 2026-04-22T19:04:24+09:00
+date: 2026-03-25T16:07:53+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852249_0.webp"
 description: "朝鮮王朝の行政の中心地、全州の「全羅監営」を完全ガイド。2026年度最新のイベント情報やライトアップ、周辺の隠れ家カフェまで、ディレクターKがその魅력을深掘りします。"

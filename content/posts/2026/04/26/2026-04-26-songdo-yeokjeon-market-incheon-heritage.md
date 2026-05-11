@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/songdo-yeokjeon-market-confluence-of.html"
 title: "仁川松島駅前市場：歴史とグルメを巡るタイムトリップガイド"
 slug: "songdo-yeokjeon-market-incheon-heritage"
-date: 2026-04-26T01:05:49+09:00
+date: 2026-04-06T16:07:19+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/songdo-yeokjeon-market-incheon-heritage/khack_1777133040_0.webp"
 description: "仁川の「松島駅前市場」は、水仁線の歴史と共に栄えた伝統市場です。ディレクターKが地元グルメ、レトロな雰囲気、旧松島駅文化公園の魅力をご紹介。"

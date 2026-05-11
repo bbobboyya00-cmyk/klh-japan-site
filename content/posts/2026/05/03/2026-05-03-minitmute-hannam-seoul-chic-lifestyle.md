@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/minitmute-hannam-seouls-chic-lifestyle.html"
 title: "漢南洞の感性を纏う、ミニミュート・ハンナム・フラッグシップストア完全ガイド"
 slug: "minitmute-hannam-seoul-chic-lifestyle"
-date: 2026-05-03T14:31:05+09:00
+date: 2026-04-24T19:47:12+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/minitmute-hannam-seoul-chic-lifestyle/khack_1777786184_0.webp"
 description: "ソウル・漢南洞に位置するミニミュートの旗艦店を徹底解説。2026年最新の店舗情報から、おすすめのフロア構成、人気のレザーアイテムまで、ディレクターKがハイエンドなライフスタイルをご提案します。"

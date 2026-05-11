@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/rose-encore-pop-up-in-busan-deep-dive.html"
 title: "釜山で開催中！BLACKPINKロゼの魅力が詰まった「one year of rosie」ポップアップストアを徹底ガイド"
 slug: "rose-busan-popup-guide"
-date: 2026-04-19T22:32:26+09:00
+date: 2026-03-14T16:15:59+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/19/rose-busan-popup-guide/khack_1776605532_0.webp"
 description: "BLACKPINKロゼのソロプロジェクト記念ポップアップが釜山で開催中！BUSAN X the SKYで美しい展示と限定グッズを。予約方法、割引、特典情報も。"

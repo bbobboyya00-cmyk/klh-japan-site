@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/emis-k-fashion-brand-redefining.html"
 title: "K-POPアイドルも夢中！ 韓国発「emis（イミス）」の魅力に迫る最旬ガイド ✨"
 slug: "emis-kfashion-seongsu-guide"
-date: 2026-04-18T11:40:58+09:00
+date: 2026-03-09T19:50:24+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/emis-kfashion-seongsu-guide/khack_1776480047_0.webp"
 description: "K-POPアイドルや韓国セレブ愛用の人気ブランド「emis（イミス）」の魅力を徹底解剖。アジア人にフィットするキャップやバッグなど、トレンドアイテムが揃う聖水洞フラッグシップストアを現地エディターKがご案内します。"

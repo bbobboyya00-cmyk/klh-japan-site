@@ -2,7 +2,7 @@
 title: "K-Life Hack: 優水屋 亭子本店、格式と伝統の極上韓国料理体験"
 en_url: "https://en.klifehack.com/2026/04/woosoook-jeongja-definitive-guide-to.html"
 slug: "woosoook-jeongja-premium-hanwoo-naengmyeon"
-date: 2026-04-29T06:32:00+09:00
+date: 2026-04-14T19:15:58+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/woosoook-jeongja-premium-hanwoo-naengmyeon/khack_1777411817_0.webp"
 description: "「K-Life Hack」ディレクターKが贈る、優水屋 亭子本店でのハイエンドな韓国料理体験。厳選された韓牛と平壌冷麺が織りなす極上の世界へご招待します。"

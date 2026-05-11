@@ -1,7 +1,7 @@
 ---
 title: "K-Beautyの最新トレンド！THE FACE SHOP fmgtで叶える自然体メイク術"
 slug: "k-beauty-fmgt-makeup"
-date: 2026-04-18T13:09:16+09:00
+date: 2026-03-10T19:08:51+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-beauty-fmgt-makeup/khack_1776485342_0.webp"
 description: "『K-Life Hack』のディレクターKが紐解く、最新K-Beauty「THE FACE SHOP fmgt」の魅力。長持ちで自然な仕上がり、そして忙しい日常に寄り添うアイテムを独自の視点で深掘りします。"

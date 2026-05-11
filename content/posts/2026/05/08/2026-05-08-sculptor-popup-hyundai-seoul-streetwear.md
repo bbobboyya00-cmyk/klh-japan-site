@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/exclusive-sculptor-pop-up-guide-hyundai.html"
 title: "【2026速報】ザ・現代ソウルで絶対行きたい！スカルプターのポップアップ完全攻略ガイド"
 slug: "sculptor-popup-hyundai-seoul-streetwear"
-date: 2026-05-08T04:11:28+09:00
+date: 2026-05-04T16:47:23+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/sculptor-popup-hyundai-seoul-streetwear/khack_1778180999_1.webp"
 description: "ソウルのトレンド発信地、ザ・現代ソウルで話題沸騰中の「スカルプター」ポップアップを徹底レポ。限定のミントカラー財布やノベルティ情報、2026年のトレンドを先取りするスタイリングのコツまで、おしゃれ女子必見の情報を凝縮してお届けします。"

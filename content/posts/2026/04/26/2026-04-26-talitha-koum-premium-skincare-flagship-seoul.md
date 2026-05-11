@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/beyond-surface-ritual-of-resilience-at.html"
 title: "ソウル・新沙洞の隠れ家で研ぎ澄まされる美意識。タリタクム（Talitha Koum）が提案する真のヴィーガン・ライフスタイル"
 slug: "talitha-koum-premium-skincare-flagship-seoul"
-date: 2026-04-26T16:09:13+09:00
+date: 2026-04-06T10:04:50+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/talitha-koum-premium-skincare-flagship-seoul/khack_1777187174_0.webp"
 description: "ソウル・新沙洞に位置するタリタクムのフラッグシップ。ディレクターKが、特許成分「白タンポポ」の生命力を宿したハイエンドなヴィーガンビューティーの世界をご案内します。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/essential-guide-obtaining-foreigners.html"
 title: "ソウルでの不動産購入を成功させる：外国人不動産登記用登録番号ガイド"
 slug: "seoul-real-estate-foreigner-registration-number-guide"
-date: 2026-04-20T01:29:49+09:00
+date: 2026-03-19T10:26:01+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-real-estate-foreigner-registration-number-guide/khack_1776616151_0.webp"
 description: "韓国で不動産を所有したい外国人必見。K-Life Hack ディレクターKが、外国人不動産登記用登録番号の取得方法、必要書類、手続きの流れを詳しく解説します。"

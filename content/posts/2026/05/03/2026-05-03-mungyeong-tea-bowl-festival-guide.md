@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/mungyeongsaejae-heritage-guide-to.html"
 title: "聞慶セジェで出会う至高の美、聞慶茶碗祭り2026完全ガイド"
 slug: "mungyeong-tea-bowl-festival-guide"
-date: 2026-05-03T20:26:05+09:00
+date: 2026-04-24T16:43:09+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/mungyeong-tea-bowl-festival-guide/khack_1777807489_0.webp"
 description: "聞慶セジェの美しい自然の中で開催される「聞慶茶碗祭り 2026」。伝統陶磁器の職人技、茶道体験、そして朝鮮王朝時代のセット場を巡る、ハイエンドな韓国文化の旅をご紹介します。ディレクターKが贈る、本物の美に触れるガイド。"

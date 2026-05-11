@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/defining-new-standard-of-k-streetwear.html"
 title: "漢南洞で出会う、自分だけの特別なキャップ。EMIS（エミス）フラッグシップストア訪問記 🧢"
 slug: "emis-hannam-flagship-store-guide"
-date: 2026-04-19T18:39:37+09:00
+date: 2026-03-12T16:11:55+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/emis-hannam-flagship-store-guide/khack_1776591571_0.webp"
 description: "漢南洞（ハンナムドン）にある大人気ブランドEMIS（エミス）の旗艦店を現地レポート。カラー豊富なボールキャップや店内の雰囲気、免税情報まで、韓国トレンドの最前線をお届けします。"

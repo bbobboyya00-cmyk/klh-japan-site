@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/finding-inner-peace-at-mini-pond.html"
 title: "水中の楽園へようこそ。永宗島のアクアカフェ「小さな池」で心洗われるひとときを ✨"
 slug: "yeongjongdo-aqua-cafe-mini-pond"
-date: 2026-04-18T13:51:26+09:00
+date: 2026-03-10T10:56:07+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/yeongjongdo-aqua-cafe-mini-pond/khack_1776487871_0.webp"
 description: "仁川・永宗島の人気スポット、アクアカフェ「小さな池（Jageun Yeonmot）」を現地エディターが詳しく紹介。魚や爬虫類との触れ合い、絶品スイーツが揃う癒しの空間です。"

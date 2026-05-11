@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/narrative-arc-at-banghwa-neighborhood.html"
 title: "K-Life Hack ディレクターKが紐解く「江西区子ども童話祭り2026」AIと童話が織りなすソウル体験"
 slug: "fairy-tale-festival-banghwa-park-seoul"
-date: 2026-04-26T13:05:20+09:00
+date: 2026-04-04T10:32:11+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/fairy-tale-festival-banghwa-park-seoul/khack_1777176215_0.webp"
 description: "K-Life Hack ディレクターKが、2026年開催の江西区子ども童話祭りを徹底ガイド。AI技術と童話が融合したユニークな体験や、家族で楽しめる魅力を深掘り。来年の訪問計画に役立つ情報満載です。"

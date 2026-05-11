@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/bukchon-wellness-museum-sanctuary-of.html"
 title: "北村の静寂と調和する癒やしの聖地、北村ウェルネスミュージアムで体験する究極のセルフケア"
 slug: "bukchon-wellness-museum-pharmacy-seoul"
-date: 2026-05-01T16:04:13+09:00
+date: 2026-04-17T19:18:09+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/bukchon-wellness-museum-pharmacy-seoul/khack_1777618960_0.webp"
 description: "2026年、ソウル北村に誕生した「北村ウェルネスミュージアム」をディレクターKが徹底ガイド。伝統的な韓屋の景観とモダンなウェルネス体験が融合した、ハイエンドな癒やしの空間をご紹介します。"

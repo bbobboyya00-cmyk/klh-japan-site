@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/beyond-aesthetics-how-seouls-juel-color.html"
 title: "ソウル・宣陵で自分磨き。ジュエルカラーで体験する「美のロジカル・診断」完全ガイド"
 slug: "seoul-personal-color-juel-color"
-date: 2026-04-18T09:49:54+09:00
+date: 2026-03-10T16:31:02+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seoul-personal-color-juel-color/khack_1776473378_0.webp"
 description: "ソウル宣陵駅すぐの「ジュエルカラー」を徹底取材。代表院長による1:1のパーソナルカラー、骨格、顔タイプ診断で、あなただけの『似合う』を論理的に導き出します。"

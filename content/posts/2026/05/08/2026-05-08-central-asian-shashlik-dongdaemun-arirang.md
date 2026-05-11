@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/hidden-central-asian-gem-in-dongdaemun.html"
 title: "東大門の路地裏で出会う中央アジアの風！「アリラン」で味わう本場シャシリクと高麗人料理"
 slug: "central-asian-shashlik-dongdaemun-arirang"
-date: 2026-05-08T07:09:08+09:00
+date: 2026-05-03T16:44:12+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/central-asian-shashlik-dongdaemun-arirang/khack_1778191675_1.webp"
 description: "東大門歴史文化公園駅からすぐ！中央アジアの異国情緒を感じられる名店「アリラン」をご紹介。肉厚でジューシーなシャシリクや、さっぱりとした高麗人式の冷やし麺ククシなど、ここでしか味わえない絶品料理の数々をエディターが詳しくレポートします。"

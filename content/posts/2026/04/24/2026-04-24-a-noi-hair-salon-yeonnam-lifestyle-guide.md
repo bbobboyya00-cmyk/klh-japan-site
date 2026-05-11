@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/anoi-hair-mapo-yeonnam-masterclass-in.html"
 title: "延南洞（ヨンナムドン）の最旬ヘアサロン「A.NOI（エイノイ）」完全ガイド。建築美とパーソナル技術の融合"
 slug: "a-noi-hair-salon-yeonnam-lifestyle-guide"
-date: 2026-04-24T04:03:37+09:00
+date: 2026-03-30T19:34:44+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/a-noi-hair-salon-yeonnam-lifestyle-guide/khack_1776970997_0.webp"
 description: "ソウル・延南洞に位置するプレミアムヘアサロン「A.NOI（エイノイ）」の魅力をDirector Kが徹底解説。洗練された建築デザイン、パーソナルカラー診断に基づいた提案、そして圧倒的な技術力を誇るスタイリストたちの世界をご案内します。"

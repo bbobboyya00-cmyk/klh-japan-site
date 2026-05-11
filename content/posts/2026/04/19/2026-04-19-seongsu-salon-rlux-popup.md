@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/inside-salon-de-rlux-pinnacle-of.html"
 title: "聖水の新たな美の聖地「Salon de R.LUX」で体験する、最高峰のライフスタイル ✨"
 slug: "seongsu-salon-rlux-popup"
-date: 2026-04-19T19:02:53+09:00
+date: 2026-03-16T19:39:34+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-salon-rlux-popup/khack_1776592944_0.webp"
 description: "2026年4月、ソウル・聖水洞で最も話題の「Salon de R.LUX」を徹底取材。ジョー マローンの特別イベントから高級ラウンジでのウイスキー試飲まで、エディターKが贈るVIP体験ガイド。"

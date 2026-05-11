@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/authentic-sapporo-soup-curry-gem.html"
 title: "合井の隠れ家で発見！とろけるチーズご飯と絶品スープカレーのマリアージュ"
 slug: "kareshi-hapjeong-sapporo-soup-curry"
-date: 2026-05-09T10:06:32+09:00
+date: 2026-05-06T19:57:01+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/09/kareshi-hapjeong-sapporo-soup-curry/khack_1778288690_1.webp"
 description: "ソウルのトレンドを追うK-Life Hackエディターが密かに教える、合井の隠れた名店「KARESI合井本店」。一度食べたら忘れられない、深みのあるスープカレーと香ばしいチーズご飯の組み合わせは必食です。"

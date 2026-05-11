@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/songdo-sanctuary-masterclass-in-high.html"
 title: "仁川・松島セントラルパークを望む極上の癒やし、スパ・ザ・ベレックの贅沢体験"
 slug: "incheon-songdo-spa-belec-wellness"
-date: 2026-05-01T22:05:29+09:00
+date: 2026-04-18T19:45:54+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/incheon-songdo-spa-belec-wellness/khack_1777640656_0.webp"
 description: "2026年、仁川・松島の近未来的な景色と共に楽しむハイエンドスパ「スパ・ザ・ベレック」。全室ウォーターベッド完備の究極の癒やし空間をご紹介します。"

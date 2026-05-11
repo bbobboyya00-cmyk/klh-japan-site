@@ -2,7 +2,7 @@
 title: "2026年最新版｜ロッテワールド完全攻略ガイド：都心のファンタジー、その洗練された楽しみ方"
 en_url: "https://en.klifehack.com/2026/04/lotte-world-jamsil-ultimate-multi.html"
 slug: "jamsil-lotte-world-lifestyle-guide"
-date: 2026-04-29T13:04:54+09:00
+date: 2026-04-12T10:59:44+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/jamsil-lotte-world-lifestyle-guide/11.webp"
 description: "2026年最新のロッテワールド体験をディレクターKが徹底解説。アクアリウムから限定ポップアップ、再入場可能なグルメスポットまで、蚕室の魅力を凝縮。"

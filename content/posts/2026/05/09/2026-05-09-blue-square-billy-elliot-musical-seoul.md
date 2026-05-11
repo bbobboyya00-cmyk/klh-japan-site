@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/blue-squares-2026-billy-elliot-preview.html"
 title: "ソウルの文化発信地「ブルースクエア」：2026年『ビリー・エリオット』を先取り体験！"
 slug: "blue-square-billy-elliot-musical-seoul"
-date: 2026-05-09T13:05:33+09:00
+date: 2026-05-05T10:56:59+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/09/blue-square-billy-elliot-musical-seoul/khack_1778299425_1.webp"
 description: "梨泰院のランドマーク「ブルースクエア」で、ミュージカル『ビリー・エリオット』の感動を再び。2026年の公演を待ちながら、劇場からブックパークまで、ソウルの最新文化トレンドをいち早くお届けします。"

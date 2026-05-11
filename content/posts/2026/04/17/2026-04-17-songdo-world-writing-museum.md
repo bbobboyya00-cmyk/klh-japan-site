@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/national-museum-of-world-writing-deep.html"
 title: "仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を"
 slug: "songdo-world-writing-museum"
-date: 2026-04-17T19:43:35+09:00
+date: 2026-03-08T16:05:35+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/thumb_main.webp"
 description: "仁川松島にある国立世界文字博物館は、世界中の文字の歴史と文化を学べるユニークな体験型博物館。家族旅行やデートにおすすめです。"

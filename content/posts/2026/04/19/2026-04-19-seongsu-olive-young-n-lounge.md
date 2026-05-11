@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/olive-young-n-seongsu-lounge-exclusive.html"
 title: "聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息"
 slug: "seongsu-olive-young-n-lounge"
-date: 2026-04-19T10:04:06+09:00
+date: 2026-03-15T10:08:06+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560628_0.webp"
 description: "聖水洞（ソンスドン）のオリーブヤングN聖水に誕生した「オリーブメンバーズラウンジ」。ゴールド会員限定の優雅な空間で、無料の本格デザートとドリンクを楽しむ至福のひとときを、現地の最新トレンドと共にエディターKが徹底解説します。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/a-panoramic-sanctuary-ultimate-guide-to.html"
 title: "水原（スウォン）の城郭を借景に。モダンな空間と絶品スイーツが奏でる「Sole Street（ソルストリート）」の誘惑 ✨"
 slug: "suwon-haenggung-solestreet-cafe"
-date: 2026-04-19T12:31:27+09:00
+date: 2026-03-17T16:43:14+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/suwon-haenggung-solestreet-cafe/khack_1776569458_0.webp"
 description: "水原（スウォン）の歴史的な城郭を一望できる「ソルストリート（Sole Street）」。洗練されたモノトーンの内装と、職人仕込みの絶品イチゴスイーツ、シグネチャーのアーモンドラテが魅力の、大人のためのリラックス空間を現地よりレポートします。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/navigating-lemonade-nexus-aespas.html"
 title: "aespa正規2集『Lemonade』が描き出す「広野」の新たな特異点"
 slug: "aespa-lemonade-kwangya-nexus"
-date: 2026-04-27T09:47:17+09:00
+date: 2026-04-07T19:12:57+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/aespa-lemonade-kwangya-nexus/khack_1777250765_0.webp"
 description: "2026年5月、aespaが正規2集『Lemonade』でカムバック。金属の味から酸味へと進化を遂げた彼女たちのハイエンドな世界観と、ワールドツアーへの期待をディレクターKが深く考察します。"

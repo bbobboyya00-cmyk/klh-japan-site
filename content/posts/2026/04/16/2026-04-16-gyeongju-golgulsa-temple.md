@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/gyeongju-golgulsa-temple-guide-sunmudo.html"
 title: "慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ"
 slug: "gyeongju-golgulsa-temple"
-date: 2026-04-16T22:29:41+09:00
+date: 2026-03-04T10:17:34+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346165_0.webp"
 description: "慶州の「骨窟寺（コルグルサ）」ガイド。韓国唯一の石窟寺院で体験する伝統武術「禅武道」や、絶壁に刻まれた磨崖如来坐像、人気のテンプルステイ情報を詳しく紹介します。"

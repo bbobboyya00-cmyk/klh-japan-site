@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/ultimate-purple-tea-therapy-teafference.html"
 title: "江南の隠れ家で「パープルティー」体験。心身を整える究極のティーラピー、ティーファレンス江南。"
 slug: "teafference-gangnam-purple-tea-therapy"
-date: 2026-05-10T22:24:53+09:00
+date: 2026-05-10T16:10:37+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/10/teafference-gangnam-purple-tea-therapy/khack_1778419415_1.webp"
 description: "江南の喧騒を忘れさせる癒やしの聖地「ティーファレンス江南」。ケニア産の希少なパープルティーと、美容ブランドISOIの感性が融合した特別な空間をトレンドセッターがご紹介。"

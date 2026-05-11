@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/national-institute-of-biological.html"
 title: "仁川の秘密の森、国立生物資源館で出会う地球の宝物"
 slug: "incheon-national-institute-biological-resources"
-date: 2026-04-30T21:48:03+09:00
+date: 2026-04-15T10:24:29+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/incheon-national-institute-biological-resources/khack_1777553205_0.webp"
 description: "2026年5月5日、仁川の国立生物資源館で開催される「生物愛フェスティバル」をディレクターKがガイド。絶滅危惧種との出会いや体験プログラムで学ぶ、特別な一日の過ごし方を提案します。"

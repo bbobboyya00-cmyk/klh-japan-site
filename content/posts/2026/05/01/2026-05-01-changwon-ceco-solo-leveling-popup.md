@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/changwon-ceco-solo-leveling-pop-up.html"
 title: "チャンウォン・セコ「俺だけレベルアップな件」ポップアップストア完全ガイド"
 slug: "changwon-ceco-solo-leveling-popup"
-date: 2026-05-01T10:05:18+09:00
+date: 2026-04-17T16:12:17+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/changwon-ceco-solo-leveling-popup/khack_1777597444_0.webp"
 description: "2026年、昌原で開催される「俺だけレベルアップな件」ポップアップストアを徹底解説。セコの圧倒的スケールで再現された世界観や限定グッズ、作家のアトリエ展示など、ファン必見の体験をディレクターKがガイド。"

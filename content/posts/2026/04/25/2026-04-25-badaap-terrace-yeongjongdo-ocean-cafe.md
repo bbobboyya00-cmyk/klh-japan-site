@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/badaap-terrace-yeongjongdos-premier.html"
 title: "永宗島「바다앞테라스」：絶景と非日常を楽しむ韓国オーシャンビューカフェ"
 slug: "badaap-terrace-yeongjongdo-ocean-cafe"
-date: 2026-04-25T22:05:12+09:00
+date: 2026-04-01T16:11:21+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/badaap-terrace-yeongjongdo-ocean-cafe/khack_1777122185_0.webp"
 description: "仁川永宗島にある「바다앞테라스」は、目の前に広がる西海の絶景とハイセンスな空間演出が魅力のカフェです。ルーフトップやテラスで非日常のひとときを。"

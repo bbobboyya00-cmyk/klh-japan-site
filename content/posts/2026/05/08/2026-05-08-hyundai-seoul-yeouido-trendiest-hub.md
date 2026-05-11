@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/the-hyundai-seoul-your-ultimate-guide.html"
 title: "ソウルのトレンド最前線！ザ・ヒュンダイ・ソウルで出会う絶品スイーツ体験"
 slug: "hyundai-seoul-yeouido-trendiest-hub"
-date: 2026-05-08T19:06:57+09:00
+date: 2026-05-03T10:21:44+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/hyundai-seoul-yeouido-trendiest-hub/khack_1778234666_1.webp"
 description: "ソウルのトレンドセッターが密かに教える、ザ・ヒュンダイ・ソウル地下1階の隠れた名店「ハンジョンソン」。昨年大人気だったフルーツヨーグルト餅の魅力を深掘りし、2026年の新作への期待も高まる、とっておきのグルメガイドをお届けします。"

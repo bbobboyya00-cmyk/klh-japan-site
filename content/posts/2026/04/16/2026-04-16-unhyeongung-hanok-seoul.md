@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/unhyeongung-deep-dive-into-joseons.html"
 title: "麗しき「雲峴宮（ウニョングン）」で辿る、朝鮮王朝の残り香と春の静寂"
 slug: "unhyeongung-hanok-seoul"
-date: 2026-04-16T21:06:05+09:00
+date: 2026-03-06T19:33:32+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776341149_0.webp"
 description: "ソウル・鍾路に佇む「雲峴宮（ウニョングン）」。高宗皇帝が幼少期を過ごした王室の私邸で、伝統建築と春の光が織りなす極上の美しさを、エディターKが詳しくナビゲートします。"

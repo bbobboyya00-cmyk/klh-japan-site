@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/the-scent-of-sophistication-deep-dive.html"
 title: "漢南洞の美学に触れる。フレグランスブランド 'Pesade' と感性を磨くソウル散策ガイド"
 slug: "pesade-hannam-seoul-guide"
-date: 2026-04-15T13:28:17+09:00
+date: 2026-03-02T10:00:41+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776227285_0.webp"
 description: "漢南洞の注目スポット 'Pesade' の魅力を徹底取材。ウッディな香りとミニマルな空間、周辺のグルメや雑貨店まで、エディターKが贈るプレミアムな1日散策コース。"

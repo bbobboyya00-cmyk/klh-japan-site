@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/a-deep-dive-into-laka-seongsu-ultimate.html"
 title: "ジェンダーニュートラルな美の聖地。聖水洞 'ラカ (Laka)' フラッグシップストア完全ガイド"
 slug: "laka-seongsu-flagship-store"
-date: 2026-04-16T07:45:00+09:00
+date: 2026-03-05T19:55:03+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776293090_0.webp"
 description: "韓国を代表するジェンダーニュートラルコスメブランド 'Laka' の聖水フラッグシップを徹底レポート。洗練された建築美と限定体験、周辺の人気カフェ情報まで、編集部Kが今のソウルを切り取ります。"

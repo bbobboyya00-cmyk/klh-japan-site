@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/samcheongdong-sujebi-michelin.html"
 title: "ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験"
 slug: "samcheongdong-sujebi"
-date: 2026-04-19T20:17:01+09:00
+date: 2026-03-14T10:24:57+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597415_14.webp"
 description: "三清洞の趣ある街並みに佇む老舗「サムチョンドン・スジェビ」。ミシュランガイドに8年連続掲載される名店の、温かく優しい手打ち麺スープと絶品チヂミを現地キュレーターKが徹底解説します。"

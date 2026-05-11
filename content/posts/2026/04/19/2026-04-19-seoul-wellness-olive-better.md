@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/unlocking-korean-wellness-deep-dive.html"
 title: "ソウル発、美しさのその先へ。オリーブヤングが手掛ける「Olive Better」で出会う最旬ウェルネス習慣"
 slug: "seoul-wellness-olive-better"
-date: 2026-04-19T07:21:30+09:00
+date: 2026-03-17T19:06:37+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seoul-wellness-olive-better/khack_1776550834_0.webp"
 description: "2026年、ソウルで話題のウェルネス拠点「Olive Better」を徹底取材。パイナップル酢グミや生姜ショットなど、エディターKが厳選した最新のインナービューティー習慣をご紹介します。"

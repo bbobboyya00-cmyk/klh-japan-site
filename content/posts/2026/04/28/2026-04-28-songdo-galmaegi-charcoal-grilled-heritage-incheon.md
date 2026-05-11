@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/songdo-galmaegi-main-branch-zenith-of.html"
 title: "1988年から続く伝統の味、松島カルメギ本店で堪能する至高のガストロノミー"
 slug: "songdo-galmaegi-charcoal-grilled-heritage-incheon"
-date: 2026-04-28T10:04:28+09:00
+date: 2026-04-11T10:42:55+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/songdo-galmaegi-charcoal-grilled-heritage-incheon/khack_1777338161_0.webp"
 description: "仁川・松島の象徴、松島カルメギ本店をディレクターKが徹底解説。伝統的な豚ハラミの旨味と洗練された空間が織りなすハイエンドな食体験。2026年最新の訪問ガイド。"

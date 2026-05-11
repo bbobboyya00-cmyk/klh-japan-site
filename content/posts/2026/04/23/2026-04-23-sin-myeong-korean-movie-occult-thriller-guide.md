@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/the-shamanic-shadows-of-power-unmasking.html"
 title: "呪術と権力の狂騒曲、韓国映画『神明』が暴く2026年の真実と聖地巡礼の記録"
 slug: "sin-myeong-korean-movie-occult-thriller-guide"
-date: 2026-04-23T01:05:56+09:00
+date: 2026-03-29T19:20:01+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/sin-myeong-korean-movie-occult-thriller-guide/khack_1776873936_0.webp"
 description: "2026年現在も話題の韓国映画『神明』を深掘り。呪術と政治が交錯する衝撃のストーリーから、撮影地となったポラム村の魅力まで、シニアディレクターKがエレガントに解説します。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/oedolgae-seogwipo-high-end-guide-to.html"
 title: "西帰浦外ドルゲ：済州の絶景を巡るハイエンドガイド"
 slug: "oedolgae-seogwipo-jeju-sentinel"
-date: 2026-04-28T07:07:06+09:00
+date: 2026-04-10T10:33:46+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/oedolgae-seogwipo-jeju-sentinel/khack_1777327513_0.webp"
 description: "ディレクターKが誘う西帰浦外ドルゲ。圧倒的な奇岩、歴史の痕跡、そして夕焼けが織りなす絶景体験。済州オルレ7コースを巡る上質な旅へ。"

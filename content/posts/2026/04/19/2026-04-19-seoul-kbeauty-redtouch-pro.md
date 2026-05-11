@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/the-korean-collagen-revolution.html"
 title: "2026年、ソウルの美意識が選ぶ「レッドタッチ・プロ」。コラーゲンを呼び覚ます、次世代の肌管理"
 slug: "seoul-kbeauty-redtouch-pro"
-date: 2026-04-19T16:05:15+09:00
+date: 2026-03-16T10:33:39+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seoul-kbeauty-redtouch-pro/khack_1776582278_0.webp"
 description: "ソウル・新沙洞で話題の最新レーザー「レッドタッチ・プロ」を徹底解説。痛みやダウンタイムを抑え、コラーゲン生成を促すリフティングの秘密と、編集者Kによるプレミアムな体験レポートをお届けします。"

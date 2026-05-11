@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/seongsu-neungdong-minari-my-secret-go.html"
 title: "ソウルの聖水洞で今一番熱い！「ヌンドンミナリ」の絶品セリ料理とユッケビビンバ完全ガイド"
 slug: "seongsu-neungdong-minari-korean-eats"
-date: 2026-05-11T01:08:30+09:00
+date: 2026-05-11T13:05:31+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429091_1.webp"
 description: "ソウルのトレンド発信地、聖水洞（ソンスドン）で大行列を作る「ヌンドンミナリ」を徹底解説。香り高いセリ（ミナリ）をたっぷり使ったコムタンや新鮮なユッケビビンバなど、現地のロカルも認める健康美食の魅力を、待ち時間のコツと共に詳しくお届けします。"

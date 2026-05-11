@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/mimiok-hanok-shabu-shabu-gem-made.html"
 title: "龍山の韓屋で味わう至高のソウルスタイル・シャブシャブ「ミミオク」完全ガイド"
 slug: "mimiok-hanok-shabu-shabu-yongsan"
-date: 2026-05-07T19:07:09+09:00
+date: 2026-05-02T16:15:21+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/07/mimiok-hanok-shabu-shabu-yongsan/khack_1778148306_1.webp"
 description: "ソウル・龍山の趣ある韓屋で、伝統とモダンが融合した絶品シャブシャブを。話題の『白と黒の料理人』ゆかりの味を、現地のトレンド通がこっそり教える2026年最新ガイド。"

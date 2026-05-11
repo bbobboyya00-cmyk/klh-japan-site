@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/the-curated-sanctuary-of-k-design.html"
 title: "ソウル近郊の美学、ムーブメントラボ義王で体験する究極のインテリア・キュレーション"
 slug: "seoul-lifestyle-movement-lab-uiwang-curation"
-date: 2026-04-21T06:58:16+09:00
+date: 2026-03-23T19:04:23+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776722068-/khack_1776722267_0.webp"
 description: "K-Life Hackが厳選したソウル近郊のハイエンド・ライフスタイル空間。ムーブメントラボ義王フラッグシップストアの魅力をディレクターKが深掘り解説します。"

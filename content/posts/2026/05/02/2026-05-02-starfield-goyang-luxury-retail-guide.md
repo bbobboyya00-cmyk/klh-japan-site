@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/starfield-goyang-masterclass-in-high.html"
 title: "高陽スターフィールドで楽しむハイエンドな休日：究極のライフスタイルガイド"
 slug: "starfield-goyang-luxury-retail-guide"
-date: 2026-05-02T16:05:52+09:00
+date: 2026-04-21T10:57:42+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/starfield-goyang-luxury-retail-guide/khack_1777705470_0.webp"
 description: "高陽スターフィールドの圧倒的な空間美と、プレミアムなショッピング、そして名匠が手掛けるグルメまで。ディレクターKが贈る、2026年最新のハイエンドな休日を彩るガイドです。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/sipping-unexpected-why-iridescent.html"
 title: "聖水の隠れ家カフェ「イリデセント」：2026年も話題のエゴマの葉グラニータ体験記"
 slug: "iridescent-seongsu-seoul-forest-cafe"
-date: 2026-05-06T17:41:02+09:00
+date: 2026-04-30T19:23:00+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/iridescent-seongsu-seoul-forest-cafe/khack_1778056703_1.webp"
 description: "聖水の路地裏に佇むモダンなカフェ「イリデセント」。5つ星ホテルのバリスタが提案する「エゴマの葉グラニータ」や「マンドゥラテ」など、五感を刺激する独創的なメニューと洗練された空間の魅力を、2026年の最新トレンドと共にご紹介します。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/suwon-ilwol-arboretum-nighttime.html"
 title: "水原の夜を彩る幻想的な光のシンフォニー「日月植物園」ナイトガーデン完全ガイド"
 slug: "suwon-ilwol-arboretum-night-garden-guide"
-date: 2026-04-30T14:39:22+09:00
+date: 2026-04-16T10:53:05+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/suwon-ilwol-arboretum-night-garden-guide/khack_1777527489_0.webp"
 description: "水原の新しいランドマーク「日月植物園」の夜間開園ガイド。モネの庭園を再現した温室やホタルの森など、幻想的な夜の散策コースをご紹介します。"

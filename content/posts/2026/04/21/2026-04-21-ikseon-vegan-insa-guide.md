@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/a-sanctuary-of-plant-based-heritage.html"
 title: "益善洞の築100年韓屋で味わう、進化系ヴィーガン・ダイニング「Vegan Insa」"
 slug: "ikseon-vegan-insa-guide"
-date: 2026-04-21T11:38:09+09:00
+date: 2026-03-21T19:03:36+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739067_0.webp"
 description: "ソウル・益善洞（イクソンドン）の歴史的な韓屋で楽しむ100%植物性素材の韓国料理。伝統とエシカルな食文化が交差する「Vegan Insa」をナビゲートします。"

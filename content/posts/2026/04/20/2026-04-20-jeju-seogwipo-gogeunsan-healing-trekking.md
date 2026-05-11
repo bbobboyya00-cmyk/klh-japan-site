@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/gogeunsan-oreum-jejus-alpine-sanctuary.html"
 title: "済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack"
 slug: "jeju-seogwipo-gogeunsan-healing-trekking"
-date: 2026-04-20T07:57:50+09:00
+date: 2026-03-18T19:17:22+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639451_0.webp"
 description: "済州島西帰浦に位置する高根山（コグンサン）は、漢拏山と美しい海岸線を一望できる絶景スポットです。フィトンチッド溢れる森の散策路から望む四季折々の景観は、心身のリフレッシュに最適。K-Life HackのディレクターKが、その魅力と楽しみ方を徹底ガイドします。"

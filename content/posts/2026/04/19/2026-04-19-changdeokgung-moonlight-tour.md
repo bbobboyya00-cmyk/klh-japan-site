@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/changdeokgung-moonlight-tour-2026.html"
 title: "【2026年版】昌徳宮 月明かり紀行：ソウルの夜を彩る幻想的な王宮の旅 ✨"
 slug: "changdeokgung-moonlight-tour"
-date: 2026-04-19T08:42:20+09:00
+date: 2026-03-12T19:54:31+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/changdeokgung-moonlight-tour/khack_1776555716_0.webp"
 description: "2026年春、ユネスコ世界文化遺産・昌徳宮で開催された「月明かり紀行」の魅력을 徹底解説。専門ガイドと巡る夜の王宮は、まさに夢のような体験です。"

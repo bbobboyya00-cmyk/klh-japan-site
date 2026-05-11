@@ -3,7 +3,7 @@
 en_url: "https://en.klifehack.com/2026/04/the-culinary-hermitage-of-suncheon.html"
 title: "順天の深い森に隠れた美食の聖地、松峙村(ソンチマウル)が贈るノスタルジックな休日"
 slug: "suncheon-songchi-maeul-tonkatsu-sujebi"
-date: 2026-04-29T19:04:25+09:00
+date: 2026-04-13T10:08:09+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/suncheon-songchi-maeul-tonkatsu-sujebi/khack_1777456991_0.webp"
 description: "順天(スンチョン)の静かな山あいに位置する「松峙村」。伝説の王トンカツと壷スジェビ、そして中毒性のあるキュウリの和え物が織りなす究極の美食体験をディレクターKがナビゲートします。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/scaling-epic-beef-mountain-gasan.html"
 title: "2026年最新版：加山デジタル団地の名物！山盛りムルカルビ＆百年プルコギへの期待"
 slug: "gasan-mountain-beef-stew-guide"
-date: 2026-05-05T11:29:53+09:00
+date: 2026-04-28T16:52:51+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/gasan-mountain-beef-stew-guide/khack_1777948053_0.webp"
 description: "ディレクターKが送る、ソウル加山デジタル団地『加山ムルカルビ＆百年プルコギ』の2026年プレビューガイド。過去の訪問経験から、山盛りのムルカルビと絶品サイドメニューの魅力を深掘りし、次回の訪問への期待感を高めます。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/seouls-urban-navigator-mastering-kakao.html"
 title: "江南・新沙洞の洗練をスマートに、カカオT（Kakao T）で極める都市移動の最適解"
 slug: "seoul-urban-mobility-kakao-t-guide"
-date: 2026-04-28T05:47:56+09:00
+date: 2026-04-11T16:12:25+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/seoul-urban-mobility-kakao-t-guide/khack_1777322821_0.webp"
 description: "韓国在住者必見。江南・新沙洞での駐車場予約から、仁川空港への快適な移動まで、カカオT（Kakao T）を使いこなすハイエンドなライフスタイルガイドをお届けします。"

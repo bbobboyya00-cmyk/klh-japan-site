@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/beyond-comfort-curated-pajama-sanctuary.html"
 title: "延南洞の隠れ家で出会う至福の休息。パジャマブティック「Juuneedu（ジュニジュ）」ショールームガイド"
 slug: "yeonnam-dong-juuneedu-pajama-boutique-showroom"
-date: 2026-04-28T20:38:01+09:00
+date: 2026-04-12T19:18:59+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/yeonnam-dong-juuneedu-pajama-boutique-showroom/khack_1777376160_0.webp"
 description: "延南洞の路地裏に佇むパジャマブティック「Juuneedu（ジュニジュ）」。上質な素材と洗練されたデザインが織りなす、韓国発のハイエンドなルームウェア体験をディレクターKが紐解きます。"

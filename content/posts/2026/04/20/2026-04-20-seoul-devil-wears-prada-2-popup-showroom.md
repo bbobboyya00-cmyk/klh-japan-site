@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/the-devil-wears-prada-2-exclusive-pop.html"
 title: "K-Life Hack独占: 聖水洞『プラダを着た悪魔2』ポップアップで感じるハイエンドなソウル体験"
 slug: "seoul-devil-wears-prada-2-popup-showroom"
-date: 2026-04-20T03:04:52+09:00
+date: 2026-03-19T19:26:38+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-devil-wears-prada-2-popup-showroom/khack_1776621865_0.webp"
 description: "ソウルの中心、聖水洞で期間限定開催中の『プラダを着た悪魔2』ポップアップショールーム。映画の世界観を再現した空間で、フォトジェニックな体験と限定アイテムをお楽しみいただけます。ディレクターKが深く掘り下げてご紹介いたします。"

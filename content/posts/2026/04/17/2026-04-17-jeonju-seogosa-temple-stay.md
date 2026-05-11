@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/seogosa-temple-stay-pan-gyo-locals.html"
 title: "全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分"
 slug: "jeonju-seogosa-temple-stay"
-date: 2026-04-17T09:25:25+09:00
+date: 2026-03-07T10:41:51+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385504_0.webp"
 description: "忙しい日常から離れて、韓国全州に位置する古刹、西古寺(ソゴサ)でのテンプルステイを体験。静かな山寺で瞑想や茶談を通じて、心を癒し、自分と向き合う時間をご紹介します。"

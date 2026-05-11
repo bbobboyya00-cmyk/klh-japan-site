@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/seouls-royal-palaces-2026-culture.html"
 title: "歴史と現代が交差するソウル宮殿の祭典：宮中文化祝典2026ガイド"
 slug: "royal-palaces-seoul-culture-festival"
-date: 2026-05-01T07:48:48+09:00
+date: 2026-04-18T10:49:29+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/royal-palaces-seoul-culture-festival/khack_1777589182_0.webp"
 description: "ソウル5大宮と宗廟で開催される「宮中文化祝典2026」で、歴史と芸術が織りなすハイエンドな体験を。ディレクターKが予約の極意を伝授します。"

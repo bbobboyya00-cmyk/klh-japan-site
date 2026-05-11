@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/upcoming-2026-dive-into-baby-shark.html"
 title: "アナタだけが知る！DDP「ベイビーシャーク秘密の招待状」2026年プレビューガイド"
 slug: "baby-shark-mystery-invitation-ddp-seoul"
-date: 2026-05-10T16:09:12+09:00
+date: 2026-05-08T10:08:00+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/10/baby-shark-mystery-invitation-ddp-seoul/khack_1778396791_1.webp"
 description: "東大門デザインプラザ(DDP)で開催される2026年の「ベイビーシャーク秘密の招待状」展を、ソウルのトレンドセッターが先行案内。AIとインタラクティブに楽しむ特別な体験を、親しい友人だけにこっそり教えるようなトーンでご紹介します。"

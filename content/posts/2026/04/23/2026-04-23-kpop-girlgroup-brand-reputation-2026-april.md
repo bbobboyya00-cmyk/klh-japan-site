@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/unpacking-april-2026-k-pop-girl-group.html"
 title: "K-POPガールズグループブランド評判：2026年4月度、市場の動向と注目すべきスターたち"
 slug: "kpop-girlgroup-brand-reputation-2026-april"
-date: 2026-04-23T07:04:35+09:00
+date: 2026-03-27T10:14:13+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/kpop-girlgroup-brand-reputation-2026-april/khack_1776895458_0.webp"
 description: "2026年4月のK-POPガールズグループ個人ブランド評判をK-Life Hackが深掘り。チャン・ウォニョンの堅守、カリナの急上昇、市場の質的変化を分析。"

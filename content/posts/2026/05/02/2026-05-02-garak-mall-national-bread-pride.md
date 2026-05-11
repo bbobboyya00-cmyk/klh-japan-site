@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/garak-mall-sky-park-epicenter-of-koreas.html"
 title: "ソウルの空の下で出会う究極のベーカリー：可楽モール『全国パン自慢』ガイド"
 slug: "garak-mall-national-bread-pride"
-date: 2026-05-02T19:05:27+09:00
+date: 2026-04-20T19:16:20+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/garak-mall-national-bread-pride/khack_1777716247_0.webp"
 description: "2026年5月、ソウルの可楽モールで全国の有名パン屋が集結する『全国パン自慢』が開催予定。職人の魂が宿る100種以上のディレクター厳選パンを、音楽と共に楽しむハイエンドな週末をご提案します。"

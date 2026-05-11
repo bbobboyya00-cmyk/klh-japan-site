@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/nostalgic-sanctuaries-jeonju-zoo-and.html"
 title: "2026年度 全州動物園 ＆ ドリームランド完全攻略：桜とレトロ遊園地の旅"
 slug: "jeonju-zoo-spring-eco-guide"
-date: 2026-04-26T08:30:16+09:00
+date: 2026-04-05T16:38:07+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/jeonju-zoo-spring-eco-guide/khack_1777159724_0.webp"
 description: "2026年春の全州旅行に欠かせない「全州動物園」を徹底解剖。桜の名所であり、レトロなドリームランドまで楽しめる現地ディレクターおすすめのコースを紹介します。"

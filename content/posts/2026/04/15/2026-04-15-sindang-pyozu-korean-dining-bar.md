@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/a-connoisseurs-guide-to-pyozu.html"
 title: "2026年ソウル・新堂洞の最旬スポット。伝統酒ソムリエが贈る至福の韓食ダイニング『ピョジュ(表酒)』へ。"
 slug: "sindang-pyozu-korean-dining-bar"
-date: 2026-04-15T16:31:24+09:00
+date: 2026-03-03T16:16:33+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776238263_0.webp"
 description: "ソウル・新堂洞(ヒップダンドン)で今最も熱い韓食ダイニング『ピョジュ』を特集。伝統酒ソムリエが提案する極上のペアリングと、洗練された空間の魅力をエディターKが徹底解説。"

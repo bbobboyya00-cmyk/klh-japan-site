@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/the-2026-seoul-international-garden.html"
 title: "2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー"
 slug: "2026-seoul-international-garden-show-guide"
-date: 2026-04-22T13:06:17+09:00
+date: 2026-03-24T19:27:10+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830748_0.webp"
 description: "2026年5月1日からソウルの森で開催されるソウル国際庭園博覧会をディレクターKが徹底解説。180日間の壮大な緑の祭典の見どころやアクセス情報を凝縮しました。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/gyeongju-hanbok-experience-unveiling.html"
 title: "慶州で優雅な韓服体験：『K-Life Hack』ディレクターKが贈る極上ガイド"
 slug: "gyeongju-hanbok-experience-k-lifehack"
-date: 2026-04-22T09:12:05+09:00
+date: 2026-03-24T10:05:23+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/gyeongju-hanbok-experience-k-lifehack/khack_1776816708_0.webp"
 description: "慶州で特別な韓服体験を。黄理団通り近くの「花道韓服」で、伝統とモダンが融合したスタイルを満喫。料金、利用方法、撮影スポットまで徹底解説します。"

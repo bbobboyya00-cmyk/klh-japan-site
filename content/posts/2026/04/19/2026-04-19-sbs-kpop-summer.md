@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/experience-hottest-k-pop-festival-2026.html"
 title: "2026 SBS歌謡大典 Summer：K-POPの熱気を体感する夏の祭典"
 slug: "sbs-kpop-summer"
-date: 2026-04-19T13:41:14+09:00
+date: 2026-03-15T19:08:32+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/sbs-kpop-summer/khack_1776573658_0.webp"
 description: "2026年8月9日、一山KINTEXで開催されるSBS歌謡大典 Summerの魅力に迫ります。トップアーティストによる最高のパフォーマンスとスペシャルステージは必見です。"

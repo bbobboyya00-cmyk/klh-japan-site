@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/muun-evoke-magic-ring-cosmessory.html"
 title: "NMIXX着用で話題！大人の魔法少女を叶える「MUUNイボークマジックリング」の魅力に迫る"
 slug: "muun-evoke-magic-ring-k-pop-cosmessory-2026"
-date: 2026-04-25T13:41:31+09:00
+date: 2026-04-02T10:38:34+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/muun/khack_1777091982_0.webp"
 description: "K-Life Hack ディレクターKが、NMIXXも愛用する新感覚コスメセサリー「MUUNイボークマジックリング」を徹底解説。Y2Kと魔法少女の世界観を融合させた魅力と、日常での活用術をご紹介します。"

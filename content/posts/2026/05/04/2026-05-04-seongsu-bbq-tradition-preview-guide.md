@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/experience-best-of-seongsus-30-year-bbq.html"
 title: "昨年の感動を胸に！2026年、聖水で再訪したい「内故郷精肉食堂」の魅力"
 slug: "seongsu-bbq-tradition-preview-guide"
-date: 2026-05-04T19:06:40+09:00
+date: 2026-04-26T16:14:49+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/seongsu-bbq-tradition-preview-guide/khack_1777889081_0.webp"
 description: "30年の伝統を誇る「内故郷精肉食堂 聖水本店」。ディレクターKが昨年の体験をもとに、2026年に再び訪れるべき絶品サムギョプサルの魅力と、活気あふれる聖水洞の雰囲気を先取りレポートします。新鮮な肉と心温まるサービス、そして鉄板で焼かれるキムチのハーモニーは、今年も期待を裏切らないでしょう。"

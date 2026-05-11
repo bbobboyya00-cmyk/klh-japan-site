@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/seomyeon-sanctuary-defining-high-end.html"
 title: "釜山西面の中心で出会う究極の小顔美学、カインミガのハイエンドケア 💎"
 slug: "busan-seomyeon-gainmiga-facial-contouring"
-date: 2026-04-30T16:04:52+09:00
+date: 2026-04-14T16:56:23+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/busan-seomyeon-gainmiga-facial-contouring/khack_1777532627_0.webp"
 description: "2026年、釜山西面で体験する韓国最高峰の小顔エステ「カインミガ」。独自の技術とプライベートな空間で、あなただけの美しさを引き出すハイエンドなライフスタイルガイドです。"

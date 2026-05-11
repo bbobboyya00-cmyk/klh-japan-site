@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/o-wols-gimbap-nakseongdae-your-2026.html"
 title: "行列必至！ソウル・楽聖大「五月のキンパ」2026年最新予約攻略ガイド"
 slug: "owols-gimbap-nakseongdae-seoul-rolls"
-date: 2026-05-05T12:14:17+09:00
+date: 2026-04-29T19:27:27+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/owols-gimbap-nakseongdae-seoul-rolls/khack_1777950771_0.webp"
 description: "楽聖大で伝説のキンパを味わうなら「五月のキンパ」は外せません。2026年も変わらぬ人気が予想されるこの店の、予約必勝法と絶品メニューを徹底解説。行列覚悟でも食べたい逸品です。"

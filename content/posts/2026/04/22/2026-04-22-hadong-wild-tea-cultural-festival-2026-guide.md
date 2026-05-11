@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/terroir-of-time-29th-hadong-wild-tea.html"
 title: "2026年河東野生茶文化祭ガイド：韓国伝統茶の聖地で楽しむハイエンドな癒やしの旅"
 slug: "hadong-wild-tea-cultural-festival-2026-guide"
-date: 2026-04-22T05:03:03+09:00
+date: 2026-03-25T19:42:59+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/hadong-wild-tea-cultural-festival-2026-guide/khack_1776801763_0.webp"
 description: "2026年5月1日から5日まで開催される『第29回河東野生茶文化祭』の完全ガイド。1200年の歴史を持つ茶の始培地で、伝統的な茶道体験や茶畑コンサート、洗練されたティーセラピーを楽しむ大人のための旅を提案します。"

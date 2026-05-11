@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/sanyi-garden-haenams-premier.html"
 title: "海南の自然と芸術が響き合う、極上のヒーリング空間「サニ庭園」"
 slug: "sanyi-garden-haenam-horticultural-sanctuary"
-date: 2026-05-02T09:02:31+09:00
+date: 2026-04-20T10:05:36+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/sanyi-garden-haenam-horticultural-sanctuary/khack_1777680048_0.webp"
 description: "海南の5万坪の敷地に広がる「サニ庭園」。現代建築と自然が融合したハイエンドなヒーリング空間で、2026年春の贅沢なひとときを。ディレクターKがその魅力をガイドします。"

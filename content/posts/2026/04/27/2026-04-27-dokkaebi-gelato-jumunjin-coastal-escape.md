@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/jumunjins-dokkaebi-gelato-curated.html"
 title: "江陵・注文津の海を五感で味わう。ドラマ『トッケビ』の情景と共鳴する「トッケビジェラート」の空間美"
 slug: "dokkaebi-gelato-jumunjin-coastal-escape"
-date: 2026-04-27T06:44:53+09:00
+date: 2026-04-07T16:44:01+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/dokkaebi-gelato-jumunjin-coastal-escape/khack_1777239824_0.webp"
 description: "江陵・注文津の象徴的な海辺に佇む「トッケビジェラート」。ドラマ『トッケビ』のロケ地を望む絶景と、五感を刺激する手作りジェラートが織りなす極上のライフスタイル空間をディレクターKがナビゲートします。"

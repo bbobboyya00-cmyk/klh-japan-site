@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/your-ultimate-preview-to-2026-seoul.html"
 title: "2026年ソウル世界都市文化フェスティバル：DDPで世界を旅する2日間を先行体験！"
 slug: "seoul-world-city-culture-festival-preview"
-date: 2026-05-09T19:09:17+09:00
+date: 2026-05-07T16:13:06+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/09/seoul-world-city-culture-festival-preview/khack_1778321274_1.webp"
 description: "2026年5月、東大門デザインプラザで開催されるソウル世界都市文化フェスティバルを徹底プレビュー。昨年の賑わいを基に、異文化体験、世界のグルメ、パフォーマンスの魅力をいち早くお届けします。友人や家族と楽しめる、無料のグローバルイベントをK-Life Hackエディターがご紹介。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/apgujeong-rodeo-gastronomy-timeless.html"
 title: "アックジョン・ロデオの伝説を味わう。究極の鶏カルビ専門店『タクロガ』本店完全ガイド"
 slug: "apgujeong-rodeo-dak-euro-ga-dakgalbi"
-date: 2026-04-28T21:24:56+09:00
+date: 2026-04-09T16:31:18+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/apgujeong-rodeo-dak-euro-ga-dakgalbi/khack_1777378967_0.webp"
 description: "20年以上アックジョンで愛され続ける鶏カルビの名店。国内産最高級鶏もも肉を使用した極上の旨味と、スタッフの熟練した調理サービスを詳しく解説します。"

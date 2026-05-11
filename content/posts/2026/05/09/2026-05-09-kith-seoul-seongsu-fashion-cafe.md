@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/unlocking-seongsus-hottest-secret-deep.html"
 title: "ソウル最旬！聖水洞『Kith Seoul』で体験するファッションとカルチャーの融合"
 slug: "kith-seoul-seongsu-fashion-cafe"
-date: 2026-05-09T22:04:51+09:00
+date: 2026-05-06T16:50:07+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/09/kith-seoul-seongsu-fashion-cafe/khack_1778331802_1.webp"
 description: "ソウルにおけるトレンドの発信地、聖水洞に登場した『Kith Seoul』。洗練されたファッション、人気のカフェ、そして限定アイテムが織りなす特別な空間を、現地エディターが徹底解説します。"

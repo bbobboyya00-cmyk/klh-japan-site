@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/the-art-of-stillness-hadong-wild-tea.html"
 title: "智異山の静寂を味わう：河東（ハドン）野生茶博物館で体験する韓国最高級のお茶文化ガイド"
 slug: "luxury-hadong-wild-tea-museum-guide"
-date: 2026-04-24T01:04:07+09:00
+date: 2026-03-31T10:49:08+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/luxury-hadong-wild-tea-museum-guide/khack_1776960228_0.webp"
 description: "韓国・河東にある「河東野生茶博物館」をディレクターKが徹底解説。1200年の歴史を持つ野生茶の魅力、伝統的な「茶作り体験」、そして智異山の絶景を望むティータイムまで、大人のためのハイエンドな韓国旅を提案します。"

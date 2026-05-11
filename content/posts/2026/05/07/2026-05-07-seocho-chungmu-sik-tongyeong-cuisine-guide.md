@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/seoul-secret-authentic-tongyeong.html"
 title: "ソウル・瑞草洞で見つけた！大切な人にだけ教えたい「忠武食」の本場統営グルメ"
 slug: "seocho-chungmu-sik-tongyeong-cuisine-guide"
-date: 2026-05-07T10:05:57+09:00
+date: 2026-05-02T10:16:59+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/07/seocho-chungmu-sik-tongyeong-cuisine-guide/khack_1778115897_1.webp"
 description: "瑞草洞の教大駅近くにひっそりと佇む「忠武食」。テレビ番組『生活の達人』でも紹介された、本場・統営の味を再現した絶品コムタンや忠武キンパが楽しめる隠れ家的な名店を、ソウル通のエディターがご紹介します。"

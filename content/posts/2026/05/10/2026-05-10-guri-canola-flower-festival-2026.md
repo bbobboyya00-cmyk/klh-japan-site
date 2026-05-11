@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/05/golden-waves-in-may-your-2026-guri.html"
 title: "2026年九里菜の花祭り！地元エディターがこっそり教える黄金色のヒーリング名所"
 slug: "guri-canola-flower-festival-2026"
-date: 2026-05-10T13:07:43+09:00
+date: 2026-05-09T10:01:52+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/10/guri-canola-flower-festival-2026/khack_1778385990_1.webp"
 description: "2026年5月、九里漢江市民公園が鮮やかな黄金色の海に包まれます。ソウル近郊で最高の春を満喫するための最新プレビューガイドをお届け。混雑を避けるコツや家族で楽しめる体験プログラムまで、現地の熱気をいち早くチェックしましょう。"

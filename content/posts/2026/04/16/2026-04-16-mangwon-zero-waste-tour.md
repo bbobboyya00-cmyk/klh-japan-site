@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/sustainable-seoul-deep-dive-into.html"
 title: "2026年最新｜ソウル・望遠洞(マンウォンドン)のエコ＆感性散策。ゼロウェイストの聖地'アルメン商店'と南仏カフェ'リトルメドウ'"
 slug: "mangwon-zero-waste-tour"
-date: 2026-04-16T04:30:38+09:00
+date: 2026-03-05T16:59:36+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776281425_0.webp"
 description: "ソウルのトレンド発信地、望遠洞。韓国初のゼロウェイストショップ'アルメン商店'のリフィル体験や、南フランスの香りが漂う'リトルメドウ'の魅力をエディターKが詳しく解説します。"

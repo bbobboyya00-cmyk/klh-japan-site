@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/k-travel-hacks-ultimate-aewol-guide-to.html"
 title: "済州島・涯月(エウォル)の静かな休息地。ミッカン倉庫(Mikkang Changgo)で過ごす、蜜柑の香りに包まれた休日"
 slug: "mikkang-changgo-jeju-cafe"
-date: 2026-04-17T14:36:08+09:00
+date: 2026-03-08T19:19:21+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/mikkang-changgo-jeju-cafe/khack_1776436550_0.webp"
 description: "済州島の涯月(エウォル)にある、古いみかん倉庫をリノベーションしたカフェ「ミッカン倉庫」。異国情緒あふれる庭園とこだわりのシグネチャーコーヒーで、極上のリラックスタイムを。"

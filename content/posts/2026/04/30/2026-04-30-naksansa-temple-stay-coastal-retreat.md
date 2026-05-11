@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/naksansa-temple-stay-serene-east-sea.html"
 title: "東海の観音聖地、洛山寺テンプルステイで心の平穏を"
 slug: "naksansa-temple-stay-coastal-retreat"
-date: 2026-04-30T22:45:09+09:00
+date: 2026-04-16T16:13:19+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/naksansa-temple-stay-coastal-retreat/khack_1777556617_0.webp"
 description: "東海の絶景を望む洛山寺でのテンプルステイ。千年の歴史と自然が織りなす空間で、心の平穏と深い洞察を得るハイエンドな体験をディレクターKがご紹介します。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/cinematic-grandeur-architectural-time.html"
 title: "용인 대장금파크: 時空を超越した麗しの叙情詩"
 slug: "yongin-daejanggeum-park-cinematic-heritage"
-date: 2026-04-27T07:07:58+09:00
+date: 2026-04-09T19:42:40+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/yongin-daejanggeum-park-cinematic-heritage/khack_1777241033_0.webp"
 description: "華麗なる韓国時代劇の世界を五感で巡る「용인 대장금파크」。建築美と自然が織りなす空間で、非日常の体験を。ディレクターKによる上質なガイド。"

@@ -2,7 +2,7 @@
 en_url: "https://en.klifehack.com/2026/04/beyond-counter-strategic-elegance-of.html"
 title: "旅と暮らしを繋ぐスマートな境界線：韓国「無人民願自動発行機」活用ガイド"
 slug: "beyond-the-counter-the-strategic-elegance-of-administrative-kiosks-at-gwang"
-date: 2026-04-26T19:03:23+09:00
+date: 2026-04-04T19:13:29+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/beyond-the-counter-the-strategic-elegance-of-administrative-kiosks-at-gwang/khack_1777197719_0.webp"
 description: "韓国生活の必需品「無人民願自動発行機」。空港や駅で即座に書類を手に入れる、ハイエンドなライフスタイル術をディレクターKが伝授。2026年度の最新手数料や場所を網羅。"
