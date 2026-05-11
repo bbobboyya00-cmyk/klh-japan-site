@@ -107,9 +107,9 @@ hasCJKLanguage = true
             icon = "user"
 
     [[menu.main]]
-        identifier = "telegram"
-        name = "テレグラム"      # 👈 Telegram -> テレグラム
-        url = "https://t.me/korinside"
+        identifier = "contact"
+        name = "お問い合わせ"             # 👈 '문의'의 일본어 표기
+        url = "mailto:contact@klifehack.com"
         weight = 40
         [menu.main.params]
             icon = "mail"
