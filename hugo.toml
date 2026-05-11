@@ -49,7 +49,7 @@ hasCJKLanguage = true
     [params.sidebar]
         avatar = "img/logo.jpg" 
         name = "K-Life Hack"
-        subtitle = "ITアーキテクトから編集長へ。クリエイティブ・ディレクター「K」が贈る、技術的洞察と洗練された韓国ライフスタイル・キュレーション。"
+        subtitle = "ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。"
 
     [params.widgets]
         homepage = [
