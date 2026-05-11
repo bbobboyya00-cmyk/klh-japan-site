@@ -1,0 +1,96 @@
+---
+en_url: "https://en.klifehack.com/2026/05/ultimate-family-guide-baby-shark-ddp.html"
+title: "【ソウルDDP】2026年夏、ベイビーシャークがやってくる！親子で楽しむAI没入型展示「ビカーミング・シャーク」完全攻略ガイド"
+slug: "baby-shark-ddp-exhibition-seoul"
+date: 2026-05-11T10:07:32+09:00
+draft: false
+image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461586_1.webp"
+description: "2026年6月、ソウルのDDPで世界的人気の「ベイビーシャーク」展示会が開催！AI技術を駆使した体験型コンテンツや限定早割チケット情報など、子連れソウル旅行に欠かせない最新スポットを現地のインフルエンサーが先取り紹介します。"
+categories: ["K-Pulse Trending"]
+tags: ["ソウル旅行", "DDP展示会", "ベイビーシャーク", "韓国子連れスポット", "東大門"]
+author: "K-Life Hack"
+---
+
+<blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
+<ul style="margin:0;padding:0;list-style:none;">
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ AI技術で自分だけのサメになれる！世界初の没入型インタラクティブ展示。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🎟️ 期間限定の早割チケットなら40%OFF！賢く予約して家族でお得に楽しもう。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📸 DDPの幻想的な建築美とベイビーシャークの魔法が融合した、2026年最大の話題スポット。</li>
+</ul>
+</div></blockquote>
+
+ねぇ、2026年のソウルで一番ホットな場所、もうチェックしましたか？週末のお出かけ先に悩んでいるなら、絶対ここがおすすめ！(未来の自分に感謝すること間違いなしですよ！)
+
+## 2026年、ソウルの夏を熱くする「ベイビーシャーク」の秘密の招待状
+
+<img alt="Baby Shark exhibition DDP official poster 2026" fetchpriority="high" height="800" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461584_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" width="598"/>
+
+ソウルのランドマーク、DDP（東大門デザインプラザ）で、2026年6月から子供たちが待ちに待った特別なイベントが始まります。この公式ポスターを見るだけで、これから始まる冒険への期待で胸が躍りますよね。
+
+<img alt="DDP Baby Shark immersive exhibition purple" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461586_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+「ベイビーシャークの秘密の招待状：ビカーミング・シャーク」は、単に目で見るだけの展示ではなく、AI技術を駆使して自分がサメのキャラクターになりきる体験型ミュージアムなんです。会場に一歩足を踏み入れると、鮮やかなパープルとブルーの光に包まれた神秘的な海の世界が広がり、まるで深海を冒険しているような気分にさせてくれます。
+
+### 自分がアニメの主人公に？AIが創り出す魔法の海の世界
+
+<img alt="Baby Shark Mystery Shipwreck DDP exhibit" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461587_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+「ミステリー難破船」ゾーンでは、リアルな木の船のファサードが登場し、好奇心旺盛な子供たちが夢中で探索できる仕掛けがいっぱいです。細部まで作り込まれた難破船の雰囲気は、まさに映画のワンシーンのようで圧倒されます。✨
+
+<img alt="Family interactive Baby Shark DDP exhibit" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461589_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+最新のデジタルスクリーンに囲まれて、家族みんなでベイビーシャークと一緒に泳いだり、会話を楽しんだりできるのは、AI展示ならではの魅力ですね。画面の中のキャラクターが自分たちの動きに反応してくれる様子は、大人でも思わず夢中になってしまいます。
+
+<img alt="DDP Baby Shark glowing shark fin" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461591_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+幻想的な光の道を進むと、暗闇の中にキラキラと輝く魚の群れやサメの背びれが現れ、子供たちの想像力を刺激するドラマチックな演出が続きます。光り輝く背びれが導く先には何があるのか、一歩進むごとにドキドキが止まりません。📸
+
+<img alt="Child interacting DDP wall projection" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461593_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+壁に映し出されたクラゲやタツノオトシゴに触れると反応が返ってくるインタラクティブな壁は、小さなお子様でも時間を忘れて遊べるスポットです。自分の手が触れた瞬間に海の生き物たちが動き出す魔法のような体験に、子供たちの瞳も輝いていました。
+
+<img alt="DDP Baby Shark glowing character zone" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461594_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+広い展示エリアの中央には光り輝くベイビーシャークが鎮座し、床に投影された水の波紋がさらに没入感を高めてくれる、最高のフォトゾーンになっています。この幻想的な空間で撮る写真は、間違いなく一生の思い出になるはずです。(trust me on this)
+
+## 建築の聖地、DDP（東大門デザインプラザ）の圧倒的な存在感
+
+<img alt="DDP building exterior sunny archway entrance" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461596_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+展示会を楽しんだ後は、世界的な建築家ザハ・ハディッドが設計したDDPそのものの造形美を堪能するのも、ソウル通の楽しみ方です。青空に映える流線型のアルミニウムパネルとアーチ型の入り口は、どこを切り取っても近未来的なアート写真が撮れる絶好のポイントです。
+
+<img alt="DDP aerial view modern architecture Seoul" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461598_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+上空から見ると、まるでソウルの街に巨大な宇宙船が舞い降りたかのような圧倒的なスケール感に、誰もが心を奪われるはずです。この独特な曲線美は、何度見ても新しい発見があるから不思議ですよね。🌟
+
+### 都会のオアシスで感じる光と影の芸術
+
+<img alt="DDP interior curved concrete pathway light" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461601_9.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+建物内部のコンクリート通路は、計算された光の差し込みによって刻々と表情を変え、静寂の中で現代建築の真髄を感じさせてくれます。展示の賑やかさとは対照的な、この落ち着いた空間美もDDPの大きな魅力の一つです。
+
+<img alt="DDP open space yellow balloon visitors" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461603_10.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+広々としたオープンスペースには、黄色いDDPバルーンなどの遊び心あふれるオブジェもあり、家族連れやカップルの憩いの場として親しまれています。開放感あふれる広場で、ゆっくりと流れるソウルの時間を感じてみてください。
+
+<img alt="DDP night light projection crowd blue" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/baby-shark-ddp-exhibition-seoul/khack_1778461605_11.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+夜になると建物全体が幻想的なブルーのライトアップに包まれ、昼間とは一転してロマンチックでサイバーパンクな雰囲気が漂うのも見逃せません。夜の散歩を楽しみながら、この光の芸術を背景に素敵な一枚を残してみてはいかがでしょうか。💙
+
+<blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
+<ul style="margin:0;padding:0;list-style:none;">
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 住所: ソウル特別市中区乙支路281 東大門デザインプラザ(DDP) ミュージアム展示2館</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">⏰ 運営時間: 10:00 - 20:00 (最終入場 19:00)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🚉 アクセス: 地下鉄2・4・5号線「東大門歴史文化公園駅」1番出口直結</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">💰 料金: 一般 23,000ウォン (早割期間は40%OFFの13,800ウォン)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">💳 支払い: クレジットカード、WOWPASS、NAMANEカード利用可能</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🌟 Editor's Secret: 入場時に配布される「海のパスポート」にスタンプを全部集めると、素敵なミッション完了プレゼントが貰えるので、子供と一緒にコンプリートを目指しましょう！</li>
+</ul>
+</div></blockquote><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
+<div class="k-map-box">
+<div class="k-map-header"><h3 class="k-map-title">📍 서울 동대문디자인플라자 (DDP)</h3><p class="k-map-address">서울특별시 중구 을지로 281 (서울특별시 중구 을지로7가 143)</p></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%20%EB%8F%99%EB%8C%80%EB%AC%B8%EB%94%94%EC%9E%90%EC%9D%B8%ED%94%8C%EB%9D%BC%EC%9E%90%20%28DDP%29&output=embed"></iframe></div>
+<div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
+<div class="k-map-buttons">
+<a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%20%EB%8F%99%EB%8C%80%EB%AC%B8%EB%94%94%EC%9E%90%EC%9D%B8%ED%94%8C%EB%9D%BC%EC%9E%90%20%28DDP%29" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EB%8F%99%EB%8C%80%EB%AC%B8%EB%94%94%EC%9E%90%EC%9D%B8%ED%94%8C%EB%9D%BC%EC%9E%90%20%28DDP%29" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
+</div>
+</div>
+
+---
+
+> 🌐 **Read this post in other languages:**
+> * <a href="https://en.klifehack.com/2026/05/ultimate-family-guide-baby-shark-ddp.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>
