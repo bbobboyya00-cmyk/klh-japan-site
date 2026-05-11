@@ -12,7 +12,7 @@ author: "K-Life Hack"
 ---
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 聖水の路地裏に佇む、昼と夜で表情を変える洗練されたモダンな隠れ家空間です。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🌿 5つ星ホテルのバリスタが提案する、常識を覆은 독창적인 시그네처 메뉴가揃っています。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🏆 2026年のブルーリボンにも選定予定。音楽と香りが調和する、感性を満たす特別な体験が待っています。</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 聖水の路地裏に佇む、昼と夜で表情を変える洗練されたモダンな隠れ家空間です。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🌿 5つ星ホテルのバリスタが提案する、常識を覆す独創的なシグネチャーメニューが揃っています。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🏆 2026年のブルーリボンにも選定予定。音楽と香りが調和する、感性を満たす特別な体験が待っています。</li></ul>
 </div></blockquote>
 
 聖水の路地裏で圧倒的な存在感を放つ「イリデセント」は、5つ星ホテル出身のバリスタが手掛ける、今ソウルで最もクールな文化空間です。昼は洗練されたカフェ、夜はヒップなムード漂う隠れ家として、感性豊かなローカルたちの間で既に話題独占状態。2026年のブルーリボン選定も確実視されている、まさに「今」行くべき絶対的なスポットです。
@@ -51,7 +51,7 @@ author: "K-Life Hack"
 
 <img alt="聖水の隠れ家カフェ「イリデセント」：2026年も話題のエゴマの葉グラニータ体験記" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/iridescent-seongsu-seoul-forest-cafe/khack_1778056728_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Address</b>: 서울특별시 성동구 서울숲4길 20-1 1층</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Hours</b>: 10:00 - 22:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Transport</b>: 地下鉄水仁・盆唐線ソウル森駅5番出口より徒歩5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Payment</b>: TravelLog, TravelWallet カード利用可能</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Notes</b>: ペット同伴可能、2026年ブルーリボン選定予定、手作りスイーツ完売注意</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Address</b>: ソウル特別市 城東区 ソウルの森4ギル 20-1 1階</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Hours</b>: 10:00 - 22:00</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Transport</b>: 地下鉄水仁・盆唐線ソウル森駅5番出口より徒歩5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Payment</b>: TravelLog, TravelWallet カード利用可能</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Notes</b>: ペット同伴可能、2026年ブルーリボン選定予定、手作りスイーツ完売注意</li></ul>
 </div></blockquote>
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">
@@ -63,7 +63,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 </a>
 </div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
-<div class="k-map-header"><h3 class="k-map-title">📍 성수 이리데센트</h3><p class="k-map-address">서울특별시 성동구 서울숲4길 20-1 1층</p></div>
+<div class="k-map-header"><h3 class="k-map-title">📍 성수 이리데센트</h3><p class="k-map-address">ソウル特別市 城東区 ソウルの森4ギル 20-1 1階</p></div>
 <div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=이리데센트&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ Traveler's Note:</span>Google Maps may have outdated information or missing listings. For the most accurate locations in Korea, we highly recommend using <b>Naver Maps</b>.</div>
 <div class="k-map-buttons">

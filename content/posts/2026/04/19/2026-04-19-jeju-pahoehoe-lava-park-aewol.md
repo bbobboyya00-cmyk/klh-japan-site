@@ -21,7 +21,7 @@ author: "K-Life Hack"
 
 {{< /alert >}}
 
-済州島の西側に位置する崖月（エウォル）。ここには、数千年前の火山活動の記憶을 그대로에, 洗練された感性で再解釈された新しい空間があります。パホイホイ溶岩地質公園（Pahoehoe Lava Field Park）です。パホイホイとは、ハワイ語で「滑らかで波のような」という意味の溶岩を指します。済州の厳しい自然と、ミニマルな建築が融合したこの場所は、単なる観光地を超えた、思索のための現代的な庭園といえるでしょう。
+済州島の西側に位置する崖月（エウォル）。ここには、数千年前の火山活動の記憶をそのままに, 洗練された感性で再解釈された新しい空間があります。パホイホイ溶岩地質公園（Pahoehoe Lava Field Park）です。パホイホイとは、ハワイ語で「滑らかで波のような」という意味の溶岩を指します。済州の厳しい自然と、ミニマルな建築が融合したこの場所は、単なる観光地を超えた、思索のための現代的な庭園といえるでしょう。
 
 <img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" fetchpriority="high" height="538" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554878_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
 
@@ -45,7 +45,7 @@ author: "K-Life Hack"
 <img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554888_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
-地形を傷つけないように設置されたインダ스트리얼なムードの鉄製デッキは、この公園の象徴的な風景の一つです。足元に広がる溶岩のディテールを安全に観察しながら、心地よい風を感じるウォーキングは、日常の喧騒を忘れさせてくれる至福の時間です。
+地形を傷つけないように設置されたインダストリアルなムードの鉄製デッキは、この公園の象徴的な風景の一つです。足元に広がる溶岩のディテールを安全に観察しながら、心地よい風を感じるウォーキングは、日常の喧騒を忘れさせてくれる至福の時間です。
 
 <img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554891_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
@@ -69,7 +69,7 @@ author: "K-Life Hack"
 
 ## 五感で楽しむ地質の物語 🌿
 
-最新のテクノロジーを駆使した無人発券システムや、自然光を取り込んだ現代的な仮設構造物など、ストレスフリーな環境も整っています。ブランドロゴの刻印ひとつにもこだわり이 느껴져, 細部にまで美意識が宿っていることが伝わってきます。床面にデザイン要素として組み込まれたQRガイドを利用すれば、この土地が持つ歴史をより深く知ることができるでしょう。
+最新のテクノロジーを駆使した無人発券システムや、自然光を取り込んだ現代的な仮設構造物など、ストレスフリーな環境も整っています。ブランドロゴの刻印ひとつにもこだわりが感じられ, 細部にまで美意識が宿っていることが伝わってきます。床面にデザイン要素として組み込まれたQRガイドを利用すれば、この土地が持つ歴史をより深く知ることができるでしょう。
 
 <img alt="自然採光を活用した公園進入路の現代的な仮設構造物" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554905_12.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
@@ -78,7 +78,7 @@ author: "K-Life Hack"
 <img alt="床面にデザイン要素として挿入されたグラフィックとqrガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554910_14.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
-公園のランドマークであるドーム型の巨大な石造構造物は、まるで神殿のような静謐な空기를 纏っています。内部には石造りの香炉があり、そこから立ち上る煙が瞑想的な雰囲기를 醸し出しています。天井の開口部から空を見上げると、切り取られた青空がひとつの絵画のように見え、心身ともに浄化されるような感覚に包まれます。
+公園のランドマークであるドーム型の巨大な石造構造物は、まるで神殿のような静謐な空気を 纏っています。内部には石造りの香炉があり、そこから立ち上る煙が瞑想的な雰囲気を 醸し出しています。天井の開口部から空を見上げると、切り取られた青空がひとつの絵画のように見え、心身ともに浄化されるような感覚に包まれます。
 
 <img alt="公園のランドマークであるドーム型の巨大な石造構造物" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554912_15.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
@@ -89,7 +89,7 @@ author: "K-Life Hack"
 
 ## ライフスタイルに寄り添う休息の時間 ☕
 
-細部へのこだわりは床面のタイポグラフィにまで及びます。影と混ざり合う文字の配列은, 歩くこと自体をひとつのアート体験に変えてくれます。古木の下に置かれた椅子に座り、ただ流れる時間を楽しむ。そんな余裕こそが、この場所が提供する真のラグジュアリーではないでしょうか。
+細部へのこだわりは床面のタイポグラフィにまで及びます。影と混ざり合う文字の配列は, 歩くこと自体をひとつのアート体験に変えてくれます。古木の下に置かれた椅子に座り、ただ流れる時間を楽しむ。そんな余裕こそが、この場所が提供する真のラグジュアリーではないでしょうか。
 
 <img alt="床に投影された影と調和した洗練された床のタイポグラフィ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554918_18.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 

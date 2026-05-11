@@ -78,7 +78,7 @@ author: "K-Life Hack"
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
 - <strong>場所名称</strong>: 漢南ザ・ヒル (Hannam The Hill)
-- <strong>韓国語名称</strong>: 한남더힐
+- <strong>韓国語名称</strong>: ハンナム・ザ・ヒル
 - <strong>区分</strong>: 高級共同住宅（アパートメント）
 - <strong>竣工日</strong>: 2011年1月7日
 - <strong>総世帯数</strong>: 32棟、約600世帯

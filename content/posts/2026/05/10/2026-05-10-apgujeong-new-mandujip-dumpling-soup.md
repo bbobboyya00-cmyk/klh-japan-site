@@ -79,7 +79,7 @@ author: "K-Life Hack"
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 <b>住所</b>: ソウル特別市 江南区 狎鴎亭路 338</li>
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">⏰ <b>営業時間</b>: 毎日 11:00 - 21:00 (ラストオーダー 20:30) ※休憩時間 15:00 - 17:00 (月～金)</li>
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">🚇 <b>交通</b>: 狎鴎亭ロデオ駅 5番出口から徒歩約10分、または狎鴎亭駅 2番出口から徒歩約10分。バス停「狎鴎亭駅」すぐ裏手。</li>
-<li style="margin-bottom:12px; list-style:none; line-height:1.4;">💳 <b>支払い</b>: ク레ジットカード、現金 (TravelLogやTravelWalletカードも利用可能)</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">💳 <b>支払い</b>: クレジットカード、現金 (TravelLogやTravelWalletカードも利用可能)</li>
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">📝 <b>備考</b>: マンドゥクッ、コチュジョン、ピンデトックはハーフサイズでの注文も可能です。待ち時間が発生する場合があるため、時間に余裕を持って訪問することをおすすめします。</li>
 </ul>
 </div>

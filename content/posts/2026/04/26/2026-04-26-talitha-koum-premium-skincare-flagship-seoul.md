@@ -37,7 +37,7 @@ author: "K-Life Hack"
 <p>美しさは、健やかさの上にのみ成り立つ。タリタクムが提案するこのシンプルな真理は、現代のビューティートレンドにおける最も重要なキーワードとなるでしょう。敏感肌だからと諦めていたすべての人に、この「目覚め」の体験が届くことを願っています。以上、ハイエンドな日常を提案するディレクターKがお届けしました。</p>
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
-- 住所: ソウル特別市 江南区 論峴路153キル 39 (서울특별시 강남구 논현로153길 39)
+- 住所: ソウル特別市 江南区 論峴路153キル 39 (ソウル特別市 江南区 論峴路153ギル 39)
 - 営業時間: 11:00 - 20:00 (月曜定休、祝日の場合は変動の可能性あり)
 - 公式サイト: https://talithakoum.com/
 

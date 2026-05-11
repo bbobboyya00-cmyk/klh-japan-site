@@ -12,7 +12,7 @@ author: "K-Life Hack"
 ---
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🏞️ 見どころ</b>: 30年続く老舗の味、無쇠（ムセ）鉄板で焼く絶品サムギョプサルと新鮮な国内産生肉。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🗓️ 開催日程</b>: 2026年も年中無休で営業予定（要確認）。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>📍 開催場所</b>: ソウル聖水洞、活気ある文化と美食の中心地。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💎 価値</b>: 精肉店直営ならではの鮮度、丁寧なサービス、そして昔ながらの温かい雰囲気が魅力。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💡 極意</b>: サイドメニューも全て美味しいので、ぜひ色々と試してみてください。特に焼いたキムチは必食！</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🏞️ 見どころ</b>: 30年続く老舗の味、鋳鉄（ムセ）鉄板で焼く絶品サムギョプサルと新鮮な国内産生肉。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🗓️ 開催日程</b>: 2026年も年中無休で営業予定（要確認）。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>📍 開催場所</b>: ソウル聖水洞、活気ある文化と美食の中心地。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💎 価値</b>: 精肉店直営ならではの鮮度、丁寧なサービス、そして昔ながらの温かい雰囲気が魅力。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💡 極意</b>: サイドメニューも全て美味しいので、ぜひ色々と試してみてください。特に焼いたキムチは必食！</li></ul>
 </div></blockquote>
 
 ## 聖水洞の路地裏で見つけた、30年続く本物の「肉」の聖地
@@ -21,9 +21,9 @@ author: "K-Life Hack"
 
 テーブルに座ると、目の前には圧巻の光景が広がります。焼きたての豚肉を囲むように、韓国らしい色とりどりのサイドディッシュが所狭しと並ぶ様子は、まさに至福のひととき。冷えた焼酎やソーダの瓶が並んでいるのを見ると、もう宴の準備は万端といった感じ。 (お酒好きにはたまらない光景 ww)
 
-## 無쇠（ムセ）鉄板で織りなす、五感を刺激するサムギョプサル
+## 鋳鉄（ムセ）鉄板で織りなす、五感を刺激するサムギョプサル
 
-この店の真骨頂は、何と言ってもこの重厚な「無쇠（ムセ）鉄板」。分厚い鉄板の上でサムギョプサルがジュウジュウと音を立てて焼ける様子は、見ているだけで食欲が爆発しそうになります。隣に置かれた焼酎のボトルが、いかにも韓国のローカルな焼肉屋らしくて最高。 (笑)
+この店の真骨頂は、何と言ってもこの重厚な「鋳鉄（ムセ）鉄板」。分厚い鉄板の上でサムギョプサルがジュウジュウと音を立てて焼ける様子は、見ているだけで食欲が爆発しそうになります。隣に置かれた焼酎のボトルが、いかにも韓国のローカルな焼肉屋らしくて最高。 (笑)
 
 <img alt="焼ける豚バラ肉焼酎ボトル" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/seongsu-bbq-tradition-preview-guide/khack_1777889086_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
@@ -46,7 +46,7 @@ author: "K-Life Hack"
 派手な演出はないけれど、素材の力だけで勝負している潔さが心地いい。聖水エリアで「本当に旨い肉」を求めるなら、ここは間違いなく外せない選択肢。一度訪れれば、地元の食通たちが夜な夜な集まる理由が体感できるはず。
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>住所</b>: ソウル特別市 城東区 聖徳亭キル 93 1階</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 店舗へ直接お問い合わせください</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 聖水駅（ソンス駅）3番出口から徒歩約10分（約806m）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>決済</b>: 現金、各種カード利用可能</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>詳細</b>: 30年以上の伝統を誇る精肉食堂。無쇠（ムセ）鉄板で焼く新鮮な国内産生サムギョプサルが看板メニュー。全10席ほどのこぢんまりとした店内で、昔ながらの趣を楽しめます。</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>住所</b>: ソウル特別市 城東区 聖徳亭キル 93 1階</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 店舗へ直接お問い合わせください</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 聖水駅（ソンス駅）3番出口から徒歩約10分（約806m）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>決済</b>: 現金、各種カード利用可能</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>詳細</b>: 30年以上の伝統を誇る精肉食堂。鋳鉄（ムセ）鉄板で焼く新鮮な国内産生サムギョプサルが看板メニュー。全10席ほどのこぢんまりとした店内で、昔ながらの趣を楽しめます。</li></ul>
 </div></blockquote><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 내고향정육점식당 성수본점</h3><p class="k-map-address">서울특별시 성동구 성덕정길 93 1층 (서울특별시 성동구 성수동2가 335-147 1층)</p></div>

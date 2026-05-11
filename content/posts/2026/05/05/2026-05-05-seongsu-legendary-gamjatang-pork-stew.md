@@ -59,7 +59,7 @@ author: "K-Life Hack"
 
 <img alt="金属鍋の香ばしいチャーハン" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/seongsu-legendary-gamjatang-pork-stew/khack_1777957808_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-カムジャタンを堪能した後の締めは、やっぱり「ポックンパ（볶음밥）」、つまりチャーハンで決まり！残ったスープにご飯と海苔のフレーク、そしてエゴマの葉を入れて炒めるこの一品は、カムジャタンの余韻を完璧に締めくくってくれるんです。鍋底で香ばしく焦げ付いたおこげも、また格別な美味しさなんですよね〜。
+カムジャタンを堪能した後の締めは、やっぱり「ポックンパ（炒飯）」、つまりチャーハンで決まり！残ったスープにご飯と海苔のフレーク、そしてエゴマの葉を入れて炒めるこの一品は、カムジャタンの余韻を完璧に締めくくってくれるんです。鍋底で香ばしく焦げ付いたおこげも、また格別な美味しさなんですよね〜。
 
 <img alt="鍋の韓国風チャーハン" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/seongsu-legendary-gamjatang-pork-stew/khack_1777957831_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 

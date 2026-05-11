@@ -59,7 +59,7 @@ author: "K-Life Hack"
 
 ## 旅の質を高める周辺の美食と空間 ☕
 
-イベントを満喫した後は、地元の高級レストラン「ヨンワジョン（연와종）」での食事がお勧めです。地域の特産物を活かした上品な韓定食は、旅の疲れを優雅に癒してくれます。食後には「セカンドセカンド」や「ラ・フォレスタ」といった洗練されたカフェで、庭園を眺めながら一杯のコーヒーを愉しむのも良いでしょう。
+イベントを満喫した後は、地元の高級レストラン「ヨンワジョン」での食事がお勧めです。地域の特産物を活かした上品な韓定食は、旅の疲れを優雅に癒してくれます。食後には「セカンドセカンド」や「ラ・フォレスタ」といった洗練されたカフェで、庭園を眺めながら一杯のコーヒーを愉しむのも良いでしょう。
 
 <img alt="alt:セ宗湖水公園の歴史的なアーカイブビジュアル - 2026年5月、世宗特別自治市で出会うハングルの美学。第629回 世宗大王誕辰記念ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/sejong-king-sejong-birthday-festival-2026/khack_1776819892_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 

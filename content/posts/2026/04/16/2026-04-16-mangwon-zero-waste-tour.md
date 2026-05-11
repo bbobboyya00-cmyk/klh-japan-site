@@ -28,7 +28,7 @@ author: "K-Life Hack"
 
 ## 望遠洞の路地裏で出会う、地球に優しい暮らしの拠点 🌿
 
-望遠市場の賑わいを少し抜けた先に、石壁に掲げられた控えめな看板を見つけました。ここは、韓国の環境保護活動の象徴とも言える'アルメン商店(알맹상점 / Almang Market)'です。
+望遠市場の賑わいを少し抜けた先に、石壁に掲げられた控えめな看板を見つけました。ここは、韓国の環境保護活動の象徴とも言える'アルメン商店(Almang Market)'です。
 
 <img alt="Vertical signage indicating Almang Market on the third floor attached to a stone wall - 2026年最新｜ソウル・望遠洞(マンウォンドン)のエコ＆感性散策。ゼロウェイストの聖地'アルメン商店'と南仏カフェ'リトルメドウ'" fetchpriority="high" height="429" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776281425_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="322"/>
 
@@ -62,7 +62,7 @@ author: "K-Life Hack"
 
 ## 南フランスの風を感じる隠れ家、リトルメドウ 🍋
 
-アルメン商店で地球への優しさを学んだ後は、徒歩圏内にあるカフェ'リトルメドウ(리틀메도우 / Little Meadow)'で一休みするのが望遠洞の王道コースです。
+アルメン商店で地球への優しさを学んだ後は、徒歩圏内にあるカフェ'リトルメドウ(Little Meadow)'で一休みするのが望遠洞の王道コースです。
 
 ここはまるで南フランスの別荘を訪れたかのような、異国情緒あふれる空間。ヨーロッパ風のアンティークな扉を開けると、バターとレモンの幸せな香りが迎えてくれます。
 
@@ -70,7 +70,7 @@ author: "K-Life Hack"
 
 
 
-## アルメン商店(알맹상점)への行き方と準備
+## アルメン商店への行き方と準備
 望遠駅(6号線)の2番出口から徒歩約10分。望遠市場のメインストリートから少し外れた場所に位置しています。訪れる際は、ぜひ自宅で余っているプラスチックの空き瓶やエコバッグを持参してください。リフィル体験がより一層特別なものになります。
 
 
@@ -86,7 +86,7 @@ author: "K-Life Hack"
 > * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/sustainable-seoul-deep-dive-into.html)
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 アルメン商店(알맹상점)</h3>
+<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 アルメン商店</h3>
 <p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">韓国ソウル特別市麻浦区ワールドカップ路25キル47, 3階</p>
 </div>
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">

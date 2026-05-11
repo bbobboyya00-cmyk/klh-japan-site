@@ -5,7 +5,7 @@ slug: "jeonju-jeollagam-yeong-guide-2026"
 date: 2026-03-25T16:07:53+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852249_0.webp"
-description: "朝鮮王朝の行政の中心地、全州の「全羅監営」を完全ガイド。2026年度最新のイベント情報やライトアップ、周辺の隠れ家カフェまで、ディレクターKがその魅력을深掘りします。"
+description: "朝鮮王朝の行政の中心地、全州の「全羅監営」を完全ガイド。2026年度最新のイベント情報やライトアップ、周辺の隠れ家カフェまで、ディレクターKがその魅力を深掘りします。"
 categories: ["Cultural Nuance"]
 tags: ["全羅監営", "全州旅行", "韓国伝統建築", "全州ナイトツアー", "2026年韓国観光"]
 author: "K-Life Hack"

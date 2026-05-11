@@ -41,13 +41,13 @@ author: "K-Life Hack"
 
 <img alt="伝統建築のセットの上で、華やかな照明と共に繰り広げられる大規模な野外パフォーマンスの現場 - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603246_9.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-## 高陽スタジアム、数万人のアミ밤が描く銀河系 🌌
+## 高陽スタジアム、数万人のアミボムが描く銀河系 🌌
 
 ソウル公演に続き、高陽（コヤン）総合運動場で開催されたファイナルコンサートは、まさにツアーのハイライトでした。澄み渡る春の空の下、会場周辺には朝早くから多くの人々が詰めかけ、特別な一日が始まる予感に満ちていました。
 
 <img alt="青空の下に設置されたワールドツアー・アリラン会場入り口のホワイトテントと、案内用のサインボード - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603227_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-スタジアムの中に入ると、そこには想像を絶する光景が広がっていました。日が沈むにつれ、観客席を埋め尽くしたアミ밤（公式ペンライト）が無線制御によって一斉に光り輝き、まるで地上に降りた天の川のような絶景を作り出します。
+スタジアムの中に入ると、そこには想像を絶する光景が広がっていました。日が沈むにつれ、観客席を埋め尽くしたアミボム（公式ペンライト）が無線制御によって一斉に光り輝き、まるで地上に降りた天の川のような絶景を作り出します。
 
 <img alt="2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603249_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt="ステージの上でリラックスしたカジュアルなツアー衣装を着用し、ファンに優しく挨拶するメンバーたちの姿 - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603248_10.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>

@@ -7,7 +7,7 @@ draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/oedolgae-seogwipo-jeju-sentinel/khack_1777327513_0.webp"
 description: "ディレクターKが誘う西帰浦外ドルゲ。圧倒的な奇岩、歴史の痕跡、そして夕焼けが織りなす絶景体験。済州オルレ7コースを巡る上質な旅へ。"
 categories: ["K-Travel Hacks"]
-tags: ["西帰浦", "外ドルゲ", "済州島", "オルレ길", "絶景"]
+tags: ["西帰浦", "外ドルゲ", "済州島", "オルレキル", "絶景"]
 author: "K-Life Hack"
 ---
 
@@ -24,14 +24,14 @@ author: "K-Life Hack"
 ## 外ドルゲとは：大自然が創り出した芸術
 
 <p>外ドルゲを訪れることは、ただ壮大な景色を眺めるだけではありません。それは、地球の営みと人間の感性が交錯する、一種の「空間的な振り付け」を体験することに他なりません。特に、奇岩が織りなす独特の景観は、風の音、波の響き、そして潮の香りと一体となり、五感を刺激します。この場所の建築的な美学は、自然の力強さと繊細さが絶妙なバランスで共存している点にあります。ディレクターKは、この地のテクスチャー、岩肌の凹凸、そして光の当たり方までをも鑑賞のポイントとして推奨します。</p>
-<p>外ドルゲ周辺は、済州オルレ길7コースの一部として整備されており、散策路を歩くこと自体が豊かな体験となります。整備されたデッキ道と土の道が交錯し、歩く場所によって足裏に伝わる感触が変化します。快適なウォーキングシューズは必須ですが、それによって得られる解放感は格別です。緑豊かな松林を抜け、視界が開けた先に広がる紺碧の海と、そこにそびえる外ドルゲの姿は、まさに息をのむ美しさです。</p>
+<p>外ドルゲ周辺は、済州オルレキル7コースの一部として整備されており、散策路を歩くこと自体が豊かな体験となります。整備されたデッキ道と土の道が交錯し、歩く場所によって足裏に伝わる感触が変化します。快適なウォーキングシューズは必須ですが、それによって得られる解放感は格別です。緑豊かな松林を抜け、視界が開けた先に広がる紺碧の海と、そこにそびえる外ドルゲの姿は、まさに息をのむ美しさです。</p>
 <img alt="西帰浦外ドルゲ：済州の絶景を巡るハイエンドガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/oedolgae-seogwipo-jeju-sentinel/khack_1777327523_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-## 感性を揺さぶる海岸線：オルレ길7コースの誘い
+## 感性を揺さぶる海岸線：オルレキル7コースの誘い
 
-<p>オルレ길7コースを進むと、外ドルゲをさまざまな角度から望むことができます。道の途中には、遠く新縁橋（セヨンギョ）や、その先に浮かぶ虎島（ポムソム）、森島（ソプソム）といった風景が目に飛び込んできます。点在するベンチで一息つき、ただ波の音に耳を傾ける。そんな贅沢な時間の過ごし方も、この地ならではの醍醐味です。ディレクターKは、時間を気にせず、気の向くままに歩を進めることをお勧めします。自然のリズムに身を委ね、心の奥底から湧き上がる感動を味わってください。</p>
+<p>オルレキル7コースを進むと、外ドルゲをさまざまな角度から望むことができます。道の途中には、遠く新縁橋（セヨンギョ）や、その先に浮かぶ虎島（ポムソム）、森島（ソプソム）といった風景が目に飛び込んできます。点在するベンチで一息つき、ただ波の音に耳を傾ける。そんな贅沢な時間の過ごし方も、この地ならではの醍醐味です。ディレクターKは、時間を気にせず、気の向くままに歩を進めることをお勧めします。自然のリズムに身を委ね、心の奥底から湧き上がる感動を味わってください。</p>
 <div class="psImg"><img alt="青い海と岩のコントラスト - 西帰浦外ドルゲ：済州の絶景を巡るハイエンドガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/oedolgae-seogwipo-jeju-sentinel/khack_1777327526_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="外ドルゲと周辺の雄大な景観 - 西帰浦外ドルゲ：済州の絶景を巡るハイエンドガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/oedolgae-seogwipo-jeju-sentinel/khack_1777327530_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
-<p>さらにオルレ길を歩くと、「黄牛池海岸（ファンウジヘアン）」へと至ります。ここは、かつて太平洋戦争末期に日本軍が米軍の攻撃に備え、魚雷艇を隠すために建設した12の人工洞窟「黄牛池海岸十二洞窟」が残る場所です。美しい自然の中に、戦争の悲しい歴史が刻まれていることに、ディレクターKは静かな衝撃を受けました。遠くからその痕跡を眺めることはできますが、安全のため立ち入りは制限されています。この場所が持つ歴史的な重みは、訪れる者に深い思索を促します。</p>
+<p>さらにオルレキルを歩くと、「黄牛池海岸（ファンウジヘアン）」へと至ります。ここは、かつて太平洋戦争末期に日本軍が米軍の攻撃に備え、魚雷艇を隠すために建設した12の人工洞窟「黄牛池海岸十二洞窟」が残る場所です。美しい自然の中に、戦争の悲しい歴史が刻まれていることに、ディレクターKは静かな衝撃を受けました。遠くからその痕跡を眺めることはできますが、安全のため立ち入りは制限されています。この場所が持つ歴史的な重みは、訪れる者に深い思索を促します。</p>
 <img alt="黄牛池海岸に点在する十二洞窟 - 西帰浦外ドルゲ：済州の絶景を巡るハイエンドガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/oedolgae-seogwipo-jeju-sentinel/khack_1777327534_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 歴史の痕跡と絶景：黄牛池海岸と十二洞窟

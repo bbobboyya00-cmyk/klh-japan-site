@@ -7,7 +7,7 @@ draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/jeonju-reading-festival-hanbyeok/1.webp"
 description: "2026年秋、全州韓壁文化館で開催される「全州読書大典」。木版印刷の伝統と現代の知性が融合する、日本人のためのハイエンドな文化紀行をディレクターKがナビゲートします。"
 categories: ["K-Travel Hacks"]
-tags: ["전주독서대전", "전주한벽문화관", "완판본문화관", "연화정도서관", "전주여행"]
+tags: ["全州読書大典", "全州韓壁文化館", "完板本文化館", "蓮花亭図書館", "全州旅行"]
 author: "K-Life Hack"
 ---
 

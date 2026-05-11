@@ -50,7 +50,7 @@ author: "K-Life Hack"
 紫のアリウムが広がる静かな一角で、その芸術性をカメラに収める時間は、旅の記憶をより深いものにするでしょう。背景に見えるカラフルなオブジェは、静寂の中に適度なリズムを与え、空間全体の完成度を高めています。ソウル森で、未来の都市生活が目指すべき調和の形を体感してください。
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市 城東区 뚝섬路 273</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 10:00から19:00まで</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 水仁・盆唐線 ソウル森(ソウルスプ)駅 3番出口より徒歩5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: ソウル森公営駐車場を利用</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>決済</b>: 気候同行カードまたはトラベログ、トラベルウォレットを推奨</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: ソウル特別市 城東区 トゥクソム路 273</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 10:00から19:00まで</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 水仁・盆唐線 ソウル森(ソウルスプ)駅 3番出口より徒歩5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: ソウル森公営駐車場を利用</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>決済</b>: 気候同行カードまたはトラベログ、トラベルウォレットを推奨</li></ul>
 </div></blockquote>
 
 <div class="k-cta-wrapper" style="margin: 45px 0px 20px; text-align: center;">

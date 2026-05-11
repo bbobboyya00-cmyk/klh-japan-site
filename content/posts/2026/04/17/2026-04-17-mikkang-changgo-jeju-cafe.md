@@ -23,7 +23,7 @@ author: "K-Life Hack"
 
 ## 涯月の路地裏に佇む、時を刻む石造りの倉庫 ✨
 
-済州空港から車を走らせること約20分。涯月(エウォル)の静かな集落に、ひっそりと佇む一軒の石造りの建物があります。それが今回ご紹介する「ミッカン倉庫(Mikkang Changgo / 미깡창고)」です。
+済州空港から車を走らせること約20分。涯月(エウォル)の静かな集落に、ひっそりと佇む一軒の石造りの建物があります。それが今回ご紹介する「ミッカン倉庫(Mikkang Changgo / ミッカン倉庫)」です。
 
 <img alt="White stone building exterior with mikkang storage text and a wooden bench - 済州島・涯月(エウォル)の静かな休息地。ミッカン倉庫(Mikkang Changgo)で過ごす、蜜柑の香りに包まれた休日" fetchpriority="high" height="969" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/mikkang-changgo-jeju-cafe/khack_1776436550_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="752"/>
 
@@ -53,7 +53,7 @@ author: "K-Life Hack"
 
 ## お腹が空いたら訪れたい、近隣の温かな家庭料理 🍴
 
-カフェで心を満たした後は、同じ涯月エリアにある「オンニシタク(Sister's Table / 언니식탁)」で、済州の恵みをふんだんに使った食事を楽しんではいかがでしょうか。
+カフェで心を満たした後は、同じ涯月エリアにある「オンニシタク(Sister's Table / オンニシタク)」で、済州の恵みをふんだんに使った食事を楽しんではいかがでしょうか。
 
 <img alt="A bowl of rice topped with grilled meat and greens with small side dishes on a wooden tray - 済州島・涯月(エウォル)の静かな休息地。ミッカン倉庫(Mikkang Changgo)で過ごす、蜜柑の香りに包まれた休日" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/mikkang-changgo-jeju-cafe/khack_1776436559_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
@@ -83,8 +83,8 @@ author: "K-Life Hack"
 ## 📍 地図・アクセス
 <div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
 <div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 미깡창고</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">제주특별자치도 제주시 애월읍 중산간서로 6710-1 미깡창고</p>
+<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 ミッカン倉庫</h3>
+<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">제주특별자치도 제주시 애월읍 중산간서로 6710-1 ミッカン倉庫</p>
 </div>
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%95%A0%EC%9B%94%EC%9D%8D%20%EA%B4%91%EB%A0%B9%EB%A6%AC%2019-2%20%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0%20%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>

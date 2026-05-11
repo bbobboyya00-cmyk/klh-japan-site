@@ -44,7 +44,7 @@ author: "K-Life Hack"
 
 <img alt="A printed menu page listing various Korean dishes - 2026年ソウル・新堂洞の最旬スポット。伝統酒ソムリエが贈る至福の韓食ダイニング『ピョジュ(表酒)』へ。" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776238275_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-実際に私も、その日の気分を伝えて『本日のグラス酒（잔술）』をセレクトしてもらいました。ソムリエの手によって丁寧に注がれるお酒は、まさに芸術品のよう。乾杯の瞬間、立ち上がる香りに心が解き放たれます。
+実際に私も、その日の気分を伝えて『本日のグラス酒（グラス酒）』をセレクトしてもらいました。ソムリエの手によって丁寧に注がれるお酒は、まさに芸術品のよう。乾杯の瞬間、立ち上がる香りに心が解き放たれます。
 
 <img alt="Two hands toasting with glasses of clear alcohol over a table of food - 2026年ソウル・新堂洞の最旬スポット。伝統酒ソムリエが贈る至福の韓食ダイニング『ピョジュ(表酒)』へ。" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776238273_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 

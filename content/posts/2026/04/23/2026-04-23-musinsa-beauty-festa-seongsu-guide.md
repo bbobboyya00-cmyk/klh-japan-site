@@ -120,7 +120,7 @@ author: "K-Life Hack"
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
 <div style="padding:20px 20px 10px;">
 
-<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">ソウル特別市 城東区 演武場キル 81 (서울특별시 성동구 성수동2가 316-1)</p>
+<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">ソウル特別市 城東区 演武場キル 81 (ソウル特別市 城東区 聖水洞2街 316-1)</p>
 </div>
 <div class="k-map-box">
 <div class="k-map-iframe-wrap">
@@ -133,8 +133,8 @@ style="filter: grayscale(0.2) contrast(1.1) Invert(var(--dark-mode-invert, 0));"
 </div>
 
 <div class="k-map-notice">
-<span style="font-size: 1.1rem; color: var(--themeC);">📍 ムシンサ・뷰티스페이스 1</span>
-<p style="margin: 5px 0 10px; opacity: 0.8;">ソウル特別市 城東区 演武場キル 81 (서울특별시 성동구 성수동2가 316-1)</p>
+<span style="font-size: 1.1rem; color: var(--themeC);">📍 ムシンサ・ビューティースペース 1</span>
+<p style="margin: 5px 0 10px; opacity: 0.8;">ソウル特別市 城東区 演武場キル 81 (ソウル特別市 城東区 聖水洞2街 316-1)</p>
 
 <span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>
 Googleマップは韓国国内で情報の更新が遅れたり、正確な位置が表示されない場合があります。より円滑な移動のために<b>Naverマップ</b>の使用を強く推奨します。

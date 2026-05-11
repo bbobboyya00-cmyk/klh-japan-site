@@ -34,7 +34,7 @@ author: "K-Life Hack"
 
 全州革新都市の中心にありながら、最も古い息吹を秘めた古刹、西古寺(ソゴサ)。大韓仏教曹渓宗(テハンブルギョジョゲジョン)に属するこのお寺は、新羅末期に創建されたと言われています。私が訪れた日は少し霞んでいましたが、晴れた日には素晴らしい景色が広がるだろうと感じました。
 
-広大な敷地に入ると、まず目に入ったのが、大きな木の下に立つ石碑です。そこには「서고사 일주문 (西古寺 一柱門)」と刻まれており、聖なる空間への入口であることを静かに示していました。一歩足を踏み入れると、ひんやりとした山の空気が心を洗い流してくれるようでした。
+広大な敷地に入ると、まず目に入ったのが、大きな木の下に立つ石碑です。そこには「西古寺 一柱門 (西古寺 一柱門)」と刻まれており、聖なる空間への入口であることを静かに示していました。一歩足を踏み入れると、ひんやりとした山の空気が心を洗い流してくれるようでした。
 
 <img alt="全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" fetchpriority="high" height="538" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385504_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
 
@@ -44,7 +44,7 @@ author: "K-Life Hack"
 
 <img alt="A wide exterior view of traditional Korean temple buildings with grey tiled roofs and yellow walls, nestled on a hillside surrounded by bare trees. - 全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385507_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-中心となるのは、複雑で美しい木造の軒と「대웅전 (大雄殿、テウンジョン)」の看板が掲げられた本堂です。その繊細な装飾は、長い歴史の中で培われてきた職人技を感じさせます。建物の細部にまで宿る美しさに、思わず見とれてしまいました。
+中心となるのは、複雑で美しい木造の軒と「大雄殿 (大雄殿、テウンジョン)」の看板が掲げられた本堂です。その繊細な装飾は、長い歴史の中で培われてきた職人技を感じさせます。建物の細部にまで宿る美しさに、思わず見とれてしまいました。
 
 <img alt="全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385509_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 

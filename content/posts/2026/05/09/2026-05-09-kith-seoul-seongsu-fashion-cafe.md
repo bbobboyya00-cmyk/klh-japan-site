@@ -64,7 +64,7 @@ author: "K-Life Hack"
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
-<li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 <b>住所</b>: 서울 성동구 서울숲2길 32-14</li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 <b>住所</b>: ソウル 城東区 ソウルの森2ギル 32-14</li>
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">⏰ <b>営業時間</b>: 11:00～20:00</li>
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">🚇 <b>アクセス</b>: 地下鉄 水仁・盆唐線「ソウルの森駅」5番出口から徒歩約5分、または2号線「トゥクソム駅」8番出口から徒歩約8分</li>
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">💳 <b>支払い</b>: クレジットカード、モバイル決済対応（タックスリファウンド可）</li>
@@ -81,7 +81,7 @@ author: "K-Life Hack"
 <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 
 <div class="k-map-box">
-<div class="k-map-header"><h3 class="k-map-title">📍 Kith Seoul</h3><p class="k-map-address">서울 성동구 서울숲2길 32-14</p></div>
+<div class="k-map-header"><h3 class="k-map-title">📍 Kith Seoul</h3><p class="k-map-address">ソウル 城東区 ソウルの森2ギル 32-14</p></div>
 <div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=키스 서울&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">

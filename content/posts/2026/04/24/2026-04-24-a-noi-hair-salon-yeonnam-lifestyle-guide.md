@@ -46,7 +46,7 @@ A.NOIが多くのセレブリティや流行に敏感なソウルっ子から支
 
 特に、ウェディング撮影を控えた「イェシン（花嫁）」たちの間で話題なのが、透明感溢れる「トープブラウン」です。光の当たり方で表情を変える絶妙なニュアンスカラーは、A.NOIのスタイリストだからこそ成せる業と言えるでしょう。
 
-また、잦은（度重なる）カラーやプールの塩素で傷んだ髪を蘇らせる「シグネチャークリニック」も定評があります。スチームを用いた深い浸透プロセスは、一度の施術で指通りの違いを実感できるはずです。
+また、度重なるカラーやプールの塩素で傷んだ髪を蘇らせる「シグネチャークリニック」も定評があります。スチームを用いた深い浸透プロセスは、一度の施術で指通りの違いを実感できるはずです。
 
 <img alt="alt:ニュートラルな内壁に表示された、ブランドアイデンティティを確立する象徴的なロゴとタイポグラフィ。 - 延南洞（ヨンナムドン）の最旬ヘアサロン「A.NOI（エイノイ）」完全ガイド。建築美とパーソナル技術の融合" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/a-noi-hair-salon-yeonnam-lifestyle-guide/khack_1776971003_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 

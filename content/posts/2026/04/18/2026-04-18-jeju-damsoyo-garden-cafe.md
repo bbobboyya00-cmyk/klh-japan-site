@@ -5,7 +5,7 @@ slug: "jeju-damsoyo-garden-cafe"
 date: 2026-03-09T10:36:39+09:00
 draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-damsoyo-garden-cafe/khack_1776483462_0.webp"
-description: "済州島・西帰浦に佇む秘密の庭園カフェ『ダムソヨ』を、『K-Life Hack』のディレクターK이 独自の視点でナビゲート。漢拏山（ハルラサン）を望む絶景と静かな池、愛らしいアヒルたちが織りなす癒やしの空間を、K-Life Hackが提案する上質な旅ガイドとしてお届けします。"
+description: "済州島・西帰浦に佇む秘密の庭園カフェ『ダムソヨ』を、『K-Life Hack』のディレクターKが 独自の視点でナビゲート。漢拏山（ハルラサン）を望む絶景と静かな池、愛らしいアヒルたちが織りなす癒やしの空間を、K-Life Hackが提案する上質な旅ガイドとしてお届けします。"
 categories: ["K-Travel Hacks"]
 tags: ["済州島カフェ", "西帰浦グルメ", "ダムソヨ", "済州島庭園カフェ", "ハルラ山ビュー"]
 author: "K-Life Hack"

@@ -56,7 +56,7 @@ author: "K-Life Hack"
 余裕があれば、海鮮の出汁がしっかり効いた鍋も一緒にオーダーするのが通の楽しみ方。熱々のスープがお肉の旨味をさらに増幅させ、最後の一口まで飽きることなく完食させてくれます ✨
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Address</b>: 서울특별시 동대문구 장한로 47 1층 박만배아리랑보쌈 장안점</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Hours</b>: 11:00 - 23:00 (平日のみ15:00-16:30ブレイクタイムあり)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Transport</b>: 地下鉄5号線 チャンハンピョン(長漢坪)駅 2番出口より徒歩5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Payment</b>: 海外発行カード、WOWPASS、TravelLog対応可能</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Notes</b>: 週末のディナータイムはウェイティング必至。ガブリサル(가브리살)ポッサムを指名して注文するのがおすすめです。</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Address</b>: ソウル特別市 東大門区 長漢路 47 1階 パクマンベアリランポッサム長安店</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Hours</b>: 11:00 - 23:00 (平日のみ15:00-16:30ブレイクタイムあり)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Transport</b>: 地下鉄5号線 チャンハンピョン(長漢坪)駅 2番出口より徒歩5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Payment</b>: 海外発行カード、WOWPASS、TravelLog対応可能</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Notes</b>: 週末のディナータイムはウェイティング必至。ガブリサル(ガブリサル)ポッサムを指名して注文するのがおすすめです。</li></ul>
 </div></blockquote>
 
 ## 職人の技が光る、艶やかな肉の芸術
@@ -82,7 +82,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 </a>
 </div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
-<div class="k-map-header"><h3 class="k-map-title">📍 서울 박만배아리랑보쌈 장안점</h3><p class="k-map-address">서울특별시 동대문구 장한로 47 1층 박만배아리랑보쌈 장안점 (서울특별시 동대문구 장안동 430-2 1층 박만배아리랑보쌈 장안점)</p></div>
+<div class="k-map-header"><h3 class="k-map-title">📍 서울 박만배아리랑보쌈 장안점</h3><p class="k-map-address">ソウル特別市 東大門区 長漢路 47 1階 パクマンベアリランポッサム長安店 (서울특별시 동대문구 장안동 430-2 1층 박만배아리랑보쌈 장안점)</p></div>
 <div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EB%B0%95%EB%A7%8C%EB%B0%B0%EC%95%84%EB%A6%AC%EB%9E%91%EB%B3%B4%EC%8C%88%20%EC%9E%A5%EC%95%88%EC%A0%90%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC%20%EC%9E%A5%EC%95%88%EB%8F%99%20430-2&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">

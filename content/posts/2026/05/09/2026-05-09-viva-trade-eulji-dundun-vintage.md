@@ -12,7 +12,7 @@ author: "K-Life Hack"
 ---
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">200坪の圧倒적スケールを誇るソウル最大級の倉庫型ヴィンテージショップ</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ハイブランドからカジュアルまで、毎日100点以上の新作が入荷する宝探し空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">購入点数に応じた割引や「3+1」イベントなど、コスパ最強のショッピング体験</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">200坪の圧倒的スケールを誇るソウル最大級の倉庫型ヴィンテージショップ</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ハイブランドからカジュアルまで、毎日100点以上の新作が入荷する宝探し空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">購入点数に応じた割引や「3+1」イベントなど、コスパ最強のショッピング体験</li></ul>
 </div></blockquote>
 
 ソウルのファッションシーンを揺るがす200坪の超巨大ヴィンテージ倉庫が、東大門のランドマーク『DUN-DUN』に上陸しました。ハイブランドからストリートまで毎日100点以上が入れ替わる在庫量は、まさに「服の海」を泳ぐような圧倒的没頭感です。ヴィンテージ好きなら、ここを素通りするのはもはや罪と言っても過言ではありません✨

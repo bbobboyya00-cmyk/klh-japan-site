@@ -101,7 +101,7 @@ author: "K-Life Hack"
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
-- **所在地**: ソウル特別市 麻浦区 オウルマダン路 130 2階 (서울특별시 마포구 어울마당로 130 2階)
+- **所在地**: ソウル特別市 麻浦区 オウルマダン路 130 2階 (ソウル特別市 麻浦区 オウルマダン路 130 2階)
 - **最寄り駅**: 弘大入口駅 9番出口から150m
 - **営業時間**: 11:00 - 22:00 (毎日/2026年度 基準)
 - **主要価格帯**: 

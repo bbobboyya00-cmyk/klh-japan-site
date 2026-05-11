@@ -12,7 +12,7 @@ author: "K-Life Hack"
 ---
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 120万人が共感した「キークニ」のウィットに富んだ一コマ漫画を立体的に再現した没入型空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 日常の悩みや家族愛をテーマにした感動的なエピソードが、笑いと涙の絶妙なバランスで展開</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📸 DDPならではの洗練された展示構成と、SNS映え間違いなし의ユニークなフォトゾーンが満載</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 120万人が共感した「キークニ」のウィットに富んだ一コマ漫画を立体的に再現した没入型空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 日常の悩みや家族愛をテーマにした感動的なエピソードが、笑いと涙の絶妙なバランスで展開</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📸 DDPならではの洗練された展示構成と、SNS映え間違いなしのユニークなフォトゾーンが満載</li></ul>
 </div></blockquote>
 
 今、ソウルで最も長い行列ができる場所を挙げるなら、間違いなくここでしょう。東大門デザインプラザ（DDP）で開催中の「キークニ特別展」は、SNSで爆発的な人気を誇る作家の感性をそのまま詰め込んだ、まさに「心のサプリメント」のような空間です。
@@ -64,7 +64,7 @@ author: "K-Life Hack"
 小さな芽を愛おしそうに見つめる少女の彫刻は、生命の尊さと希望を感じさせてくれます。作家の優しい眼差しがそのまま形になったようなこの作品は、展示の締めくくりにふさわしい、穏やかな感動を届けてくれました。
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Address</b>: 서울특별시 중구 을지로 281 (DDPミュージアム地下2階 展示1館)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Hours</b>: 10:00 - 20:00 (最終入場 19:00 / 年中無休)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Transport</b>: 地下鉄2・4・5号線 東大門歴史文化公園駅 1番出口直結</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Payment</b>: クレジットカード、モバイル決済対応（グッズショップ含む）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Notes</b>: 展示のメッセージをじっくり読むのが醍醐味です。時間に余裕を持って訪れてください。</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Address</b>: ソウル特別市 中区 乙支路 281 (DDPミュージアム地下2階 展示1館)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Hours</b>: 10:00 - 20:00 (最終入場 19:00 / 年中無休)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Transport</b>: 地下鉄2・4・5号線 東大門歴史文化公園駅 1番出口直結</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Payment</b>: クレジットカード、モバイル決済対応（グッズショップ含む）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>Notes</b>: 展示のメッセージをじっくり読むのが醍醐味です。時間に余裕を持って訪れてください。</li></ul>
 </div></blockquote>
 
 ## 言葉の力が織りなす、忘れられない体験
@@ -90,7 +90,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 </a>
 </div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
-<div class="k-map-header"><h3 class="k-map-title">📍 Dongdaemun Design Plaza (DDP)</h3><p class="k-map-address">서울특별시 중구 을지로 281 (서울특별시 중구 을지로7가 2-1)</p></div>
+<div class="k-map-header"><h3 class="k-map-title">📍 Dongdaemun Design Plaza (DDP)</h3><p class="k-map-address">ソウル特別市 中区 乙支路 281 (서울특별시 중구 을지로7가 2-1)</p></div>
 <div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%A4%91%EA%B5%AC%20%EC%9D%84%EC%A7%80%EB%A1%9C%20281&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">

@@ -86,7 +86,7 @@ author: "K-Life Hack"
 <div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
 <div style="padding:20px 20px 10px;">
 <h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 ソウルの森</h3>
-<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">ソウル特別市 城東区 뚝섬路 273 (서울특별시 성동구 성수동1가 685-20)</p>
+<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">ソウル特別市 城東区 トゥクソム路 273 (서울특별시 성동구 성수동1가 685-20)</p>
 </div>
 <div style="background:var(--themeBg-sec);height:350px;width:100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%EC%88%B2&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>

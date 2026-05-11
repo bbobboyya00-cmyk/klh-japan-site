@@ -42,7 +42,7 @@ author: "K-Life Hack"
 お目当ての製品が見つかったら、価格や詳細をチェックしてみてね。人気のモイストバリアトナーとかは、使い心地が軽やかすぎて、ついついまとめ買いしたくなっちゃうはず。あと、SNSフォローとかの簡単なミッションをクリアするだけで貰えるリユーザブルバッグは、聖水でのショッピングバッグとしても大活躍してくれるから、絶対ゲットしてね！！🎁
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
-<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>住所</b>: 서울특별시 성동구 연무장길 17</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 11:00 - 19:00 (最終日は15:00まで)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 地下鉄2号線 聖水駅4番出口から徒歩約5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>決済方法</b>: クレジットカード、モバイル決済対応</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>備考</b>: 入場時に公式SNSのフォロー画面を提示するとスムーズです</li></ul>
+<ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>住所</b>: ソウル特別市 城東区 演武場ギル 17</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 11:00 - 19:00 (最終日は15:00まで)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: 地下鉄2号線 聖水駅4番出口から徒歩約5分</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>決済方法</b>: クレジットカード、モバイル決済対応</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>備考</b>: 入場時に公式SNSのフォロー画面を提示するとスムーズです</li></ul>
 </div></blockquote>
 <img alt="ダークグリーンの壁に映えるランベルのロゴ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/lanbelle-popup-seongsu-skincare-preview/khack_1778039084_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 展示の最後には、みんなが夢中になる「9.98秒タイマーゲーム」が待ってるよ。ピッタリ止めることができたら現品プレゼントっていう、マジで太っ腹な企画！！✨たとえ失敗しても可愛いヘアクリップやクリームのサンプルが貰えるから、ぜひ運試しに挑戦してみてね！
@@ -58,7 +58,7 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 </a>
 </div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
-<div class="k-map-header"><h3 class="k-map-title">📍 Lanbelle</h3><p class="k-map-address">서울특별시 성동구 연무장길 17 (서울특별시 성동구 성수동2가 316-55)</p></div>
+<div class="k-map-header"><h3 class="k-map-title">📍 Lanbelle</h3><p class="k-map-address">ソウル特別市 城東区 演武場ギル 17 (서울특별시 성동구 성수동2가 316-55)</p></div>
 <div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%8F%99%EA%B5%AC%20%EC%97%B0%EB%AC%B4%EC%9E%A5%EA%B8%B8%2017&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
