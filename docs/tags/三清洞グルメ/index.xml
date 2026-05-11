@@ -3,7 +3,7 @@
 &lt;!----&gt;
 &lt;div class="alert alert--success"&gt;
  &lt;div class="alert-content"&gt;
- &lt;p&gt;&lt;strong&gt;📌 Quick Summary&lt;/strong&gt;&lt;/p&gt;
+ &lt;hr&gt;
 &lt;ul&gt;
 &lt;li&gt;三清洞の路地裏に佇む、ミシュラン掲載の老舗店&lt;/li&gt;
 &lt;li&gt;丁寧に手でちぎった、モチモチ食感のスジェビ&lt;/li&gt;
@@ -11,6 +11,7 @@
 &lt;li&gt;揚げたて熱々のジャガイモチヂミも絶品&lt;/li&gt;
 &lt;li&gt;ピーク時は行列必至だが、回転が早く比較的スムーズに入店可能&lt;/li&gt;
 &lt;/ul&gt;
+
  &lt;/div&gt;
 &lt;/div&gt;
 
