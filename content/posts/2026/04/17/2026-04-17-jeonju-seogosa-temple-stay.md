@@ -36,7 +36,7 @@ author: "K-Life Hack"
 
 広大な敷地に入ると、まず目に入ったのが、大きな木の下に立つ石碑です。そこには「서고사 일주문 (西古寺 一柱門)」と刻まれており、聖なる空間への入口であることを静かに示していました。一歩足を踏み入れると、ひんやりとした山の空気が心を洗い流してくれるようでした。
 
-<img alt="A stone monument with '서고사 일주문' (Seogosa Iljumun) text, positioned under a large tree on a mountain path. - 全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" fetchpriority="high" height="538" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385504_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
+<img alt="全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" fetchpriority="high" height="538" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385504_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
 
 ## 静寂に包まれた伝統建築の美 📸
 
@@ -46,7 +46,7 @@ author: "K-Life Hack"
 
 中心となるのは、複雑で美しい木造の軒と「대웅전 (大雄殿、テウンジョン)」の看板が掲げられた本堂です。その繊細な装飾は、長い歴史の中で培われてきた職人技を感じさせます。建物の細部にまで宿る美しさに、思わず見とれてしまいました。
 
-<img alt="A close-up of the main temple building's facade, featuring intricate wooden eaves and a signboard with '대웅전' (Daeungjeon) text. - 全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385509_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385509_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 寺院内を巡ると、赤と黄色のアクセントが施された複数の伝統的な建物が、岩肌の斜面に沿って建てられているのが見えました。冬の時期には植生がまばらで、より一層建物の構造美が際立って見えます。これらの建物は、自然と一体となるように設計されており、どこか懐かしい温かさを感じさせます。
 
@@ -86,7 +86,7 @@ author: "K-Life Hack"
 
 テンプルステイは基本的に予約制なので、公式サイトから事前に申し込んでください。特に休息型は、自分のペースで過ごせるため、初めての方にもおすすめです。個人的な感想としては、人が少ない時期に訪れると、より深く自分と向き合える静かな時間を過ごせるでしょう。
 
-持ち物としては、タオルやドライヤーは持参が必要です。季節によっては朝晩冷え込むこともありますので、羽織るものがあると良いでしょう。心穏やかな時間を過ごしたい方、忙しい日常に쉼（シィム＝休息）が必要な方には、西古寺でのテンプルステイを心からおすすめします。ぜひ、韓国で心に残るヒーリング体験をしてみてください。
+持ち物としては、タオルやドライヤーは持参が必要です。季節によっては朝晩冷え込むこともありますので、羽織るものがあると良いでしょう。心穏やかな時間を過ごしたい方、忙しい日常に休息が必要な方には、西古寺でのテンプルステイを心からおすすめします。ぜひ、韓国で心に残るヒーリング体験をしてみてください。
 
 ---
 

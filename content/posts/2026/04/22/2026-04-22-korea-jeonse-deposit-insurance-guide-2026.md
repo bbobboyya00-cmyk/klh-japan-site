@@ -41,7 +41,7 @@ author: "K-Life Hack"
 
 <img alt="HUG保険が提供する心の平安を象徴する穏やかな水辺の高級住宅 - 2026年最新版：韓国での資産を守る「チョンセ保証保険」完全ガイド 🛡️" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/korea-jeonse-deposit-insurance-guide-2026/khack_1776841383_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 機関別の特徴と比較：HUG、HF、SGI
 
@@ -65,7 +65,7 @@ author: "K-Life Hack"
 
 <img alt="保護された物件の内部空間を表現したプレミアムなミニマルリビング - 2026年最新版：韓国での資産を守る「チョンセ保証保険」完全ガイド 🛡️" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/korea-jeonse-deposit-insurance-guide-2026/khack_1776841385_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 申し込み方法と必要書類
 

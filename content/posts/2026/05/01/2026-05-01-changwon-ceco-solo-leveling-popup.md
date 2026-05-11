@@ -49,7 +49,7 @@ author: "K-Life Hack"
 
 会場の奥深くに設けられた専用スペースは、故チャン・ソンラク作家の偉大な功績を称える聖域として機能している。
 
-<img alt="alt: 故チャン・ソンラク作家の偉大な芸術적功績を称え、静かに追悼を捧げるための専用スペース" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/changwon-ceco-solo-leveling-popup/khack_1777597454_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="alt: 故チャン・ソンラク作家の偉大な芸術功績を称え、静かに追悼を捧げるための専用スペース" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/changwon-ceco-solo-leveling-popup/khack_1777597454_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 作家の息遣いを感じさせるアトリエの再現空間には、実際に使用されたスケッチや道具が並び、ソン・ジヌというキャラクターに命を吹き込む瞬間の静かな熱狂が保存されている。
 

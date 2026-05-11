@@ -46,7 +46,7 @@ author: "K-Life Hack"
 
 この店を訪れる際に心得ておくべきは、その並外れたホスピタリティゆえの「量」の豊かさです。二人での訪問であれば「カップルサイズ」でも十分すぎるほど。そして、この物語を完成させるために欠かせないのが、セルフスタイルの「チュモッパ（韓国式おにぎり）」です。
 
-<img alt="alt:チュモッ파とピクルスが並ぶ、メイン料理のテーブルセッティング - 公州の美食遺産、元祖キムピタンの深淵に触れる：ピタンキムタン" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/gongju-original-kimpitang-gastronomy-destination/khack_1777517496_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="公州の美食遺産、元祖キムピタンの深淵に触れる：ピタンキムタン" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/gongju-original-kimpitang-gastronomy-destination/khack_1777517496_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 海苔の香ばしさとたくあんの小気味よい食感がアクセントのチュモッパは、濃厚なキムピタンのソースを纏わせることで、そのポテンシャルを最大限に発揮します。自らの手で丸めるという体験もまた、食事という儀式を彩るエッセンスとなります。
 

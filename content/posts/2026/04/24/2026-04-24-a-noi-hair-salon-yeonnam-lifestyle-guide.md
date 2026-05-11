@@ -58,7 +58,7 @@ A.NOIには、それぞれ独自の専門性を持つ実力派ディレクター
 
 彼らの共通点は、単にリクエストに応えるだけでなく、ゲストのライフスタイルに寄り添った「手入れのしやすさ」を重視している点です。日本語でのコミュニケーションは限られるかもしれませんが、写真や翻訳アプリを通じた丁寧なカウンセリングで、理想のスタイルを共有することが可能です。
 
-#
+
 
 ## エイノイヘアー 麻浦延南店への行き方 🗺️
 
@@ -66,7 +66,7 @@ A.NOIには、それぞれ独自の専門性を持つ実力派ディレクター
 
 <img alt="alt:ブランド情報が記されたエントランスホールのクローズアップ。 - 延南洞（ヨンナムドン）の最旬ヘアサロン「A.NOI（エイノイ）」完全ガイド。建築美とパーソナル技術の融合" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/a-noi-hair-salon-yeonnam-lifestyle-guide/khack_1776971012_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 施術の待ち時間も楽しむ延南ライフ ☕
 

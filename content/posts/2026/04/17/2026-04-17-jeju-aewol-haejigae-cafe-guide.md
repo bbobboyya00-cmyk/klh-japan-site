@@ -29,7 +29,7 @@ author: "K-Life Hack"
 
 ## 1. 済州の伝統と海が交差する、唯一無二のロケーション ✨
 
-<img alt="A building exterior with a '카페 해지개' signboard and a stone dol hareubang statue at the entrance. - 済州島・涯月（エウォル）の海を飲み込む贅沢。韓屋と絶景が織りなす『ヘジゲ（海知開）』完全ガイド" fetchpriority="high" height="538" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-aewol-haejigae-cafe-guide/khack_1776392960_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
+<img alt="済州島・涯月（エウォル）の海を飲み込む贅沢。韓屋と絶景が織りなす『ヘジゲ（海知開）』完全ガイド" fetchpriority="high" height="538" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-aewol-haejigae-cafe-guide/khack_1776392960_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
 
 済州国際空港から車で約30分。エメラルドグリーンの海が広がる涯月（エウォル）カフェ通りの一角に、威風堂々とした佇まいの「ヘジゲ（海知開）」が現れます。入口で迎えてくれるのは、済州の象徴である石像 'トルハルバン'。モダンな建物でありながら、伝統的な韓屋の要素を巧みに取り入れた外観は、訪れる者を非日常へと誘います。
 
@@ -67,13 +67,13 @@ author: "K-Life Hack"
 
 カフェの名前である「ヘジゲ」は、'日が沈む場所' を意味します。その名の通り、夕暮れ時は海全体がオレンジ色に染まり、言葉を失うほどの絶景が広がります。このマジックアワーに合わせて訪れるのが、エディターKの一押しのプランです。
 
-#
+
 
 ## ❓ アクセスと駐車場について
 
 カフェ「ヘジゲ」は、済州市涯月邑涯月北西路52に位置しています。涯月カフェ通りは非常に道が狭く混雑しますが、こちらは広々とした専用駐車場を完備しているため、車での訪問も安心です。満車の場合は、近隣の公営駐車場を利用することも可能です。
 
-#
+
 
 ## ❓ 周辺のおすすめスポットは？
 
@@ -93,7 +93,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%95%A0%EC%9B%94%EC%9D%8D%20%EC%95%A0%EC%9B%94%EB%A6%AC%202555%20.%201~2%EC%B8%B5%20%ED%95%B4%EC%A7%80%EA%B0%9C&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%95%A0%EC%9B%94%EC%9D%8D%20%EC%95%A0%EC%9B%94%EB%A6%AC%202555%20.%201~2%EC%B8%B5%20%ED%95%B4%EC%A7%80%EA%B0%9C&query_place_id=ChIJkT_5s231DDURAxxjUhkTY8E" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%ED%95%B4%EC%A7%80%EA%B0%9C" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

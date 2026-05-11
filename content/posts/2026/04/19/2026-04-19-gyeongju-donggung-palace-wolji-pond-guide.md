@@ -82,13 +82,13 @@ author: "K-Life Hack"
 
 <img alt="伝統的な手すり越しに広がる、淡いピンク色の桜景色 - 慶州・東宮と月池：新羅の黄金夜景に酔いしれる、春のロマンチック散歩 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/gyeongju-donggung-palace-wolji-pond-guide/khack_1776572761_13.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 東宮と月池(東宮と月池)への行き方とおすすめの時間帯
 
 この場所を100%楽しむためのキーワードは「日没30分前」です。慶州駅からバス、あるいは瞻星台から徒歩15分ほどで到着できるアクセスの良さも魅力。夕暮れ時の青みがかった空とライトアップが混ざり合う、いわゆるブルーアワーを狙って入場してください。
 
-#
+
 
 ## 慶州夜景散歩をより充実させるために
 
@@ -110,7 +110,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EB%8F%99%EA%B6%81%EA%B3%BC%20%EC%9B%94%EC%A7%80&hl=ja&t=&z=17&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EB%8F%99%EA%B6%81%EA%B3%BC%20%EC%9B%94%EC%A7%80&query_place_id=ChIJ9SUiOHBOZjUR_YnH8Lbjzt0" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EA%B2%BD%EC%A3%BC%20%EB%8F%99%EA%B6%81%EA%B3%BC%20%EC%9B%94%EC%A7%80" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

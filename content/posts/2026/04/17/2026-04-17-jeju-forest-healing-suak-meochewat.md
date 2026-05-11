@@ -32,12 +32,12 @@ author: "K-Life Hack"
 
 済州島で、夏の暑さを忘れてリラックスできる場所をお探しですか？そんな時におすすめしたいのが、豊かな自然に囲まれた森の道です。特に、子供連れのご家族や、膝に負担をかけたくない方にもぴったりな「水岳オルム(スアコルム)」と「モチェワッ森の道(モチェワッスムギル)」は、心身を癒すのに最適な選択肢です。
 
-#
+
 
 ## 快適な散策を約束する、水岳オルム都市林の魅力 ✨
 
 「水岳オルム」は、その名前に反して比較的なだらかなコースが多く、訪れる人々を優しく迎え入れてくれます。特に目を引くのは、美しい人工物が自然と調和している点です。入口近くには
-`水岳オルム都市林総合案内`の茶色い木製案内板が森の中に立っています。<img alt="A brown wooden information board displaying a map and the text '제주 수악오름 도시숲 종합 안내' within a forest setting. - 済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿" fetchpriority="high" height="564" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378798_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="752"/>
+`水岳オルム都市林総合案内`の茶色い木製案内板が森の中に立っています。<img alt="済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿" fetchpriority="high" height="564" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378798_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="752"/>
 
 森の奥へ進むと、
 真っ直ぐに伸びる木製のボードウォークの道は、鬱蒼とした森の中へと続いています。<img alt="A straight wooden boardwalk path extending into a dense forest with tall trees. - 済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378800_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
@@ -49,13 +49,13 @@ author: "K-Life Hack"
 これは子供たちが喜びそうな、遊び心のあるデザインですね。
 
 道標もユニークです。
-'セソジョンウォン(セソ庭園)'、'ファウォン(花園)'、'ヒャンギウォン(香気園)'へと方向を示す矢印が描かれた、漫画のキャラクターの木製案内標識が森の中に立っています。<img alt="A wooden signpost with a cartoon character, featuring directional arrows pointing to '세소정원', '화원', and '향기원' in a forest. - 済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378808_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+'セソジョンウォン(セソ庭園)'、'ファウォン(花園)'、'ヒャンギウォン(香気園)'へと方向を示す矢印が描かれた、漫画のキャラクターの木製案内標識が森の中に立っています。<img alt="済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378808_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 こうした可愛らしい案内板のおかげで、迷うことなく様々なエリアを楽しむことができます。森の中では、
 木の幹の textured な樹皮を小さな丸い緑色の植物が覆っています。<img alt="Small, round green plants covering the textured bark of a tree trunk in a forest. - 済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378810_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 そして、
 苔むした岩の表面に小さな丸い緑色の植物がしがみついており、岩の割れ目が見えます。<img alt="Small, round green plants clinging to a mossy rock surface with visible crevices. - 済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378811_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 豊かな自然の営みが、まるでアート作品のようです。頂上付近は少し急な坂道もありますが、往復1時間半ほどのコースなので、無理なく楽しめます。帰り道には、
-'水岳オルム'と'5.16道路'へと方向を示す矢印が描かれた、漫画のキャラクターの木製案内標識が森の中に立っています。<img alt="A wooden signpost with a cartoon character, featuring directional arrows pointing to '수악오름' and '5.16도로' in a forest. - 済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378814_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+'水岳オルム'と'5.16道路'へと方向を示す矢印が描かれた、漫画のキャラクターの木製案内標識が森の中に立っています。<img alt="済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378814_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 森が語りかける神秘、モチェワッ森の道 🌲
 
@@ -63,13 +63,13 @@ author: "K-Life Hack"
 
 特に、「ソロンコッギル」と呼ばれるコースは、6.3kmで約2時間。9歳のお子さんと同行した知人は、休憩込みで1時間46分で完歩したそうです。森の中には、牛や馬の放牧のための境界だった「ジャッソン(石垣)」が点在しており、済州島の歴史を感じさせます。また、初夏から秋にかけてはマダニが活発になるため、虫よけスプレーの利用を強くおすすめします。
 
-#
+
 
 ## 子供も大人も楽しめる、癒しの道筋 👨‍👩‍👧‍👦
 
 これらの森の道は、子供たちの好奇心を刺激し、大人には深い安らぎを与えてくれます。道の途中には、休憩用のベンチが定期的に設置されており、疲れたらいつでも一休みできます。水岳オルムの可愛らしい座席や、モチェワッ森の道の広々とした日陰のエリアは、ピクニックにも最適です。また、モチェワッ森の道では、運が良ければ冬の渡り鳥であるオシドリを見ることができるかもしれません。オシドリを見つけると幸運が訪れると言われているそうですよ。
 
-#
+
 
 ## 済州の自然が育む、生命の息吹 💚
 
@@ -77,7 +77,7 @@ author: "K-Life Hack"
 
 ## K編集長おすすめ！済州の奥深さを味わうためのヒント 💡
 
-#
+
 
 ## 水岳オルム都市林とモチェワッ森の道とは？
 
@@ -85,7 +85,7 @@ author: "K-Life Hack"
 
 **モチェワッ森の道(モチェワッスムギル)**: 西帰浦市南元邑に位置する、多様な樹木が茂る鬱蒼とした森の道です。日陰が多く、夏の暑い時期でも涼しく散策できることで知られています。いくつかのコースがあり、それぞれ異なる長さと景観を楽しめます。古くからの石垣「ジャッソン」も特徴の一つです。
 
-#
+
 
 ## アクセス方法とおすすめの時間帯
 
@@ -115,7 +115,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%84%9C%EA%B7%80%ED%8F%AC%EC%8B%9C%20%EB%82%A8%EC%9B%90%EC%9D%8D%20%ED%95%9C%EB%82%A8%EB%A6%AC%201622-3%20%EB%A8%B8%EC%B2%B4%EC%99%93%EC%88%B2%EA%B8%B8&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%84%9C%EA%B7%80%ED%8F%AC%EC%8B%9C%20%EB%82%A8%EC%9B%90%EC%9D%8D%20%ED%95%9C%EB%82%A8%EB%A6%AC%201622-3%20%EB%A8%B8%EC%B2%B4%EC%99%93%EC%88%B2%EA%B8%B8&query_place_id=ChIJo79cUsMADTURoR6D6-AbRAY" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EB%A8%B8%EC%B2%B4%EC%99%93%EC%88%B2%EA%B8%B8" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

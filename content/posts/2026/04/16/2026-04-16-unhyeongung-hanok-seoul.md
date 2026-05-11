@@ -55,13 +55,13 @@ author: "K-Life Hack"
 
 <img alt="Small wooden gate with a tiled roof framed by stone and brick walls - 麗しき「雲峴宮（ウニョングン）」で辿る、朝鮮王朝の残り香と春の静寂" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776341158_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 雲峴宮（ウニョングン）とは？行き方と見どころ
 
 ここは、1860年代に建てられた朝鮮王朝末期の重要な遺構です。高宗皇帝が王位に就く前まで過ごした場所として知られ、歴史ドラマのファンにとっても聖地のような存在です。入場料が無料でありながら、文化財としての価値が非常に高く、落ち着いて見学できるのが最大の魅力です。
 
-#
+
 
 ## おすすめの訪問時間帯と周辺スポット
 
@@ -83,7 +83,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%9A%B4%EB%8B%88%EB%8F%99%20114-10%20%EC%9A%B4%ED%98%84%EA%B6%81%20%EC%9A%B4%ED%98%84%EA%B6%81&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%9A%B4%EB%8B%88%EB%8F%99%20114-10%20%EC%9A%B4%ED%98%84%EA%B6%81%20%EC%9A%B4%ED%98%84%EA%B6%81&query_place_id=ChIJy_KLudyifDUR8R3cB_PyJsU" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%9A%B4%ED%98%84%EA%B6%81" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

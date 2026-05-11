@@ -27,7 +27,7 @@ author: "K-Life Hack"
 
 </div></blockquote>
 
-#
+
 
 ## 韓国茶の過去と未来が交差する、建築の美学
 
@@ -37,7 +37,7 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="alt:韓国茶博物館の威厳ある近代的な本館の外観 - 2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/boseong-korean-tea-museum-heritage-guide-2026/khack_1777020022_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:博物館の敷地内に静かに佇む、思索のための伝統的な韓屋パビリオン - 2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/boseong-korean-tea-museum-heritage-guide-2026/khack_1777020024_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-#
+
 
 ## 時代を超える「茶道具」の芸術性 ##
 
@@ -48,7 +48,7 @@ author: "K-Life Hack"
 <img alt="alt:編み込まれたマットの上に置かれた、エレガンスとシンプルさを体現する白磁の茶器セット - 2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/boseong-korean-tea-museum-heritage-guide-2026/khack_1777020026_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt="alt:朝霧に包まれた茶畑の幻想的な風景。宝城の丘に漂う神秘的な雰囲気 - 2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/boseong-korean-tea-museum-heritage-guide-2026/khack_1777020028_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 自ら五感を研ぎ澄ます「茶生活」の体験 ###
 
@@ -58,7 +58,7 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="alt:繊細な緑茶から力強い発酵茶まで、六大茶類を分かりやすく紹介する展示 - 2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/boseong-korean-tea-museum-heritage-guide-2026/khack_1777020032_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:伝統的な茶の保存技術を伝える、職人の手による素朴な月型の壺 - 2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/boseong-korean-tea-museum-heritage-guide-2026/khack_1777020034_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-#
+
 
 ## 展望台から眺める、緑の波濤 ###
 
@@ -69,7 +69,7 @@ author: "K-Life Hack"
 <img alt="alt:博物館の庭園に設置された、巨大なティーポットから花が溢れ出すユニークな彫刻 - 2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/boseong-korean-tea-museum-heritage-guide-2026/khack_1777020036_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <div class="psImg"><img alt="alt:世界の茶文化の多様性を伝える、エレガントなヨーロッパ様式のティー展示 - 2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/boseong-korean-tea-museum-heritage-guide-2026/khack_1777020039_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:シルクロードを通じた茶文化の伝播を辿る、光り輝く世界地図の展示 - 2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/boseong-korean-tea-museum-heritage-guide-2026/khack_1777020041_9.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-#
+
 
 ## 韓国茶博物館を深く楽しむためのガイド ###
 
@@ -91,13 +91,13 @@ author: "K-Life Hack"
 
 <div style="text-align:center;margin:45px 0 20px;"><a href="http://www.boseong.go.kr/tea" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div>
 
-#
+
 
 ## 韓国茶博物館への行き方 ###
 
 ソウルから宝城へは、KORAIL（韓国鉄道公社）を利用して宝城駅まで向かうのが一般的です。宝城駅からはタクシーで約10分から15分ほどで到着します。また、光州（クァンジュ）からバスを利用するルートも便利です。駐車場が完備されているため、レンタカーでのドライブ旅行にも最適なデスティネーションです。
 
-#
+
 
 ## 宝城の茶畑、どこで見るのがベスト？ ###
 

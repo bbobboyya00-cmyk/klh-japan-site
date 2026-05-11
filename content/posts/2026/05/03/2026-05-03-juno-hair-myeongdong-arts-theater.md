@@ -22,31 +22,31 @@ author: "K-Life Hack"
 
 ジュンオヘアー明洞芸術劇場店は、ソウルの文化とファッションの中心である明洞にその拠点を構えます。国内外からの訪問者で賑わうこの地は、ショッピング、美食、そして芸術が交錯するダイナミックな空間です。店舗は、明洞の活気と呼応しながらも、一歩足を踏み入れれば、静謐で洗練された異空間へと誘うのです。
 純白のタイル壁に鮮やかに際立つ真紅の「JUNO HAIR 芸術劇場店」のサインは、洗練された店内へと導く、視覚的なプロローグです。ここは、単なるヘアカットの場を超え、自己を慈しみ、新たな美意識を育むための特別な時間を提供します。
-<img alt="화이트 타일 벽에 선명하게 대비되는 레드 컬러의 'JUNO HAIR 예술극장점' 간판. 독자를 매장 내부로 안내하는 첫 번째 시각적 이정표." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795116_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="'JUNO HAIR ' .        ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795116_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 空間美学
 
 店内は、モダンかつミニマルなデザイン哲学が貫かれています。白を基調とした空間に、温もりのある木材と自然石が巧みに配され、静謐な調和を創出。顧客が心ゆくまで寛げるよう、その設計は細部に至るまで周到に計算されています。
 モダンでミニマルなインテリア空間には、円形のミラー、自然石、そして生命力溢れる緑の植物が調和し、静謐かつ品格ある雰囲気を醸成しています。アートギャラリーを思わせるこの空間で、顧客は日常の喧騒を忘れ、深い安らぎを得るでしょう。
-<img alt="모던하고 미니멀한 인테리어 속, 둥근 거울과 자연석, 그리고 푸른 식물이 조화롭게 어우러져 공간의 고즈넉한 품격을 더합니다." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795118_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=",   ,         ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795118_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 洗練された照明と全身鏡が配されたスタイリングスペース。そこでは、上質なチェアと整然と配置されたツールが、顧客に深い安らぎと揺るぎないプロフェッショナリズムを約束します。プライバシーに配慮した配置は、一人ひとりに特別なエクスペリエンスを享受させます。
-<img alt="세련된 조명과 전신 거울이 어우러진 헤어 스타일링 공간. 고급스러운 의자와 정돈된 도구들이 편안하면서도 전문적인 분위기를 자아냅니다." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795120_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=".        ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795120_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 壁面の円形照明に優美に照らされるヘアプロダクト群。柔らかな光が製品のテクスチャーを際立たせ、繊細に配されたオブジェが空間全体の感性を高めます。顧客は、自身の髪質や課題に最適な製品を、時間をかけて吟味できるでしょう。
-<img alt="벽면의 원형 조명 속에 진열된 헤어 제품들. 은은한 빛이 제품의 질감을 강조하며, 섬세하게 배치된 오브제들이 공간의 감도를 높." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795121_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=".     ,      ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795121_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## ディレクターKの提言：ヘアケアの真髄
 
 ジュンオヘアーでは、顧客一人ひとりの髪質とライフスタイルに合わせた、パーソナルなコンサルテーションを最重要視します。経験豊富なスタイリストが、顧客の潜在的な「理想のイメージ」を精緻に引き出し、最新のトレンドを融合させた最適なスタイルを提案するのです。
 木製トレイに供された、冷涼なアイスアメリカーノとオレンジジュース、そして繊細なスイーツ。顧客が快適に過ごせるよう、細やかな配慮が行き届いたサービスです。施術中のドリンクサービス一つにも、上質なホスピタリティが息づいています。
-<img alt="나무 트레이에 담긴 시원한 아이스 아메리카노와 오렌지 주스, 그리고 달콤한 간식. 고객의 편안한 대기 시간을 위한 세심한 서비스가 돋보." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795123_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=",   .        ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795123_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 穏やかな陽光が降り注ぐ、広々としたラウンジスペース。顧客はここで、次のスタイリングを待つ間、心ゆくまでリラックスし、ゆったりとした時を過ごします。日常の喧騒から解放され、心身ともに深いリフレッシュを享受する、貴重な瞬間となるでしょう。
-<img alt="햇살이 스며드는 넓고 아늑한 살롱의 대기 공간. 고객들이 편안하게 휴식을 취하며 다음 스타일링을 기다리는 여유로운 풍경." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795124_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=".         ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795124_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 卓越した技術と個別化されたサービス
 
 カット、パーマ、カラーリングはもとより、頭皮ケアやヘッドスパなど、髪と頭皮の健康を追求する多岐にわたるメニューが用意されています。特に、ダメージを極限まで抑制しつつ理想のスタイルを具現化する技術は、ディレクターKも高く評価する点です。スタイリストたちは、常に最新の技術と知識を習得し、顧客に最高のクオリティを提供すべく日々研鑽を重ねています。
 ジュンオヘアー明洞芸術劇場店が提示する、サービスごとの明確な料金体系。シャンプーからカット、パーマ、カラーに至るまで、多岐にわたる施術の価格情報が明示されています。この透明性こそが、顧客に揺るぎない信頼と安心感をもたらす所以です。
-<img alt="준오헤어 명동예술극장점의 서비스별 요금표. 샴푸부터 컷, 펌, 컬러 등 다양한 시술의 가격 정보를 명확하게 확인할 수 있습니다." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795126_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=".  , ,          ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795126_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 明洞芸術劇場店は、単に髪を整える場所ではありません。それは、自己を再発見し、内なる魅力を開花させるための特別なステージです。ディレクターKは、ここでの体験が、顧客の日々を豊かに彩る、唯一無二の時間となることを確信します。
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">

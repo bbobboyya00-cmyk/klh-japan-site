@@ -79,7 +79,7 @@ author: "K-Life Hack"
 </div></blockquote>
 <img alt="alt: イベント限定のギフトキット。繊細な白いリボンが結ばれたアクセサリー。 - 2026年最新 | 聖水洞「ムシンサ・ビューティーフェスタ」完全ガイド：K-Beautyの聖地を巡る" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/musinsa-beauty-festa-seongsu-guide/khack_1776938664_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## ムシンサ・ビューティーフェスタへの行き方 🗺️
 
@@ -87,7 +87,7 @@ author: "K-Life Hack"
 
 聖水洞のメインストリートである「演武場キル」沿いに位置しているため、周辺のカフェやセレクトショップと併せて観光するのにも最適な立地です。
 
-#
+
 
 ## 2026年度のチケット購入方法と注意点 🎫
 

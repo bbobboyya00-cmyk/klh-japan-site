@@ -26,7 +26,7 @@ author: "K-Life Hack"
 <p>家族と共に訪れるこの場所は、子供たちの純粋な好奇心を育み、大人たちには視覚的な癒しを与える理想的なサンクチュアリです。美しくライティングされた水槽は、まるで水中に浮かぶギャラリーのように、訪れる者の感性を優しく刺激します。細部までこだわり抜かれた空間デザインは、どこを切り取っても一枚の絵画のような美しさを放ちます。</p>
 <img alt="美しくライトアップされた水族館の展示で、天然石の造形の間を泳ぐ水生生物を興味深く観察するベビーカーの赤ちゃん - 2026年最新版｜ロッテワールド完全攻略ガイド：都心のファンタジー、その洗練された楽しみ方" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/jamsil-lotte-world-lifestyle-guide/khack_1777435422_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <p>質感豊かな石壁に沿って進む回廊には、海洋生物の息遣いを感じさせる小さな窓が点在しています。まるで深海探検家になったかのような没入感は、ここがソウルの中心であることを忘れさせてくれるはずです。一つ一つの展示に込められた物語を追いながら、ゆっくりと歩を進める贅沢を楽しんでください。</p>
-<img alt="水族館内の質感のある石壁に沿って、小さな窓から覗く海洋生物の生息地に興味を示すベビーカー의赤ちゃん - 2026年最新版｜ロッテワールド完全攻略ガイド：都心のファンタジー、その洗練された楽しみ方" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/jamsil-lotte-world-lifestyle-guide/khack_1777435425_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="2026年最新版｜ロッテワールド完全攻略ガイド：都心のファンタジー、その洗練された楽しみ方" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/jamsil-lotte-world-lifestyle-guide/khack_1777435425_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 期間限定の魔法、メープルランド・アドベンチャー
 

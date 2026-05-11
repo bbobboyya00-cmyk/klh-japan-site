@@ -62,7 +62,7 @@ author: "K-Life Hack"
 
 <img alt="alt:映画テーマの衣装とアイテムが展示されたガラス陳列棚。床には'IF YOU LOOK SO CHIC'の文字があり、洗練されたディスプレイです。 - K-Life Hack独占: 聖水洞『プラダを着た悪魔2』ポップアップで感じるハイエンドなソウル体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-devil-wears-prada-2-popup-showroom/khack_1776621874_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 参加型イベントと限定アイテムを見逃さないで！🎁
 
@@ -78,7 +78,7 @@ author: "K-Life Hack"
 
 特に注目したいのは、K-BeautyブランドJUNGSAEMMOOLとの限定コラボレーションアイテムです。映画の象徴的なレッドとシックなブラックを基調としたパッケージデザインは、まさにファッショニスタの心をくすぐる逸品です。クッションファンデーション、リップ、ミスト、クリームなど、日常使いできるコスメがラインナップされています。
 
-#
+
 
 ## 聖水洞ポップアップショールームへの行き方とおすすめの時間帯🚃
 

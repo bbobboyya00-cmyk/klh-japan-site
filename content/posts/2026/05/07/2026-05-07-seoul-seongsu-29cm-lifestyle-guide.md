@@ -31,7 +31,7 @@ author: "K-Life Hack"
 
 SNSで話題のバブルハンドルマグなど、遊び心満載のアイテムを実際に手に取れるのもオフラインならではの醍醐味。オンラインの画面越しでは分からなかった絶妙な質感や重みを確かめれば、運命の一品に出会えること間違いなしです（財布の紐が緩むので要注意！）。
 
-<img alt="スヌーピーポップアップ의 インテリア" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/07/seoul-seongsu-29cm-lifestyle-guide/khack_1778137449_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="スヌーピーポップアップ インテリア" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/07/seoul-seongsu-29cm-lifestyle-guide/khack_1778137449_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 時には人気キャラクターとのコラボで、モダンさと可愛さが同居する不思議な空間に様変わりすることも。洗練された家具とアートが調和したこの場所は、どこを切り取っても絵になる究極のフォトスポットです。
 

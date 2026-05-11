@@ -58,7 +58,7 @@ K-Life Hackのシニアディレクター、Kです。
 
 <img alt="alt: 素朴な室内の設定で、物思いにふけるキャラクターを捉えた情緒的なスチールカット - 呪術と権力の狂騒曲、韓国映画『神明』が暴く2026年の真実と聖地巡礼の記録" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/sin-myeong-korean-movie-occult-thriller-guide/khack_1776873942_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 呪術政治スリラー『神明』とは？
 
@@ -70,7 +70,7 @@ K-Life Hackのシニアディレクター、Kです。
 
 <img alt="alt: 物語に社会的背景と多様性を加える、公開キャンペーンシーンのストーリーテリング・スチール - 呪術と権力の狂騒曲、韓国映画『神明』が暴く2026年の真実と聖地巡礼の記録" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/sin-myeong-korean-movie-occult-thriller-guide/khack_1776873944_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## おすすめの視聴方法と、没入するためのポイント
 

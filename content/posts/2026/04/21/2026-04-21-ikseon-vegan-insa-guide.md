@@ -52,7 +52,7 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="レストランの優しい精神を象徴する、店内の植物と装飾用の石のクローズアップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739069_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="自然光の下で様々な鉢植えが並ぶ、静寂に包まれた中庭の庭園" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739081_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-#
+
 
 <div class="k-table-wrapper" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;">
 <table style="width: 100%; min-width: 500px; border-collapse: collapse; color: var(--themeC); text-align: left;">

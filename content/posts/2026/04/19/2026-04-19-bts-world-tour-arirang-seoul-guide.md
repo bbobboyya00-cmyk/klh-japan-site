@@ -49,7 +49,7 @@ author: "K-Life Hack"
 
 スタジアムの中に入ると、そこには想像を絶する光景が広がっていました。日が沈むにつれ、観客席を埋め尽くしたアミ밤（公式ペンライト）が無線制御によって一斉に光り輝き、まるで地上に降りた天の川のような絶景を作り出します。
 
-<img alt="数万個のアミ밤の光で埋め尽くされた、幻想的なスタジアムの観客席とステージの全景 - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603249_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603249_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt="ステージの上でリラックスしたカジュアルなツアー衣装を着用し、ファンに優しく挨拶するメンバーたちの姿 - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603248_10.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 公演が進むにつれ、メンバーたちのパフォーマンスはさらに熱を帯びていきます。特にアンコールで見せた、肩の力の抜けた自然体な姿は、ファンとの距離をより一層縮めてくれました。彼らがステージの端から端まで駆け巡り、一人一人の顔を見つめようとする姿に、長年の絆の深さを感じずにはいられません。
@@ -59,7 +59,7 @@ author: "K-Life Hack"
 今回のコンサートをより特別なものにしていたのは、細部までこだわり抜かれた公式グッズ（MD）の数々です。KINTEX Hall 6に設置された特設ショップには、早朝から整理券を求める長蛇の列ができていました。今回のデザインテーマは、深みのあるレッドと洗練されたグレーのコントラストです。
 
 <div class="psImg"><img alt="公式グッズであるグレーカラーのツアーフーディーを着用したマネキンのディスプレイ - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603229_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="ワールドツアー・アリランのロゴがパターンとして配された、ディープカラーの公式トートバッグのクローズアップ - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603232_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
-<div class="psImg"><img alt="アミ밤とショルダーバッグなどのアクセサリーを合わせた、ホワイトTシャツのマネキンコーディネート - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603235_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="会場に配置された公式MDのリストと購入方法が記載された大型の案内ボード - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603237_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
+<div class="psImg"><img alt="2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603235_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="会場に配置された公式MDのリストと購入方法が記載された大型の案内ボード - 2026年、BTSが再び刻む伝説。ソウルを揺らした「ARIRANG」ワールドツアー完全ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/bts-world-tour-arirang-seoul-guide/khack_1776603237_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
 特に、伝統的なパターンを取り入れたトートバッグや、シンプルながらも高級感のあるフーディーは、日常使いもできる高いデザイン性が話題となっています。これほどの大規模な人数を収容するため、会場内の動線管理も非常に緻密に計算されていました。
 
@@ -74,7 +74,7 @@ author: "K-Life Hack"
 
 公演の最後、輝くライトの下で肩を組む7人の後ろ姿を見つめながら、私たちは確信しました。彼らの物語は終わったのではなく、ここからまた新しい章が始まるのだと。2026年の春、ソウルで感じたこの高揚感は、これからもずっと私たちの心に残り続けるでしょう。
 
-#
+
 
 ## 行き方と訪問のヒント
 

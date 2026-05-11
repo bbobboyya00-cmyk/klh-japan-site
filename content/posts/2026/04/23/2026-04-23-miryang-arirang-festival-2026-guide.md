@@ -30,7 +30,7 @@ author: "K-Life Hack"
 
 <img alt="alt:密陽江のパノラマビュー、丘の中腹には歴史的な嶺南楼が曇り空の下に佇む。 - 2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918088_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 歴史と現代が織りなす感動の舞台：密陽江オデッセイ
 祝祭のハイライトの一つが、国内最大規模の実景ミュージカル「密陽江オデッセイ」です。密陽の象徴である嶺南楼を背景に、密陽江を舞台にして繰り広げられるこの公演は、臨津倭乱（文禄・慶長の役）を背景にした護国大叙事詩「師命、世へと行く」をテーマにしています。
@@ -41,7 +41,7 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="alt:密陽アリラン大祝祭のパフォーマンスを締めくくる、ステージ上空の夜空を彩る壮大な花火。 - 2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918090_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:夜のフェスティバルステージの広角ショット。複雑な照明装置が水面にスポットライトを反射させ、ドラマチックな雰囲気を醸し出している。 - 2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918092_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-#
+
 
 ## 家族で楽しむ体験プログラムと地域の味覚
 密陽アリラン大祝祭は、観るだけでなく、実際に体験して楽しむことができるプログラムが充実している点も魅力です。祭りの期間中、午前10時から午後8時まで開館する「アリランテーマ館」では、アリランの歴史や古証資料が展示されており、全国各地のアリランを聞くことができる清音空間も設けられています。
@@ -55,7 +55,7 @@ author: "K-Life Hack"
 数年前の祝祭で好評を博した「車のない通り『楽しい大通り』」のような都市型街路祭は、もし今年も開催されれば、夜のイベントとして見逃せないでしょう。活気あるストリートフードゾーンでは、若手シェフたちが腕を振るい、ワッフル、トッポッキ、ハンドドリップコーヒー、カップビールなど、多様なグルメが楽しめます。地元アーティストによるハンドメイド作品の展示販売も、密陽の新しい魅力を発見できる素敵な機会です。
 
 <div class="psImg"><img alt="alt:活気に満ちた紫色のLEDスクリーンが花のパターンを表示する大規模なステージでK-POPアイドルグループがパフォーマンスを行っている。 - 2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918094_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:「cocoroma」の看板があるテントを含め、様々なベンダーテントが並び、工芸品を販売し、顧客と交流する賑やかな昼間の市場風景。 - 2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918096_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
-<div class="psImg"><img alt="alt:「데일리공방 (Daily Workshop)」のバナーが掲げられたテントの下の活気ある市場の屋台。様々な手作り品や陶器が展示されている。 - 2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918098_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:祭りの会場の華やかなテントで、カラフルな伝統的な韓国衣装を身につけたパフォーマーたちが子供たちとポーズをとっている。 - 2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918100_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
+<div class="psImg"><img alt="2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918098_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:祭りの会場の華やかなテントで、カラフルな伝統的な韓国衣装を身につけたパフォーマーたちが子供たちとポーズをとっている。 - 2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918100_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
 ## 祭りを彩るその他の見どころと周辺情報 🌸
 祝祭の舞台となる「嶺南楼」は、朝鮮時代の三大楼閣の一つであり、その壮麗な美しさは訪れる人々を魅了します。楼閣に上がれば、八作屋根の下に広がる密陽江の絶景が一幅の絵画のように目に飛び込んできます。歴史の息吹を感じながら、ゆったりと流れる時間の中で美しい風景を堪能することは、この祝祭ならではの贅沢な体験と言えるでしょう。
@@ -64,7 +64,7 @@ author: "K-Life Hack"
 
 <img alt="alt:祭りの賑やかな夜の街並み。ストリングライトとバナーで飾られ、「立ち入り禁止」の赤い標識と大勢の人々が見える。 - 2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918102_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 密陽アリラン大祝祭への行き方
 密陽アリラン大祝祭は、慶尚南道密陽市の中心部、嶺南楼と密陽江一帯で開催されます。最寄りのKORAIL密陽駅からは、無料シャトルバスが運行されるため、KTXを利用してソウルや釜山からアクセスするのが最も便利です。
@@ -73,7 +73,7 @@ author: "K-Life Hack"
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 
-#
+
 
 - **イベント期間**: 2026年5月7日（木）～ 5月10日（日）
 - **主要会場**: 嶺南楼、密陽江一帯、南川江辺路、内一洞一帯

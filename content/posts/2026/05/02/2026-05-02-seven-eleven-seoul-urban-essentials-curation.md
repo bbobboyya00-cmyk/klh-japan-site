@@ -45,7 +45,7 @@ author: "K-Life Hack"
 
 特に、ソウルのランドマークであるロッテワールドタワー近辺のフラッグシップ店舗は、その圧倒的な建築美で訪れる者を魅了する。超高層ビルの洗練された空気感と調和した店舗デザインは、プレミアムな都市生活の象徴だ。
 
-<img alt="韓国の夏の儀式ともいえるパウチ飲料が整然と並ぶ、アイスカフェ専用의ステーション。" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/seven-eleven-seoul-urban-essentials-curation/khack_1777684056_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="韓国の夏の儀式ともいえるパウチ飲料が整然と並ぶ、アイスカフェ専用ステーション。" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/seven-eleven-seoul-urban-essentials-curation/khack_1777684056_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 韓国の夏には欠かせないパウチ飲料のコーナーも、ここでは一つの作品のように美しく整列する。色鮮やかなドリンクが並ぶ様子は、視覚的にも涼やかで、旅の疲れを癒しとなるだろう。
 

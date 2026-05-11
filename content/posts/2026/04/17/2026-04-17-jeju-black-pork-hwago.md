@@ -63,13 +63,13 @@ author: "K-Life Hack"
 
 さらに、白菜のムグンジ（熟成キムチ）やシャキシャキとした食感の玉ねぎのピクルスが、口の中をさっぱりとリセットしてくれます。濃厚な味わいの黒豚と、酸味の効いたサイドメニューのバランスが実に見事です。最後は、長時間煮込まれた濃厚なキムチチゲで締めくくるのが「ファゴ流」のスタイル。お腹はいっぱいのはずなのに、最後の一口まで止まらない美味しさでした。
 
-#
+
 
 ## 済州島・ファゴ(Hwago)への行き方 ✨
 
 西帰浦の中心部に位置し、主要なホテルや観光地からのアクセスが非常に便利です。済州空港からはリムジンバスで「西帰浦新市街地」方面へ向かい、タクシーに乗り換えれば数分で到着します。レンタカーを利用する場合は、店舗からわずか20メートルほどの場所に広い専用駐車場があるため、駐車のストレスもありません。有名人もお忍びで訪れる人気店ですので、特に週末のディナータイムは事前予約をすることをお勧めします。
 
-#
+
 
 ## おすすめの訪問時間帯 ✨
 
@@ -89,7 +89,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%84%9C%EA%B7%80%ED%8F%AC%EC%8B%9C%20%EA%B0%95%EC%A0%95%EB%8F%99%20167-6%201%EC%B8%B5%20%ED%99%94%EA%B3%A0%20%ED%9D%91%EB%8F%BC%EC%A7%80%20%EC%8B%A0%EC%8B%9C%EA%B0%80%EC%A7%80%EC%A0%90&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%84%9C%EA%B7%80%ED%8F%AC%EC%8B%9C%20%EA%B0%95%EC%A0%95%EB%8F%99%20167-6%201%EC%B8%B5%20%ED%99%94%EA%B3%A0%20%ED%9D%91%EB%8F%BC%EC%A7%80%20%EC%8B%A0%EC%8B%9C%EA%B0%80%EC%A7%80%EC%A0%90&query_place_id=ChIJ9Rnhz9xRDDURhWI_IbbK05c" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%ED%99%94%EA%B3%A0%20%ED%9D%91%EB%8F%BC%EC%A7%80%20%EC%8B%A0%EC%8B%9C%EA%B0%80%EC%A7%80%EC%A0%90" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

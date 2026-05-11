@@ -61,13 +61,13 @@ author: "K-Life Hack"
 
 一方で、3階には子供たちが喜ぶテント席が用意されており、家族連れでも気兼ねなく楽しめる配慮がなされています。まるでキャンプに来たかのようなワクワク感を楽しみながら、美味しいパンを頬張る時間は、かけがえのない家族の思い出となるでしょう。
 
-#
+
 
 ## エウォルパンゴンジャンへの行き方
 
 済州国際空港からは車（レンタカーやタクシー）で約40分ほどの距離にあります。クァクチ（郭支）海水浴場から徒歩圏内ということもあり、海辺の散策と合わせて立ち寄るのがおすすめです。専用の広い駐車場も完備されているため、ドライブの途中に気軽に寄れるのも嬉しいポイントです。
 
-#
+
 
 ## おすすめの訪問時間帯と過ごし方
 
@@ -89,7 +89,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%95%A0%EC%9B%94%EB%B9%B5%EA%B3%B5%EC%9E%A5%20%EC%95%A4%20%EC%B9%B4%ED%8E%98&hl=ja&t=&z=17&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%95%A0%EC%9B%94%EB%B9%B5%EA%B3%B5%EC%9E%A5%20%EC%95%A4%20%EC%B9%B4%ED%8E%98&query_place_id=ChIJQVYgjyb1DDURVgkVutR1xDs" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%A0%9C%EC%A3%BC%20%EC%95%A0%EC%9B%94%EB%B9%B5%EA%B3%B5%EC%9E%A5%20%EC%95%A4%20%EC%B9%B4%ED%8E%98" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

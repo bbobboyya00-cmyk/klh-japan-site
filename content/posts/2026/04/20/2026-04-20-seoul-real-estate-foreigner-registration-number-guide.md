@@ -52,7 +52,7 @@ author: "K-Life Hack"
 
 外国人不動産登記用登録番号の初回発給申請は、ソウルの特定の出入国・外国人庁でのみ可能です。具体的には、『ソウル出入国・外国人庁（木洞）』または『ソウル出入国・外国人庁 世宗路出張所』のいずれかとなります。私は皆様に、アクセスが便利な『世宗路出張所』をお勧めします。
 
-#
+
 
 ## アクセス方法
 
@@ -63,7 +63,7 @@ author: "K-Life Hack"
 
 <img alt="alt - ソウルでの不動産購入を成功させる：外国人不動産登記用登録番号ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-real-estate-foreigner-registration-number-guide/khack_1776616172_10.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>法務部ソウル出入国・外国人庁世宗路出張所であることを示す実際の案内板です。明確な情報伝達に適しています。
 
-#
+
 
 ## おすすめの時間帯
 
@@ -75,7 +75,7 @@ author: "K-Life Hack"
 
 申請はご本人が直接訪問する方法と、代理人を通じて申請する方法の二通りがあります。特に海外在住の方は代理人申請が一般的です。ここでは、それぞれのケースで必要となる書類と、特に注意すべき点を詳しく解説します。
 
-#
+
 
 ## 本人申請の場合
 
@@ -85,7 +85,7 @@ author: "K-Life Hack"
 -   申請書（窓口で記入可能）
 -   手数料：1,000ウォン
 
-#
+
 
 ## 代理人申請の場合
 
@@ -99,7 +99,7 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="alt - ソウルでの不動産購入を成功させる：外国人不動産登記用登録番号ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-real-estate-foreigner-registration-number-guide/khack_1776616162_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt - ソウルでの不動産購入を成功させる：外国人不動産登記用登録番号ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-real-estate-foreigner-registration-number-guide/khack_1776616183_15.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div><p>アポスティーユおよび外国人不動産登記用登録番号関連書類が並べられた様子。必要な書類の種類を視覚的に示します。</p><p>外国人不動産登記用登録番号発給申請書書類のきれいな平面配置写真です。</p>
 
-#
+
 
 ## 重要：署名と公証・アポスティーユについて
 
@@ -107,14 +107,14 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="alt - ソウルでの不動産購入を成功させる：外国人不動産登記用登録番号ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-real-estate-foreigner-registration-number-guide/khack_1776616163_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt - ソウルでの不動産購入を成功させる：外国人不動産登記用登録番号ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/seoul-real-estate-foreigner-registration-number-guide/khack_1776616181_14.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div><p>外国人不動産登記用登録番号登録証明書2枚が並べられたきれいな平面配置写真です。</p><p>外国人不動産登記用登録番号登録証明書書類のきれいな平面配置写真です。</p>
 
-#
+
 
 ## 発給にかかる時間と費用
 
 -   **処理期間**: 書類に不備がなければ、ほとんどの場合、当日に即時発給されます。通常、3時間以内とされていますが、混雑状況や審査内容によってはそれ以上かかることもあります。
 -   **手数料**: 1件につき1,000ウォンです。
 
-#
+
 
 ## 必要書類一覧（代理人申請の場合）
 

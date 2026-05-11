@@ -23,7 +23,7 @@ author: "K-Life Hack"
 
 特に「ヨーロピアンアドベンチャー」内のフォーシーズンズガーデンは、季節ごとに異なる美しい花々が咲き誇り、訪れる者を魅了する。春にはチューリップ、夏にはバラ、秋には菊など、色彩豊かな花々が園内を彩り、まるで絵画のような景観を創出する。ディレクターKは、この場所で過ごす時間が、慌ただしい日常から解き放たれる至福の瞬間だと確信している。
 
-<img alt="네덜란드 풍의 풍차가 어우러진 포시즌스 가든의 튤립 물결. 다채로운 색감의 꽃들이 방문객을 맞이하는 에버랜드의 상징적인 풍경." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/everland-yongin-premium-escape/khack_1777748680_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=".        ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/everland-yongin-premium-escape/khack_1777748680_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 快適な一日を過ごすためのスマート準備術
 
@@ -31,7 +31,7 @@ author: "K-Life Hack"
 
 日差し対策として帽子や日傘は必須だ。また、スマートな入園には、公式アプリの活用が欠かせない。チケットの事前購入はもちろん、パーク内の情報やアトラクションの待ち時間もリアルタイムで確認でき、計画的な行動を強力にサポートする。
 
-<img alt="동화 속 마을 같은 이국적인 건물들과 화려한 꽃 장식이 조화를 이루며, 익명의 방문객들이 여유롭게 산책하는 정원의 풍경을 담아 공간의 매력을 더합니다." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/everland-yongin-premium-escape/khack_1777748682_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=",          ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/everland-yongin-premium-escape/khack_1777748682_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 絶景とスリル、大人を魅了するエバーランドの真髄
 
@@ -39,7 +39,7 @@ author: "K-Life Hack"
 
 また、ズートピアゾーンでは、サファリワールドやロストバレーで動物たちと間近に触れ合える貴重な体験ができる。特に「ロストバレー」は、水陸両用車に乗ってキリンやゾウなどの動物たちを観察できる、エバーランドならではの特別なプログラムだ。春には満開の桜が園内を覆い、観覧車とのコントラストが幻想的な雰囲気を醸成する。
 
-<img alt="봄의 절정을 알리는 벚꽃이 만개한 에버랜드의 파노라마 전경. 하늘을 가득 메운 벚꽃과 관람차가 어우러져 환상적인 분위기를 연출합니다." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/everland-yongin-premium-escape/khack_1777748685_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=".         ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/everland-yongin-premium-escape/khack_1777748685_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## ディレクターKが提案する賢いパーク利用法
 
@@ -47,7 +47,7 @@ author: "K-Life Hack"
 
 サファリワールドやロストバレーは、午前中に訪れることをディレクターKは推奨する。また、秋には紅葉が園内を美しく彩り、Tエクスプレスからの眺めは格別だ。季節ごとの景色を楽しみながら、アクティブな体験を満喫できるのがエバーランドの醍醐味である。
 
-<img alt="가을 단풍으로 물든 숲을 배경으로, 짜릿한 스릴을 선사하는 T익스프레스 롤러코스터가 어우러진 에버랜드의 풍경. 계절의 변화와 활동적인 체험을 동시에 보여줍니다." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/everland-yongin-premium-escape/khack_1777748687_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=",    T    .      ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/everland-yongin-premium-escape/khack_1777748687_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 龍仁エバーランドへのアクセスと基本情報
 
@@ -55,7 +55,7 @@ author: "K-Life Hack"
 
 駐車場は複数あるが、正門に近い1A、1B駐車場はシャトルバスの乗り場にも近く便利だ。到着が遅くなると満車になる可能性もあるため、早めの到着が推奨される。公式アプリで駐車場の満車状況を確認し、最適な駐車場所を選ぶべきだ。
 
-<img alt="넓게 펼쳐진 정원 곳곳을 거니는 방문객들로 활기 넘치는 에버랜드의 주말 풍경, 다양한 색상의 꽃들이 공간감을 더하며 체험의 순간을 포착합니다." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/everland-yongin-premium-escape/khack_1777748688_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt=",        ." decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/everland-yongin-premium-escape/khack_1777748688_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">訪問ガイド (Tip)</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: 京畿道龍仁市処仁区蒲谷邑エバーランド路199</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業時間</b>: 日によって異なる。公式サイトを確認のこと。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>アクセス</b>: エバーライン「エバーランド(愛宝楽園)駅」下車後、シャトルバス利用。またはシャトルバス、自家用車利用。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>駐車場</b>: 1A, 1B駐車場は有料、無料駐車場からのシャトルバスも運行。公式アプリで満車状況を確認。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>公式予約</b>: 公式サイトでチケットの事前購入が可能。</li></ul>
 </div></blockquote>

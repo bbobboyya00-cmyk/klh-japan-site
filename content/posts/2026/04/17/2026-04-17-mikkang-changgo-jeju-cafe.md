@@ -59,7 +59,7 @@ author: "K-Life Hack"
 
 こちらのおすすめは、済州名物の太刀魚を贅沢に使った「太刀魚の蒲焼丼」。ふっくらと焼き上げられた身に、甘辛いタレが絡み、ご飯が進む一品です。地元の人々にも愛される温かな家庭の味は、旅の思い出にさらなる彩りを添えてくれます。愛犬と一緒に旅をしている方にとっても、ペット同伴可能な貴重なレストランとして重宝するはずです。
 
-#
+
 
 ## #
 
@@ -67,7 +67,7 @@ author: "K-Life Hack"
 
 済州国際空港からレンタカー、またはタクシーを利用するのが最もスムーズです。約20分ほどで到着します。人気店のため、週末や午後のティータイムには席が埋まってしまうことも。おすすめは、オープンの11時に合わせた「オープンラン」です。午前中の清々しい空気の中で、庭園を独り占めする贅沢を楽しんでください。
 
-#
+
 
 ## #
 
@@ -89,7 +89,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%95%A0%EC%9B%94%EC%9D%8D%20%EA%B4%91%EB%A0%B9%EB%A6%AC%2019-2%20%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0%20%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%95%A0%EC%9B%94%EC%9D%8D%20%EA%B4%91%EB%A0%B9%EB%A6%AC%2019-2%20%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0%20%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0&query_place_id=ChIJG4VRlJP7DDURA_qjiKB_rpQ" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

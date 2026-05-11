@@ -30,7 +30,7 @@ author: "K-Life Hack"
 
 かつては米問屋や台所用品店が並んでいた新堂洞(シンダンドン)。今はそのレトロな景観を活かしたギャラリーやカフェが点在し、若者たちの間では『ヒップダンドン』と呼ばれ親しまれています。夜の帳が下りる頃、路地の角でふと目を引くのが、温かな光を放つ黄色い看板です。
 
-<img alt="A glowing yellow square signboard with the text 표주 - 2026年ソウル・新堂洞の最旬スポット。伝統酒ソムリエが贈る至福の韓食ダイニング『ピョジュ(表酒)』へ。" fetchpriority="high" height="1004" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776238263_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="752"/>
+<img alt="2026年ソウル・新堂洞の最旬スポット。伝統酒ソムリエが贈る至福の韓食ダイニング『ピョジュ(表酒)』へ。" fetchpriority="high" height="1004" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776238263_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="752"/>
 
 この小さな正方形の看板が、本日ご紹介する韓食ダイニング『ピョジュ(表酒)』の目印。店名は、伝統的なお酒を酌み交わす際に使われる『ひょうたんの柄杓』を意味します。その名の通り、ここでは韓国の伝統酒を現代的なスタイルで楽しむことができます。
 
@@ -66,7 +66,7 @@ author: "K-Life Hack"
 
 お洒落なスツールに置かれたメニューや、さりげなく飾られたオブジェ。どこを切り取っても絵になる光景は、カメラを向けずにはいられません。実際、新堂洞で働くクリエイティブな職種の方々も、一日の終わりにこの空間で静かに伝統酒を愉しんでいる姿をよく見かけます。
 
-#
+
 
 ## 訪れる前に知っておきたい！楽しみ方のコツ ✨
 
@@ -79,7 +79,7 @@ author: "K-Life Hack"
 **3. お酒の持ち込み（コルキジ）について**
 韓国酒に限り、持ち込みが可能です。蒸留酒は3万ウォン、濁酒や清酒は2万ウォンの手数料がかかりますが、お気に入りの一本がある場合は利用してみるのも手です。
 
-#
+
 
 ## アクセスと営業時間について 🚩
 

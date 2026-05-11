@@ -47,7 +47,7 @@ author: "K-Life Hack"
 
 岩壁に彫られた仏像は、慈愛に満ちた表情で東海を見守っています。9世紀の統一新羅時代の特徴である、力強くも繊細な彫刻美は見る者を圧倒します。周囲のタフォニ地形（風化によってできた蜂の巣状の穴）が、この仏像の神秘性をさらに引き立てており、自然と信仰が融合した類まれなる風景を作り出しています。
 
-#
+
 
 ## 磨崖如来坐像へのアクセスとおすすめの時間帯
 
@@ -63,7 +63,7 @@ author: "K-Life Hack"
 
 境内には、禅武道のダイナミックなポーズをとった像が点在しており、修行の厳しさと美しさを物語っています。現在、毎週水曜日から日曜日まで（月・火は休演）、午後3時から境内の特設舞台で演武公演が行われており、誰でも無料で見学することができます。研ぎ澄まされた動きと力強い気迫は、観る者の心に深い響きを与えます。
 
-#
+
 
 ## 禅武道公演の基本情報
 - **開催時間**: 毎週水曜日〜日曜日 午後3時（1日1回）
@@ -81,10 +81,10 @@ author: "K-Life Hack"
 
 外国人参加者が非常に多いため、英語での案内も充実しており、初めての方でも安心して参加できるのが骨窟寺の魅力です。デジタルデトックスを行い、自然の音に耳を澄ませる体験は、旅の最高の思い出になるでしょう。
 
-#
+
 
 ## 骨窟寺への行き方（アクセス）
-慶州市内からは車で約30分、仏国寺（プルグッサ）からは約20分ほどです。公共交通機関を利用する場合は、慶州駅から700番バス、またはシ외バスターミナルから100番・150番バスに乗り、「骨窟寺・祇林寺入口」で下車後、徒歩約15〜20分です。上り坂が続くため、タクシーの利用も検討してみてください。
+慶州市内からは車で約30分、仏国寺（プルグッサ）からは約20分ほどです。公共交通機関を利用する場合は、慶州駅から700番バス、または市外バスターミナルから100番・150番バスに乗り、「骨窟寺・祇林寺入口」で下車後、徒歩約15〜20分です。上り坂が続くため、タクシーの利用も検討してみてください。
 
 ---
 
@@ -100,7 +100,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EA%B2%BD%EC%A3%BC%EC%8B%9C%20%EB%AC%B8%EB%AC%B4%EB%8C%80%EC%99%95%EB%A9%B4%20%EC%95%88%EB%8F%99%EB%A6%AC%20%EC%82%B0304%20%EA%B3%A8%EA%B5%B4%EC%82%AC%20%EA%B3%A8%EA%B5%B4%EC%82%AC&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EA%B2%BD%EC%A3%BC%EC%8B%9C%20%EB%AC%B8%EB%AC%B4%EB%8C%80%EC%99%95%EB%A9%B4%20%EC%95%88%EB%8F%99%EB%A6%AC%20%EC%82%B0304%20%EA%B3%A8%EA%B5%B4%EC%82%AC%20%EA%B3%A8%EA%B5%B4%EC%82%AC&query_place_id=ChIJVRr9rQeuZzURKYR62hhb_7g" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EA%B3%A8%EA%B5%B4%EC%82%AC" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

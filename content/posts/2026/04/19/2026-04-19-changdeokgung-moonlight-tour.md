@@ -38,7 +38,7 @@ author: "K-Life Hack"
 <img alt="月明かり紀行のときめきを増すロゴ入りの記念品バッグ - 【2026年版】昌徳宮 月明かり紀行：ソウルの夜を彩る幻想的な王宮の旅 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/changdeokgung-moonlight-tour/khack_1776555719_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <p>月明かり紀行のときめきを増すロゴ入りの記念品バッグ</p>
 
-#
+
 
 ## 昌徳宮月明かり紀行とは？
 
@@ -48,12 +48,12 @@ author: "K-Life Hack"
 
 ツアーは通常、敦化門（トンファムン）ではなく、西側の琴湖門（クモムン）から始まります。入口で手渡される伝統的な青紗提灯（チョンサチョロン）を手にすると、まるで朝鮮時代にタイムスリップしたかのような気分に包まれます。一つ一つ丁寧に説明をしてくれる専門ガイドの声が、イヤホンを通して耳に心地よく響きます。
 
-<img alt="青紗提灯の明かりの下、古宮의 夜を探索する観覧客たちの臨場感あふれる情景 - 【2026年版】昌徳宮 月明かり紀行：ソウルの夜を彩る幻想的な王宮の旅 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/changdeokgung-moonlight-tour/khack_1776555734_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="【2026年版】昌徳宮 月明かり紀行：ソウルの夜を彩る幻想的な王宮の旅 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/changdeokgung-moonlight-tour/khack_1776555734_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <p>青紗提灯의 明かりの下、古宮의 夜を探索する観覧客たちの臨場感あふれる情景</p>
 
 金川橋（クムチョンギョ）を渡り、最初に出迎えてくれるのは、昌徳宮の正殿である仁政殿（インジョンジョン）です。柔らかな夜間照明に照らされ、黄金色に輝くその威容は, 昼間とは全く異なる神秘적인 美しさを放ちます。歴代の王たちが即位式や重要な儀式を行った場所であり、その荘厳な雰囲気には誰もが息をのむことでしょう。
 
-<img alt="柔らかな夜間照明に照らされ、黄金色に輝く仁政殿の威容 - 【2026年版】昌徳宮 月明かり紀行：ソウルの夜を彩る幻想적인 王宮の旅 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/changdeokgung-moonlight-tour/khack_1776555727_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="【2026年版】昌徳宮 月明かり紀行：ソウルの夜を彩る幻想的な王宮の旅 ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/changdeokgung-moonlight-tour/khack_1776555727_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <p>柔らかな夜間照明に照らされ、黄金色に輝く仁政殿의 威容</p>
 
 さらに進むと、熙政堂（ヒジョンタン）や楽善斎（ナクソンジェ）といった王の執務室や生活空間が見えてきます。特に楽善斎は、派手な装飾を抑えながらも優雅で洗練された美しさが際立っています。夜の闇の中に、韓紙の窓から温かい光が漏れ出す様は、当時の王族의 暮らしをそっと覗き見ているかのような気分にさせられます。
@@ -93,7 +93,7 @@ author: "K-Life Hack"
 
 座席には座り心地の良いクッションが用意され、ゆったりと舞台を鑑賞できます。この時間を通じて、朝鮮王室の優雅な宴席に招かれたような、非日常的な気分を味わえるでしょう。すべてのプログラムが終わり、名残惜しくも琴湖門へと戻る後苑の森道は、月明かりと提灯の光に照らされ、深い余韻を残します。
 
-#
+
 
 ## 昌徳宮月明かり紀行：2026年開催詳細と予約のヒント
 
@@ -116,7 +116,7 @@ author: "K-Life Hack"
 
 専用駐車場はありませんので、公共交通機関の利用をお勧めします。近くの現代桂洞社屋駐車場や鍾路消防署横のコインパーキングも利用可能ですが、限りがあるためご注意ください。
 
-#
+
 
 ## 知っておきたい観覧のヒントと注意点
 
@@ -126,7 +126,7 @@ author: "K-Life Hack"
 - **写真撮影について**: フラッシュや三脚の使用は禁止されています。他の観覧者の迷惑にならないよう、マナーを守って撮影を楽しみましょう。
 - **飲食制限**: プログラム中に提供される茶菓を除き、宮殿内への飲食物の持ち込みは基本的に禁止されています。
 
-#
+
 
 ## 終わりに
 
@@ -149,7 +149,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B1%EB%B3%84%EC%8B%9C%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%9C%A8%EA%B3%A1%EB%A1%9C%2099&hl=ja&t=&z=17&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. より正確な位置確認のために<b>Naverマップ</b>の使用を推奨します。</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために<b>Naverマップ</b>の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%ED%8A%B1%EB%B3%84%EC%8B%9C%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%9C%A8%EA%B3%A1%EB%A1%9C%2099" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%B0%BD%EB%8D%95%EA%B6%81%20%EB%8B%AC%EB%B9%9B%EA%B8%B0%ED%96%89" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

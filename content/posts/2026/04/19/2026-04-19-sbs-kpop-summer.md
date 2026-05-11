@@ -35,7 +35,7 @@ author: "K-Life Hack"
 
 <img alt="2026 SBS歌謡大典 Summerのテーマを象徴するメインタイトルグラフィック - 2026 SBS歌謡大典 Summer：K-POPの熱気を体感する夏の祭典" fetchpriority="high" height="808" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/sbs-kpop-summer/khack_1776573658_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
 
-#
+
 
 ## 歴代級のK-POPフェスティバル、その魅力とは？
 
@@ -45,7 +45,7 @@ author: "K-Life Hack"
 
 <img alt="夏祭りの華やかさを最大限に引き出した公式メイン広報ポスター - 2026 SBS歌謡大典 Summer：K-POPの熱気を体感する夏の祭典" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/sbs-kpop-summer/khack_1776573666_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 2026年、今年の「Summer」はここが違う！
 
@@ -55,7 +55,7 @@ author: "K-Life Hack"
 
 <img alt="壮大な会場のスケールと現場の雰囲気を抽象的に表現した高画質アートワーク - 2026 SBS歌謡大典 Summer：K-POPの熱気を体感する夏の祭典" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/sbs-kpop-summer/khack_1776573663_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 期待高まるラインナップとスペシャルステージ
 
@@ -70,13 +70,13 @@ author: "K-Life Hack"
 
 <img alt="K-POPフェスティバルのアイデンティティを視覚化した感覚的なキャラクター型ステージグラフィック - 2026 SBS歌謡大典 Summer：K-POPの熱気を体感する夏の祭典" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/sbs-kpop-summer/khack_1776573659_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## イベント会場へのアクセス
 
 KINTEXはソウル近郊に位置しており、ソウル市内からも比較的アクセスしやすい場所にあります。公共交通機関を利用して、イベント会場までスムーズに移動することができます。
 
-#
+
 
 ## イベント会場への行き方とは？
 

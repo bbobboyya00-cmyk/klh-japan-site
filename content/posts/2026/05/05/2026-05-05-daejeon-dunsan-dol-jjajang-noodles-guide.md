@@ -51,7 +51,7 @@ author: "K-Life Hack"
 
 公式メニュー表をチェックすると、石焼シリーズ以外にも魅力的な料理が並んでいます。
 
-<img alt="公式メニュー의 가격표" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/daejeon-dunsan-dol-jjajang-noodles-guide/khack_1777975531_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="公式メニュー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/daejeon-dunsan-dol-jjajang-noodles-guide/khack_1777975531_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 サクサクのタンスユクや季節限定のメニューも充実していて、どれを頼むか迷ってしまいますね。このボリュームとクオリティを考えれば、価格設定も非常に良心的だと言えます。
 

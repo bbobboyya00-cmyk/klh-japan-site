@@ -27,7 +27,7 @@ author: "K-Life Hack"
 
 ## 五感で楽しむスナリの世界観と体験
 
-<img alt="피クセルアートを背景にしたアンバサダー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/soonhari-jin-island-seongsu-popup/khack_1777953935_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="クセルアートを背景にしたアンバサダー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/soonhari-jin-island-seongsu-popup/khack_1777953935_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 カラフルな風船とピクセルアートに囲まれたエリアは、歩いているだけで元気をもらえる感じです。ゼロシュガーのヘルシーなイメージと、ポップなデザインが意外なほどマッチしています。ここが一番のフォトスポットかもしれません 📸
 

@@ -25,7 +25,7 @@ author: "K-Life Hack"
 
 ## 黄色の看板が目印！路地裏で見つけた「餅」の聖地 ✨
 
-<img alt="Exterior of '모찌방앗간 MOCHI DESSERT' shop with a yellow signboard and striped awning. - 延南洞の新名物！モッチパンアッカンの100%グルテンフリー・もちもち鯛焼きガイド" fetchpriority="high" height="528" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776216556_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="484"/>
+<img alt="延南洞の新名物！モッチパンアッカンの100%グルテンフリー・もちもち鯛焼きガイド" fetchpriority="high" height="528" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776216556_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="484"/>
 
 延南洞のメインストリートから少し入った場所に、そのお店はありました。黄色い看板とストライプの日よけが目を引く「モッチパンアッカン MOCHI DESSERT」の外観は、まるでおもちゃ箱のような可愛らしさです。
 
@@ -45,7 +45,7 @@ author: "K-Life Hack"
 
 ## 目の前で焼き上がる、ライブ感あふれるキッチン 📸
 
-#
+
 
 ## 職人の手仕事が見える安心感
 
@@ -55,7 +55,7 @@ author: "K-Life Hack"
 
 ここで重要なのが「ブールノワゼット（焦がしバター）」の存在です。焼き上げる際に贅沢にバターを塗ることで、表面はサクッと、中は驚くほどもちもちとした独特の食感を生み出しているのです。
 
-#
+
 
 ## 注文から受け取りまでスムーズなシステム
 
@@ -81,7 +81,7 @@ author: "K-Life Hack"
 
 地下鉄2号線・空港鉄道・京義中央線の「弘大入口（ホンデイック）駅」3番出口から歩いて約5分ほどです。延南洞のメインストリートを散策しながら立ち寄るのに最適な場所にあります。
 
-#
+
 
 ## おすすめの訪問時間帯は？
 

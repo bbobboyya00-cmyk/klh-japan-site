@@ -49,13 +49,13 @@ author: "K-Life Hack"
 
 <img alt="Graphic wall display of color theory charts emphasizing a systematic and professional approach - ソウル・宣陵で自分磨き。ジュエルカラーで体験する「美のロジカル・診断」完全ガイド" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seoul-personal-color-juel-color/khack_1776473387_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 韓国現地で人気の「似合う」を見極めるコツ
 
 診断の後半では、顔タイプ分析も行われます。顔の縦横比やパーツの配置を測定し、卵型やハート型、あるいは直線的なタイプなのかを判別します。これにより、似合うネックレスのライン、メガネのフレームの形、さらには前髪の分ける位置まで、具体的かつ実践的なアドバイスを受けることができます。流行を追うのではなく、自分のパーツを活かす「パーソナライズされたトレンド」を取り入れることが可能になります。
 
-#
+
 
 ## 診断後も続く、あなただけのスタイルガイド
 
@@ -69,7 +69,7 @@ author: "K-Life Hack"
 
 診断を受けた後は、スタジオからすぐの場所にある人気のカフェやショップへ、新しく手に入れた知識を携えて出かけてみてはいかがでしょうか。自分に本当に似合うものを知った後の世界は、これまでよりもずっと鮮やかに、そして自信に満ちたものとして映るはずです。
 
-#
+
 
 ## アクセスと予約について
 
@@ -89,7 +89,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B0%95%EB%82%A8%EA%B5%AC%20%EC%97%AD%EC%82%BC%EB%8F%99%20705-1%20%EB%B9%85%ED%86%A0%EB%A6%AC%EC%95%84%EC%98%A4%ED%94%BC%EC%8A%A4%ED%85%94%20413%ED%98%B8%20%EC%A3%BC%EC%97%98%EC%BB%AC%EB%9F%AC%20%ED%8D%BC%EC%8A%A4%EB%84%90%EC%BB%AC%EB%9F%AC%EC%A7%84%EB%8B%A8%20%EA%B3%A8%EA%B2%A9%EC%B2%B4%ED%98%95%EC%A7%84%EB%8B%A8&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B0%95%EB%82%A8%EA%B5%AC%20%EC%97%AD%EC%82%BC%EB%8F%99%20705-1%20%EB%B9%85%ED%86%A0%EB%A6%AC%EC%95%84%EC%98%A4%ED%94%BC%EC%8A%A4%ED%85%94%20413%ED%98%B8%20%EC%A3%BC%EC%97%98%EC%BB%AC%EB%9F%AC%20%ED%8D%BC%EC%8A%A4%EB%84%90%EC%BB%AC%EB%9F%AC%EC%A7%84%EB%8B%A8%20%EA%B3%A8%EA%B2%A9%EC%B2%B4%ED%98%95%EC%A7%84%EB%8B%A8&query_place_id=ChIJI326kWSlfDURm35m-iq9P4g" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%A3%BC%EC%97%98%EC%BB%AC%EB%9F%AC%20%ED%8D%BC%EC%8A%A4%EB%84%90%EC%BB%AC%EB%9F%AC%EC%A7%84%EB%8B%A8%20%EA%B3%A8%EA%B2%A9%EC%B2%B4%ED%98%95%EC%A7%84%EB%8B%A8" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

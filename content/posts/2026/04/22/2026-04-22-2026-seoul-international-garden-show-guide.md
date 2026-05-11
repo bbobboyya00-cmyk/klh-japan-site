@@ -30,7 +30,7 @@ author: "K-Life Hack"
 
 世界的な造園家アンリ・ババ（Henri Bava）をはじめとするトップクリエイターたちが参加し、都市の構造と自然の調和を追求した「作家庭園」は必見です。彼らの手によって生み出される空間は、訪れる人々に深い思索と安らぎを与えてくれるでしょう。
 
-<div class="psImg"><img alt="alt:精교に設計された庭園のディテールカット - 2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830751_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:自然素材を活用したモダンな庭園の構造物 - 2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830755_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
+<div class="psImg"><img alt="2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830751_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt:自然素材を活用したモダンな庭園の構造物 - 2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830755_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/></div>
 
 ## クイック・ローカル・テイクアウト：訪問前に知っておくべきこと 📍
 
@@ -42,12 +42,12 @@ author: "K-Life Hack"
 
 会場となる「ソウルの森」は、ソウル市内でもアクセスの良さが際立つ場所に位置しています。公共交通機関の利用を強くおすすめします。
 
-#
+
 
 ## 地下鉄を利用する場合
 水仁・盆唐線の「ソウルの森駅」4番出口から徒歩約2分で、メインゲートに到着します。また、2号線の「トゥクソム駅」8番出口からも徒歩約10分程度でアクセス可能です。
 
-#
+
 
 ## おすすめの訪問時間帯
 開場直後の正午、あるいは夕暮れ時の17時以降が特におすすめです。特に夕暮れ時は、庭園のライトアップと都会の夜景が重なり、幻想的な雰囲気を楽しむことができます。

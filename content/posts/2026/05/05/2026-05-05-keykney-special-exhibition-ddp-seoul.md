@@ -39,7 +39,7 @@ author: "K-Life Hack"
 
 「コーヒーの点滴」という斬新な表現に、思わず「私のことだ！」と苦笑いしてしまいました (笑)。働く大人たちの哀愁をユーモアに変えてしまうキークニの視点は、単なる皮肉を超えた深い愛情とエールに満ちています。
 
-<img alt="温かみのあるベッドルーム의展示" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/keykney-special-exhibition-ddp-seoul/khack_1777986480_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="温かみのあるベッドルーム展示" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/keykney-special-exhibition-ddp-seoul/khack_1777986480_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 一転して、寝室を再現したエリアは深い静寂と温もりに包まれています。ここでは家族や自分自身への想いを綴ったメッセージが心に深く刺さり、静かに涙を流す人の姿も多く見られました。ハンカチの準備は必須ですよ 💧
 

@@ -23,45 +23,45 @@ author: "K-Life Hack"
 
 済州島の西側に位置する崖月（エウォル）。ここには、数千年前の火山活動の記憶을 그대로에, 洗練された感性で再解釈された新しい空間があります。パホイホイ溶岩地質公園（Pahoehoe Lava Field Park）です。パホイホイとは、ハワイ語で「滑らかで波のような」という意味の溶岩を指します。済州の厳しい自然と、ミニマルな建築が融合したこの場所は、単なる観光地を超えた、思索のための現代的な庭園といえるでしょう。
 
-<img alt="파호이호이 용암지질공원의 광활하고 이국적인 암석 지대 전경 - 済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" fetchpriority="high" height="538" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554878_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
+<img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" fetchpriority="high" height="538" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554878_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
 
 施設に足を踏み入れると、まず目に飛び込んでくるのは圧倒的なスケールの岩石地帯です。長い年月を経て固まった溶岩のテクスチャは、まるで別の惑星に降り立ったかのような錯覚を覚えさせます。丁寧に配置された奇岩たちは、自然が作り出した彫刻作品のようで、その一つひとつに足を止めて見入ってしまいます。
 
 <div class="psImg">
-<img alt="정교하게 큐레이션된 기암괴석 전시 공간의 조형미" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554880_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-<img alt="공원 입구의 현대적인 타이포그래피가 새겨진 대형 석조 표지석" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554883_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554880_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554883_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
 ## 荒々しい自然とモダンデザインの境界 ✨
 
 公園のアイデンティティは、その建築デザインにも色濃く反映されています。石造りの重厚なサインや、直線を活かしたミニマルなチケットオフィスは、周囲の溶岩フィールドと見事な調和を見せています。無機質なコンクリートやスチールといった素材が、太古の岩石と出会うことで、これまでにない現代的な美しさが生まれています。
 
-<img alt="미니멀한 건축 양식이 돋보이는 티ケット 오フィス 외관" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554885_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="ケット フィス" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554885_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 訪問者のための案内も非常にスマートです。洗練されたグラフィックで描かれたガイドマップを手に、広大な敷地を自分たちのペースで探索することができます。自然を保護しながらも、歩きやすさを考慮した動線設計に、エディターとしてのこだわりを感じずにはいられません。
 
 <div class="psImg">
-<img alt="방문객을 위한 세련된 디자인의 공원 전체 가이드 맵" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554886_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-<img alt="제주의 자연과 현대적 시설이 어우러진 용암 필드 전경" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554888_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554886_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554888_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
 地形を傷つけないように設置されたインダ스트리얼なムードの鉄製デッキは、この公園の象徴的な風景の一つです。足元に広がる溶岩のディテールを安全に観察しながら、心地よい風を感じるウォーキングは、日常の喧騒を忘れさせてくれる至福の時間です。
 
-<img alt="지형을 보호하며 보행의 편의를 더한 인더스트리얼 무드의 철제 데크" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554891_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554891_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 溶岩フィールドを歩く、特別な体験 🗿
 
 散策路を進むと、自然親和的な建築のファサードが次々と現れます。粗い岩の質感と滑らかな建物の壁面が対照的で、どこを切り取ってもフォトジェニックな1枚になります。特に、岩壁の間を縫うように続く感性的な小道は、遠くから眺めるだけでもその美しさに息を呑みます。
 
 <div class="psImg">
-<img alt="용암 암석과 조화를 이루는 자연 친화的な建築物パサード" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554893_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
-<img alt="암벽 사이를 지나는 감각적인 산책로의 원경" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554895_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="的な建築物パサード" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554893_7.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554895_8.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
 ここでは、人間もまた大地のアートの一部となります。巨大な岩壁の前に立つと、時間の流れがゆっくりと感じられ、自然への畏敬の念が湧き上がってきます。歩き疲れたら、用意されたキャンピングチェアに身を委ね、刻々と表情を変える済州の空を眺めるのも贅沢な過ごし方です。
 
 <div class="psImg">
-<img alt="대지 예술의 일부처럼 느껴지는 인물과 암벽의 조화로운 연출" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554898_9.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554898_9.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt="公園内での休息のための感性的なキャンピングチェアの配置" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554901_10.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
@@ -100,12 +100,12 @@ author: "K-Life Hack"
 <img alt="温かい木材の天井と粗い石壁が対比される建築ディテール" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554923_20.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 </div>
 
-#
+
 
 ## パホイホイ溶岩地質公園とは？
 済州島の代表的な火山地形で、粘性の低い溶岩が滑らかに流れて固まった「ビルレ（平らな岩盤）」をベースにした体験型公園です。地質の観察だけでなく、トレッキングシューズを借りて直接溶岩の上を歩くことができる貴重なスポットです。
 
-#
+
 
 ## 行き方とおすすめの時間帯
 済州空港から西側へ車で約30分。崖月の中山間エリアに位置しています。午後の遅い時間帯に訪れると、溶岩の凹凸に長い影が落ち、地形の立体感がよりドラマチックに感じられるのでおすすめです。
@@ -140,7 +140,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=파호이호이 라바필드 파크 제주&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=파호이호이 라바필드 파크 제주" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%ED%8C%8C%ED%98%B8%EC%9D%B4%ED%98%B8%EC%9D%B4%20%EB%9D%BC%EB%B0%94%ED%95%84%EB%93%9C%20%ED%8C%8C%ED%81%AC%20%EC%A0%9C%EC%A3%BC" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

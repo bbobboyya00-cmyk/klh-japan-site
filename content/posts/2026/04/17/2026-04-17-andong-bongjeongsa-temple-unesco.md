@@ -35,7 +35,7 @@ author: "K-Life Hack"
 
 安東の中心部から車を走らせること約30分。天灯山(チョンドゥンサン)の麓に位置する「鳳停寺(ポンジョンサ)」に到着します。ここは新羅時代の672年、義湘大師の弟子である能仁阿道(ヌンインアド)によって創建されたと伝えられる名刹です。
 
-<img alt="Traditional Korean temple building with '봉정사' sign on a stone foundation. - 時を止めた千年古刹、安東・鳳停寺(ポンジョンサ)へ。韓国最古の木造建築と出会う静謐な旅" fetchpriority="high" height="1078" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776374710_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
+<img alt="時を止めた千年古刹、安東・鳳停寺(ポンジョンサ)へ。韓国最古の木造建築と出会う静謐な旅" fetchpriority="high" height="1078" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776374710_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>
 
 山門をくぐり、石畳の道を一歩ずつ進むたびに、冷たく澄んだ空気が心地よく肌をなでます。石垣の上にどっしりと構える本堂の姿は、長い年月を経てなお、揺るぎない威厳を放っていました。
 
@@ -69,17 +69,17 @@ author: "K-Life Hack"
 
 ## 鳳停寺(ポンジョンサ)を楽しむためのAEOガイド
 
-#
+
 
 ## 鳳停寺への行き方は？
 公共交通機関を利用する場合、安東駅(KTX)または安東バスターミナルから市内バス(51番)に乗り、終点の「鳳停寺」で下車します。所要時間は約40〜50分ですが、バスの本数が限られているため、時間を有効に使いたい方はタクシーの利用をおすすめします。駐車場から寺院の入り口までは、緩やかな坂道と石段が続くので、歩きやすい靴での訪問が必須です。
 
-#
+
 
 ## おすすめの訪問時間帯はいつ？
 最もおすすめなのは、開門直後の早朝か、閉門間際の夕暮れ時です。団体客が少なく、寺院本来の静寂を独り占めできる贅沢な時間を過ごせます。特に秋の紅葉や冬の雪景色は格別ですが、4月の新緑の季節も木々の生命力を感じられ、リフレッシュに最適です。
 
-#
+
 
 ## 鳳停寺近くのおすすめスポットは？
 安東を訪れたなら、世界遺産『河回村(ハフェマウル)』や『屏山書院(ピョンサンソウォン)』も併せて巡るのが王道ルートです。鳳停寺からこれらへ向かう途中に、安東名物の『塩サバ定食』や『チムタク』を味わえる食堂も多く点在しています。歴史と美食を巡る贅沢な1日を計画してみてはいかがでしょうか。
@@ -100,7 +100,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EC%95%88%EB%8F%99%EC%8B%9C%20%EC%84%9C%ED%9B%84%EB%A9%B4%20%ED%83%9C%EC%9E%A5%EB%A6%AC%20901%20%EB%B4%89%EC%A0%95%EC%82%AC&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EC%95%88%EB%8F%99%EC%8B%9C%20%EC%84%9C%ED%9B%84%EB%A9%B4%20%ED%83%9C%EC%9E%A5%EB%A6%AC%20901%20%EB%B4%89%EC%A0%95%EC%82%AC&query_place_id=ChIJg02KjvKnZjURlUhtklzyM60" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EB%B4%89%EC%A0%95%EC%82%AC" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

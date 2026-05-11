@@ -25,31 +25,31 @@ author: "K-Life Hack"
 
 ## モドゥエカード (모두의카드) とは？ 韓国交通費節約の新常識 ✨
 
-<img alt="2026 신제도 안내를 담은 '모두의카드 K패스 신청 방법'의 제목 슬라이드. - 韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" fetchpriority="high" height="808" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528236_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>2026年新制度案内「モドゥエカード K-パス申請方法」のタイトルスライド
+<img alt="韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" fetchpriority="high" height="808" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528236_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="808"/>2026年新制度案内「モドゥエカード K-パス申請方法」のタイトルスライド
 
 皆様、韓国でのスマートな生活を送る上で、日々かさむ交通費にお悩みではありませんか。地下鉄やバスを乗り継ぎ、月に数万円が交通費として消えていくのは、正直なところ痛手です。しかし、2026年1月より国土交通部大都市圏広域交通委員会が導入した「モドゥエカード (모두의카드)」は、そんな悩みを解決する画期的な制度です。これは、単なる割引ではなく、利用者の負担を大幅に軽減するための「定額型払い戻し制度」として設計されました。
 
-<img alt="'모두의카드란 무엇이고 어떻게 등장했는지'를 설명하는 CHAPTER 01 슬라이드. - 韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528238_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「モドゥエカードとは何か、どのように誕生したのか」を説明するCHAPTER 01スライド
+<img alt="韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528238_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「モドゥエカードとは何か、どのように誕生したのか」を説明するCHAPTER 01スライド
 
 モドゥエカード (모두의카드) は、既存のK-パス (K-패스) の枠組みを大幅にアップグレードしたものです。これまでのK-パス (K-패스) が、月間の交通費総額に対して一定の割合（20%～53%）を払い戻す「比率払い戻し」方式だったのに対し、モドゥエカード (모두의카드) は設定された月間基準額を超過した交通費を、実質的に全額払い戻す「定額払い戻し」方式を採用しています。この仕組みは、長距離通勤者や乗り換えが多い方にとって、非常に大きな恩恵をもたらします。実際に利用してみると、基準額を超えた分が無制限パスのように感じられ、その効果に驚かされました。
 
 ## K-パス (K-패스) とモドゥエカード (모두의카드)、その決定的な違い 💡
 
-#
+
 
 ## 払い戻し方式の比較：比率払い戻し vs 定額払い戻し
 
-<img alt="'기존 K패스와의 결정적 차이'를 '비율 환급 vs 정액 환급'으로 비교하는 CHAPTER 02 슬라이드. - 韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528239_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「既存K-パスとの決定的な違い」を「比率払い戻し vs 定額払い戻し」で比較するCHAPTER 02スライド
+<img alt="韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528239_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「既存K-パスとの決定的な違い」を「比率払い戻し vs 定額払い戻し」で比較するCHAPTER 02スライド
 
 多くの方が疑問に感じるのが、従来のK-パス (K-패스) とモドゥエカード (모두의카드) の具体的な違いでしょう。K-パス (K-패스) は月15回以上利用した場合、使用金額の約20%から53%が比率で還元される仕組みでした。一方、モドゥエカード (모두의카드) は、居住地域や利用タイプによって定められた月間基準額を超過した交通費が全額払い戻される定額型です。
 
 最も画期的だと感じたのは、利用者がどちらの方式を選ぶかを毎月判断する必要がない点です。システムが毎月の利用履歴を自動で比較し、払い戻し額がより大きくなる方を自動的に適用してくれるのです。私自身も、特に設定を変更することなく普段通りカードを利用していたところ、より有利な方式で払い戻し金が入金されており、大変驚きました。これにより、計算のストレスから解放され、安心して公共交通機関を利用できるようになりました。
 
-#
+
 
 ## 一般型とプラス型の選定基準 🚌
 
-<img alt="'일반형과 플러스형을 가르는 구분 기준'에 대한 CHAPTER 03 슬라이드. - 韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528241_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「一般型とプラス型を分ける区別基準」に関するCHAPTER 03スライド
+<img alt="韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528241_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「一般型とプラス型を分ける区別基準」に関するCHAPTER 03スライド
 
 モドゥエカード (모두의카드) には「一般型」と「プラス型」の二つのタイプがあります。この二つは、首都圏を基準に以下のように区分されます。
 
@@ -60,7 +60,7 @@ author: "K-Life Hack"
 
 ## 青年、高齢者などタイプ別の払い戻し条件 👨‍🦳👩‍🎓
 
-<img alt="'청년과 어르신 등 유형별 환급 조건 차이'를 설명하는 CHAPTER 04 슬라이드. - 韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528242_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「青年や高齢者など、タイプ別払い戻し条件の違い」を説明するCHAPTER 04スライド
+<img alt="韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528242_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「青年や高齢者など、タイプ別払い戻し条件の違い」を説明するCHAPTER 04スライド
 
 モドゥエカード (모두의카드) 制度は、年齢層や世帯状況に応じて基準額がさらに低くなる優遇措置も設けられています。
 
@@ -72,11 +72,11 @@ author: "K-Life Hack"
 
 ## モドゥエカード (모두의카드) の申請と交通カード発行手順 📱
 
-#
+
 
 ## 新規利用者と既存K-パス (K-패스) 利用者の違い
 
-<img alt="'모두의카드 신청 방법과 교통카드 발급 절차'를 안내하는 CHAPTER 05 슬라이드. - 韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528244_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「モドゥエカード申請方法と交通カード発行手続き」を案内するCHAPTER 05スライド
+<img alt="韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528244_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「モドゥエカード申請方法と交通カード発行手続き」を案内するCHAPTER 05スライド
 
 既存のK-パス (K-패스) をご利用中の方であれば、モドゥエカード (모두의카드) への別途申請手続きや新しいカードの発行は必要ありません。2026年1月よりシステムが自動的に更新され、お持ちの既存カードをそのまま利用するだけで、より有利な払い戻し方式が自動的に適用されます。
 
@@ -84,7 +84,7 @@ author: "K-Life Hack"
 
 カードを受け取ったら、K-パス (K-패스) 公式アプリまたはウェブサイトで会員登録と本人認証を行い、カード番号を登録します。その後、モドゥエカード (모두의카드) サービス利用規約への同意にチェックを入れると、すべての準備が完了します。モバイルでの申請も非常に簡単で、画面の案内に従って10分もかからずに登録手続きが完了しました。初めての方でも、スムーズに発行と登録を終えられるはずです。
 
-#
+
 
 ## 払い戻しを確実に受けるためのチェックリスト
 
@@ -98,7 +98,7 @@ author: "K-Life Hack"
 
 ## モドゥエカード (모두의카드) で韓国生活をもっと豊かに 💰
 
-<img alt="'마무리 핵심 요약'을 담은 CHAPTER 06 슬라이드. - 韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528245_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「最終的な核心要約」を収めたCHAPTER 06スライド
+<img alt="韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528245_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>「最終的な核心要約」を収めたCHAPTER 06スライド
 
 今回、私自身がモドゥエカード (모두의카드) を実際に申請し、1ヶ月間利用してみて最も印象的だったのは、ユーザーが手を加える部分がほとんどないという点です。基準額とタイプの構造を一度理解してしまえば、あとはシステムが自動的に最も有利な払い戻しを適用してくれるからです。
 
@@ -108,7 +108,7 @@ author: "K-Life Hack"
 
 ---
 
-#
+
 
 ## 公式情報はこちらからご確認ください！
 この制度に関する詳細や最新情報は、K-パス (K-패스) の公式ウェブサイトでご確認いただけます。

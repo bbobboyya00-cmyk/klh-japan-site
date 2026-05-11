@@ -33,7 +33,7 @@ author: "K-Life Hack"
 
 私が訪れたのは平日の午後でしたが、店先にはすでに長い行列ができており、その人気の高さに驚かされました。しかし、心配ご無用。席数が多く回転が速いため、思ったよりも早く入店できました。行列の先に待つ期待感も、旅の醍醐味の一つですね。
 
-#
+
 
 ## 厳選されたシンプルなメニュー構成
 順番を待っている間に、店頭に掲げられたメニューを眺めます。メインはもちろん「スジェビ」ですが、その他にも「チャプサル・オンシミ（もち米の団子スープ）」や「カムジャジョン（ジャガイモチヂミ）」、「パジョン（ネギチヂミ）」、「ノクドゥジョン（緑豆チヂミ）」、そして「チュクミ（イイダコ炒め）」など、食欲をそそる品々が並んでいます。
@@ -44,14 +44,14 @@ author: "K-Life Hack"
 
 席に着くと、スジェビを取り分けるための器と、チヂミ用の醤油皿がすでに準備されていました。このきめ細やかなサービスも、老舗ならではの心遣いです。
 
-#
+
 
 ## 嬉しいセルフサービスのキムチと秘伝の薬味
 テーブルには、いつでも好きなだけ楽しめるように、白菜の浅漬けキムチと大根の角切りキムチ（カクテキ）が大きな容器に入って置かれています。どちらも自家製で、スジェビの優しい味わいを引き立てる、ちょうど良い塩梅と辛さが特徴です。特に、シャキシャキとした食感の浅漬けキムチは、箸が止まらなくなる美味しさでした。
 
 また、チヂミをさらに美味しくする特製の醤油ダレと、刻み青唐辛子も用意されています。この青唐辛子は、辛いものが得意な方にはぜひ試していただきたい、ピリッとしたアクセントになります。
 
-#
+
 
 ## こんがり熱々！素朴な味わいの「カムジャジョン」
 注文してすぐに、香ばしい香りを漂わせながらカムジャジョンが運ばれてきました。見るからに美味しそうな黄金色に焼き上げられた、厚みのあるチヂミです。
@@ -71,7 +71,7 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="お玉でスジェビをすくい上げる生き生きとした様子、モチモチとした食感が伝わってきます - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597403_9.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="白い器に盛られたスジェビをスプーンで掬い上げたクローズアップ - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597417_15.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div>
 
-#
+
 
 ## 賢く訪れる！「サムチョンドン・スジェビ」の楽しみ方
 「サムチョンドン・スジェビ」は、平日・週末問わず、お昼時には常に長い行列ができています。しかし、先ほどもお伝えしたように、店内は広く回転も速いため、見た目ほど待つことはありません。
@@ -80,7 +80,7 @@ author: "K-Life Hack"
 
 <img alt="日差しの中でサムチョンドン・スジェビの店前に長く並ぶお客さんの姿 - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597406_10.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 味変で二度美味しい！「コチュカンジャン」を添えて
 テーブルに置かれている刻み青唐辛子の薬味「コチュカンジャン」を少し加えてみてください。最初はそのままの優しい出汁の味を楽しみ、途中からピリッとした辛さを加えることで、また違った顔を見せてくれます。
@@ -89,7 +89,7 @@ author: "K-Life Hack"
 
 <img alt="ピリ辛でシャキシャキとした食感が絶品の刻み唐辛子のおかず - ミシュラン掲載店「サムチョンドン・スジェビ」三清洞で味わう至高の手打ち麺体験" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/samcheongdong-sujebi/khack_1776597408_11.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
-#
+
 
 ## 三清洞で忘れられない美食体験を
 三清洞の美しい街並みを散策し、歴史と伝統が息づく「サムチョンドン・スジェビ」で温かい手打ち麺を味わう。これこそが、ソウル旅行の醍醐味の一つだと感じました。

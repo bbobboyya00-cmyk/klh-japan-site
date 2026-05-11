@@ -39,7 +39,7 @@ author: "K-Life Hack"
 
 <img alt="alt - 済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639457_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>: 鮮やかな青空の下、遠くの漢拏山頂へ続く風光明媚な土の道。
 
-#
+
 
 ## コースの選び方とおすすめの時間帯 ⏰
 高根山には主に「オレンジ（Aコース）」と「ブルー（Bコース）」の二つのコースがあります。
@@ -50,7 +50,7 @@ author: "K-Life Hack"
 
 <div class="psImg"><img alt="alt - 済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639453_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="alt - 済州島西帰浦の高根山（コグンサン）で心身を癒すハイエンドトレッキング｜K-Life Hack" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/jeju-seogwipo-gogeunsan-healing-trekking/khack_1776639463_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div><p>: 明るく澄んだ空を背景に、青々と茂る常緑樹の葉が広がるローアングルショット。</p><p>: 広大な青空の下に広がる黄金色のススキ畑、静寂と広がりを感じさせる。</p>
 
-#
+
 
 ## 絶景が待つ頂上と、道中の楽しみ 🏞️
 高根山の頂上からは、済州島の主要な観光名所が一望できます。眼下には西帰浦市街が広がり、遠くには江汀（カンジョン）港から松岳山（ソンアクサン）へと続く海岸線の絶景が眼前に迫ります。そして、火口に沿って歩くと現れる西帰浦の海岸線には、文島、虎島、森島といった美しい島々が点在し、まるで絵画のような景色を織りなしています。

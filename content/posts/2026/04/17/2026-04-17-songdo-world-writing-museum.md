@@ -23,7 +23,7 @@ author: "K-Life Hack"
 
 {{< /alert >}}
 
-<img alt="Golden letters 'MW 국립세계문자박물관' on a white wall. - 仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" fetchpriority="high" height="275" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/thumb_main.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="322"/>
+<img alt="仁川 松島：世界の文字を巡る旅へ！国立世界文字博物館で知的好奇心を刺激する一日を" fetchpriority="high" height="275" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/songdo-world-writing-museum/thumb_main.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="322"/>
 
 ## 松島に現れた、世界への扉を開くモダニズム建築 ✨
 
@@ -65,13 +65,13 @@ author: "K-Life Hack"
 
 さらに、2階にはカフェや屋上庭園も整備されており、そこからセントラルパークへ直接散策に出ることも可能です。晴れた日には、室内での学習と屋外でのリラックスを組み合わせた、充実した一日を過ごすことができるでしょう。
 
-#
+
 
 ## 国立世界文字博物館とは？
 
 国立世界文字博物館（National Museum of World Writing）は、人類が使用してきた様々な文字の歴史、文化、そして未来を展示する韓国初の文字専門博物館です。無料で一般公開されており、文字が文明の発展にどのように貢献してきたかを学ぶことができます。単に展示物を見るだけでなく、インタラクティブな体験を通して、文字の奥深さを多角的に理解できるよう工夫されています。
 
-#
+
 
 ## 効率的な巡り方と周辺のおすすめ
 
@@ -96,7 +96,7 @@ author: "K-Life Hack"
 <div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
 <iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%9D%B8%EC%B2%9C%EA%B4%91%EC%97%AD%EC%8B%9C%20%EC%97%B0%EC%88%98%EA%B5%AC%20%EC%86%A1%EB%8F%84%EB%8F%99%2024-8%20%EA%B5%AD%EB%A6%BD%EC%84%B8%EA%B3%84%EB%AC%B8%EC%9E%90%EB%B0%95%EB%AC%BC%EA%B4%80%20%EA%B5%AD%EB%A6%BD%EC%84%B8%EA%B3%84%EB%AC%B8%EC%9E%90%EB%B0%95%EB%AC%BC%EA%B4%80&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
 </div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報가 최신이 아닐 수 있습니다. 보다 정확한 위치 확인을 위해 <b>Naverマップ</b> 의 사용을 권장합니다.</div>
+<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
 <div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
 <a href="https://www.google.com/maps/search/?api=1&query=%EC%9D%B8%EC%B2%9C%EA%B4%91%EC%97%AD%EC%8B%9C%20%EC%97%B0%EC%88%98%EA%B5%AC%20%EC%86%A1%EB%8F%84%EB%8F%99%2024-8%20%EA%B5%AD%EB%A6%BD%EC%84%B8%EA%B3%84%EB%AC%B8%EC%9E%90%EB%B0%95%EB%AC%BC%EA%B4%80%20%EA%B5%AD%EB%A6%BD%EC%84%B8%EA%B3%84%EB%AC%B8%EC%9E%90%EB%B0%95%EB%AC%BC%EA%B4%80&query_place_id=ChIJEfufMQJ3ezURIPHBRWgA7og" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EA%B5%AD%EB%A6%BD%EC%84%B8%EA%B3%84%EB%AC%B8%EC%9E%90%EB%B0%95%EB%AC%BC%EA%B4%80" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>

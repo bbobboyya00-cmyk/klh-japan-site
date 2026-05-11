@@ -47,7 +47,7 @@ author: "K-Life Hack"
 
 祭りの最高潮を告げる王室行列は、かつての王朝が持っていた威厳を完璧な時代考証と共に再現する。色鮮やかな装束を纏った行列がセット内を練り歩く姿は、歴史の重層性を物語る。
 
-<img alt="聞慶の歴史的な王室行列의再現" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/mungyeong-tea-bowl-festival-guide/khack_1777807504_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="聞慶の歴史的な王室行列再現" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/mungyeong-tea-bowl-festival-guide/khack_1777807504_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 木製の棚に整然と並べられた陶磁器たちは、一つとして同じ表情を持っていない。展示ブースを巡り、名匠たちの傑作の中から自分だけの一点を見つけ出す時間は、至高の知的遊戯である。
 
