@@ -1,0 +1,73 @@
+{{- $pag := $.Paginator -}}
+{{- if gt $pag.TotalPages 1 -}}
+<nav class="pagination" aria-label="Pagination">
+    
+    {{- /* Previous page button */ -}}
+    {{- if $pag.Prev -}}
+    <a class="page-link" href="{{ $pag.Prev.URL }}" aria-label="Go to previous page">
+        {{ partial "helper/icon" "chevron-left" }}
+    </a>
+    {{- else -}}
+    <span class="page-link disabled" aria-hidden="true">
+        {{ partial "helper/icon" "chevron-left" }}
+    </span>
+    {{- end -}}
+
+    {{- /* Page numbers logic */ -}}
+    {{- $window := 4 -}}
+
+    {{- /* First page */ -}}
+    {{- if eq $pag.PageNumber 1 -}}
+    <span class="page-link current" aria-current="page">1</span>
+    {{- else -}}
+    <a class="page-link" href="{{ $pag.First.URL }}" aria-label="Go to page 1">1</a>
+    {{- end -}}
+
+    {{- /* Left ellipsis */ -}}
+    {{- if gt $pag.PageNumber 3 -}}
+    <span class="page-link pagination-link" aria-hidden="true">
+        {{ partial "helper/icon" "dots" }}
+    </span>
+    {{- end -}}
+
+    {{- /* Middle pages */ -}}
+    {{- range $pag.Pagers -}}
+        {{- if and (gt .PageNumber 1) (lt .PageNumber $pag.TotalPages) -}}
+            {{- if and (ge .PageNumber (sub $pag.PageNumber $window)) (le .PageNumber (add $pag.PageNumber $window)) -}}
+                {{- if eq .PageNumber $pag.PageNumber -}}
+                <span class="page-link current" aria-current="page">{{ .PageNumber }}</span>
+                {{- else -}}
+                <a class="page-link" href="{{ .URL }}" aria-label="Go to page {{ .PageNumber }}">{{ .PageNumber }}</a>
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+
+    {{- /* Right ellipsis */ -}}
+    {{- if lt $pag.PageNumber (sub $pag.TotalPages 2) -}}
+    <span class="page-link pagination-link" aria-hidden="true">
+        {{ partial "helper/icon" "dots" }}
+    </span>
+    {{- end -}}
+
+    {{- /* Last page */ -}}
+    {{- if gt $pag.TotalPages 1 -}}
+        {{- if eq $pag.PageNumber $pag.TotalPages -}}
+        <span class="page-link current" aria-current="page">{{ $pag.TotalPages }}</span>
+        {{- else -}}
+        <a class="page-link" href="{{ $pag.Last.URL }}" aria-label="Go to page {{ $pag.TotalPages }}">{{ $pag.TotalPages }}</a>
+        {{- end -}}
+    {{- end -}}
+
+    {{- /* Next page button */ -}}
+    {{- if $pag.Next -}}
+    <a class="page-link" href="{{ $pag.Next.URL }}" aria-label="Go to next page">
+        {{ partial "helper/icon" "chevron-right" }}
+    </a>
+    {{- else -}}
+    <span class="page-link disabled" aria-hidden="true">
+        {{ partial "helper/icon" "chevron-right" }}
+    </span>
+    {{- end -}}
+</nav>
+{{- end -}}
