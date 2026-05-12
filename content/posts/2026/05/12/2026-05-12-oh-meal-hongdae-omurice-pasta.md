@@ -13,7 +13,7 @@ author: "K-Life Hack"
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
-<li style="margin-bottom:12px; list-style:none; line-height:1.4;"></li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">- 🚇 <b>最寄り駅</b>: 弘大入口駅8番出口から徒歩すぐ！スターバックスを曲がると見えます。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">- ⏰ <b>営業時間</b>: 毎日11:30～21:15（ラストオーダー20:30）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">- ✨ <b>写真映え度</b>: ラブダックオムライスやカラフルなソバマキはSNS映え抜群！</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">- 💡 <b>こんな人におすすめ</b>: デート、女子会、外国人のお友達との食事にもぴったりです。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">- ⚠️ <b>要注意点 (Deal-breaker)</b>: ピーク時の待ち時間は覚悟必須！2階への階段が少し急です。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"></li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"></li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"> 🚇 <b>最寄り駅</b>: 弘大入口駅8番出口から徒歩すぐ！スターバックスを曲がると見えます。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"> ⏰ <b>営業時間</b>: 毎日11:30～21:15（ラストオーダー20:30）</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"> ✨ <b>写真映え度</b>: ラブダックオムライスやカラフルなソバマキはSNS映え抜群！</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"> 💡 <b>こんな人におすすめ</b>: デート、女子会、外国人のお友達との食事にもぴったりです。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"> ⚠️ <b>要注意点 (Deal-breaker)</b>: ピーク時の待ち時間は覚悟必須！2階への階段が少し急です。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"></li>
 </ul>
 </div></blockquote>
 
@@ -103,7 +103,7 @@ author: "K-Life Hack"
 
 <blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-header"><span class="alert-icon">💡</span><span class="alert-title">Guide</span></div><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
-<li style="margin-bottom:12px; list-style:none; line-height:1.4;"></li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">- 💖 <b>編集者の秘密</b>: 2階の窓際席は自然光が一番美しく、写真撮影に最適ですよ！</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">- 🚇 <b>最寄り駅からの道順</b>: 弘大入口駅8番出口を出て直進、スターバックスの角を曲がるとすぐです。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">- 💸 <b>コスパ最高</b>: 2人用のセットメニューは、単品で頼むより断然お得なので、ぜひチェックしてみてくださいね！</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"></li>
+<li style="margin-bottom:12px; list-style:none; line-height:1.4;"></li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"> 💖 <b>編集者の秘密</b>: 2階の窓際席は自然光が一番美しく、写真撮影に最適ですよ！</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"> 🚇 <b>最寄り駅からの道順</b>: 弘大入口駅8番出口を出て直進、スターバックスの角を曲がるとすぐです。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"> 💸 <b>コスパ最高</b>: 2人用のセットメニューは、単品で頼むより断然お得なので、ぜひチェックしてみてくださいね！</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"></li>
 </ul>
 </div></blockquote><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
