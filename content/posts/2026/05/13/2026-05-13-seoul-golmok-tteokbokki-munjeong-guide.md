@@ -1,13 +1,13 @@
 ---
 en_url: "https://en.klifehack.com/2026/05/2026-local-guide-is-golmok-tteokbokki.html"
-title: "【ソウル】地元民が教える「ソウル3大トッポッキ」の聖地！文井洞の<mark>골목떡볶이</mark>は絶対外せない！！"
+title: "【ソウル】地元民が教える「ソウル3大トッポッキ」の聖地！文井洞のコルモックトッポッキは絶対外せない！！"
 slug: "seoul-golmok-tteokbokki-munjeong-guide"
 date: 2026-05-13T15:38:29+09:00
 draft: false
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/13/seoul-golmok-tteokbokki-munjeong-guide/khack_1778654202_1.webp"
-description: "ソウル3大トッポッキの一つとして名高い、文井洞の<mark>골목떡볶이</mark>を徹底レポ！懐かしのスープトッポッキの味から、セルフ注文のコツ、地元民だけが知るサイドメニューの楽しみ方まで。2026年最新の訪問ガイドをお届けします。"
+description: "ソウル3大トッポッキの一つとして名高い、文井洞のコルモックトッポッキを徹底レポ！懐かしのスープトッポッキの味から、セルフ注文のコツ、地元民だけが知るサイドメニューの楽しみ方まで。2026年最新の訪問ガイドをお届けします。"
 categories: ["K-Food Insider"]
-tags: ["골목떡볶이", "ソウル グルメ", "韓国 食べ歩き", "文井洞 グルメ", "ソウル3大トッポッキ"]
+tags: ["コルモックトッポッキ", "ソウル グルメ", "韓国 食べ歩き", "文井洞 グルメ", "ソウル3大トッポッキ"]
 author: "K-Life Hack"
 ---
 
