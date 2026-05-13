@@ -142,3 +142,27 @@ body.article-page .article-header .article-image {
     }
 }
 
+
+/* 🎯 [v2606.004 TA] 아메바 스타일 역동적 강조 디자인 */
+
+/* 1. 형광펜 효과: 글자 하단에 깔리는 세련된 마커 */
+mark {
+    background: linear-gradient(transparent 60%, #ffff00 40%); /* 노란색 마커 */
+    font-weight: inherit;
+    color: inherit;
+    padding: 0 2px;
+}
+
+/* 2. 폰트 크기 점프 시 줄 간격 꼬임 방지 */
+span[style*="font-size"] {
+    display: inline-block;
+    line-height: 1.2;
+    margin: 10px 0;
+    /* 중앙 정렬 효과를 원할 경우를 위해 유연성 확보 */
+}
+
+/* 3. 볼드체 강조 (일본어 폰트 최적화) */
+b, strong {
+    font-weight: 900;
+    color: var(--themeC); /* 테마 색상 추종 */
+}
