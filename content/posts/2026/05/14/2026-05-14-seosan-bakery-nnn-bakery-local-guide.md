@@ -78,7 +78,7 @@ author: "K-Life Hack"
 
 チョコが贅沢に練り込まれたバゲットは、噛めば噛むほど旨味が溢れます。
 
-<img alt="チョコバゲット의 断面と質感" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/14/seosan-bakery-nnn-bakery-local-guide/khack_1778720987_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="チョコバゲットの 断面と質感" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/14/seosan-bakery-nnn-bakery-local-guide/khack_1778720987_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 ただし、<b><mark>かなりハードな食感</mark></b>なので、顎が弱い方は注意が必要かも（笑）。
 
@@ -113,10 +113,10 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 </div><div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOSAN" >}}</div>
 <div class="k-map-box">
 <div class="k-map-header"><h3 class="k-map-title">📍 NNN Bakery</h3><p class="k-map-address">충청남도 서산시 동헌로 83 1층 (충청남도 서산시 읍내동 237-3)</p></div>
-<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EA%B7%9C%EB%A7%A4%EB%B2%A0%EC%9D%B4%EC%BB%A4%EB%A6%AC&output=embed"></iframe></div>
+<div class="k-map-iframe-wrap"><iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=읍내동 NNN베이커리&output=embed"></iframe></div>
 <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
 <div class="k-map-buttons">
-<a href="https://www.google.com/maps/search/?api=1&query=%EA%B7%9C%EB%A7%A4%EB%B2%A0%EC%9D%B4%EC%BB%A4%EB%A6%AC" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
+<a href="https://www.google.com/maps/search/?api=1&query=읍내동 NNN베이커리" class="btn-google" target="_blank" rel="noopener noreferrer">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%9D%8D%EB%82%B4%EB%8F%99%20NNN%EB%B2%A0%EC%9D%B4%EC%BB%A4%EB%A6%AC" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
