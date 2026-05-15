@@ -4,7 +4,7 @@ title: "江南で超話題！青年カムジャタン江南駅店のタワー級
 slug: "cheongnyeon-gamjatang-gangnam-pork-stew"
 date: 2026-05-15T13:52:11+09:00
 draft: false
-image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/15/cheongnyeon-gamjatang-gangnam-pork-stew/khack_1778820617_1.webp"
+image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/15/cheongnyeon-gamjatang-gangnam-pork-stew/khack_1778820628_8.webp"
 description: "江南駅近くで働く会社員に大人気の青年カムジャタン江南駅店を徹底レポ。圧倒的な肉のタワーととろ〜りチーズポックンパは必食です。駐車場2時間無料の嬉しい情報も。"
 categories: ["K-Food Insider"]
 tags: ["青年カムジャタン", "江南グルメ", "ソウル旅行", "カムジャタン", "韓国料理"]
