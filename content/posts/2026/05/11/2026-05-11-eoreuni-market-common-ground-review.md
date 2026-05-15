@@ -7,7 +7,7 @@ draft: false
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/eoreuni-market-common-ground-review/khack_1778493950_1.webp"
 description: "2026年5月、ソウルの建大（コンデ）がキダルトの聖地に！トイ・ストーリー30周年記念グッズや激レアヴィンテージが集まる「オルニマーケット」のオープンラン情報から、賢い掘り出し物の見つけ方まで、現地から生の声をお届けします。"
 categories: ["The Hype Logistics"]
-tags: ["건대입구", "어르니마켓", "커먼그라운드", "키덜트", "서울팝업스토어"]
+tags: ["大人買い"]
 author: "K-Life Hack"
 ---
 
