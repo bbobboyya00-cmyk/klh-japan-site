@@ -53,8 +53,6 @@ author: "K-Life Hack"
 
 注文はテーブルでじっくり選べますよ！👍
 
-<img alt="シグネチャーメニューと価格が分かりやすく書かれたボード" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/15/cheongnyeon-gamjatang-gangnam-pork-stew/khack_1778820625_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
 見てください、この圧倒的なボリューム！📸✨
 
 大きな背骨（ドゥンピョ）がこれでもかというほど積み上げられていて、まさに「肉のタワー」です🍖
