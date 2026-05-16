@@ -35,28 +35,35 @@
   <meta property="og:image" content="{{ absURL `img/logo.webp` }}" />
   <meta property="twitter:image" content="{{ absURL `img/logo.webp` }}" />
 {{ end }}
-
 <style>
 @media (max-width: 640px) {
-    /* 1. 줄바꿈을 절대 금지(nowrap)하고, 중앙 정렬 및 상하 여백 최적화 */
+    /* 1. Flexbox의 한계를 벗어나 Block 레이아웃으로 전환하여 '가로 스와이프' 환경 구축 */
     .pagination {
-        display: flex !important;
-        flex-wrap: nowrap !important; 
-        justify-content: center !important;
-        overflow: visible !important;
-        gap: 4px !important;
-        padding: 10px 4px !important;
+        display: block !important; 
+        white-space: nowrap !important; /* 줄바꿈 절대 금지 */
+        overflow-x: auto !important; /* 넘치는 부분은 가로 스크롤(스와이프) 허용 */
+        overflow-y: hidden !important;
+        text-align: center !important; /* 요소가 적을 때는 화면 중앙 정렬 유지 */
         width: 100% !important;
+        max-width: 100vw !important; /* 컨테이너가 모바일 화면을 뚫고 나가는 현상(가로 스크롤 버그) 완벽 차단 */
+        padding: 10px 4px !important;
         box-sizing: border-box !important;
+        -webkit-overflow-scrolling: touch !important; /* iOS에서 부드러운 관성 스크롤 지원 */
     }
-    
-    /* 2. 10개 요소가 320px~375px 내에 안착하도록 폭과 폰트 크기를 컴팩트하게 압축 */
+
+    /* 2. 디자인을 위해 못생긴 가로 스크롤바는 투명하게 숨김 처리 */
+    .pagination::-webkit-scrollbar { display: none !important; }
+    .pagination { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+
+    /* 3. 개별 버튼들을 인라인 블록(Inline-flex)화 하여 가로로 길게 나열 */
     .pagination .page-link {
-        font-size: 0.78rem !important;
-        min-width: 28px !important; /* 총 가로폭 계산: (28*10) + (4*9) = 316px로 iPhone SE 등 최저 해상도에서도 한 줄 안착 보장 */
-        height: 30px !important;
-        padding: 0 2px !important;
         display: inline-flex !important;
+        vertical-align: middle !important; /* Block 컨테이너 내부 수직 정렬 */
+        font-size: 0.85rem !important;
+        min-width: 32px !important; /* 터치가 편하도록 최소 크기 확보 */
+        height: 32px !important;
+        margin: 0 3px !important; /* Flex의 gap 대신 margin 사용 */
+        padding: 0 4px !important;
         align-items: center !important;
         justify-content: center !important;
         box-sizing: border-box !important;
@@ -64,10 +71,9 @@
         border-radius: 4px !important;
     }
 
-    /* 3. 셰브론(<, >) 및 닷츠(...) 아이콘 크기도 폰트 비율에 맞춰 축소 */
     .pagination .page-link svg {
-        width: 14px !important;
-        height: 14px !important;
+        width: 16px !important;
+        height: 16px !important;
     }
 }
 </style>
