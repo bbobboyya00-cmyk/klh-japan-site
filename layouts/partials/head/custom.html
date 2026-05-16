@@ -37,7 +37,7 @@
 {{ end }}
 <style>
 @media (max-width: 640px) {
-    /* 1. 스크롤 락업 및 모바일 폭 100% 최적화 (가로폭 초과 원천 봉쇄) */
+    /* 1. 스크롤 레이아웃 브레이킹 방지 및 가로폭 100% 한계 고정 */
     .pagination {
         display: flex !important;
         flex-wrap: nowrap !important;
@@ -47,58 +47,58 @@
         width: 100% !important;
         padding: 12px 0 !important;
         margin: 0 !important;
-        gap: 2px !important;
+        gap: 3px !important; /* 모바일 가독성을 고려한 정밀 자간 조절 */
         box-sizing: border-box !important;
     }
 
-    /* 2. 유연한 수축 허용 및 미세 패딩 다이어트 */
+    /* 2. 유연한 수축 규격화 및 크기 강제 요소 해제 */
     .pagination > a,
     .pagination > span {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        flex: 0 1 auto !important; /* 공간 부족 시 유연하게 찌그러지도록 허용 */
-        min-width: 0 !important;   /* 고정 크기 파괴 */
-        height: 30px !important;
-        padding: 0 3px !important;
+        flex: 0 1 auto !important; /* 공간이 부족해지면 유연하게 수축 허용 */
+        min-width: 0 !important;   /* 하드코딩된 테마 가로 너비 해제 */
+        height: 32px !important;
+        padding: 0 4px !important;
         margin: 0 !important;
-        font-size: 0.85rem !important; /* 시인성 확보를 위해 폰트 미세 상향 */
+        font-size: 0.85rem !important;
         text-decoration: none !important;
         box-sizing: border-box !important;
         border-radius: 4px !important;
     }
 
-    /* 3. 화살표 및 끝자리 수축 절대 방어 */
-    .pagination > a[aria-label="Go to previous page"],
-    .pagination > a[aria-label="Go to next page"] {
-        flex: 0 0 auto !important;
-        padding: 0 1px !important;
-    }
-
+    /* 화살표 아이콘 규격화 */
     .pagination svg {
         width: 16px !important;
         height: 16px !important;
         margin: 0 !important;
     }
 
-    /* ==========================================
-       [핵심] 모바일 전용 노출/은폐 (±2) 지능형 로직
-       ========================================== */
-    /* A. 기본적으로 불필요한 중간 번호들은 모두 은폐 */
-    /* (첫 페이지, 마지막 페이지, 현재 페이지, 말줄임표(...)는 제외) */
-    .pagination > *:not(:first-child):not(:last-child):not(:nth-child(2)):not(:nth-last-child(2)):not(.current):not(.pagination-link) {
+    /* =========================================================================
+       [핵심] 명시도 무력화 기반 모바일 전용 노출/은폐 아키텍처
+       ========================================================================= */
+    
+    /* A. 모바일 화면 안의 모든 페이지네이션 요소를 최하위 점수(0-1-0)로 일단 전체 숨김 */
+    .pagination > * {
         display: none !important;
     }
 
-    /* B. 현재 페이지(.current) 기준으로 좌측 2개(-2, -1) 부활 */
-    .pagination > *:has(+ .current),
-    .pagination > *:has(+ * + .current) {
+    /* B. 무조건 고정 노출되어야 하는 코어 프레임 부활 (명시도 점수 우위 확보) */
+    .pagination > :first-child,               /* < (이전 화살표) */
+    .pagination > :last-child,                /* > (다음 화살표) */
+    .pagination > :nth-child(2),              /* 1 (첫 페이지 번호) */
+    .pagination > :nth-last-child(2),         /* 마지막 페이지 번호 */
+    .pagination > .pagination-link,           /* ... (말줄임표) */
+    .pagination > .current {                  /* 현재 페이지 */
         display: inline-flex !important;
     }
 
-    /* C. 현재 페이지(.current) 기준으로 우측 2개(+1, +2) 부활 */
-    .pagination > .current + *,
-    .pagination > .current + * + * {
+    /* C. 현재 페이지(.current) 기준 형제 요소들 정밀 추적 후 좌우 2개씩(±2) 확정 부활 */
+    .pagination > *:has(+ .current),          /* 현재 페이지 - 1 */
+    .pagination > *:has(+ * + .current),      /* 현재 페이지 - 2 */
+    .pagination > .current + *,               /* 현재 페이지 + 1 */
+    .pagination > .current + * + * {          /* 현재 페이지 + 2 */
         display: inline-flex !important;
     }
 }
