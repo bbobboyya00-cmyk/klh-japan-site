@@ -37,7 +37,7 @@
 {{ end }}
 <style>
 @media (max-width: 640px) {
-    /* 1. 스크롤 완전 금지(hidden) 및 컨테이너 좌우 패딩 제거로 375px 공간 100% 확보 */
+    /* 1. 스크롤 락업 & 중앙 정렬 유지 */
     .pagination {
         display: flex !important;
         flex-wrap: nowrap !important;
@@ -45,32 +45,38 @@
         align-items: center !important;
         overflow: hidden !important; 
         width: 100% !important;
-        padding: 10px 0 !important; /* 좌우 공백 0 */
-        gap: 2px !important; /* 각 숫자 사이의 간격을 최소화 */
+        padding: 10px 0 !important; /* 컨테이너 좌우 패딩을 0으로 만들어 375px 100% 활용 */
+        margin: 0 !important;
+        gap: 2px !important; /* 각 엘리먼트 사이의 최소 간격 */
         box-sizing: border-box !important;
     }
 
-    /* 2. margin, font-size, min-width 강제 할당 해제 (텍스트 크기만큼만 유연하게 줄어듦) */
-    .pagination .page-link {
+    /* 2. 숨어있던 min-width 강제 할당 파괴 및 유연한 수축 허용 */
+    .pagination > a,
+    .pagination > span {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 0 3px !important; /* 숫자 양옆 여백을 3px로 타이트하게 압축 */
-        height: 32px !important;
+        flex: 0 1 auto !important; /* 요소 팽창 금지(0), 필요시 수축 허용(1), 콘텐츠 크기만큼만 할당(auto) */
+        min-width: 0 !important; /* 🌟 핵심: 테마 원본의 32px 강제 할당을 완벽히 무력화 */
+        height: 30px !important;
+        padding: 0 2px !important; /* 양옆 잉여 공백 최소화 */
+        margin: 0 !important;
+        font-size: 0.8rem !important; /* 모바일 전용 폰트 사이즈 강제 */
         text-decoration: none !important;
+        box-sizing: border-box !important;
         border-radius: 4px !important;
-        flex-shrink: 1 !important; /* 375px을 넘어가려 하면 숫자들이 자동으로 찌그러지며 자리 양보 */
     }
 
-    /* 3. 양쪽 화살표 생존 보장 가드 (수축 절대 금지 및 양옆 공백 극한 축소) */
-    .pagination .page-link[aria-label="Go to previous page"],
-    .pagination .page-link[aria-label="Go to next page"] {
-        flex-shrink: 0 !important; /* 숫자는 찌그러져도 화살표는 형태 유지 */
-        padding: 0 1px !important; /* 화살표 버튼의 불필요한 패딩을 거의 없앰 */
+    /* 3. 화살표 및 첫페이지/끝페이지 생존 철벽 가드 (절대 수축 금지) */
+    .pagination > a[aria-label="Go to previous page"],
+    .pagination > a[aria-label="Go to next page"] {
+        flex: 0 0 auto !important; /* 양쪽 끝 화살표는 절대로 찌그러지지 않음 */
+        padding: 0 !important; /* 화살표 주변 공백 완전 소각 */
     }
 
-    /* 화살표 아이콘 자체 규격 다이어트 */
-    .pagination .page-link svg {
+    /* SVG 아이콘 핏 최적화 */
+    .pagination svg {
         width: 16px !important;
         height: 16px !important;
         margin: 0 !important;
