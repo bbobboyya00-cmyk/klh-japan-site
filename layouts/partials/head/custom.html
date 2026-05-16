@@ -37,7 +37,7 @@
 {{ end }}
 <style>
 @media (max-width: 640px) {
-    /* 1. 스크롤 락업 & 중앙 정렬 유지 */
+    /* 1. 스크롤 락업 및 모바일 폭 100% 최적화 (가로폭 초과 원천 봉쇄) */
     .pagination {
         display: flex !important;
         flex-wrap: nowrap !important;
@@ -45,41 +45,61 @@
         align-items: center !important;
         overflow: hidden !important; 
         width: 100% !important;
-        padding: 10px 0 !important; /* 컨테이너 좌우 패딩을 0으로 만들어 375px 100% 활용 */
+        padding: 12px 0 !important;
         margin: 0 !important;
-        gap: 2px !important; /* 각 엘리먼트 사이의 최소 간격 */
+        gap: 2px !important;
         box-sizing: border-box !important;
     }
 
-    /* 2. 숨어있던 min-width 강제 할당 파괴 및 유연한 수축 허용 */
+    /* 2. 유연한 수축 허용 및 미세 패딩 다이어트 */
     .pagination > a,
     .pagination > span {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        flex: 0 1 auto !important; /* 요소 팽창 금지(0), 필요시 수축 허용(1), 콘텐츠 크기만큼만 할당(auto) */
-        min-width: 0 !important; /* 🌟 핵심: 테마 원본의 32px 강제 할당을 완벽히 무력화 */
+        flex: 0 1 auto !important; /* 공간 부족 시 유연하게 찌그러지도록 허용 */
+        min-width: 0 !important;   /* 고정 크기 파괴 */
         height: 30px !important;
-        padding: 0 2px !important; /* 양옆 잉여 공백 최소화 */
+        padding: 0 3px !important;
         margin: 0 !important;
-        font-size: 0.8rem !important; /* 모바일 전용 폰트 사이즈 강제 */
+        font-size: 0.85rem !important; /* 시인성 확보를 위해 폰트 미세 상향 */
         text-decoration: none !important;
         box-sizing: border-box !important;
         border-radius: 4px !important;
     }
 
-    /* 3. 화살표 및 첫페이지/끝페이지 생존 철벽 가드 (절대 수축 금지) */
+    /* 3. 화살표 및 끝자리 수축 절대 방어 */
     .pagination > a[aria-label="Go to previous page"],
     .pagination > a[aria-label="Go to next page"] {
-        flex: 0 0 auto !important; /* 양쪽 끝 화살표는 절대로 찌그러지지 않음 */
-        padding: 0 !important; /* 화살표 주변 공백 완전 소각 */
+        flex: 0 0 auto !important;
+        padding: 0 1px !important;
     }
 
-    /* SVG 아이콘 핏 최적화 */
     .pagination svg {
         width: 16px !important;
         height: 16px !important;
         margin: 0 !important;
+    }
+
+    /* ==========================================
+       [핵심] 모바일 전용 노출/은폐 (±2) 지능형 로직
+       ========================================== */
+    /* A. 기본적으로 불필요한 중간 번호들은 모두 은폐 */
+    /* (첫 페이지, 마지막 페이지, 현재 페이지, 말줄임표(...)는 제외) */
+    .pagination > *:not(:first-child):not(:last-child):not(:nth-child(2)):not(:nth-last-child(2)):not(.current):not(.pagination-link) {
+        display: none !important;
+    }
+
+    /* B. 현재 페이지(.current) 기준으로 좌측 2개(-2, -1) 부활 */
+    .pagination > *:has(+ .current),
+    .pagination > *:has(+ * + .current) {
+        display: inline-flex !important;
+    }
+
+    /* C. 현재 페이지(.current) 기준으로 우측 2개(+1, +2) 부활 */
+    .pagination > .current + *,
+    .pagination > .current + * + * {
+        display: inline-flex !important;
     }
 }
 </style>
