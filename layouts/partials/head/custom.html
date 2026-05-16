@@ -37,28 +37,66 @@
 {{ end }}
 <style>
 @media (max-width: 640px) {
-    /* CSS는 오직 모바일에서의 정상적인 규격과 정렬만 담당 (복잡한 가드 전면 삭제) */
+    /* 1. 순정 플렉스 박스 레이아웃 및 375px 고정 수축 환경 세팅 */
     .pagination {
         display: flex !important;
         flex-wrap: nowrap !important;
         justify-content: center !important;
         align-items: center !important;
+        overflow: hidden !important; 
         width: 100% !important;
         padding: 15px 0 !important;
-        gap: 5px !important; /* 터치하기 편한 정상 자간 유지 */
+        margin: 0 !important;
+        gap: 5px !important;
         box-sizing: border-box !important;
     }
-    .pagination .page-link {
+    
+    /* 2. 터치 규격 및 폰트 사이즈 고정 (min-width 무력화) */
+    .pagination > * {
         min-width: 32px !important;
         height: 32px !important;
         font-size: 0.9rem !important;
         padding: 0 4px !important;
         text-decoration: none !important;
         box-sizing: border-box !important;
+        border-radius: 4px !important;
+        flex: 0 1 auto !important;
     }
+
     .pagination svg {
         width: 16px !important;
         height: 16px !important;
+    }
+
+    /* =========================================================================
+       [SSoT 매핑 마크업] 태그 독립형 ±2 필터 레이어
+       ========================================================================= */
+    
+    /* [규칙 A] 명시도 점수 균형을 위해 계층 선택자(>)로 모바일 내 모든 번호를 선제 은폐 */
+    .pagination > * {
+        display: none !important;
+    }
+
+    /* [규칙 B] 뼈대 기둥 및 주문 명세 필수 요소 노출 (span/a 태그 구분 파괴) */
+    .pagination > :first-child,                          /* <  (이전 화살표 span) */
+    .pagination > :last-child,                           /* >  (다음 화살표 a) */
+    .pagination > :nth-child(2),                         /* 1  (첫 페이지 번호) */
+    .pagination > :nth-last-child(2),                    /* 마지막 페이지 번호 */
+    .pagination > .pagination-link,                      /* ... (말줄임표 span) */
+    .pagination > .current {                             /* 현재 활성화된 페이지 span */
+        display: inline-flex !important;
+    }
+
+    /* [규칙 C] 현재 페이지(.current) 기준 우측 2개(+1, +2) 소속 태그 불문 부활 */
+    .pagination > .current + *,
+    .pagination > .current + * + * {
+        display: inline-flex !important;
+    }
+
+    /* [규칙 D] 현재 페이지(.current) 기준 좌측 2개(-1, -2) 소속 태그 불문 부활 */
+    .pagination > *:has(+ .current),
+    .pagination > *:has(+ * + .current) {
+        display: inline-flex !important;
     }
 }
 </style>
