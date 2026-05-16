@@ -1,0 +1,99 @@
+---
+en_url: "https://en.klifehack.com/2026/05/sneak-peek-ddps-baby-shark-exhibition.html"
+title: "2026年6月オープンのDDPベイビーシャーク展示会を40%割引で先取り予約したレポ"
+slug: "ddp-baby-shark-exhibition-family-fun"
+date: 2026-05-16T19:09:44+09:00
+draft: false
+image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/ddp-baby-shark-exhibition-family-fun/khack_1778926053_1.webp"
+description: "2026年6月から東大門デザインプラザで開催される「ベイビーシャーク」のAI体験型展示会。チケットを安く買う方法や見どころをソウル在住者が紹介します。"
+categories: ["K-Pulse Trending"]
+tags: ["DDP", "ベイビーシャーク", "ソウル観光", "東大門", "子連れ旅行"]
+author: "K-Life Hack"
+---
+
+ソウルで子連れのお出かけ先に悩んでいるママ・パパの皆さん、注目です！✨ 5月のバラの季節が過ぎ、いよいよ夏本番のイベント情報が入ってきました。今回は、世界中で愛されるあのキャラクターに会える<b><mark>ベイビーシャーク</mark></b>の最新展示会を、ソウル在住の私が本音でレビューしちゃいます！💖
+
+（…実を言うと、私も40%オフの早割チケットを速攻でゲットしました！笑）🤫
+
+<br/>
+
+## ◆ 幻想的な海の世界へ！最新AI技術の没入体験 ◆
+
+今回の展示の目玉は何といっても「AI技術」を使った体験型ゾーンです。入り口から続く水中通路は、青い光が反射して本当に海底を歩いているような感覚になります。地下鉄2・4・5号線が通る東大門歴史文化公園（トンデムン・レキシブンカコウエン）駅から直結なので、暑い日でも快適に到着できるのが嬉しいポイントですね！🌊
+
+
+
+<img alt="DDP展示館の青い光の幻想的な水中通路" fetchpriority="high" height="526" loading="eager" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/ddp-baby-shark-exhibition-family-fun/khack_1778926051_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" width="743"/>
+
+
+
+展示タイトルは「ベイビーシャーク秘密の招待状：ビカーミング・シャーク」。このポスター、色使いが鮮やかで思わず見惚れちゃいませんか？🎨 2026年6月18日からスタートするこのイベントは、全部で6つのテーマゾーンに分かれていて、大人でもワクワクするような仕掛けが満載です！🦈✨
+
+
+
+<img alt="DDPベイビーシャーク展示会の公式ポスター" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/ddp-baby-shark-exhibition-family-fun/khack_1778926056_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
+<br/>
+
+## ◆ 子供たちが夢中！デジタルで触れ合うサメの仲間たち ◆
+
+大きなデジタル画面の前で、自分の動きに合わせてサメが反応してくれるエリアは、子供たちのエネルギー発散にぴったりです！🏃‍♀️💨 画面の中のテクスチャも非常に細かく、まるでキャラクターが生きているかのような躍動感。ただ、人気ゾーンなので週末は30分以上の待ち時間が発生する可能性大です。予約アプリの「キャッチテーブル」で状況を確認しておくのが賢い選択ですよ！（未来の自分に感謝することになるはず！）💯
+
+
+
+<img alt="デジタル画面でサメと遊ぶ子供たち" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/ddp-baby-shark-exhibition-family-fun/khack_1778926053_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
+
+暗闇の中で光り輝く「海藻の洞窟」は、視覚的な刺激が強くて写真映えも最高です。✨🥺 手を触れると光の色が変わるなど、五感を使って楽しめる工夫がされています。ただ、このエリアは通路が少し狭く、大きなベビーカーだと移動が大変かもしれません。身軽な格好で行くことを強くおすすめします！⚠️
+
+
+
+<img alt="光る海藻の洞窟を探検する様子" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/ddp-baby-shark-exhibition-family-fun/khack_1778926054_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
+<br/>
+
+## ◆ 圧巻の建築美！東大門デザインプラザ（DDP）の魅力 ◆
+
+会場となる<b><mark>東大門デザインプラザ（DDP）</mark></b>は、ザハ・ハディッド氏が設計した世界最大規模の3次元非定型建築です。この曲線美、いつ見ても宇宙船みたいで圧倒されますよね！🛸 太陽の光が反射するアルミパネルの質感を間近で見ると、その精巧さに驚かされます。📸📸
+
+
+
+<img alt="太陽の光に照らされたDDPの曲線美" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/ddp-baby-shark-exhibition-family-fun/khack_1778926058_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
+
+建物の足元には、朝鮮時代の歴史遺構がそのまま残されているのもソウルらしい風景です。現代的なメタリック建築と古い石垣のコントラストは、ここでしか見られない貴重な景色。展示を楽しんだ後に、この周辺を15分ほどゆっくり散歩するだけでも、ソウルの歴史と未来を同時に感じることができますよ！🌿✨
+
+
+
+<img alt="歴史遺構と現代建築が共存するDDPの全景" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/ddp-baby-shark-exhibition-family-fun/khack_1778926060_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
+<br/>
+
+### ⚠️ 正直に言います！ここだけは要注意 ⚠️
+
+DDPの内部は、まるで迷路のように複雑です！この流線型の通路は美しいですが、エレベーターの場所が分かりにくく、階段も急な場所が多いので、歩き慣れていないと足がパンパンになります（…私も何度か迷子になって泣きそうになりました！笑）。また、お土産コーナーには可愛いグッズが並んでいますが、中には展示と関係ないアルパカのぬいぐるみなど「これ、ここで買う必要ある？」と思ってしまう高価な商品も混ざっています。お財布の紐はしっかり締めておきましょう！🎁💸
+
+
+
+<img alt="DDP内部のメタリックな流線型通路" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/ddp-baby-shark-exhibition-family-fun/khack_1778926062_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
+
+
+<img alt="お祭りで売られている可愛いアルパカのぬいぐるみ" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/ddp-baby-shark-exhibition-family-fun/khack_1778926065_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
+<br/>
+<span style="font-size: 1.4em; font-weight: 800;">事前予約の40%割引は6月17日まで！この夏、ソウルで一番ホットな家族の思い出作りに出かけましょう！！！！！</span>😱💖
+
+<br/>
+
+---
+
+> 🌐 **Read this post in other languages:**
+> * <a href="https://en.klifehack.com/2026/05/sneak-peek-ddps-baby-shark-exhibition.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>
