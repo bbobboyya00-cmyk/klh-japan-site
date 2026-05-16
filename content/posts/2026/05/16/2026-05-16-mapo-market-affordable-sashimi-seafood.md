@@ -57,7 +57,7 @@ author: "K-Life Hack"
 
 
 
-<img alt="新鮮なアワビとホヤ의 ディスプレイ" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/mapo-market-affordable-sashimi-seafood/khack_1778893448_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="新鮮なアワビとホヤの ディスプレイ" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/mapo-market-affordable-sashimi-seafood/khack_1778893448_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
 
