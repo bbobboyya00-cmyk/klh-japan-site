@@ -141,6 +141,8 @@ author: "K-Life Hack"
 
 ホテルビュッフェでありがちな「コーヒーマシンの行列」がここにはありません！テーブルのQRコードを読み込むだけで、バリスタが淹れたコーヒーを席まで運んでくれるんです。
 
+<img alt="QR coffe" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/17/vista-walkerhill-buffet-seoul-review/img22.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
 このサービスは本当にスマートで感動しました。👏
 
 
