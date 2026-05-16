@@ -38,37 +38,36 @@
 
 <style>
 @media (max-width: 640px) {
-    /* 1. 순정 테마의 클리핑 가드(overflow: hidden)를 파괴하고 자연스러운 줄바꿈 허용 */
+    /* 1. 줄바꿈을 절대 금지(nowrap)하고, 중앙 정렬 및 상하 여백 최적화 */
     .pagination {
         display: flex !important;
-        flex-wrap: wrap !important;
+        flex-wrap: nowrap !important; 
         justify-content: center !important;
-        overflow: visible !important; 
-        gap: 6px !important;
-        row-gap: 10px !important;
-        padding: 12px 8px !important;
+        overflow: visible !important;
+        gap: 4px !important;
+        padding: 10px 4px !important;
         width: 100% !important;
         box-sizing: border-box !important;
     }
     
-    /* 2. nav 직계 자식인 .page-link(a 및 span) 엘리먼트 정밀 타겟팅 및 독립 라운딩 조절 */
+    /* 2. 10개 요소가 320px~375px 내에 안착하도록 폭과 폰트 크기를 컴팩트하게 압축 */
     .pagination .page-link {
-        font-size: 0.85rem !important;
-        min-width: 36px !important;
-        height: 36px !important;
-        padding: 0 4px !important;
+        font-size: 0.78rem !important;
+        min-width: 28px !important; /* 총 가로폭 계산: (28*10) + (4*9) = 316px로 iPhone SE 등 최저 해상도에서도 한 줄 안착 보장 */
+        height: 30px !important;
+        padding: 0 2px !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
         box-sizing: border-box !important;
         text-decoration: none !important;
-        border-radius: 6px !important; /* 줄바꿈 레이아웃 브레이킹 시 경계선이 깨지지 않도록 독립 격리 조치 */
+        border-radius: 4px !important;
     }
 
-    /* 3. < > 및 ... 등의 아이콘 크기가 모바일 뷰포트 밖으로 튀지 않도록 제어 */
+    /* 3. 셰브론(<, >) 및 닷츠(...) 아이콘 크기도 폰트 비율에 맞춰 축소 */
     .pagination .page-link svg {
-        width: 18px !important;
-        height: 18px !important;
+        width: 14px !important;
+        height: 14px !important;
     }
 }
 </style>
