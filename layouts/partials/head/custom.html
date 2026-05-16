@@ -37,7 +37,7 @@
 {{ end }}
 <style>
 @media (max-width: 640px) {
-    /* 1. 순정 플렉스 박스 레이아웃 및 375px 고정 수축 환경 세팅 */
+    /* 1. 375px 화면 안에서 절대 터지지 않도록 가로 마이크로 자간(3px) 조절 */
     .pagination {
         display: flex !important;
         flex-wrap: nowrap !important;
@@ -47,15 +47,15 @@
         width: 100% !important;
         padding: 15px 0 !important;
         margin: 0 !important;
-        gap: 5px !important;
+        gap: 3px !important; 
         box-sizing: border-box !important;
     }
     
-    /* 2. 터치 규격 및 폰트 사이즈 고정 (min-width 무력화) */
+    /* 2. 폰트 크기는 크게 키워 가독성을 확보하고, 대신 최소 너비를 유연하게 제어 */
     .pagination > * {
-        min-width: 32px !important;
+        min-width: 28px !important; /* 숫자 버튼의 적정 너비 확보 */
         height: 32px !important;
-        font-size: 0.9rem !important;
+        font-size: 0.95rem !important; /* 🌟 사용자의 요구 반영: 폰트 사이즈 시원하게 확대 */
         padding: 0 4px !important;
         text-decoration: none !important;
         box-sizing: border-box !important;
@@ -63,37 +63,45 @@
         flex: 0 1 auto !important;
     }
 
+    /* 3. 공간을 많이 잡아먹는 화살표와 말줄임표(...) 박스의 너비를 컴팩트하게 다이어트 */
+    /* 이렇게 해야 숫자 폰트가 커져도 전체 가로폭이 375px을 넘지 않아 화살표가 잘리지 않습니다 */
+    .pagination > :first-child,
+    .pagination > :last-child,
+    .pagination > .pagination-link {
+        min-width: 24px !important;
+        padding: 0 !important;
+    }
+
     .pagination svg {
         width: 16px !important;
         height: 16px !important;
+        margin: 0 !important;
     }
 
     /* =========================================================================
-       [SSoT 매핑 마크업] 태그 독립형 ±2 필터 레이어
+       [SSoT 필터 레이어] 텍스트 노출 가드
        ========================================================================= */
-    
-    /* [규칙 A] 명시도 점수 균형을 위해 계층 선택자(>)로 모바일 내 모든 번호를 선제 은폐 */
     .pagination > * {
         display: none !important;
     }
 
-    /* [규칙 B] 뼈대 기둥 및 주문 명세 필수 요소 노출 (span/a 태그 구분 파괴) */
-    .pagination > :first-child,                          /* <  (이전 화살표 span) */
-    .pagination > :last-child,                           /* >  (다음 화살표 a) */
+    /* 필수 프레임워크 요소 노출 */
+    .pagination > :first-child,                          /* <  (이전 화살표) */
+    .pagination > :last-child,                           /* >  (다음 화살표) */
     .pagination > :nth-child(2),                         /* 1  (첫 페이지 번호) */
     .pagination > :nth-last-child(2),                    /* 마지막 페이지 번호 */
-    .pagination > .pagination-link,                      /* ... (말줄임표 span) */
-    .pagination > .current {                             /* 현재 활성화된 페이지 span */
+    .pagination > .pagination-link,                      /* ... (말줄임표) */
+    .pagination > .current {                             /* 현재 페이지 */
         display: inline-flex !important;
     }
 
-    /* [규칙 C] 현재 페이지(.current) 기준 우측 2개(+1, +2) 소속 태그 불문 부활 */
+    /* 현재 페이지(.current) 기준 우측 2개(+1, +2) 부활 */
     .pagination > .current + *,
     .pagination > .current + * + * {
         display: inline-flex !important;
     }
 
-    /* [규칙 D] 현재 페이지(.current) 기준 좌측 2개(-1, -2) 소속 태그 불문 부활 */
+    /* 현재 페이지(.current) 기준 좌측 2개(-1, -2) 부활 */
     .pagination > *:has(+ .current),
     .pagination > *:has(+ * + .current) {
         display: inline-flex !important;
