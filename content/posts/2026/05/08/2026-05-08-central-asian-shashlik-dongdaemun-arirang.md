@@ -51,7 +51,7 @@ author: "K-Life Hack"
 
 目の前で豪快に肉を串から外す瞬間は、まさに本格的な中央アジア料理を楽しんでいるという実感が湧いてくる最高にワクワクする時間です。この圧倒的なボリューム感は、写真に収めずにはいられません。
 
-<img alt="alt="中央アジアの伝統的な小皿料理" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/central-asian-shashlik-dongdaemun-arirang/khack_1778191686_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="中央アジアの伝統的な小皿料理" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/central-asian-shashlik-dongdaemun-arirang/khack_1778191686_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 キムチや玉ねぎ、そして特製のソースなど、テーブルを彩る小皿料理の一つひとつに丁寧な手仕事が感じられ、飽きることなく食事を楽しめます。特製ソースにディップして食べれば、新しい味の発見にワクワクが止まりません。
 
