@@ -72,12 +72,12 @@ author: "K-Life Hack"
 
 
 
-<img alt="眉スタイリング後の男性顧客" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/18/remade-gangnam-eyebrow-styling-review/khack_1779090374_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="眉スタイリング後の男性顧客" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/18/remade-gangnam-eyebrow-styling-review/44.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
 
 
-<img alt="眉スタイリング結果クローズアップ" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/18/remade-gangnam-eyebrow-styling-review/khack_1779090376_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="眉スタイリング結果クローズアップ" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/18/remade-gangnam-eyebrow-styling-review/33.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
 <b>正直な失敗談としてお伝えしたいのは、施術直後の濃さです。</b>当日はかなりクッキリした眉になるため、大事なデートや写真撮影の直前に行くのは絶対に避けるべき。3日ほど経つと自然に馴染んできますが、それまでは「クレヨンしんちゃん状態」を覚悟しなければなりません。
