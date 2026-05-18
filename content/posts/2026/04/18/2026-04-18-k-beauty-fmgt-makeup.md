@@ -16,7 +16,7 @@ author: "K-Life Hack"
 
 {{< alert type="success" >}}
 
-****
+
 - 最新K-Beautyブランド「THE FACE SHOP fmgt」の厳選アイテム
 - 忙しい朝に嬉しい、持続力と自然な仕上がりを両立
 - プロの仕上がりを叶えるユニークなツールとテクスチャー
