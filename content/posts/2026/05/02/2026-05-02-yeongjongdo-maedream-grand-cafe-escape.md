@@ -31,8 +31,6 @@ author: "K-Life Hack"
 
 1階のベーカリーコーナーには、視覚を愉しませる多様なパンが並びます。単なる軽食に留まらず、空間のコンセプトに合わせたアーティスティックなデザートの数々は、五感を刺激する美食体験を約束します。
 
-<img alt='粉砂糖をまぶし、新鮮な苺のスライスと濃厚なグレーズをたっぷりとトッピングした贅沢なストロベリークリームドーナツ。"' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/yeongjongdo maedream grand cafe escape/khack_1777726977_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
 特に、旬のフルーツを惜しみなく使用したシグネチャーメニューは、その華やかな佇まいからSNSでも大きな話題を呼んでいます。甘美なクリームと新鮮な苺の調和は、旅の疲れを癒やす至高の体験となるでしょう。
 
 <img alt='トウモロコシの形を模して巧妙に作られたデザートパン。甘いイエローカスタードと粒が含まれており、遊び心溢れる一品です。"' decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/yeongjongdo maedream grand cafe escape/khack_1777726980_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
