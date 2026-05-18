@@ -2062,10 +2062,8 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;p&gt;今回は、光化門の路地裏で見つけた隠れ家のようなスパと、感性を刺激する美食空間を巡る、特別な1日をご提案します。&lt;/p&gt;
 &lt;div class="alert alert--success"&gt;
  &lt;div class="alert-content"&gt;
- &lt;br&gt;
-・ スポセラピー（Spot Therapy）で受ける、韓国人熟練テラピストによる精密なパーソナルボディケア。&lt;br&gt;
-・ 全席個室のプレミアム韓食ダイニング、ウアラ（Uara）で堪能する、五感で楽しむ10コースの贅沢な時間。&lt;br&gt;
-
+ -スポセラピー（Spot Therapy）で受ける、韓国人熟練テラピストによる精密なパーソナルボディケア。
+-全席個室のプレミアム韓食ダイニング、ウアラ（Uara）で堪能する、五感で楽しむ10コースの贅沢な時間。
  &lt;/div&gt;
 &lt;/div&gt;
 
@@ -2121,14 +2119,14 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 &lt;p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;"&gt;서울 종로구 종로1가 24 4층&lt;/p&gt;
 &lt;/div&gt;
 &lt;div style="background: var(--themeBg-sec); height: 350px; width: 100%;"&gt;
-&lt;iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=서울 종로구 종로1가 24 4층&amp;t=&amp;z=18&amp;ie=UTF8&amp;iwloc=&amp;output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"&gt;&lt;/iframe&gt;
+&lt;iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=서울 종로구 새문안로5가길 3-1 4층&amp;output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"&gt;&lt;/iframe&gt;
 &lt;/div&gt;
 &lt;div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"&gt;
 &lt;span style="display: block; font-weight: 700; margin-bottom: 2px;"&gt;⚠️ 旅行者のための注意&lt;/span&gt;
 変化の激しいエリアでは、Googleマップの情報が最新ではない場合があります。より正確な位置確認のために、韓国語 &lt;b&gt;Naverマップ&lt;/b&gt; の使用をお勧めします。
 &lt;/div&gt;
 &lt;div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;"&gt;
-&lt;a href="https://www.google.com/maps/search/?api=1&amp;query=서울 종로구 종로1가 24 4층" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank"&gt;Google マップ&lt;/a&gt;
+&lt;a href="https://www.google.com/maps/search/?api=1&amp;query=서울 종로구 새문안로5가길 3-1 4층" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank"&gt;Google マップ&lt;/a&gt;
 &lt;a href="https://map.naver.com/p/search/%EC%8A%A4%ED%8F%AC%ED%85%8C%EB%9D%BC%ED%94%BC%20%EA%B4%91%ED%99%94%EB%AC%B8%EC%84%B8%EC%A2%85" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank"&gt;Naver マップ&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;</description></item></channel></rss>
