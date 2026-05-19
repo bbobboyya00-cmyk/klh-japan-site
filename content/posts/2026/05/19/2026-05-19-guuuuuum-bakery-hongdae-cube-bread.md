@@ -25,7 +25,7 @@ author: "K-Life Hack"
 
 
 
-## <b>구우움 베이커리 홍대점</b> が提案する日本の家庭のような温かい空間とは
+## <b>GUUUUUUM BAKERY 弘大店</b> が提案する日本の家庭のような温かい空間とは
 
 中に入ると、外観からは想像できないほど広々とした空間が広がっていて驚きました。
 
@@ -85,7 +85,7 @@ author: "K-Life Hack"
 
 
 
-<img alt="トレイに並んだ焼き立ての 큐브빵" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/19/guuuuuum-bakery-hongdae-cube-bread/khack_1779151538_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+<img alt="トレイに並んだ焼き立てのキューブパン" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/19/guuuuuum-bakery-hongdae-cube-bread/khack_1779151538_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
 
