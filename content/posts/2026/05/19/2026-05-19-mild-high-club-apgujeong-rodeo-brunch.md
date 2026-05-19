@@ -1,6 +1,6 @@
 ---
 en_url: "https://en.klifehack.com/2026/05/i-walked-10-minutes-from-apgujeong.html"
-title: "予約なしで週末は待ち時間覚悟？狎鴎亭ロデオ駅5番出口から徒歩10分のマイルドハイクラブ狎鴎亭店へ行ってみた"
+title: "圧鴎亭ロデオの「Mild High Club」で話題のダッチベイビーパンケーキを食べてきた話"
 slug: "mild-high-club-apgujeong-rodeo-brunch"
 date: 2026-05-19T10:08:07+09:00
 draft: false
