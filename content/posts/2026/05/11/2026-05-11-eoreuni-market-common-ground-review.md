@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/kidult-paradise-real-2026-eoreuni.html
 title: "「大人買い」が止まらない！建大コモングラウンドで開催中のオルニマーケット潜入レポ"
 slug: "eoreuni-market-common-ground-review"
 date: 2026-05-11T19:08:07+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/eoreuni-market-common-ground-review/khack_1778493950_1.webp"
 description: "2026年5月、ソウルの建大（コンデ）がキダルトの聖地に！トイ・ストーリー30周年記念グッズや激レアヴィンテージが集まる「オルニマーケット」のオープンラン情報から、賢い掘り出し物の見つけ方まで、現地から生の声をお届けします。"
 categories: ["The Hype Logistics"]
 tags: ["大人買い"]
 author: "K-Life Hack"
 ---
+
+
 
 今週末、ソウルで何をしようか迷っている方は注目してください！キャラクターグッズやヴィンテージ雑貨が好きなら、絶対に見逃せないイベントが建大（コンデ）で開催されています。童心を忘れない大人「キダルト」たちの聖地、オルニマーケットの熱狂的な現場を、ソウル現地の視点で詳しくレポートしますね。
 
@@ -89,8 +91,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%9E%90%EC%96%91%EB%8F%99%20%EC%BB%A4%EB%A8%BC%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/kidult-paradise-real-2026-eoreuni.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

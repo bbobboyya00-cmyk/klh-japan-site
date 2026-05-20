@@ -11,6 +11,8 @@ tags: ["ランベル", "聖水ポップアップ", "韓国スキンケア", "ソ
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🌿 自然由来成分にこだわった「ランベル」の10周年を記念した癒やしの空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🎁 入場するだけで貰えるリユーザブルバッグと豪華サンプルキットの特典</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">⏱️ 9.98秒を狙うタイマーゲームでスキンケア現品ゲットのチャンス</li></ul>
 </div></blockquote>
@@ -66,8 +68,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%9E%91%EB%B2%A8" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/lanbelle-pop-ups-green-escape-2026.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

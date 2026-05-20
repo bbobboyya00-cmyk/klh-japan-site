@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/literary-luxury-in-gangnam-2026-great.
 title: "2026年ソウル・江南の休日｜国立子供青少年図書館で楽しむプレミアムな「こどもの日」フェスティバル"
 slug: "gangnam-national-children-youth-library-2026-guide"
 date: 2026-04-01T10:50:56+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/gangnam-national-children-youth-library-2026-guide/khack_1777068288_0.webp"
 description: "ソウル江南の「国立子供青少年図書館」で開催される2026年こどもの日フェスティバルの詳細ガイド。マジックショー、読書体験、駐車場情報など、家族連れに最適なハイエンドな休日プランをディレクターKが提案します。"
 categories: ["K-Travel Hacks"]
 tags: ["国立子供青少年図書館", "江南こどもの日", "ソウル家族旅行", "韓国子供とお出かけ", "江南図書館フェスティバル"]
 author: "K-Life Hack"
 ---
+
+
 
 「K-Life Hack」のシニアディレクター、Kです。
 

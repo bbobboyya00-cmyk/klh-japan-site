@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/beyond-surface-ritual-of-resilience-at
 title: "ソウル・新沙洞の隠れ家で研ぎ澄まされる美意識。タリタクム（Talitha Koum）が提案する真のヴィーガン・ライフスタイル"
 slug: "talitha-koum-premium-skincare-flagship-seoul"
 date: 2026-04-06T10:04:50+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/talitha-koum-premium-skincare-flagship-seoul/khack_1777187174_0.webp"
 description: "ソウル・新沙洞に位置するタリタクムのフラッグシップ。ディレクターKが、特許成分「白タンポポ」の生命力を宿したハイエンドなヴィーガンビューティーの世界をご案内します。"
 categories: ["K-Beauty Insider"]
 tags: ["タリタクム", "韓国コスメ", "ヴィーガンビューティー", "シームレスクッション", "新沙洞"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 見どころ: 白タンポポの生命力を象徴する、ミニマルかつエレガントな空間。</li>
@@ -66,8 +68,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/강남 탈리다쿰" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/beyond-surface-ritual-of-resilience-at.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

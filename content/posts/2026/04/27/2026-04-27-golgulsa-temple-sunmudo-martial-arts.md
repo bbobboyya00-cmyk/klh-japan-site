@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/golgulsa-temple-ascetic-luxury-in.html
 title: "慶州・骨窟寺：千年の石窟と「禅武道」が織りなす究極の心身修練ガイド"
 slug: "golgulsa-temple-sunmudo-martial-arts"
 date: 2026-04-07T10:54:57+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/golgulsa-temple-sunmudo-martial-arts/khack_1777284250_0.webp"
 description: "韓国唯一の石窟寺院、慶州・骨窟寺でのテンプルステイ。禅武道の演武から早朝の海辺修行まで、ディレクターKが贈るハイエンドな精神の休息ガイド。"
 categories: ["Cultural Nuance"]
 tags: ["骨窟寺", "慶州テンプルステイ", "禅武道", "韓国一人旅", "ヒーリング旅行"]
 author: "K-Life Hack"
 ---
+
+
 
 <p>喧騒から切り離された慶州（キョンジュ）の山懐、そこには韓国の「少林寺」と称される神秘的な寺院が存在します。ディレクターKがお届けする今回のガイドは、単なる宿泊体験を超え、心身の限界に挑みながら真の休息を見出す「骨窟寺（コルグルサ）」でのテンプルステイです。現代の韓国人が、なぜ今あえて厳しい修行を求めてこの地を訪れるのか。その社会的背景と共に、この場所だけが持つ特別な質感を深掘りします。</p>
 
@@ -84,8 +86,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EA%B3%A8%EA%B5%B4%EC%82%AC" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/golgulsa-temple-ascetic-luxury-in.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

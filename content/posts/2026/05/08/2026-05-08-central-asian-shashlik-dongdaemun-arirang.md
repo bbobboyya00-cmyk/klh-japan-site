@@ -11,6 +11,8 @@ tags: ["東大門グルメ", "中央アジア料理", "シャシリク", "高麗
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">東大門歴史文化公園駅から徒歩1分という抜群のアクセス</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">高麗人伝統の味が楽しめるソウルでも貴重な中央アジア料理店</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">炭火でじっくり焼き上げた巨大なシャシリク（串焼き）が主役</li></ul>
 </div></blockquote>

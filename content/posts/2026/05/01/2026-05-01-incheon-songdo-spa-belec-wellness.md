@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/songdo-sanctuary-masterclass-in-high.h
 title: "仁川・松島セントラルパークを望む極上の癒やし、スパ・ザ・ベレックの贅沢体験"
 slug: "incheon-songdo-spa-belec-wellness"
 date: 2026-04-18T19:45:54+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/incheon-songdo-spa-belec-wellness/khack_1777640656_0.webp"
 description: "2026年、仁川・松島の近未来的な景色と共に楽しむハイエンドスパ「スパ・ザ・ベレック」。全室ウォーターベッド完備の究極の癒やし空間をご紹介します。"
 categories: ["K-Beauty Insider"]
 tags: ["松島スパ", "仁川エステ", "バンブーテラピー", "韓国ウェルネス", "セントラルパーク"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>視点</b>: セントラルパークの一望</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>日程</b>: 毎日営業予定</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>場所</b>: 松島セントラルパーク前</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>価値</b>: プレミアムな全身の休息</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>極意</b>: 水のベッドで眠る至福</li></ul>
@@ -63,8 +65,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%86%A1%EB%8F%84%20%EC%84%BC%ED%8A%B8%EB%9F%B4%ED%8C%8C%ED%81%AC" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/songdo-sanctuary-masterclass-in-high.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

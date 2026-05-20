@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/my-18000-krw-cheongdam-lunch-honest.ht
 title: "清潭洞でこのクオリティは驚き！チョングッチャン苦手さんも大満足の絶品タコ炒めと韓定食"
 slug: "cheonggukjang-boribap-cheongdam-korean-lunch"
 date: 2026-05-17T01:08:43+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/17/cheonggukjang-boribap-cheongdam-korean-lunch/khack_1778947521_1.webp"
 description: "清潭洞で長年愛される隠れた名店「チョングッチャンと麦ご飯 清潭店」を徹底レビュー！臭みが少ないチョングッチャンと、やみつきになるタコ炒め、豊富な手作りおかずで大満足の韓定食を体験。家族連れにもおすすめの清潭洞ランチスポットです。"
 categories: ["K-Food Insider"]
 tags: ["清潭洞グルメ", "チョングッチャンと麦ご飯", "清潭駅韓国料理", "チョングッチャン名店", "タコ炒め", "麦ご飯", "家族外食"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -114,8 +116,3 @@ author: "K-Life Hack"
 正直なところ、デートには不向き（匂いの問題で！）ですが、気心の知れた友人や家族と、本物の韓国の味をお腹いっぱい楽しむには最高のスポットです。👍
 
 清潭洞で20,000ウォン前後でこれだけの幸福感を味わえる場所は、他にはなかなかありません。<span style="font-size: 1.4em; font-weight: 800;">ソウル通を目指すなら、一度は訪れる価値アリですよ！！</span>✈️🇰🇷
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/my-18000-krw-cheongdam-lunch-honest.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

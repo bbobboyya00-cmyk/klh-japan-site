@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/refreshing-escape-to-soonhari-jin.html
 title: "聖水のピクセルアートな島へ！「スナリ・ジン・アイランド」2026年ポップアップ完全ガイド"
 slug: "soonhari-jin-island-seongsu-popup"
 date: 2026-04-29T10:19:42+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/soonhari-jin-island-seongsu-popup/khack_1777953931_0.webp"
 description: "2026年5月、聖水洞にあの「スナリ・ジン・アイランド」が帰ってきます！ピクセルアートの世界観と爽快なドリンク体験、過去の人気イベントをベースにした2026年の見どころを最速プレビューします。"
 categories: ["K-Pulse Trending"]
 tags: ["スナリ", "聖水ポップアップ", "韓国旅行", "ピクセルアート", "ソウル観光"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">レトロなピクセルアートが彩る幻想的な空間デザイン</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">スナリの魅力を再発見できる特別なミクソロジー体験</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">どこを撮っても映えるミニチュアとフォトゾーンの数々</li></ul>
@@ -72,8 +74,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%88%9C%ED%95%98%EB%A6%AC%EC%B0%90%EC%95%84%EC%9D%BC%EB%9E%9C%EB%93%9C" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/refreshing-escape-to-soonhari-jin.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

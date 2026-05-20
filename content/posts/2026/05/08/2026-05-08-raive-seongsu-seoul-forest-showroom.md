@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/raive-seongsu-hidden-contemporary.html
 title: "友達にこっそり教えたい！ソウルの森「RAIVE」で最旬トレンドを先取り！"
 slug: "raive-seongsu-seoul-forest-showroom"
 date: 2026-05-04T19:30:15+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/raive-seongsu-seoul-forest-showroom/khack_1778213056_1.webp"
 description: "ソウルの森にひっそりと佇むファッションブランド「RAIVE」。感度の高いアイテムが揃うショールームで、最新のソウルファッショントレンドを体験しよう。"
 categories: ["The Hype Logistics"]
 tags: ["ソウルの森", "RAIVE", "聖水洞", "韓国ファッション", "ショールーム"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ソウルの森にある隠れ家的なファッションスポット</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">トレンディなキャップやアクセサリーが勢揃い</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">上質な素材と洗練されたデザインに注目</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ソウルのおしゃれ女子たちが愛する最新スタイルを体験</li></ul>
@@ -86,8 +88,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%A0%88%EC%9D%B4%EB%B8%8C%20%EC%84%9C%EC%9A%B8%EC%88%B2" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/raive-seongsu-hidden-contemporary.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

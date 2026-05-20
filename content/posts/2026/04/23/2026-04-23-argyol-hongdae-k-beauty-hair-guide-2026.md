@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/beyond-neon-precision-of-k-beauty.html
 title: "2026年ソウル美容旅：弘大の最旬サロン『アールギョル』で叶える至高のK-Beauty体験"
 slug: "argyol-hongdae-k-beauty-hair-guide-2026"
 date: 2026-03-26T10:25:14+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/argyol-hongdae-k-beauty-hair-guide-2026/khack_1776884631_0.webp"
 description: "ソウル弘大の人気ヘアサロン『アールギョル』をディレクターKが徹底取材。2026年の最新トレンドカラーから、人気のレイヤードカット、限定トーストサービスまで詳しく解説します。"
 categories: ["K-Beauty Insider"]
 tags: ["弘大美容室", "韓国ヘアサロン", "K-Beauty", "アールギョル", "レイヤードカット"]
 author: "K-Life Hack"
 ---
+
+
 
 こんにちは。『K-Life Hack』のシニアディレクターKです。
 

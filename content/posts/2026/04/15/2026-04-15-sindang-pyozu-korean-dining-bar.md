@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/a-connoisseurs-guide-to-pyozu.html"
 title: "2026年ソウル・新堂洞の最旬スポット。伝統酒ソムリエが贈る至福の韓食ダイニング『ピョジュ(表酒)』へ。"
 slug: "sindang-pyozu-korean-dining-bar"
 date: 2026-03-03T16:16:33+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776238263_0.webp"
 description: "ソウル・新堂洞(ヒップダンドン)で今最も熱い韓食ダイニング『ピョジュ』を特集。伝統酒ソムリエが提案する極上のペアリングと、洗練された空間の魅力をエディターKが徹底解説。"
 categories: ["K-Food Insider"]
 tags: ["新堂洞 グルメ", "ヒップダンドン 居酒屋", "ソウル 伝統酒バー", "韓国料理 ペアリング", "ピョジュ 予約"]
 author: "K-Life Hack"
 ---
+
+
 
 ソウルで今最も熱いエリア、新堂洞（シンダンドン）。
 
@@ -87,24 +89,7 @@ author: "K-Life Hack"
 
 ソウルの夜を、単なる食事で終わらせたくないあなたへ。伝統酒の奥深さと、モダン韓食の驚きが共存する『ピョジュ』で、忘れられないひとときを過ごしてみてはいかがでしょうか。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-connoisseurs-guide-to-pyozu.html)
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 ピョジュ (Pyozu)</h3><p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울 중구 다산로42길 43-6, 1층</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=%ED%91%9C%EC%A3%BC&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"></iframe>
-</div>
-
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;">
-<span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>
-変化の激しいエリアでは、Googleマップの情報が最新ではない場合があります。より正確な位置確認のために、韓国語 <b>Naverマップ</b> の使用をお勧めします。
-</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%ED%91%9C%EC%A3%BC" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%ED%91%9C%EC%A3%BC" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

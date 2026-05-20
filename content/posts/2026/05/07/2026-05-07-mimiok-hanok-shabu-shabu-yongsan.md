@@ -11,6 +11,8 @@ tags: ["ミミオク", "龍山グルメ", "ソウルシャブシャブ", "白と
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">伝統的な韓屋を改装した洗練された空間で、落ち着いた大人の食事時間を過ごせます。 利川（イチョン）産の米を使用した特製麺と、パクチーの代わりに韓国ハーブ「カワミドリ」を使った独自の風味が特徴です。 Netflixの人気番組『白と黒の料理人』ゆかりのシェフが手掛ける, 今ソウルで最も予約困難なホットプレイスの一つです。</li></ul>
 </div></blockquote>

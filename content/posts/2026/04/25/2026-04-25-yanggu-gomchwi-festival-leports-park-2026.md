@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/verdant-sophistication-at-yanggu.html"
 title: "2026年、春の香りを贈る。韓国・楊口「ゴムチ祭り」究極のハイエンド・ガイド"
 slug: "yanggu-gomchwi-festival-leports-park-2026"
 date: 2026-04-03T10:19:20+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/yanggu-gomchwi-festival-leports-park-2026/khack_1777100618_0.webp"
 description: "2026年5月、韓国江原道の楊口で開催される「青春楊口ゴムチ祭り」。伝統の山菜と豪華アーティストの共演、そして幻想的な花火まで。ディレクターKが贈る、大人のための春の旅の提案。"
 categories: ["K-Travel Hacks"]
 tags: ["韓国祭り2026", "楊口ゴムチ祭り", "江原道観光", "韓国春の旅", "韓国伝統料理"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>2026年5月2日から4日間、江原道楊口のレポーツ公園にて開催されます。</li>

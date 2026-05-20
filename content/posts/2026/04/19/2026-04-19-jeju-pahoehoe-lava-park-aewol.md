@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/a-journey-into-jejus-volcanic-soul.htm
 title: "済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ"
 slug: "jeju-pahoehoe-lava-park-aewol"
 date: 2026-03-13T19:53:39+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-pahoehoe-lava-park-aewol/khack_1776554878_0.webp"
 description: "済州島・崖月(エウォル)に誕生したパホイホイ溶岩地質公園を徹底ガイド。数千年前の溶岩が描く神秘的な地質と、モダンな建築美が融合した新感覚のライフスタイルスポット。予約方法から見どころ、カフェ情報まで現地のKが詳しく紹介します。"
 categories: ["K-Travel Hacks"]
 tags: ["済州島観光", "エウォル", "パホイホイ", "溶岩地質公園", "韓国旅行トレンド", "済州島感性スポット"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -123,26 +125,7 @@ author: "K-Life Hack"
 
 済州島の旅に、少しだけ深い思索と洗練された感性を加えたいなら、ぜひこの場所を訪れてみてください。自然とデザインが交差するこの場所で、あなただけの特別な物語が見つかるはずです。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-journey-into-jejus-volcanic-soul.html)
-
-<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
-
-## 📍 地図・アクセス
-
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 파호이호이 용암지질공원</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">제주특별자치도 제주시 애월읍 중산간서로 5994-47</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=파호이호이 라바필드 파크 제주&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=파호이호이 라바필드 파크 제주" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%ED%8C%8C%ED%98%B8%EC%9D%B4%ED%98%B8%EC%9D%B4%20%EB%9D%BC%EB%B0%94%ED%95%84%EB%93%9C%20%ED%8C%8C%ED%81%AC%20%EC%A0%9C%EC%A3%BC" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

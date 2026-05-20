@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/long-lines-for-hoonhoon-hotteok-in.htm
 title: "平日夕方でも行列！望遠市場「フンフンホットク」の正直レポ"
 slug: "mangwon-market-hoonhoon-hotteok-review"
 date: 2026-05-17T19:15:54+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/17/mangwon-market-hoonhoon-hotteok-review/khack_1779012866_1.webp"
 description: "望遠市場で大人気の「フンフンホットク」は、閉店間際でも行列ができるほど。外はカリカリ、中はもちもちの絶品ホットクは、ソウル旅行で絶対食べたいローカルグルメ！特にシアッホットクとコーンホットクは必食です。"
 categories: ["K-Food Insider"]
 tags: ["フンフンホットク", "望遠市場", "韓国屋台グルメ", "シアッホットク", "インジョルミホットク", "ソウルローカル人気店", "ホットクデザート"]
 author: "K-Life Hack"
 ---
+
+
 
 アンニョンハセヨ！ソウルインサイダーのK-Lifeです✨
 
@@ -206,8 +208,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%ED%9B%88%ED%9B%88%ED%98%B8%EB%96%A1" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/long-lines-for-hoonhoon-hotteok-in.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

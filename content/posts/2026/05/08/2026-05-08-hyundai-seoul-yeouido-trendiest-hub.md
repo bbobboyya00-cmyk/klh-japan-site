@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/the-hyundai-seoul-your-ultimate-guide.
 title: "ソウルのトレンド最前線！ザ・ヒュンダイ・ソウルで出会う絶品スイーツ体験"
 slug: "hyundai-seoul-yeouido-trendiest-hub"
 date: 2026-05-03T10:21:44+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/hyundai-seoul-yeouido-trendiest-hub/khack_1778234666_1.webp"
 description: "ソウルのトレンドセッターが密かに教える、ザ・ヒュンダイ・ソウル地下1階の隠れた名店「ハンジョンソン」。昨年大人気だったフルーツヨーグルト餅の魅力を深掘りし、2026年の新作への期待も高まる、とっておきのグルメガイドをお届けします。"
 categories: ["K-Pulse Trending"]
 tags: ["ザヒュンダイソウル", "ハンジョンソン", "フルーツ餅", "ヨイドグルメ", "ソウルショッピング"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ソウルで最も洗練されたデパート「ザ・ヒュンダイ・ソウル」の魅力を徹底解剖</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">昨年大ヒットした「ハンジョンソン」のフルーツヨーグルト餅を2026年版としてプレビュー</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">友達にこっそり教えたい、日持ちしないからこそ特別な“当日限定”の絶品スイーツ</li></ul>
@@ -100,8 +102,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%8D%94%ED%98%84%EB%8C%80%20%EC%84%9C%EC%9A%B8" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/the-hyundai-seoul-your-ultimate-guide.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

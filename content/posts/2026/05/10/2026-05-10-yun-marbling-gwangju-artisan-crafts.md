@@ -11,6 +11,8 @@ tags: ["ユンマーブリング", "光州体験", "マーブリングアート"
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">🎨 唯一無二のアート体験:水面で描くマーブリング技法を通じ、世界に一つだけのオリジナル雑貨を作れる特別な工房です。</li>
@@ -71,8 +73,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/윤마블링" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/discover-yun-marbling-gwangjus-hidden.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/a-sanctuary-of-scholarly-grace.html"
 title: "400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地"
 slug: "otgol-village-daegu-hanok-travel-guide"
 date: 2026-03-22T16:41:58+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/otgol-village-daegu-hanok-travel-guide/khack_1776777863_0.webp"
 description: "慶州崔氏の集姓村として知られる大邱・漆谷村の魅力をディレクターKが徹底解説。美しい土塀の道、歴史的な韓屋、季節の花々が彩る特別な風景と、現地で味わうべき伝統の味を紹介します。"
 categories: ["Cultural Nuance"]
 tags: ["大邱旅行", "漆谷村", "韓屋ステイ", "韓国伝統文化", "慶州崔氏"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -103,23 +105,7 @@ K-Life Hackのシニアディレクター、Kです。
 
 <img alt="春の訪れを告げる裸の枝に咲く繊細なピンク色の梅の花 - 400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/otgol-village-daegu-hanok-travel-guide/khack_1776777883_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-sanctuary-of-scholarly-grace.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="35d87128d60/daegu" name="GYEONGSANG" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
-<div style="padding:20px 20px 10px;">
-<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 漆谷村 (オッコルマウル)</h3>
-<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">大邱広域市東区漆谷路195 (대구광역시 동구 둔산동 344-3)</p>
-</div>
-<div style="background:var(--themeBg-sec);height:350px;width:100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EB%8C%80%EA%B5%AC%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%8F%99%EA%B5%AC%20%EB%91%94%EC%82%B0%EB%8F%99%20344-3&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-<div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EB%8C%80%EA%B5%AC%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%8F%99%EA%B5%AC%20%EB%91%94%EC%82%B0%EB%8F%99%20344-3" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%98%BB%EA%B3%A8%EB%A7%88%EC%9D%84" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Naver マップ</a>
 </div>
 </div>

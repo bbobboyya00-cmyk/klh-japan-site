@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/a-sanctuary-of-plant-based-heritage.ht
 title: "益善洞の築100年韓屋で味わう、進化系ヴィーガン・ダイニング「Vegan Insa」"
 slug: "ikseon-vegan-insa-guide"
 date: 2026-03-21T19:03:36+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/1776738874-/khack_1776739067_0.webp"
 description: "ソウル・益善洞（イクソンドン）の歴史的な韓屋で楽しむ100%植物性素材の韓国料理。伝統とエシカルな食文化が交差する「Vegan Insa」をナビゲートします。"
 categories: ["K-Food Insider"]
 tags: ["益善洞", "ヴィーガン", "ソウルグルメ", "韓屋ダイニング", "韓国旅行"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -83,24 +85,7 @@ author: "K-Life Hack"
 </table>
 </div>
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-sanctuary-of-plant-based-heritage.html)
-
-## 📍 地図・アクセス
-
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 비건인사 채식당 (Vegan Insa)</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울특별시 종로구 삼일대로32가길 12-4 익선동 33-18 한옥</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=서울특별시+종로구+삼일대로32가길+12-4&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が最新でない場合があります。より正確な位置確認のために、<b>Naverマップ</b>の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=비건인사+채식당" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google Maps</a>
 <a href="https://map.naver.com/p/search/%EC%9D%B5%EC%84%A0%EB%8F%99%20%EB%B9%84%EA%B1%B4%EC%9D%B8%EC%82%AC%20%EC%B1%84%EC%8B%9D%EB%8B%B9" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver Maps</a>
 </div>
 </div>

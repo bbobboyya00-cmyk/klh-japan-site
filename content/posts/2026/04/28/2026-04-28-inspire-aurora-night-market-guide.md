@@ -11,6 +11,8 @@ tags: []
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏙️ 150mのLED天井が描くオーロラと没入型ライブの圧倒的な響宴。</li>
 <li>🗓️ 2026年4月18日（土）より、毎週土曜日に開催される特別な夜。</li>

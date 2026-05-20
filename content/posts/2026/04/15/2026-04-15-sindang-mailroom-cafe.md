@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/a-cinematic-postal-experience-in-heart
 title: "郵便局がカフェに？ソウル・新堂洞(シンダンドン)の隠れ家『メールルーム』で体験する非日常"
 slug: "sindang-mailroom-cafe"
 date: 2026-03-03T19:33:12+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776249116_0.webp"
 description: "ソウルの注目スポット『ヒップダン』にある郵便局コンセプトのカフェ。秘密の扉やポストを使った受取システムなど、没入感溢れる空間をエディターKが徹底レポート。"
 categories: ["Cultural Nuance"]
 tags: ["シンダン洞カフェ", "ソウルカフェ巡り", "ヒップダン", "コンセプトカフェ", "ソウル旅行2026"]
 author: "K-Life Hack"
 ---
+
+
 
 ソウルの古い街並みが、今、若手クリエイターたちの手によって'ヒップダン'として熱く盛り上がっています。
 
@@ -75,24 +77,7 @@ author: "K-Life Hack"
 ## おすすめの時間帯と注意点
 平日の午後は比較的ゆったりとしていますが、週末は非常に多くの人で賑わいます。特に2階・3階の座席数は限られているため、まずは席を確保してから1階で注文することをお勧めします。手書きのオーダーやポストでの受取など、ここだけの体験は誰かに教えたくなること間違いなしです。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-cinematic-postal-experience-in-heart.html)
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 メールルーム(Mail Room)</h3><p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">韓国ソウル特別市中区退계路83キル10-7</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=%EC%8B%A0%EB%8B%B9%EB%8F%99%20%EB%A9%94%EC%9D%BC%EB%A3%B8%20%EC%8B%A0%EB%8B%B9&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"></iframe>
-</div>
-
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;">
-<span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>
-変化の激しいエリアでは、Googleマップの情報が最新ではない場合があります。より正確な位置確認のために、韓国語 <b>Naverマップ</b> の使用をお勧めします。
-</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%8B%A0%EB%8B%B9%EB%8F%99%20%EB%A9%94%EC%9D%BC%EB%A3%B8%20%EC%8B%A0%EB%8B%B9" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%8B%A0%EB%8B%B9%EB%8F%99%20%EB%A9%94%EC%9D%BC%EB%A3%B8%20%EC%8B%A0%EB%8B%B9" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

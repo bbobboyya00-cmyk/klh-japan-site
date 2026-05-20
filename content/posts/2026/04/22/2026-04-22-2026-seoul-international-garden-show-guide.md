@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/the-2026-seoul-international-garden.ht
 title: "2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー"
 slug: "2026-seoul-international-garden-show-guide"
 date: 2026-03-24T19:27:10+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830748_0.webp"
 description: "2026年5月1日からソウルの森で開催されるソウル国際庭園博覧会をディレクターKが徹底解説。180日間の壮大な緑の祭典の見どころやアクセス情報を凝縮しました。"
 categories: ["K-Travel Hacks"]
 tags: ["ソウル国際庭園博覧会", "ソウルの森", "韓国旅行", "聖水洞", "ヒーリングスポット"]
 author: "K-Life Hack"
 ---
+
+
 
 『K-Life Hack』ディレクターのKです。本日は、2026年のソウルで最も注目すべきハイエンドなライフスタイルイベントをご紹介します。都市の喧騒を離れ、洗練された緑の世界へと皆様を誘います。
 
@@ -77,23 +79,7 @@ author: "K-Life Hack"
 <img alt="alt:夕暮れ時のソウルの森と庭園博覧会の美しいライトアップ - 2026年ソウル国際庭園博覧会完全ガイド：ソウルの森で楽しむ最先端のグリーンカルチャー" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/2026-seoul-international-garden-show-guide/khack_1776830773_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <div style="text-align:center;margin:45px 0 20px;"><a href="https://gov.seoul.go.kr/festa/garden/y2026" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div>
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/the-2026-seoul-international-garden.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
-<div style="padding:20px 20px 10px;">
-<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 ソウルの森</h3>
-<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">ソウル特別市 城東区 トゥクソム路 273 (서울특별시 성동구 성수동1가 685-20)</p>
-</div>
-<div style="background:var(--themeBg-sec);height:350px;width:100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%EC%88%B2&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-<div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%EC%88%B2" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%EC%88%B2" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Naver マップ</a>
 </div>
 </div>

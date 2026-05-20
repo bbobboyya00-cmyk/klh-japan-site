@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/coastal-crust-and-artisanal-calm.html"
 title: "済州・エウォルの海を一望。至福のベーカリー「エウォルパンゴンジャン」完全ガイド"
 slug: "aewol-bread-factory-jeju-guide"
 date: 2026-03-11T16:35:55+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/aewol-bread-factory-jeju-guide/khack_1776568380_0.webp"
 description: "済州島・エウォルにある絶景ベーカリーカフェ「エウォルパンゴンジャン」を徹底取材。名物の玄武岩米パンやオーシャンビューのフォトスポット、BTSファン必見の聖地まで詳しくご紹介します。"
 categories: ["K-Travel Hacks"]
 tags: ["済州島 カフェ", "エウォルパンゴンジャン", "玄武岩パン", "オーシャンビュー", "済州 ベーカリー"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -75,23 +77,7 @@ author: "K-Life Hack"
 
 済州の豊かな恵みと、洗練された空間、そして心温まるおもてなし。エウォルパンゴンジャンでのひとときは、あなたの済州旅行をより彩り豊かなものにしてくれるに違いありません。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/coastal-crust-and-artisanal-calm.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 애월 애월빵공장</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">제주특별자치도 제주시 애월읍 금성5길 42-15 1층, 2층 애월빵공장 앤 카페</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%95%A0%EC%9B%94%EB%B9%B5%EA%B3%B5%EC%9E%A5%20%EC%95%A4%20%EC%B9%B4%ED%8E%98&hl=ja&t=&z=17&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%95%A0%EC%9B%94%EB%B9%B5%EA%B3%B5%EC%9E%A5%20%EC%95%A4%20%EC%B9%B4%ED%8E%98&query_place_id=ChIJQVYgjyb1DDURVgkVutR1xDs" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%A0%9C%EC%A3%BC%20%EC%95%A0%EC%9B%94%EB%B9%B5%EA%B3%B5%EC%9E%A5%20%EC%95%A4%20%EC%B9%B4%ED%8E%98" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

@@ -11,6 +11,8 @@ tags: ["東大門", "ヴィンテージショップ", "ビバ貿易", "ソウル
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">200坪の圧倒的スケールを誇るソウル最大級の倉庫型ヴィンテージショップ</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ハイブランドからカジュアルまで、毎日100点以上の新作が入荷する宝探し空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">購入点数に応じた割引や「3+1」イベントなど、コスパ最強のショッピング体験</li></ul>
 </div></blockquote>
@@ -93,8 +95,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/비바무역 을지 던던 동대문점" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seoul-insider-guide-massive-vintage.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/healing-art-therapy-at-ddp-keykney.htm
 title: "DDPで心温まる癒やしを。2026年「キークニ特別展」の見どころと現地レポート"
 slug: "keykney-special-exhibition-ddp-seoul"
 date: 2026-04-28T10:31:55+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/keykney-special-exhibition-ddp-seoul/khack_1777986475_1.webp"
 description: "SNSで話題のイラストレーター、キークニ（Keykney）の特別展がDDPで開催。笑いと涙が交差する共感度100%の展示空間を、ソウルのトレンドに敏感なエディターが詳しくご紹介します。2026年の最新イベント情報をお見逃しなく。"
 categories: ["K-Pulse Trending"]
 tags: ["キークニ", "DDP展示", "ソウル観光", "韓国イラスト", "ヒーリングイベント"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 120万人が共感した「キークニ」のウィットに富んだ一コマ漫画を立体的に再現した没入型空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 日常の悩みや家族愛をテーマにした感動的なエピソードが、笑いと涙の絶妙なバランスで展開</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📸 DDPならではの洗練された展示構成と、SNS映え間違いなしのユニークなフォトゾーンが満載</li></ul>
@@ -98,8 +100,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%8F%99%EB%8C%80%EB%AC%B8%EB%94%94%EC%9E%90%EC%9D%B8%ED%94%8C%EB%9D%BC%EC%9E%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/healing-art-therapy-at-ddp-keykney.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

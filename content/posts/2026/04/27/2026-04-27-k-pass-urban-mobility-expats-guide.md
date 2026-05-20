@@ -11,6 +11,8 @@ tags: []
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞  旧K-パスの利点を継承、定額制を導入。自動最適化システムで交通費を賢く節約できます。</li>
 <li>🗓️  サービスは2026年1月1日に開始し、2026年度基準で運営されます。</li>
@@ -76,8 +78,3 @@ author: "K-Life Hack"
 - 毎月の利用状況はアプリで確認し、還元金額をチェックしましょう。
 
 </div></blockquote>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/seamless-journeys-across-urban-korea-k.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

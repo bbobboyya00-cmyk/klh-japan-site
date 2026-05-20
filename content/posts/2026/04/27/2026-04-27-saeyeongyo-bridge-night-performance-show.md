@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/architectural-harmony-and-sonic.html"
 title: "西帰浦を象徴する光の彫刻、セヨンギョで迎える究極の週末：2026 金土金土セヨンショー"
 slug: "saeyeongyo-bridge-night-performance-show"
 date: 2026-04-08T10:46:06+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/saeyeongyo-bridge-night-performance-show/khack_1777273359_0.webp"
 description: "2026年4月に開幕した済州島・西帰浦の夜を彩る「金土金土セヨンショー」。ドラマのロケ地としても名高い新縁橋（セヨンギョ）で、花火と音楽が融合する贅沢なひとときをディレクターKがナビゲートします。"
 categories: ["K-Travel Hacks"]
 tags: ["新縁橋", "セヨンショー", "西帰浦夜景", "済州島イベント", "ウ・ヨンウ弁護士は天才肌ロケ地"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 見どころ: 帆船を模した新縁橋の夜景と音楽花火</li>
@@ -73,8 +75,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%83%88%EC%97%B0%EA%B5%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/architectural-harmony-and-sonic.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

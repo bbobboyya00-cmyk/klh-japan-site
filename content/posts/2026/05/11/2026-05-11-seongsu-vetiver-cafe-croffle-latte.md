@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/hidden-gem-in-seongsu-my-secret-spot.h
 title: "聖水洞の隠れ家カフェ「ベティバー」！究極のクロッフルと濃厚ラテを味わう現地レポ"
 slug: "seongsu-vetiver-cafe-croffle-latte"
 date: 2026-05-11T10:43:47+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-vetiver-cafe-croffle-latte/khack_1778450695_1.webp"
 description: "ソウル・聖水洞の住宅街に佇む「ベティバー」を徹底解説。サクサクのクロッフルと、濃厚な黒ゴマアイスクリームが織りなす至福のデザート体験を、現地のインフルエンサーが詳しくご紹介します。"
 categories: ["K-Food Insider"]
 tags: ["聖水洞カフェ", "ソウルカフェ巡り", "韓国クロッフル", "聖水デザート", "ソウル旅行グルメ"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -81,8 +83,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/성수 베티버" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/hidden-gem-in-seongsu-my-secret-spot.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

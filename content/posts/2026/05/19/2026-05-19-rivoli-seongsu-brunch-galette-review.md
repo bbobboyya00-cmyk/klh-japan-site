@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/2026-seongsu-dong-guide-visiting-rivol
 title: "聖水洞の「Rivoli」正直レポ！パリ気分で味わうガレットとブランチ体験記"
 slug: "rivoli-seongsu-brunch-galette-review"
 date: 2026-05-19T19:22:04+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/19/rivoli-seongsu-brunch-galette-review/khack_1779186051_1.webp"
 description: "聖水洞で今話題の「Rivoli」を徹底取材！パリの邸宅のような空間で味わう本格ガレットや、実際に訪れて分かった入店ルールの注意点まで、正直な感想を交えてご紹介します。"
 categories: ["K-Food Insider"]
-tags: ["聖水洞ブランチ", "Rivoli", "리볼리 성수", "ソウルガレット", "聖水カフェ"]
+tags: ["聖水洞ブランチ", "Rivoli", "ソウルガレット", "聖水カフェ"]
 author: "K-Life Hack"
 ---
+
+
 
 聖水洞（ソンスドン）のメインストリートを歩いていて、ふとパリの路地裏に迷い込んだような錯覚に陥る場所があるのを知っていますか？
 
@@ -145,8 +147,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%A6%AC%EB%B3%BC%EB%A6%AC%20%EC%84%B1%EC%88%98" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/2026-seongsu-dong-guide-visiting-rivoli.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

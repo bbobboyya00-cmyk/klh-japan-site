@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/seoul-secret-authentic-tongyeong.html"
 title: "ソウル・瑞草洞で見つけた！大切な人にだけ教えたい「忠武食」の本場統営グルメ"
 slug: "seocho-chungmu-sik-tongyeong-cuisine-guide"
 date: 2026-05-02T10:16:59+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/07/seocho-chungmu-sik-tongyeong-cuisine-guide/khack_1778115897_1.webp"
 description: "瑞草洞の教大駅近くにひっそりと佇む「忠武食」。テレビ番組『生活の達人』でも紹介された、本場・統営の味を再現した絶品コムタンや忠武キンパが楽しめる隠れ家的な名店を、ソウル通のエディターがご紹介します。"
 categories: ["K-Food Insider"]
 tags: ["瑞草洞グルメ", "教大駅ランチ", "忠武食", "忠武キンパ", "生活の達人"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 瑞草洞のオフィス街で味わう本場・統営の海の幸</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🔥 テレビ番組『生活の達人』が認めた圧倒的なクオリティ</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ タコと牛肉の旨味が凝縮された特製コムタンが絶品</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📅 2026年の訪問も行列必至、早めの時間帯がおすすめ</li></ul>
@@ -67,8 +69,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%B6%A9%EB%AC%B4%EC%8B%9D" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seoul-secret-authentic-tongyeong.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

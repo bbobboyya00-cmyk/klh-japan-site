@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/starfield-goyang-masterclass-in-high.h
 title: "高陽スターフィールドで楽しむハイエンドな休日：究極のライフスタイルガイド"
 slug: "starfield-goyang-luxury-retail-guide"
 date: 2026-04-21T10:57:42+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/starfield-goyang-luxury-retail-guide/khack_1777705470_0.webp"
 description: "高陽スターフィールドの圧倒的な空間美と、プレミアムなショッピング、そして名匠が手掛けるグルメまで。ディレクターKが贈る、2026年最新のハイエンドな休日を彩るガイドです。"
 categories: ["K-Beauty Insider"]
 tags: ["高陽スターフィールド", "韓国ショッピング", "スシマゴ", "イートピア", "ライフスタイル"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>見どころ</b>: 未来的な建築と美食の融合</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催日程</b>: 2026-05-02 基準常時運営</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催場所</b>: 高陽スターフィールド全域</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>価値</b>: 日常を格上げするプレミアムな体験</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>極意</b>: 3階のイートピアで名匠の寿司を堪能すること</li></ul>
@@ -65,8 +67,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%8A%A4%ED%83%80%ED%95%84%EB%93%9C%20%EA%B3%A0%EC%96%91" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/starfield-goyang-masterclass-in-high.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

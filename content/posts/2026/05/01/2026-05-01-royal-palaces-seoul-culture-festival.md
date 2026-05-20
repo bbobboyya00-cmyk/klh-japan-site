@@ -11,6 +11,8 @@ tags: ["宮中文化祝典", "ソウル", "古宮", "伝統文化", "芸術祭"]
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">古宮を舞台に繰り広げられる壮大な芸術祭。伝統と現代が交錯する、唯一無二の体験があなたを待つ。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">開催期間は2026年4月25日から5月3日まで。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ソウル市内の五大宮と宗廟が、この特別な期間、非日常へと誘う舞台となる。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ディレクターKは、最高の体験には事前予約と宮パスの活用が不可欠だと断言する。夜間プログラムは決して見逃せない。</li></ul>
 </div></blockquote>

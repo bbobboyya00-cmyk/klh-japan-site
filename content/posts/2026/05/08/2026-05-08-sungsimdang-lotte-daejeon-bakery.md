@@ -11,6 +11,8 @@ tags: ["聖心堂", "大田グルメ", "ロッテ百貨店", "韓国パン屋", 
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">大田の隠れた名店「聖心堂」がロッテ百貨店で手軽に楽しめる</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">揚げパンや明卵バゲットなど、本店と変わらない豊富な品揃え</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">昨年大ヒットの「マンゴーシルト」を今年も見逃すな</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">2026年のトレンドを先取り！混雑を避ける攻略法を公開</li></ul>
 </div></blockquote>

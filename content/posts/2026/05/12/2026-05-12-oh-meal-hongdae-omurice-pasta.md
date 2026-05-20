@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/hongdaes-cutest-omurice-spot-omeal-is.
 title: "弘大の隠れ家カフェ「Oh! Meal」で発見！絶品オムライスとパスタに舌鼓！"
 slug: "oh-meal-hongdae-omurice-pasta"
 date: 2026-05-12T10:05:40+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/refs/heads/main/assets/2026/05/12/oh-meal-hongdae-omurice-pasta/khack_1778547838_1.webp"
 description: "弘大入口駅すぐの「Oh! Meal 弘大店」は、見た目も味も最高級の韓国風洋食レストラン。特にラブダックオムライスは必見！ソウル在住インフルエンサーがこっそり教える、とっておきのグルメスポットをご紹介します。"
 categories: ["K-Food Insider"]
 tags: ["弘大グルメ", "Oh! Meal", "オムライス", "パスタ", "ソウルカフェ"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -115,8 +117,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%98%A4%EB%B0%80%20%ED%99%8D%EB%8C%80%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/hongdaes-cutest-omurice-spot-omeal-is.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

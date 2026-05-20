@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/busans-central-district-alluring.html"
 title: "釜山中央洞「クンジョクグクス」：粘り強い魅力と異国情緒の融合"
 slug: "busan-central-kkeunjeok-guksu-experience"
 date: 2026-04-19T10:16:03+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/busan-central-kkeunjeok-guksu-experience/khack_1777687834_0.webp"
 description: "釜山中央洞の隠れた名店「クンジョクグクス」へようこそ。独特の食感と深い味わいが織りなす、ハイエンドな麺料理体験をご案内いたします。"
 categories: ["K-Food Insider"]
 tags: ["釜山", "中央洞", "クンジョクグクス", "タイ料理", "シロム丼"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>視点</b>: 釜山が秘める美食の隠れ家で、五感を研ぎ澄ます麺の真髄を。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>営業開始</b>: 2026年5月2日より、通年営業。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>所在地</b>: 釜山中央洞、独自の風情が息づく路地裏。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>本質</b>: 伝統と現代性が交錯する、唯一無二の麺料理。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>ディレクターKの提言</b>: 粘り強いスープが織りなす、未体験の深み。</li></ul>
@@ -87,8 +89,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%81%88%EC%A0%81%EA%B5%AD%EC%88%98%20%EB%B3%B8%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/busans-central-district-alluring.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

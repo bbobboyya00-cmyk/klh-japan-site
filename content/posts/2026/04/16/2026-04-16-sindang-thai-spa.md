@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/cassia-thai-wangsimni-premier.html"
 title: "ソウル新堂洞（シンダンドン）で見つける極上タイマッサージ：カシアタイでの癒し体験 ✨"
 slug: "sindang-thai-spa"
 date: 2026-03-05T10:22:53+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776270600_0.webp"
 description: "ソウル新堂洞にあるカシアタイ王十里店は、心と体を癒すタイマッサージスパ。疲れた日常を忘れ、穏やかな空間で極上のリラックスタイムを過ごしてみませんか。カップルや友人との訪問にも最適です。"
 categories: ["Cultural Nuance"]
 tags: ["韓国旅行", "ソウル旅行", "新堂洞", "王十里", "タイマッサージ", "スパ", "リラックス", "カップルマッサージ", "ヒーリング", "韓国トレンド"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -112,25 +114,7 @@ author: "K-Life Hack"
 
 ソウル旅行中に、日常の喧騒から離れて心ゆくまでリラックスしたい方は、ぜひ新堂洞のカシアタイ王十里店を訪れてみてください。きっと、忘れられない最高のヒーリング体験ができるはずです。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/cassia-thai-wangsimni-premier.html)
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 カシアタイ王十里店</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울특별시 중구 신당동 484 1층</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=서울특별시 중구 신당동 484 1층&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"></iframe>
-</div>
-
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;">
-<span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>
-変化の激しいエリアでは、Googleマップの情報が最新ではない場合があります。より正確な位置確認のために、韓国語 <b>Naverマップ</b> の使用をお勧めします。
-</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=서울특별시 중구 신당동 484 1층" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%8B%A0%EB%8B%B9%EB%8F%99%20%EC%B9%B4%EC%8B%9C%EC%95%84%ED%83%80%EC%9D%B4%20%EC%99%95%EC%8B%AD%EB%A6%AC%EC%A0%90" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

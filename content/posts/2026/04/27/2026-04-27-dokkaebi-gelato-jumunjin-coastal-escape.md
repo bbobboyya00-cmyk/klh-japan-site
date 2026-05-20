@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/jumunjins-dokkaebi-gelato-curated.html
 title: "江陵・注文津の海を五感で味わう。ドラマ『トッケビ』の情景と共鳴する「トッケビジェラート」の空間美"
 slug: "dokkaebi-gelato-jumunjin-coastal-escape"
 date: 2026-04-07T16:44:01+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/dokkaebi-gelato-jumunjin-coastal-escape/khack_1777239824_0.webp"
 description: "江陵・注文津の象徴的な海辺に佇む「トッケビジェラート」。ドラマ『トッケビ』のロケ地を望む絶景と、五感を刺激する手作りジェラートが織りなす極上のライフスタイル空間をディレクターKがナビゲートします。"
 categories: ["K-Travel Hacks"]
 tags: ["江陵", "注文津", "トッケビ", "ジェラート", "韓国旅行", "オーシャンビュー"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 見どころ: ドラマ『トッケビ』撮影地を目の前に望むオーシャンビュー </li>
@@ -69,8 +71,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%8F%84%EA%B9%A8%EB%B9%84%EC%A0%A4%EB%9D%BC%EB%98%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/jumunjins-dokkaebi-gelato-curated.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/seoul-forest-urban-oasis-of.html"
 title: "ソウル森で紡がれる緑の叙事詩：2026年ソウル国際庭園博覧会ガイド"
 slug: "seoul-forest-garden-expo-grandeur"
 date: 2026-04-21T19:52:24+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/seoul-forest-garden-expo-grandeur/khack_1777695015_0.webp"
 description: "2026年、ソウル森で開催される国際庭園博覧会のハイエンドガイド。ポケモンとのコラボレーションから洗練された造園美まで、都会のオアシスで楽しむ特別な休息をディレクターKが提案します。"
 categories: ["K-Travel Hacks"]
 tags: ["ソウル国際庭園博覧会", "ソウル森", "ポケモンシークレットフォレスト", "ソウル観光2026", "韓国ライフスタイル"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>見どころ</b>: ポケモン30周年記念シークレットフォレスト</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催日程</b>: 2026年5月1日から10月27日まで</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催場所</b>: ソウル森一帯</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>価値</b>: 都市と自然が融合する芸術的ランドスケープ</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>極意</b>: 平日の午前中に訪れ、限定グッズと静寂を独占すること</li></ul>
@@ -70,8 +72,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%EC%88%B2" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seoul-forest-urban-oasis-of.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/unlocking-seongsus-hottest-secret-deep
 title: "ソウル最旬！聖水洞『Kith Seoul』で体験するファッションとカルチャーの融合"
 slug: "kith-seoul-seongsu-fashion-cafe"
 date: 2026-05-06T16:50:07+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/09/kith-seoul-seongsu-fashion-cafe/khack_1778331802_1.webp"
 description: "ソウルにおけるトレンドの発信地、聖水洞に登場した『Kith Seoul』。洗練されたファッション、人気のカフェ、そして限定アイテムが織りなす特別な空間を、現地エディターが徹底解説します。"
 categories: ["K-Pulse Trending"]
 tags: ["Kith Seoul", "聖水洞", "ソンスドン", "ファッション", "カフェ", "韓国旅行"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -89,8 +91,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/키스 서울" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/unlocking-seongsus-hottest-secret-deep.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

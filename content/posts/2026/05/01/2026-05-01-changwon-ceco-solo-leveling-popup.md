@@ -11,6 +11,8 @@ tags: ["俺だけレベルアップな件", "昌原", "セコ", "ポップアッ
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">見どころ 全世界143億ビューを記録した神話的没入感</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">開催日程 2026年3月27日から5月17日まで</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">開催場所 チャンウォン・コンベンションセンター(CECO)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">価値 首都圏を越え地方都市で初開催される超大型体験型空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ディレクターKの助言 ハンター証発行とAR体験による完全な同化</li></ul>
 </div></blockquote>

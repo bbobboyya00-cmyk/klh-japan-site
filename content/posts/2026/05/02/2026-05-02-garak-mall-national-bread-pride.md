@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/garak-mall-sky-park-epicenter-of-korea
 title: "ソウルの空の下で出会う究極のベーカリー：可楽モール『全国パン自慢』ガイド"
 slug: "garak-mall-national-bread-pride"
 date: 2026-04-20T19:16:20+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/garak-mall-national-bread-pride/khack_1777716247_0.webp"
 description: "2026年5月、ソウルの可楽モールで全国の有名パン屋が集結する『全国パン自慢』が開催予定。職人の魂が宿る100種以上のディレクター厳選パンを、音楽と共に楽しむハイエンドな週末をご提案します。"
 categories: ["K-Food Insider"]
 tags: ["全国パン自慢", "可楽モール", "ソウルパン屋巡り", "韓国グルメ旅", "ソウルイベント2026"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">見どころ 記録的な芳香が包み込む至福の空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">開催日程 2026年5月8日から5月10日まで</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">開催場所 可楽モール 3階 空の庭園</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">価値 旅をせずとも出会える全国の職人魂</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ディレクターKの極意 開幕直後の風と音楽を享受する贅沢</li></ul>
@@ -71,8 +73,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EA%B0%80%EB%9D%BD%EB%AA%B0" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/garak-mall-sky-park-epicenter-of-koreas.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

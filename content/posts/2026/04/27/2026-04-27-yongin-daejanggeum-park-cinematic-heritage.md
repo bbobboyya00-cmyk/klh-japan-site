@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/cinematic-grandeur-architectural-time.
 title: "龍仁大長今（ヨンイン・チャングム）パーク：時空を超越した麗しの叙情詩"
 slug: "yongin-daejanggeum-park-cinematic-heritage"
 date: 2026-04-09T19:42:40+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/yongin-daejanggeum-park-cinematic-heritage/khack_1777241033_0.webp"
 description: "華麗なる韓国時代劇の世界を五感で巡る「龍仁大長今（ヨンイン・チャングム）パーク」。建築美と自然が織りなす空間で、非日常の体験を。ディレクターKによる上質なガイド。"
 categories: ["K-Travel Hacks"]
 tags: ["韓国ドラマ撮影地", "大長今パーク", "時代劇", "グランピング", "建築美"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 韓国時代劇の壮大な世界、多様な時代の建築美、グランピング体験が魅力です。</li>
@@ -81,8 +83,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%9A%A9%EC%9D%B8%20%EB%8C%80%EC%9E%A5%EA%B8%88%ED%8C%8C%ED%81%AC" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/cinematic-grandeur-architectural-time.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

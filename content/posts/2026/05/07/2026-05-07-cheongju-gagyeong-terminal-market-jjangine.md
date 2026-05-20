@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/cheongjus-hidden-gem-gagyeong-terminal
 title: "清州・加慶ターミナル市場：地元民が愛する絶品グルメと活気溢れる日常"
 slug: "cheongju-gagyeong-terminal-market-jjangine"
 date: 2026-05-02T19:04:36+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/07/cheongju-gagyeong-terminal-market-jjangine/khack_1778130246_1.webp"
 description: "清州の隠れた名所「加慶ターミナル市場」へようこそ！新鮮な食材と、地元で愛される「チャンイネ」のサクサクとろけるトンカツ＆ピリ辛冷麺は必食。活気ある市場の雰囲気とともに、親しい友人にだけ教えたいとっておきのローカル体験を2026年も楽しんでみませんか？"
 categories: ["K-Food Insider"]
 tags: ["清州", "加慶ターミナル市場", "在来市場", "トンカツ", "冷麺", "チャンイネ", "ローカルグルメ", "韓国旅行"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -99,8 +101,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/가경터미널시장" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/cheongjus-hidden-gem-gagyeong-terminal.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

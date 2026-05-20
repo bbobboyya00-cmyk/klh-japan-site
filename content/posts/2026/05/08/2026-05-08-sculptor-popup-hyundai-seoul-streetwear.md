@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/exclusive-sculptor-pop-up-guide-hyunda
 title: "【2026速報】ザ・現代ソウルで絶対行きたい！スカルプターのポップアップ完全攻略ガイド"
 slug: "sculptor-popup-hyundai-seoul-streetwear"
 date: 2026-05-04T16:47:23+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/08/sculptor-popup-hyundai-seoul-streetwear/khack_1778180999_1.webp"
 description: "ソウルのトレンド発信地、ザ・現代ソウルで話題沸騰中の「スカルプター」ポップアップを徹底レポ。限定のミントカラー財布やノベルティ情報、2026年のトレンドを先取りするスタイリングのコツまで、おしゃれ女子必見の情報を凝縮してお届けします。"
 categories: ["K-Pulse Trending"]
 tags: ["スカルプター", "ザ・現代ソウル", "韓国ファッション", "ポップアップストア", "ソウル旅行"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">
@@ -78,9 +80,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 公式サイトを見る
 </a>
 </div>
-    
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/exclusive-sculptor-pop-up-guide-hyundai.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

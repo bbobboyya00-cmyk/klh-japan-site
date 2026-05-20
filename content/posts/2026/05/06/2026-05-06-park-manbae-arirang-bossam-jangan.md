@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/the-ultimate-melt-in-your-mouth-bossam
 title: "35年の伝統が語る本物の味！ソウル長安洞で出会う「パク・マンベアリランポッサム」の絶品ガブリサル体験"
 slug: "park-manbae-arirang-bossam-jangan"
 date: 2026-04-30T10:28:17+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/park-manbae-arirang-bossam-jangan/khack_1778007984_1.webp"
 description: "ソウル長安洞で35年間愛され続けるポッサムの名店をエディターが厳選。希少部位ガブリサルを使用したとろける肉質と、メイン注文で無料提供されるカルグクスやマッククスの驚愕コスパを2026年最新版ガイドとしてお届けします。"
 categories: ["K-Food Insider"]
 tags: ["ソウルグルメ", "ポッサム", "長安洞", "韓国旅行", "ガブリサル"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🐷 35年の伝統が息づく、ソウルっ子も列を作るポッサムの聖地です。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🍜 メイン料理を注文すると、本格的なカルグクスまたはマッククスが無料サービスされる驚きのコスパを誇ります。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 希少部位「ガブリサル」を使用した、とろけるような肉質と自家製ムマルレンイの調和が絶品です。</li></ul>
@@ -90,8 +92,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%B0%95%EB%A7%8C%EB%B0%B0%EC%95%84%EB%A6%AC%EB%9E%91%EB%B3%B4%EC%8C%88%20%EC%9E%A5%EC%95%88%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/the-ultimate-melt-in-your-mouth-bossam.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

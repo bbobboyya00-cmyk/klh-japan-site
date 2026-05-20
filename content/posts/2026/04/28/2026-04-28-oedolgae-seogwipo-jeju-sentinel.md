@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/oedolgae-seogwipo-high-end-guide-to.ht
 title: "西帰浦外ドルゲ：済州の絶景を巡るハイエンドガイド"
 slug: "oedolgae-seogwipo-jeju-sentinel"
 date: 2026-04-10T10:33:46+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/oedolgae-seogwipo-jeju-sentinel/khack_1777327513_0.webp"
 description: "ディレクターKが誘う西帰浦外ドルゲ。圧倒的な奇岩、歴史の痕跡、そして夕焼けが織りなす絶景体験。済州オルレ7コースを巡る上質な旅へ。"
 categories: ["K-Travel Hacks"]
 tags: ["西帰浦", "外ドルゲ", "済州島", "オルレキル", "絶景"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 見どころ: 孤高の奇岩、南州海金剛の絶景、夕焼けの色彩。 </li>
@@ -68,8 +70,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%99%B8%EB%8F%8C%EA%B0%9C" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/oedolgae-seogwipo-high-end-guide-to.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

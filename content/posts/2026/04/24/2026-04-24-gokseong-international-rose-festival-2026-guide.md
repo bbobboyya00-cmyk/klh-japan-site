@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/the-floral-monarchy-rediscovering.html
 title: "2026年「谷城世界バラまつり」完全ガイド：1,004種の香りに包まれる韓国最高峰のローズガーデンへ"
 slug: "gokseong-international-rose-festival-2026-guide"
 date: 2026-03-31T19:44:33+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/gokseong-international-rose-festival-2026-guide/khack_1777036188_0.webp"
 description: "韓国・全羅南道で開催される2026年「谷城世界バラまつり」をディレクターKが徹底解説。1,004種の希少なバラと蒸気機関車の旅、プレミアムな体験を1,200字超の深掘りレポートでお届けします。"
 categories: ["K-Travel Hacks"]
 tags: ["谷城世界バラまつり", "韓国旅行 2026", "島津江汽車村", "韓国バラ園", "全羅南道 観光"]
 author: "K-Life Hack"
 ---
+
+
 
 皆様、こんにちは。K-Life HackのディレクターKです。
 

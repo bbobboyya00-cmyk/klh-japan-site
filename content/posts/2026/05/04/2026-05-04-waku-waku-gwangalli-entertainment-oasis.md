@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/waku-waku-gwangalli-high-end.html"
 title: "広安里に輝くエンターテイメントの聖地「ワクワク広安里店」ハイエンドガイド"
 slug: "waku-waku-gwangalli-entertainment-oasis"
 date: 2026-04-27T16:01:50+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/waku-waku-gwangalli-entertainment-oasis/khack_1777845893_0.webp"
 description: "広安里ビーチのすぐそばに位置する「ワクワク広安里店」は、高品質な正規IPの景品と、忘れられない思い出を作るための最先端アトラクションが満載の、まさに大人の遊び場です。"
 categories: ["K-Pulse Trending"]
 tags: ["ワクワク広安里店", "広安里デート", "釜山観光", "クレーンゲーム", "ポケモン", "正規IP", "フォトスポット"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">プレミアムIP景品が織りなす非日常のエンターテイメント体験。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">最新のポケモン新作グッズは随時入荷。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">広安里に位置する、唯一無二の遊びの空間。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">家族、友人、恋人との忘れがたい記憶を創造する。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">公式Instagramで情報を精査し、ワクワクコールで確実な勝利を。</li></ul>
@@ -80,8 +82,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%99%80%EC%BF%A0%EC%99%80%EC%BF%A0%20%EA%B4%91%EC%95%88%EB%A6%AC%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/waku-waku-gwangalli-high-end.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

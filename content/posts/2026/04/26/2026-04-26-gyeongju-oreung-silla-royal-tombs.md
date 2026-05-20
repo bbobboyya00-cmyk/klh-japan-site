@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/gyeongju-oreung-architectural-silence.
 title: "慶州オヌン（五陵）の静寂と白木蓮｜新羅の始まりを歩く、究極のヒーリングガイド"
 slug: "gyeongju-oreung-silla-royal-tombs"
 date: 2026-04-05T19:57:46+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/gyeongju-oreung-silla-royal-tombs/khack_1777165630_0.webp"
 description: "慶州の隠れた名所、五陵（オヌン）。新羅の始祖が眠る聖域で、春の白木蓮と静寂に包まれる贅沢なひとときを。ディレクターKが贈る、ハイエンドな慶州散策ガイド。2026年最新情報。"
 categories: ["K-Travel Hacks"]
 tags: ["慶州旅行", "五陵", "新羅の歴史", "韓国パワースポット", "白木蓮の名所"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>新羅の始祖と王妃が眠る、慶州で最も神聖な最古の王陵群。</li>
@@ -57,8 +59,3 @@ author: "K-Life Hack"
         <a href="https://map.naver.com/p/search/%EA%B2%BD%EC%A3%BC%20%EC%98%A4%EB%A6%89" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
     </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/gyeongju-oreung-architectural-silence.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

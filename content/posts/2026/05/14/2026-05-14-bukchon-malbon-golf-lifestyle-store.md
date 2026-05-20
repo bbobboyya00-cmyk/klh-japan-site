@@ -11,6 +11,8 @@ tags: ["マルボン", "ゴルフファッション", "マルボン韓屋", "マ
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ <b>北村</b>に誕生した新感覚のマルボンゴルフ空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">💖 伝統とモダンが融合した美しい<b>韓屋</b>スタイル</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🛍️ 限定品や<b>カスタマイズ</b>サービスで特別感を満喫！</li>
@@ -165,8 +167,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/북촌 말본" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/bukchon-malbon-where-traditional-hanok.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

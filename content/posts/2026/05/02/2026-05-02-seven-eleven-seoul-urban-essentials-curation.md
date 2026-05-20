@@ -11,6 +11,8 @@ tags: ["セブンイレブン", "ソウル観光", "韓国コンビニ", "プレ
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">限定プレミアム商品と洗練された空間が、このリテール体験の核心をなす。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">2026年、ソウル市内主要フラッグシップ店舗にて常時運営。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">そこはコンビニエンスを超越した、独自のキュレーション体験を提供する。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ディレクターKが語る極意は、24時間いつでも享受可能なハイエンドな休息だ。</li></ul>
 </div></blockquote>

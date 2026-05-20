@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/terroir-of-time-29th-hadong-wild-tea.h
 title: "2026年河東野生茶文化祭ガイド：韓国伝統茶の聖地で楽しむハイエンドな癒やしの旅"
 slug: "hadong-wild-tea-cultural-festival-2026-guide"
 date: 2026-03-25T19:42:59+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/hadong-wild-tea-cultural-festival-2026-guide/khack_1776801763_0.webp"
 description: "2026年5月1日から5日まで開催される『第29回河東野生茶文化祭』の完全ガイド。1200年の歴史を持つ茶の始培地で、伝統的な茶道体験や茶畑コンサート、洗練されたティーセラピーを楽しむ大人のための旅を提案します。"
 categories: ["K-Travel Hacks"]
 tags: ["河東野生茶文化祭", "韓国旅行", "伝統茶体験", "茶畑コンサート", "5月韓国イベント"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -92,23 +94,7 @@ author: "K-Life Hack"
 
 歩きやすい靴と、朝晩の冷え込みに対応できる軽いアウターを準備して、千年の香りに身を委ねる特別な休暇をお過ごしください。河東で、最高の一杯があなたを待っています。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/terroir-of-time-29th-hadong-wild-tea.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="35d87128d60/daegu" name="GYEONGSANG" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
-<div style="padding:20px 20px 10px;">
-<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 河東野生茶博物館</h3>
-<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">慶尚南道 河東郡 花開面 双渓路 571-25 (경상남도 하동군 화개면 운수리 664-1)</p>
-</div>
-<div style="background:var(--themeBg-sec);height:350px;width:100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EA%B2%BD%EC%83%81%EB%82%A8%EB%8F%84%20%ED%95%98%EB%8F%99%EA%B5%B0%20%ED%99%94%EA%B0%9C%EB%A9%B4%20%EC%9A%B4%EC%88%98%EB%A6%AC%20664-1&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-<div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EA%B2%BD%EC%83%81%EB%82%A8%EB%8F%84%20%ED%95%98%EB%8F%99%EA%B5%B0%20%ED%99%94%EA%B0%9C%EB%A9%B4%20%EC%9A%B4%EC%88%98%EB%A6%AC%20664-1" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%ED%95%98%EB%8F%99%EC%95%BC%EC%83%9D%EC%B0%A8%EB%B0%95%EB%AC%BC%EA%B4%80" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Naver マップ</a>
 </div>
 </div>

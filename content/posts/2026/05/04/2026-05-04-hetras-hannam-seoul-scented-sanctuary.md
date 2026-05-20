@@ -11,6 +11,8 @@ tags: ["香水", "ハンドクリーム", "漢南洞", "ライフスタイル", 
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🏞️ 見どころ</b>: 洗練された空間で、五感を刺激する多様な香りのアイテムを体験できます。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🗓️ 開催日程</b>: 現在、シルバーアクセサリー着用でギフトがもらえるイベントが開催中です（2026年5月現在）。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>📍 開催場所</b>: 漢南洞の中心に位置し、アクセスしやすいライフスタイルショップです。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💎 価値</b>: 高品質でありながら手頃な価格で、日常に上質な香りを加えることができます。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💡 極意</b>: 豊富なテスターで好みの香りをじっくり探し、イベント参加で特別なギフトを手に入れましょう。</li></ul>
 </div></blockquote>

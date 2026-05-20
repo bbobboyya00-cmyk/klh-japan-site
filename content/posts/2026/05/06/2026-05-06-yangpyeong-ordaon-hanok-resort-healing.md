@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/hidden-mountain-sanctuary-your-2026.ht
 title: "楊平の隠れ家リゾート「オルダオン」完全ガイド！2026年に行くべき癒やしの聖地"
 slug: "yangpyeong-ordaon-hanok-resort-healing"
 date: 2026-05-01T10:41:34+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/yangpyeong-ordaon-hanok-resort-healing/khack_1778065079_1.webp"
 hide_featured: true
 description: "都会の喧騒を忘れさせてくれる楊平の「オルダオン」。広大な植物園、伝統的な韓屋、そして絶景のプールまで。大切な人にだけ教えたい、2026年最新のローカルヒーリングスポットをエディターが徹底解説します。"
@@ -11,6 +11,8 @@ categories: ["K-Pulse Trending"]
 tags: ["楊平", "オルダオン", "韓国旅行", "ヒーリングスポット", "韓屋ステイ"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 ソウルから1時間で到着する圧倒的な大自然とラグジュアリーなリゾート空間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🏮 国内最大級の伝統韓屋「松栢堂」で味わう、時を忘れるような静寂の時間</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🌿 四季折々の表情を見せる広大な植物園と、山々に囲まれた絶景の屋外プール</li></ul>
@@ -81,9 +83,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 公式サイトを見る
 </a>
 </div>
-    
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/hidden-mountain-sanctuary-your-2026.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

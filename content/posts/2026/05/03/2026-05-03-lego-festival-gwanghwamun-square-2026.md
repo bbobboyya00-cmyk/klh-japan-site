@@ -11,6 +11,8 @@ tags: ["光化門広場", "レゴフェスティバル", "ソウル子供の日"
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>見どころ</b>: 歴史的な広場がブロックの楽園へ</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催日程</b>: 2026年5月2日〜5月5日</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催場所</b>: 光化門(クァンファムン)広場一帯</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>価値</b>: 家族の絆を深める創造的体験</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>極意</b>: 混雑を避け限定クーポンを賢く活用</li></ul>
 </div></blockquote>

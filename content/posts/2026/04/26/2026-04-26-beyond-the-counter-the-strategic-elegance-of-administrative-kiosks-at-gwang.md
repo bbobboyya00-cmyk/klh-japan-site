@@ -11,6 +11,8 @@ tags: []
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>空港や主要駅で迅速に完結するスマートな行政サービスです。</li>
 <li>2026年4月現在、年間を通じて稼働しておりいつでも利用可能です。</li>

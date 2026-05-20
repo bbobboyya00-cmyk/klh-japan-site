@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/aewols-sunset-sanctuary-why-haejigae.h
 title: "済州島・涯月（エウォル）の海を飲み込む贅沢。韓屋と絶景が織りなす『ヘジゲ（海知開）』完全ガイド"
 slug: "jeju-aewol-haejigae-cafe-guide"
 date: 2026-03-06T10:41:23+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jeju-aewol-haejigae-cafe-guide/khack_1776392960_0.webp"
 description: "済州島の人気スポット、涯月カフェ通りの「ヘジゲ（Haejigae）」を徹底解説。伝統的な韓屋の趣とオーシャンビュー、絶品ベーカリーや限定の「ノウルサンド」まで、編集者Kがその魅力を綴ります。"
 categories: ["K-Travel Hacks"]
 tags: ["済州島カフェ", "涯月", "ヘジゲ", "韓国旅行", "済州島グルメ", "オーシャンビュー", "韓屋カフェ"]
 author: "K-Life Hack"
 ---
+
+
 
 青い海と黒い玄武岩が織りなす、済州島・涯月（エウォル）の海岸線。
 
@@ -79,23 +81,7 @@ author: "K-Life Hack"
 
 カフェのすぐ前からは、有名な「漢潭（ハンダム）海岸散策路」が繋がっています。コーヒーを楽しんだ後は、海沿いの道をのんびりと歩きながら、クァクジ海水浴場まで散策してみてはいかがでしょうか。また、お腹が空いたら、車で数分の場所にある郷土料理店「済州光海 涯月」で、新鮮なサバの煮付けを味わうのも最高のコースです。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/aewols-sunset-sanctuary-why-haejigae.html)<div class="k-weather-section" style="margin-top: 35px; margin-bottom: 20px;"><h3 style="font-size: 1.2rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 15px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 해지개</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">제주특별자치도 제주시 애월읍 애월북서길 52 . 1~2층</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%95%A0%EC%9B%94%EC%9D%8D%20%EC%95%A0%EC%9B%94%EB%A6%AC%202555%20.%201~2%EC%B8%B5%20%ED%95%B4%EC%A7%80%EA%B0%9C&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%95%A0%EC%9B%94%EC%9D%8D%20%EC%95%A0%EC%9B%94%EB%A6%AC%202555%20.%201~2%EC%B8%B5%20%ED%95%B4%EC%A7%80%EA%B0%9C&query_place_id=ChIJkT_5s231DDURAxxjUhkTY8E" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%ED%95%B4%EC%A7%80%EA%B0%9C" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

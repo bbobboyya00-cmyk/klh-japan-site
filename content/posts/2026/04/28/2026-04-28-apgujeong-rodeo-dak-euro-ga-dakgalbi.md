@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/apgujeong-rodeo-gastronomy-timeless.ht
 title: "アックジョン・ロデオの伝説を味わう。究極の鶏カルビ専門店『タクロガ』本店完全ガイド"
 slug: "apgujeong-rodeo-dak-euro-ga-dakgalbi"
 date: 2026-04-09T16:31:18+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/apgujeong-rodeo-dak-euro-ga-dakgalbi/khack_1777378967_0.webp"
 description: "20年以上アックジョンで愛され続ける鶏カルビの名店。国内産最高級鶏もも肉を使用した極上の旨味と、スタッフの熟練した調理サービスを詳しく解説します。"
 categories: ["K-Food Insider"]
 tags: ["apgujeong-rodeo", "dakuroga", "chicken-galbi", "seoul-gourmet", "harim-chicken"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 見どころ: 20年の歴史が醸し出すアックジョン随一の重厚な美食体験</li>
@@ -75,8 +77,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%8B%AD%EC%9C%BC%EB%A1%9C%EA%B0%80%20%EC%95%95%EA%B5%AC%EC%A0%95%EB%B3%B8%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/apgujeong-rodeo-gastronomy-timeless.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

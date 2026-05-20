@@ -11,6 +11,8 @@ tags: ["国立生物資源館", "仁川観光", "子供の日", "環境教育", 
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>見どころ</b>: 絶滅危惧種と対話する没入型体験</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催日</b>: 2026年5月5日</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>場所</b>: 国立生物資源館</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>価値</b>: 共生の未来を描く教育的洞察</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>助言</b>: 混雑を回避し午前中のバブルショーを起点に動線を描くのが賢明です</li></ul>
 </div></blockquote>

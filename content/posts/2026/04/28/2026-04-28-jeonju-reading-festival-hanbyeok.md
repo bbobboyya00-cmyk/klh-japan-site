@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/jeonju-hanbyeoks-literary-canvas-2026.
 title: "「全州韓壁文化館」：歴史と知性が交差する秋、全州読書大典で出会う最上の休息"
 slug: "jeonju-reading-festival-hanbyeok"
 date: 2026-04-10T16:35:45+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/jeonju-reading-festival-hanbyeok/1.webp"
 description: "2026年秋、全州韓壁文化館で開催される「全州読書大典」。木版印刷の伝統と現代の知性が融合する、日本人のためのハイエンドな文化紀行をディレクターKがナビゲートします。"
 categories: ["K-Travel Hacks"]
 tags: ["全州読書大典", "全州韓壁文化館", "完板本文化館", "蓮花亭図書館", "全州旅行"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 全州川を望む韓屋で、心豊かな読書体験があなたを待っています。</li>
@@ -72,8 +74,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%A0%84%EC%A3%BC%ED%95%9C%EB%B2%BD%EB%AC%B8%ED%99%94%EA%B4%80" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/jeonju-hanbyeoks-literary-canvas-2026.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/gastronomic-icon-definitive-guide-to.h
 title: "釜山・南浦洞の聖地「イジェモピザ本店」：究極のチーズが奏でるハイエンド・ガストロノミーガイド"
 slug: "lee-jae-mo-pizza-busan-main"
 date: 2026-04-13T19:55:11+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/lee-jae-mo-pizza-busan-main/khack_1777448814_0.webp"
 description: "釜山を代表するグルメの殿堂「イジェモピザ本店」。2026年度も変わらぬ人気を誇る究極のチーズ体験、ウェイティングの極意、おすすめメニューをディレクターKが徹底解説します。"
 categories: ["K-Food Insider"]
 tags: ["釜山グルメ", "イジェモピザ", "南浦洞", "韓国旅行", "釜山ピザ"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🧀 100%国産チーズが描き出す究極の糸引き体験</li>
@@ -85,8 +87,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%9D%B4%EC%9E%AC%EB%AA%A8%ED%94%BC%EC%9E%90%20%EB%B3%B8%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/gastronomic-icon-definitive-guide-to.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

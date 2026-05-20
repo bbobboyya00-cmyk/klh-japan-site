@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/the-culinary-hermitage-of-suncheon.htm
 title: "順天の深い森に隠れた美食の聖地、松峙村(ソンチマウル)が贈るノスタルジックな休日"
 slug: "suncheon-songchi-maeul-tonkatsu-sujebi"
 date: 2026-04-13T10:08:09+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/29/suncheon-songchi-maeul-tonkatsu-sujebi/khack_1777456991_0.webp"
 description: "順天(スンチョン)の静かな山あいに位置する「松峙村」。伝説の王トンカツと壷スジェビ、そして中毒性のあるキュウリの和え物が織りなす究極の美食体験をディレクターKがナビゲートします。"
 categories: ["K-Food Insider"]
 tags: ["順天グルメ", "ソンチマウル", "韓国トンカツ", "スンチョン旅行", "韓国美食ガイド"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 見どころ: 山あいに佇む、まるでおとぎ話のような隠れ家レストラン</li>
@@ -68,8 +70,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%86%A1%EC%B9%98%EB%A7%88%EC%9D%84" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/the-culinary-hermitage-of-suncheon.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

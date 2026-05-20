@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/experience-best-of-seongsus-30-year-bb
 title: "昨年の感動を胸に！2026年、聖水で再訪したい「内故郷精肉食堂」の魅力"
 slug: "seongsu-bbq-tradition-preview-guide"
 date: 2026-04-26T16:14:49+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/seongsu-bbq-tradition-preview-guide/khack_1777889081_0.webp"
 description: "30年の伝統を誇る「内故郷精肉食堂 聖水本店」。ディレクターKが昨年の体験をもとに、2026年に再び訪れるべき絶品サムギョプサルの魅力と、活気あふれる聖水洞の雰囲気を先取りレポートします。新鮮な肉と心温まるサービス、そして鉄板で焼かれるキムチのハーモニーは、今年も期待を裏切らないでしょう。"
 categories: ["K-Food Insider"]
 tags: ["聖水洞", "サムギョプサル", "韓国焼肉", "ノポ", "ソウルグルメ"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🏞️ 見どころ</b>: 30年続く老舗の味、鋳鉄（ムセ）鉄板で焼く絶品サムギョプサルと新鮮な国内産生肉。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🗓️ 開催日程</b>: 2026年も年中無休で営業予定（要確認）。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>📍 開催場所</b>: ソウル聖水洞、活気ある文化と美食の中心地。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💎 価値</b>: 精肉店直営ならではの鮮度、丁寧なサービス、そして昔ながらの温かい雰囲気が魅力。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💡 極意</b>: サイドメニューも全て美味しいので、ぜひ色々と試してみてください。特に焼いたキムチは必食！</li></ul>
@@ -57,8 +59,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%82%B4%EA%B3%A0%ED%96%A5%EC%A0%95%EC%9C%A1%EC%A0%90%EC%8B%9D%EB%8B%B9%20%EC%84%B1%EC%88%98%EB%B3%B8%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/experience-best-of-seongsus-30-year-bbq.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/the-ultimate-6000-won-feast-why-seoul.
 title: "清涼里の隠れ家！6,000ウォンの幸せ「忠清道食堂」現地エディターの秘密のガイド"
 slug: "cheongnyangni-market-baekban-food-guide"
 date: 2026-05-09T19:14:06+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/10/cheongnyangni-market-baekban-food-guide/khack_1778342900_1.webp"
 description: "ソウルの京東市場に佇む、知る人ぞ知る名店「忠清道食堂」を徹底解説。わずか6,000ウォンで楽しめる豪華な韓国定食（ペッパン）の魅力から、セレブも訪れる2026年の最新情報まで、現地エディターが特別に公開します。"
 categories: ["K-Food Insider"]
 tags: ["清涼里グルメ", "京東市場", "韓国定食", "ソウル穴場", "チェユクポックム"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -75,8 +77,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/청량리 충청도식당" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/the-ultimate-6000-won-feast-why-seoul.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

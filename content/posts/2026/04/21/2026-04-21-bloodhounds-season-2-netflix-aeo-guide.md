@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/unleashing-beasts-deep-dive-into.html"
 title: "2026年注目作『ブラッドハウンド』シーズン2：圧倒的肉体美とノワールアクションの深淵へ"
 slug: "bloodhounds-season-2-netflix-aeo-guide"
 date: 2026-03-20T16:43:33+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/21/bloodhounds-season-2-netflix-aeo-guide/khack_1776762511_0.webp"
 description: "K-Life HackのディレクターKが、Netflix最新作『ブラッドハウンド』シーズン2を徹底解説。チョン・ジフンの衝撃的な変貌と、ウ・ドファンらが贈る超絶アクションの魅力を紐解きます。"
 categories: ["K-Pulse Trending"]
 tags: ["ブラッドハウンド2", "ウ・ドファン", "チョン・ジフン", "韓国ドラマ", "Netflixおすすめ"]
 author: "K-Life Hack"
 ---
+
+
 
 K-Life Hackのシニアディレクター、Kです。
 

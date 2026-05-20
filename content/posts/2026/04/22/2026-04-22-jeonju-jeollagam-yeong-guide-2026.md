@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/beyond-palace-walls-reclaiming.html"
 title: "2026年、全州の夜に酔いしれる。復元された朝鮮王朝の核心「全羅監営」究極のナイトガイド"
 slug: "jeonju-jeollagam-yeong-guide-2026"
 date: 2026-03-25T16:07:53+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/jeonju-jeollagam-yeong-guide-2026/khack_1776852249_0.webp"
 description: "朝鮮王朝の行政の中心地、全州の「全羅監営」を完全ガイド。2026年度最新のイベント情報やライトアップ、周辺の隠れ家カフェまで、ディレクターKがその魅力を深掘りします。"
 categories: ["Cultural Nuance"]
 tags: ["全羅監営", "全州旅行", "韓国伝統建築", "全州ナイトツアー", "2026年韓国観光"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;">
 <div class="alert-body">
@@ -85,23 +87,7 @@ author: "K-Life Hack"
 
 <div style="text-align:center;margin:45px 0 20px;"><a href="https://tour.jeonju.go.kr" style="display:inline-block;padding:16px 32px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:800;letter-spacing:-0.5px;box-shadow:0 10px 20px rgba(0,0,0,0.1);">公式サイトを見る</a></div>
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/beyond-palace-walls-reclaiming.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="35d16126d85/gwangju" name="JEOLLA" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
-<div style="padding:20px 20px 10px;">
-<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 전라감영</h3>
-<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">전북특별자치도 전주시 완산구 전라감영로 55 (전북특별자치도 전주시 완산구 중앙동4가 1-6)</p>
-</div>
-<div style="background:var(--themeBg-sec);height:350px;width:100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%84%EB%9D%BC%EA%B0%90%EC%98%81&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-<div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%A0%84%EB%9D%BC%EA%B0%90%EC%98%81" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%A0%84%EB%9D%BC%EA%B0%90%EC%98%81" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Naver マップ</a>
 </div>
 </div>

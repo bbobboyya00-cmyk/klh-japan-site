@@ -11,6 +11,8 @@ tags: ["聖水洞グルメ", "ソウル旅行", "ユッケビビンバ", "ミナ
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">🌿 ソウルのトレンド発信地、聖水洞で今最も注目を集めるセリ（ミナリ）料理の専門店です。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🥩 鮮度抜群のユッケと香り高いセリが調和した「ユッケビビンバ」は、一度食べたら忘れられない逸品。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">⏰ ウェイティング必須の人気店ですが、回転が速く、心温まるサービスも充実しています。</li>

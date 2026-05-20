@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/a-panoramic-sanctuary-ultimate-guide-t
 title: "水原（スウォン）の城郭を借景に。モダンな空間と絶品スイーツが奏でる「Sole Street（ソルストリート）」の誘惑 ✨"
 slug: "suwon-haenggung-solestreet-cafe"
 date: 2026-03-17T16:43:14+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/suwon-haenggung-solestreet-cafe/khack_1776569458_0.webp"
 description: "水原（スウォン）の歴史的な城郭を一望できる「ソルストリート（Sole Street）」。洗練されたモノトーンの内装と、職人仕込みの絶品イチゴスイーツ、シグネチャーのアーモンドラテが魅力の、大人のためのリラックス空間を現地よりレポートします。"
 categories: ["The Hype Logistics"]
 tags: ["水原カフェ", "行宮洞", "水原華城ビュー", "韓国カフェ巡り", "ソルストリート"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -75,23 +77,7 @@ author: "K-Life Hack"
 
 水原という街の歴史をリスペクトしつつ、現代的な感性で再解釈した「ソルストリート」。ここで過ごす一時間は、あなたの韓国旅行にきっと深い余韻を残してくれるはずです。季節が移ろうごとに、窓の外に見える木々の色も変わります。ぜひ、それぞれの季節の美しさを探しに訪れてみてください。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/a-panoramic-sanctuary-ultimate-guide-to.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d26127d03/suwon-si" name="GYEONGGI-SOUTH" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 쏠스트릿</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">경기도 수원시 장안구 팔달로 255 우솔빌딩 3층</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%8F%A0%EC%8A%A4%ED%8A%B8%EB%A6%BF%20%ED%96%89%EA%B6%81%EC%A0%90&hl=ja&t=&z=17&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%8F%A0%EC%8A%A4%ED%8A%B8%EB%A6%BF%20%ED%96%89%EA%B6%81%EC%A0%90&query_place_id=ChIJE4UC0ildezURmPh59w8qDJU" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%88%98%EC%9B%90%20%EC%8F%A0%EC%8A%A4%ED%8A%B8%EB%A6%BF%20%ED%96%89%EA%B6%81%EC%A0%90" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

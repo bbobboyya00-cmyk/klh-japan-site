@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/o-wols-gimbap-nakseongdae-your-2026.ht
 title: "行列必至！ソウル・楽聖大「五月のキンパ」2026年最新予約攻略ガイド"
 slug: "owols-gimbap-nakseongdae-seoul-rolls"
 date: 2026-04-29T19:27:27+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/owols-gimbap-nakseongdae-seoul-rolls/khack_1777950771_0.webp"
 description: "楽聖大で伝説のキンパを味わうなら「五月のキンパ」は外せません。2026年も変わらぬ人気が予想されるこの店の、予約必勝法と絶品メニューを徹底解説。行列覚悟でも食べたい逸品です。"
 categories: ["K-Food Insider"]
 tags: ["楽聖大", "キンパ", "ソウルグルメ", "予約", "韓国料理"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">予約必須のソウル人気キンパ専門店。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">品切れ御免！早めの電話予約が成功の鍵。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">2026年も期待！薄いご飯と具材たっぷりキンパの絶妙バランス。</li></ul>
@@ -62,8 +64,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%98%A4%EC%9B%94%EC%9D%98%EA%B9%80%EB%B0%A5" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/o-wols-gimbap-nakseongdae-your-2026.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

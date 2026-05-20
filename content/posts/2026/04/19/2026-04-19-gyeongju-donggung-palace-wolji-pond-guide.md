@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/beyond-moonlight-timeless-allure-of.ht
 title: "慶州・東宮と月池：新羅の黄金夜景に酔いしれる、春のロマンチック散歩 ✨"
 slug: "gyeongju-donggung-palace-wolji-pond-guide"
 date: 2026-03-12T10:24:13+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/gyeongju-donggung-palace-wolji-pond-guide/khack_1776572736_0.webp"
 description: "慶州を代表する夜景の名所「東宮と月池」を徹底ガイド。2026年4月の最新桜情報やマジックアワーの楽しみ方、新羅時代の歴史的背景まで、洗練されたエディトリアル視点でご紹介します。"
 categories: ["Cultural Nuance"]
 tags: ["慶州旅行", "東宮と月池", "韓国夜景スポット", "新羅遺跡", "慶州桜の名所"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -96,23 +98,7 @@ author: "K-Life Hack"
 
 慶州という街が持つ静かな誇りと、時を超えて受け継がれる美意識。そのすべてが凝縮された東宮と月池で、あなただけの特別な春の夜を見つけてみませんか。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/beyond-moonlight-timeless-allure-of.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="35d87128d60/daegu" name="GYEONGSANG" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 동궁과 월지</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">경상북도 경주시 원화로 102 안압지</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EB%8F%99%EA%B6%81%EA%B3%BC%20%EC%9B%94%EC%A7%80&hl=ja&t=&z=17&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EB%8F%99%EA%B6%81%EA%B3%BC%20%EC%9B%94%EC%A7%80&query_place_id=ChIJ9SUiOHBOZjUR_YnH8Lbjzt0" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EA%B2%BD%EC%A3%BC%20%EB%8F%99%EA%B6%81%EA%B3%BC%20%EC%9B%94%EC%A7%80" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

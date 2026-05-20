@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/authentic-charcoal-bulgogi-and-stew.ht
 title: "【東大門】地元っ子がこっそり教える名店！「ジェンバンジッ」の絶品プルコギ定食"
 slug: "dongdaemun-jaengbanjip-bulgogi-grilled-fish"
 date: 2026-05-11T07:19:56+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/dongdaemun-jaengbanjip-bulgogi-grilled-fish/khack_1778440643_1.webp"
 description: "東大門の路地裏に佇む「ジェンバンジッ」は、炭火香るプルコギとスンドゥブチゲが絶品のローカル食堂。1人旅でも安心の豪華定食を、ソウル在住インフルエンサーが徹底レポートします！"
 categories: ["K-Food Insider"]
 tags: ["東大門グルメ", "ソウル1人ご飯", "ジェンバンジッ", "韓国プルコギ定食", "ソウルローカル名店"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -92,8 +94,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%8F%99%EB%8C%80%EB%AC%B8%20%EC%9F%81%EB%B0%98%EC%A7%91" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/authentic-charcoal-bulgogi-and-stew.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

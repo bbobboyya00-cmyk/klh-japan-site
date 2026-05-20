@@ -11,6 +11,8 @@ tags: ["北村", "ウェルネス", "韓国旅行", "ソウル観光", "薬局",
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">視座：伝統の瓦屋根と現代の知性が交差する、ソウルで最も静謐なウェルネスの聖域</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">体験：薬剤師による精密なカウンセリングと五感を研ぎ澄ますヒーリング</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">白眉：ルーフトップから見渡す北村の稜線と、古都の呼吸を感じる時間</li></ul>
 </div></blockquote>

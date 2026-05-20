@@ -11,6 +11,8 @@ tags: ["チョアヨン", "龍仁市", "マスコット", "ポップアップス
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 
 - 龍仁市の公式マスコット「ジョアヨン」の限定グッズが多彩にラインナップされます。

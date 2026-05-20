@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/seocho-gus-jikhwa-jangin-masterclass-i
 title: "直火匠人 教大店：ソウルの美食家を唸らせる極上の和牛体験"
 slug: "jikama-seochogu-hanwoo-grilling-mastery"
 date: 2026-04-16T19:02:59+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/jikama-seochogu-hanwoo-grilling-mastery/khack_1777499142_0.webp"
 description: "ソウルの教大駅に佇む「直火匠人」は、最高級韓牛1++等級のみを厳選した美食の殿堂です。職人によるプレミアムグリリングサービスと洗練された空間で、五感を刺激する極上の和牛体験を。ディレクターKが推薦する、ソウルで味わうべき至福の味を堪能ください。"
 categories: ["K-Food Insider"]
 tags: ["和牛", "焼肉", "教大", "ソウルグルメ", "高級料理"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 見どころ: 特級和牛の旨味を引き出す、熟練の職人技によるグリルサービス。</li>
@@ -81,8 +83,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%A7%81%ED%99%94%EC%9E%A5%EC%9D%B8%20%EA%B5%90%EB%8C%80%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/seocho-gus-jikhwa-jangin-masterclass-in.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

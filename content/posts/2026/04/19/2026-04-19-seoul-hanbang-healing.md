@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/discover-traditional-korean-medicine-a
 title: "ソウル薬令市韓医学博物館：五感で巡る、韓国伝統医療の魅力と癒し体験🌿"
 slug: "seoul-hanbang-healing"
 date: 2026-03-16T16:41:07+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seoul-hanbang-healing/khack_1776551318_0.webp"
 description: "ソウル薬令市韓医学博物館で、韓方文化の奥深さに触れる旅へ。伝統衣装体験から薬草足浴、韓方マッサージまで、心と体を癒す特別な時間をご紹介します。"
 categories: ["Cultural Nuance"]
 tags: ["韓医学", "韓方体験", "ソウル旅行", "薬草足浴", "韓服体験", "ソウル薬令市", "東大門", "ヒーリング", "韓国文化", "体質診断"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -78,23 +80,7 @@ author: "K-Life Hack"
 ## ソウル薬令市への行き方
 ソウル薬令市韓医学博物館は、ソウル薬令市という韓国最大の韓方薬市場の中にあります。地下鉄1号線「祭基洞（チェギドン）駅」2番出口から徒歩約5分とアクセスも抜群です。駅の構内にも薬令市の案内展示があり、市場の雰囲気を早くも感じられます。博物館での体験の前後には、ぜひこの活気ある市場を散策し、韓国の日常と伝統文化に触れてみてください。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/discover-traditional-korean-medicine-at.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 한의약박물관</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울특별시 동대문구 약령중앙로 26</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%EC%95%BD%EB%A0%B9%EC%8B%9C%ED%95%9C%EC%9D%98%EC%95%BD%EB%B0%95%EB%AC%BC%EA%B4%80&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%EC%95%BD%EB%A0%B9%EC%8B%9C%ED%95%9C%EC%9D%98%EC%95%BD%EB%B0%95%EB%AC%BC%EA%B4%80&query_place_id=ChIJK0u1nqm8fDURplByelFA6O0" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%EC%95%BD%EB%A0%B9%EC%8B%9C%ED%95%9C%EC%9D%98%EC%95%BD%EB%B0%95%EB%AC%BC%EA%B4%80" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/seongsus-legendary-gamjatang-2026.html
 title: "2026年版！聖水洞伝説のカムジャタンを巡る旅：ソムンナン聖水カムジャタン"
 slug: "seongsu-legendary-gamjatang-pork-stew"
 date: 2026-04-29T16:53:26+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/seongsu-legendary-gamjatang-pork-stew/khack_1777957804_1.webp"
 description: "2026年も大行列必至！聖水洞で40年愛される「ソムンナン聖水カムジャタン」の魅力を徹底解剖。秘伝のタレと絶品ポックンパは今回も期待大です。"
 categories: ["K-Food Insider"]
 tags: ["聖水洞グルメ", "カムジャタン", "ソウル旅行", "韓国料理", "聖水駅"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 聖水洞で40年以上の歴史を誇る、地元で愛され続ける伝説のカムジャタン専門店。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🍲 秘伝のタレと柔らかい豚の背骨肉が織りなす絶妙なハーモニーは、一度食べたら忘れられない味。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📍 聖水駅4番出口から徒歩5分、カフェ通りの近くで食後の散策にも最適な立地。</li></ul>
@@ -84,8 +86,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/소문난 성수 감자탕" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seongsus-legendary-gamjatang-2026.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

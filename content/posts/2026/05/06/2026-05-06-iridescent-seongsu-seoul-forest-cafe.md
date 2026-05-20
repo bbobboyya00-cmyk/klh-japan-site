@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/sipping-unexpected-why-iridescent.html
 title: "聖水の隠れ家カフェ「イリデセント」：2026年も話題のエゴマの葉グラニータ体験記"
 slug: "iridescent-seongsu-seoul-forest-cafe"
 date: 2026-04-30T19:23:00+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/iridescent-seongsu-seoul-forest-cafe/khack_1778056703_1.webp"
 description: "聖水の路地裏に佇むモダンなカフェ「イリデセント」。5つ星ホテルのバリスタが提案する「エゴマの葉グラニータ」や「マンドゥラテ」など、五感を刺激する独創的なメニューと洗練された空間の魅力を、2026年の最新トレンドと共にご紹介します。"
 categories: ["K-Food Insider"]
 tags: ["聖水カフェ", "ソウル森", "エゴマの葉グラニータ", "韓国旅行", "聖水洞デート"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 聖水の路地裏に佇む、昼と夜で表情を変える洗練されたモダンな隠れ家空間です。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🌿 5つ星ホテルのバリスタが提案する、常識を覆す独創的なシグネチャーメニューが揃っています。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🏆 2026年のブルーリボンにも選定予定。音楽と香りが調和する、感性を満たす特別な体験が待っています。</li></ul>
@@ -71,8 +73,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%9D%B4%EB%A6%AC%EB%8D%B0%EC%84%BC%ED%8A%B8" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver Maps</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/sipping-unexpected-why-iridescent.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

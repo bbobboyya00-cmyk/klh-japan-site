@@ -11,6 +11,8 @@ tags: ["ソウル", "文化祭り", "DDP", "世界料理", "Kカルチャー", "
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🌍 世界各国の文化を一度に体験できる大使館ゾーンは、パスポートなしで異文化に触れる絶好のチャンスです。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🎭 多彩な世界文化公演やワールドバスキングは、昨年よりもさらにパワーアップし、五感を刺激する感動を提供してくれるでしょう。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🍜 世界のグルメとデザートゾーンでは、普段なかなか味わえない珍しい料理やスイーツが勢揃いし、食欲を満たしてくれます。</li></ul>
 </div></blockquote>

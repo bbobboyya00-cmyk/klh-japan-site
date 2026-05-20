@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/authentic-french-vibes-at-nnn-bakery.h
 title: "瑞山（ソサン）で絶対外せない！「NNNベーカリー」の塩パンとメロンパンが絶品すぎる件🥐✨"
 slug: "seosan-bakery-nnn-bakery-local-guide"
 date: 2026-05-14T10:10:40+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/14/seosan-bakery-nnn-bakery-local-guide/khack_1778720982_1.webp"
 description: "瑞山のローカルたちが秘密にしたい名店「NNNベーカリー」を徹底解剖！テレビ番組『天下製パン』出演の職人が作るフランス伝統のパンは、一口食べれば幸せ確定。2026年最新の訪問ガイドをお届けします。"
 categories: ["K-Pulse Trending"]
 tags: ["瑞山パン屋", "NNNベーカリー", "塩パン", "フランスパン", "瑞山グルメ"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -120,8 +122,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%9D%8D%EB%82%B4%EB%8F%99%20NNN%EB%B2%A0%EC%9D%B4%EC%BB%A4%EB%A6%AC" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/authentic-french-vibes-at-nnn-bakery.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

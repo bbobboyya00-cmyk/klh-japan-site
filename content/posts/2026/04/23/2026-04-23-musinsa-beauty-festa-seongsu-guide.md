@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/the-2026-aesthetic-frontier-curators.h
 title: "2026年最新 | 聖水洞「ムシンサ・ビューティーフェスタ」完全ガイド：K-Beautyの聖地を巡る"
 slug: "musinsa-beauty-festa-seongsu-guide"
 date: 2026-03-28T16:42:45+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/musinsa-beauty-festa-seongsu-guide/khack_1776938653_0.webp"
 description: "2026年、ソウル・聖水洞で開催される「ムシンサ・ビューティーフェスタ」。ディレクターKが、限定ポップアップや豪華特典、効率的な回り方を徹底解説。K-Beautyのトレンドが一堂に会するこのイベントの魅力を深掘りします。"
 categories: ["K-Beauty Insider"]
 tags: ["ムシンサビューティーフェスタ", "聖水ポップアップ", "韓国コスメ2026", "ソウル観光", "K-Beautyトレンド"]
 author: "K-Life Hack"
 ---
+
+
 
 こんにちは。K-Life Hackのシニアディレクター、Kです。
 

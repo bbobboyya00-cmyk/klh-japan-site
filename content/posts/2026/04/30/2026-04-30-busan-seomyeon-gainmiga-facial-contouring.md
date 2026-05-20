@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/seomyeon-sanctuary-defining-high-end.h
 title: "釜山西面の中心で出会う究極の小顔美学、カインミガのハイエンドケア 💎"
 slug: "busan-seomyeon-gainmiga-facial-contouring"
 date: 2026-04-14T16:56:23+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/busan-seomyeon-gainmiga-facial-contouring/khack_1777532627_0.webp"
 description: "2026年、釜山西面で体験する韓国最高峰の小顔エステ「カインミガ」。独自の技術とプライベートな空間で、あなただけの美しさを引き出すハイエンドなライフスタイルガイドです。"
 categories: ["K-Beauty Insider"]
 tags: ["カインミガ", "釜山エステ", "西面小顔矯正", "Kビューティー", "韓国美容"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>黄金比：独自の科学的理論で構築する究極の小顔ライン</li>
@@ -85,8 +87,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EA%B0%80%EC%9D%B8%EB%AF%B8%EA%B0%80%20%EB%B6%80%EC%82%B0%EC%84%9C%EB%A9%B4%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/seomyeon-sanctuary-defining-high-end.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

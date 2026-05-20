@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/massive-pork-bone-tower-at-cheongnyeon
 title: "江南で超話題！青年カムジャタン江南駅店のタワー級ボリュームに驚愕✨"
 slug: "cheongnyeon-gamjatang-gangnam-pork-stew"
 date: 2026-05-15T13:52:11+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/15/cheongnyeon-gamjatang-gangnam-pork-stew/khack_1778820628_8.webp"
 description: "江南駅近くで働く会社員に大人気の青年カムジャタン江南駅店を徹底レポ。圧倒的な肉のタワーととろ〜りチーズポックンパは必食です。駐車場2時間無料の嬉しい情報も。"
 categories: ["K-Food Insider"]
 tags: ["青年カムジャタン", "江南グルメ", "ソウル旅行", "カムジャタン", "韓国料理"]
 author: "K-Life Hack"
 ---
+
+
 
 江南（カンナム）でご飯を食べる時、一番困るのが駐車場ですよね。🤔 でも、ここはなんと2時間も無料なんです！🚗✨ 実際に平日の昼間に行ってみたら、近くの会社員の方々で溢れかえっていて、その人気を肌で感じました。
 
@@ -80,8 +82,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/청년감자탕 강남역점" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/massive-pork-bone-tower-at-cheongnyeon.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

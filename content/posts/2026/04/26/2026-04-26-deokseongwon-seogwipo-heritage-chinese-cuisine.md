@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/jeju-heritage-gastronomy-timeless.html
 title: "1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記"
 slug: "deokseongwon-seogwipo-heritage-chinese-cuisine"
 date: 2026-04-04T16:24:52+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/deokseongwon-seogwipo-heritage-chinese-cuisine/khack_1777173799_0.webp"
 description: "1945年創業、西帰浦最古の中華料理店「徳成園」。名物「ワタリガニチャンポン」の深いコクと、80年続く伝統の味をK-Life HackのディレクターKが徹底解説します。"
 categories: ["K-Food Insider"]
 tags: ["済州島グルメ", "西帰浦グルメ", "徳成園", "ワタリガニチャンポン", "韓国老舗"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>1945年創業、西帰浦最古の中華料理店が刻む品格と伝統。</li>
@@ -65,8 +67,3 @@ author: "K-Life Hack"
         <a href="https://map.naver.com/p/search/서귀포 덕성원" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
     </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/jeju-heritage-gastronomy-timeless.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

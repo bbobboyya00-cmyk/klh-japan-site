@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/gyeongju-hanbok-experience-unveiling.h
 title: "慶州で優雅な韓服体験：『K-Life Hack』ディレクターKが贈る極上ガイド"
 slug: "gyeongju-hanbok-experience-k-lifehack"
 date: 2026-03-24T10:05:23+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/gyeongju-hanbok-experience-k-lifehack/khack_1776816708_0.webp"
 description: "慶州で特別な韓服体験を。黄理団通り近くの「花道韓服」で、伝統とモダンが融合したスタイルを満喫。料金、利用方法、撮影スポットまで徹底解説します。"
 categories: ["Cultural Nuance"]
 tags: ["慶州 韓服", "黄理団通り", "韓服体験", "慶州旅行", "花道韓服"]
 author: "K-Life Hack"
 ---
+
+
 
 『K-Life Hack』ディレクターKでございます。今日のテーマは、古都慶州で時を超えた美しさを纏う、特別な韓服体験について深掘りしてまいります。
 
@@ -173,23 +175,7 @@ author: "K-Life Hack"
 
 「花道韓服」は、その立地の良さ、韓服の種類の豊富さ、サービスの質の高さ、そして手頃な価格設定まで、全体的にバランスの取れた素晴らしい選択肢だと感じました。慶州への訪問を計画しているなら、ぜひこの特別な体験を旅のハイライトに加えてみてください。きっと忘れられない思い出となるでしょう。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/gyeongju-hanbok-experience-unveiling.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="35d87128d60/daegu" name="GYEONGSANG" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
-<div style="padding:20px 20px 10px;">
-<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 花道韓服（コッキル韓服）</h3>
-<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">경상북도 경주시 금성로 235 꽃길한복</p>
-</div>
-<div style="background:var(--themeBg-sec);height:350px;width:100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=꽃길한복&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-<div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=꽃길한복" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/꽃길한복" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Naver マップ</a>
 </div>
 </div>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/2026-local-guide-is-golmok-tteokbokki.
 title: "【ソウル】地元民が教える「ソウル3大トッポッキ」の聖地！文井洞のコルモックトッポッキは絶対外せない！！"
 slug: "seoul-golmok-tteokbokki-munjeong-guide"
 date: 2026-05-13T15:38:29+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/13/seoul-golmok-tteokbokki-munjeong-guide/khack_1778654202_1.webp"
 description: "ソウル3大トッポッキの一つとして名高い、文井洞のコルモックトッポッキを徹底レポ！懐かしのスープトッポッキの味から、セルフ注文のコツ、地元民だけが知るサイドメニューの楽しみ方まで。2026年最新の訪問ガイドをお届けします。"
 categories: ["K-Food Insider"]
 tags: ["コルモックトッポッキ", "ソウル グルメ", "韓国 食べ歩き", "文井洞 グルメ", "ソウル3大トッポッキ"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -119,8 +121,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B3%A8%EB%AA%A9%EB%96%A1%EB%B3%B6%EC%9D%B4" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/2026-local-guide-is-golmok-tteokbokki.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

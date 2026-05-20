@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/i-paid-198000-krw-for-vista-walkerhill
 title: "1人198,000ウォンの価値はある？ビスタウォーカーヒル「ザ・ビュッフェ」週末ランチの正直レポ"
 slug: "vista-walkerhill-buffet-seoul-review"
 date: 2026-05-17T07:55:27+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/17/vista-walkerhill-buffet-seoul-review/khack_1778972005_1.webp"
 description: "ソウルで特別な記念日を過ごすならここ！ビスタウォーカーヒルの「ザ・ビュッフェ」を徹底レビュー。漢江の絶景、贅沢なズワイガニ、そしてQR注文の便利さまで。実際に訪れて感じたメリットと注意点を詳しくお伝えします。"
 categories: ["K-Pulse Trending"]
 tags: ["ビスタウォーカーヒル", "ソウルホテルビュッフェ", "ザ・ビュッフェ", "韓国旅行", "ソウルグルメ"]
 author: "K-Life Hack"
 ---
+
+
 
 ソウルで一番の絶景ビュッフェと言えば、やっぱりここ！✨ 大切な家族の記念日に、以前から気になっていた<b><mark>ビスタウォーカーヒル</mark></b>の「ザ・ビュッフェ」に行ってきました。
 
@@ -169,9 +171,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 今すぐ予約 (Book Now)
 </a>
 </div>
-    
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/i-paid-198000-krw-for-vista-walkerhill.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

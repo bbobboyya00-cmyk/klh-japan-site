@@ -11,6 +11,8 @@ tags: ["公州グルメ", "キムピタン", "元祖キムピタン", "韓国旅
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 見どころ: キムチとピザ、タンスユクが織りなす独創的な美食の調和</li>
 <li>✨ 魅力: 百済の古都、公州で出会う「元祖」だけが持つ圧倒的な存在感</li>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/lotte-giants-x-will-be-play-essential.
 title: "ソウル最新！ロッテジャイアンツ公式グッズ『ウィルビプレイ』徹底ガイド"
 slug: "lotte-giants-willbeplay-seoul-goods-guide"
 date: 2026-03-18T16:35:20+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/20/lotte-giants-willbeplay-seoul-goods-guide/khack_1776625431_0.webp"
 description: "2026年4月11日オープン。蚕室ロッテワールドモール3階にあるロッテジャイアンツとウィルビプレイのコラボショップをディレクターKが解説します。"
 categories: ["The Hype Logistics"]
 tags: ["ロッテジャイアンツ", "韓国野球グッズ", "ロッテワールドモール", "ソウルショッピング", "ウィルビプレイ"]
 author: "K-Life Hack"
 ---
+
+
 
 『K-Life Hack』ディレクターのKです。ソウルの最先端トレンドと、ここでしか体験できない特別なライフスタイルをご紹介しています。
 

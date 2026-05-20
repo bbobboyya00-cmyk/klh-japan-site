@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/unhyeongung-deep-dive-into-joseons.htm
 title: "麗しき「雲峴宮（ウニョングン）」で辿る、朝鮮王朝の残り香と春の静寂"
 slug: "unhyeongung-hanok-seoul"
 date: 2026-03-06T19:33:32+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776341149_0.webp"
 description: "ソウル・鍾路に佇む「雲峴宮（ウニョングン）」。高宗皇帝が幼少期を過ごした王室の私邸で、伝統建築と春の光が織りなす極上の美しさを、エディターKが詳しくナビゲートします。"
 categories: ["Cultural Nuance"]
 tags: ["雲峴宮", "ウニョングン", "ソウル観光", "韓屋", "安国駅", "朝鮮王朝", "韓国一人旅", "ソウル穴場"]
 author: "K-Life Hack"
 ---
+
+
 
 ソウルの中心部、鍾路（チョンノ）のビル群の間に、ひっそりと時が止まったような場所があります。
 
@@ -69,23 +71,7 @@ author: "K-Life Hack"
 
 都会の真ん中で、古き良きソウルの気品に触れるひととき。雲峴宮は、知的な大人にこそふさわしい、静謐な癒やしのスポットと言えるでしょう。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/unhyeongung-deep-dive-into-joseons.html)
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 운현궁</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울특별시 종로구 삼일대로 464 운현궁</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%9A%B4%EB%8B%88%EB%8F%99%20114-10%20%EC%9A%B4%ED%98%84%EA%B6%81%20%EC%9A%B4%ED%98%84%EA%B6%81&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%9A%B4%EB%8B%88%EB%8F%99%20114-10%20%EC%9A%B4%ED%98%84%EA%B6%81%20%EC%9A%B4%ED%98%84%EA%B6%81&query_place_id=ChIJy_KLudyifDUR8R3cB_PyJsU" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%9A%B4%ED%98%84%EA%B6%81" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/jaraseom-namdo-flower-garden-k-travel.
 title: "加平 (カピョン) 🪷 楽園「Jara Island 南島花園」で巡る、息をのむ絶景の秘密"
 slug: "jara-island-flower-garden"
 date: 2026-03-09T16:17:09+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/jara-island-flower-garden/khack_1776486741_0.webp"
 description: "加平の「ジャラ島 南島花園」は、季節ごとに異なる花々が咲き誇る、まさに地上の楽園。広大な敷地に広がる色鮮やかな花畑は、訪れる人々を魅了し、心癒される体験を提供します。『K-Life Hack』のディレクターKが厳選した、韓国の 隠れた名所へご案内します。"
 categories: ["K-Travel Hacks"]
 tags: ["加平", "ジャラ島", "花畑", "韓国旅行", "絶景", "ヒーリング", "花フェスタ", "京畿道", "フォトジェニック", "ドローン撮影"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -102,23 +104,7 @@ author: "K-Life Hack"
 
 ジャラ島南島花園は、美しい花々と雄大な自然が調和した、韓国でも類を見ない場所です。家族や友人、恋人と訪れても、きっと心に残る素晴らしい思い出が作れるはずです。次回韓国にいらっしゃる際には、ぜひこの美しい楽園を訪れてみてくださいね。Kでした。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/jaraseom-namdo-flower-garden-k-travel.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d74127d03/uijeongbu-si" name="GYEONGGI-NORTH" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 자라섬 남도 꽃정원</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">경기도 가평군 가평읍 달전리 산5-5</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EB%82%A8%EB%8F%84%EA%BD%83%EC%A0%95%EC%9B%90&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EB%82%A8%EB%8F%84%EA%BD%83%EC%A0%95%EC%9B%90&query_place_id=ChIJT90MXnYnYzURib7Nrrlvau8" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EB%82%A8%EB%8F%84%EA%BD%83%EC%A0%95%EC%9B%90" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

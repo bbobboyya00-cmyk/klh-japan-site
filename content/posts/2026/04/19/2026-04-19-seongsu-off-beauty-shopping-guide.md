@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/k-beauty-deep-dive-navigating-massive.
 title: "聖水洞の新たなランドマーク「オフビューティー」。韓国コスメの宝庫を徹底解剖 ✨"
 slug: "seongsu-off-beauty-shopping-guide"
 date: 2026-03-15T16:33:42+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-off-beauty-shopping-guide/khack_1776571376_0.webp"
 description: "聖水洞（ソンスドン）に誕生した巨大な倉庫型ドラッグストア「オフビューティー」を現地取材。人気コスメからお得な朝割情報まで、最新のKビューティー情報を紹介します。"
 categories: ["K-Beauty Insider"]
 tags: ["オフビューティー", "聖水洞ショッピング", "韓国コスメ", "ソンスドン", "倉庫型ドラッグストア"]
 author: "K-Life Hack"
 ---
+
+
 
 ソウルのトレンドセッターが集まる街、聖水洞。日々新しいショップが誕生するこのエリアで、今ひときわ注目を集めているのが、倉庫型ビューティーショップ「オフビューティー（Off-Beauty）聖水メガファクトリー店」です。かつてライフスタイル空間として人気を博したPeaches DOWONの跡地に位置し、その圧倒的なスケールと独自の世界観で訪れる人々を魅了しています。
 
@@ -85,23 +87,7 @@ author: "K-Life Hack"
 ## オフビューティー聖水メガファクトリー店への行き方 ✨
 地下鉄2号線「聖水（ソンス）駅」または「トゥクソム（トゥクソム）駅」から徒歩約10分。かつてのPeaches DOWONの跡地を目指せば、あの鮮やかなパープルの建物が見えてきます。駐車場は完備されていないため、近隣の公共駐車場の利用をおすすめします。おすすめの時間帯は、もちろん早朝割引が適用されるオープン直後です。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/k-beauty-deep-dive-navigating-massive.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 オフビューティー 聖水メガファクトリー店</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">韓国ソウル特別市聖東区演武場3キル9</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%98%A4%ED%94%84%EB%B7%B0%ED%8B%B0%20%EC%84%B1%EC%88%98%EB%A9%94%EA%B0%80%ED%8C%A9%ED%86%A0%EB%A6%AC%EC%A0%90&hl=ja&t=&z=17&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%98%A4%ED%94%84%EB%B7%B0%ED%8B%B0%20%EC%84%B1%EC%88%98%EB%A9%94%EA%B0%80%ED%8C%A9%ED%86%A0%EB%A6%AC%EC%A0%90&query_place_id=ChIJ88Kk17alfDURcWsSv53RINk" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%E8%81%96%E6%B0%B4%E6%B4%9E%20%EC%98%A4%ED%94%84%EB%B7%B0%ED%8B%B0%20%EC%84%B1%EC%88%98%EB%A9%94%EA%B0%80%ED%8C%A9%ED%86%A0%EB%A6%AC%EC%A0%90" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

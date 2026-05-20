@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/local-secret-in-seongsu-why-office.htm
 title: "聖水洞の会社員が通うガチの穴場！「キワンセンゴギ」で味わうコスパ最高の厚切り焼肉"
 slug: "seongsu-kiwang-saenggogi-korean-bbq-review"
 date: 2026-05-12T16:07:52+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/12/seongsu-kiwang-saenggogi-korean-bbq-review/khack_1778569604_1.webp"
 description: "聖水駅すぐ！地元民に愛される「キワンセンゴギ」を正直レビュー。150席の広々空間で、新鮮な生サムギョプサルや牛肉、絶品釜飯を堪能。聖水洞でコスパと味を両立した本物の焼肉店を探している方は必見のローカルスポットです。"
 categories: ["K-Food Insider"]
 tags: ["聖水洞グルメ", "聖水駅焼肉", "ソウルコスパグルメ", "サムギョプサル", "韓国ローカル名店"]
 author: "K-Life Hack"
 ---
+
+
 
 聖水洞（ソンスドン）といえばカフェ巡りが定番ですが、正直、映え重視のカフェ飯だけじゃお腹は満たされませんよね？そこで私がリアルに通っているのが、この「キワンセンゴギ」です。ただ、キラキラした聖水のイメージで行くと、入り口の急な階段と地下独特の雰囲気に少し驚くかもしれません。足元には十分注意して降りてくださいね。
 
@@ -81,8 +83,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%84%B1%EC%88%98%20%EA%B8%B0%EC%99%95%EC%83%9D%EA%B3%A0%EA%B8%B0" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/local-secret-in-seongsu-why-office.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

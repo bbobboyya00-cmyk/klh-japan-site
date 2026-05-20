@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/chasing-iron-bag-chef-2026-guide-to.ht
 title: "2026年も行列必至！西村「度量（ドリャン）」の絶品東坡肉とシェフの温かいおもてなし"
 slug: "doryang-seochon-chinese-dining-guide"
 date: 2026-04-28T19:38:22+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/05/doryang-seochon-chinese-dining-guide/khack_1777973886_1.webp"
 description: "Netflix『白と黒の料理人』で一躍スターとなったイム・テフンシェフの店「度量」。2026年5月の訪問に向けて、伝説の東坡肉や海老の茄子包み揚げの魅力を、過去の感動体験をベースにプレビューガイドとしてお届けします。"
 categories: ["K-Food Insider"]
 tags: ["西村グルメ", "ソウル中華料理", "東坡肉", "イムテフンシェフ", "度量"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 予約困難店！伝説の東坡肉（トンポーロー）は、2026年も絶対に外せないシグネチャーメニューです。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">👨‍🍳 シェフの気配り：イム・テフンシェフが各テーブルを回り、最高の食べ方を直接伝授してくれる温かいサービスが魅力。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">📝 2026年攻略法：ディナー利用でも午前10時からの整理券配布に合わせて並ぶのが、確実に入店するための鉄則です。</li></ul>
@@ -79,8 +81,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%8F%84%EB%9F%89" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/chasing-iron-bag-chef-2026-guide-to.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

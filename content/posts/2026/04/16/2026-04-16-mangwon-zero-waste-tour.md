@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/sustainable-seoul-deep-dive-into.html"
 title: "2026年最新｜ソウル・望遠洞(マンウォンドン)のエコ＆感性散策。ゼロウェイストの聖地'アルメン商店'と南仏カフェ'リトルメドウ'"
 slug: "mangwon-zero-waste-tour"
 date: 2026-03-05T16:59:36+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776281425_0.webp"
 description: "ソウルのトレンド発信地、望遠洞。韓国初のゼロウェイストショップ'アルメン商店'のリフィル体験や、南フランスの香りが漂う'リトルメドウ'の魅力をエディターKが詳しく解説します。"
 categories: ["K-Travel Hacks"]
 tags: ["望遠洞", "アルメン商店", "リトルメドウ", "韓国ゼロウェイスト", "ソウルカフェ巡り"]
 author: "K-Life Hack"
 ---
+
+
 
 {{<alert type="success">}}
 
@@ -80,25 +82,7 @@ author: "K-Life Hack"
 
 望遠洞で見つけたのは、単なるトレンドではなく、持続可能な未来へのヒント。次の韓国旅行では、あなたもこの優しい循環の輪に加わってみませんか。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/sustainable-seoul-deep-dive-into.html)
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 アルメン商店</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">韓国ソウル特別市麻浦区ワールドカップ路25キル47, 3階</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" marginheight="0" marginwidth="0" scrolling="no" src="https://maps.google.com/maps?q=%EC%95%8C%EB%A7%B9%EC%83%81%EC%A0%90&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0)) hue-rotate(var(--dark-mode-hue, 0deg));" width="100%"></iframe>
-</div>
-
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;">
-<span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>
-変化の激しいエリアでは、Googleマップの情報が最新ではない場合があります。より正確な位置確認のために、韓国語 <b>Naverマップ</b> の使用をお勧めします。
-</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%95%8C%EB%A7%B9%EC%83%81%EC%A0%90" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EC%95%8C%EB%A7%B9%EC%83%81%EC%A0%90" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

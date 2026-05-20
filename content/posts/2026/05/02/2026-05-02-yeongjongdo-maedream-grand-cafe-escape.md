@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/yeongjongdos-maedream-grand.html"
 title: "永宗島 メイドリーム：教会を再生した幻想的な空間で味わうハイエンドな休息"
 slug: "yeongjongdo-maedream-grand-cafe-escape"
 date: 2026-04-22T19:26:09+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/yeongjongdo maedream grand cafe escape/khack_1777726972_0.webp"
 description: "仁川・永宗島に位置する「メイドリーム」は、教会をリノベーションした神秘的な大型カフェ。巨大な生命の樹とステンドグラスが織りなす幻想的な空間で、2026年のトレンドを先取りする至高のひとときを提案します。"
 categories: ["K-Food Insider"]
 tags: ["メイドリーム", "永宗島カフェ", "仁川おすすめ", "教会リノベーション", "韓国大型カフェ"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>見どころ</b>: 教会を再生した圧倒的なスケールの空間と巨大な生命の樹</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催日程</b>: 年中無休 (2026年5月現在)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催場所</b>: 仁川広域市 永宗島</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>価値</b>: 建築美と自然、そして美食が融合したハイエンドな休息</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>ディレクターKの極意</b>: 地下から屋上まで、各階で異なる夢の世界観を五感で楽しむこと</li></ul>
@@ -67,8 +69,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%A9%94%EC%9D%B4%EB%93%9C%EB%A6%BC" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/yeongjongdos-maedream-grand.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

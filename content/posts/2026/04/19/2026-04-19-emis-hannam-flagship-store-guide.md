@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/defining-new-standard-of-k-streetwear.
 title: "漢南洞で出会う、自分だけの特別なキャップ。EMIS（エミス）フラッグシップストア訪問記 🧢"
 slug: "emis-hannam-flagship-store-guide"
 date: 2026-03-12T16:11:55+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/emis-hannam-flagship-store-guide/khack_1776591571_0.webp"
 description: "漢南洞（ハンナムドン）にある大人気ブランドEMIS（エミス）の旗艦店を現地レポート。カラー豊富なボールキャップや店内の雰囲気、免税情報まで、韓国トレンドの最前線をお届けします。"
 categories: ["K-Pulse Trending"]
 tags: ["漢南洞", "EMIS", "エミス", "韓国ファッション", "韓国ショッピング", "ソウルガイド"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -61,23 +63,7 @@ author: "K-Life Hack"
 
 営業時間は月曜日から木曜日までは19:30まで、金曜日から日曜日までは20:00までとなっています。お昼の12時にオープンするため、少し早めにランチを済ませてから訪れると、比較的スムーズに入店できるでしょう。自然光が美しく差し込む午後の時間帯は、店内のディスプレイがより一層輝いて見えます。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/defining-new-standard-of-k-streetwear.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 エミス 漢南フラッグシップストア (EMIS Hannam Flagship Store)</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">서울특별시 용산구 대사관로5길 27</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%ED%95%9C%EB%82%A8%EB%8F%99%20%EC%9D%B4%EB%AF%B8%EC%8A%A4%20%ED%95%9C%EB%82%A8%ED%94%8C%EB%9E%98%EA%B7%B8%EC%89%BD%20%EC%8A%A4%ED%86%A0%EC%96%B4&hl=ja&t=&z=17&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が最新でない場合があります。より正確な位置確認のために、<b>Naverマップ</b>の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%ED%95%9C%EB%82%A8%EB%8F%99%20%EC%9D%B4%EB%AF%B8%EC%8A%A4%20%ED%95%9C%EB%82%A8%ED%94%8C%EB%9E%98%EA%B7%B8%EC%89%BD%20%EC%8A%A4%ED%86%A0%EC%96%B4&query_place_id=ChIJ_-JsocajfDURDH7lSTPvKIU" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%ED%95%9C%EB%82%A8%EB%8F%99%20%EC%9D%B4%EB%AF%B8%EC%8A%A4%20%ED%95%9C%EB%82%A8%ED%94%8C%EB%9E%98%EA%B7%B8%EC%89%BD%20%EC%8A%A4%ED%86%A0%EC%96%B4" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

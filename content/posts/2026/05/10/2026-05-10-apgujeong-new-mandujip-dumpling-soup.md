@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/unveiling-apgujeongs-best-kept-secret.
 title: "狎鴎亭ニューマンドゥチプ：地元民が愛する絶品マンドゥクッの隠れ家"
 slug: "apgujeong-new-mandujip-dumpling-soup"
 date: 2026-05-08T16:35:39+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/10/apgujeong-new-mandujip-dumpling-soup/khack_1778364285_1.webp"
 description: "2026年も変わらぬ美味しさ！ミシュラン掲載の老舗「狎鴎亭ニューマンドゥチプ」で、心温まる北朝鮮式マンドゥクッを堪能。ソウルのトレンドセッターが密かに教える、通好みの名店を徹底ガイド。"
 categories: ["K-Food Insider"]
 tags: ["狎鴎亭グルメ", "ニューマンドゥチプ", "マンドゥクッ", "韓国料理", "ミシュラン"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -93,8 +95,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%95%95%EA%B5%AC%EC%A0%95%20%EB%89%B4%EB%A7%8C%EB%91%90%EC%A7%91" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/unveiling-apgujeongs-best-kept-secret.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

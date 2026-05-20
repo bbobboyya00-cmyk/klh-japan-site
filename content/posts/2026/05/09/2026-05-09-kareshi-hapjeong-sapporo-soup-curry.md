@@ -11,6 +11,8 @@ tags: ["スープカレー", "合井グルメ", "ソウル旅行", "隠れ家", 
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">合井の路地裏に佇む、知る人ぞ知る隠れ家スープカレー専門店。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">豊富な具材と深いコクが特徴の札幌式スープカレーで、心も体も温まる。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">香ばしく炙られたチーズご飯は、カレーとの相性抜群でリピーター続出。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">食通のソウルっ子が足繁く通う、週末のランチタイムは行列必至の人気店。</li></ul>
 </div></blockquote>

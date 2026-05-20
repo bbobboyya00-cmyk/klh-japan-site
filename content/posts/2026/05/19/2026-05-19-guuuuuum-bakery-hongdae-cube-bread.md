@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/i-waited-10-minutes-for-table-at.html"
 title: "弘大入口駅から徒歩5分！GUUUUUUM BAKERY 弘大店で人気のメロンパンが完売していた件"
 slug: "guuuuuum-bakery-hongdae-cube-bread"
 date: 2026-05-19T09:46:41+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/19/guuuuuum-bakery-hongdae-cube-bread/khack_1779151530_1.webp"
 description: "弘大の路地裏で見つけた日本風の可愛いカフェ、GUUUUUUM BAKERY 弘大店。人気のキューブパンや店内のフォトスポットを正直にレポートします。"
 categories: ["K-Food Insider"]
 tags: ["GUUUUUUM BAKERY", "弘大カフェ", "キューブパン", "ソウル旅行", "韓国パン屋"]
 author: "K-Life Hack"
 ---
+
+
 
 弘大の賑やかな通りから少し外れた路地に、なぜこれほどまでに人が吸い込まれていくのか不思議に思ったことはありませんか？
 
@@ -159,8 +161,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EA%B5%AC%EC%9A%B0%EC%9B%80%EB%B2%A0%EC%9D%B4%EC%BB%A4%EB%A6%AC%20%ED%99%8D%EB%8C%80%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/i-waited-10-minutes-for-table-at.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

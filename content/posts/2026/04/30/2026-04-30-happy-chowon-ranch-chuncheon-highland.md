@@ -11,6 +11,8 @@ tags: ["春川", "ハッピーチョウォン牧場", "韓国旅行", "絶景ス
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🏞️ 視座</b>: 喧騒を断ち切り、静寂が支配する「韓国のアルプス」へ</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>🗓️ 時期</b>: 四季を通じて開放</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>📍 所在</b>: 春川(チュンチョン)</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💎 価値</b>: 原始の自然がもたらす精神の調律</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>💡 助言</b>: 頂上の展望台こそが、この旅の終着点である</li></ul>
 </div></blockquote>

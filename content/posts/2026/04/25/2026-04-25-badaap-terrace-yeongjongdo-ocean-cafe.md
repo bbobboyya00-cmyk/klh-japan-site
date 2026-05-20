@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/badaap-terrace-yeongjongdos-premier.ht
 title: "永宗島「海の前のテラス（パダアプ・テラス）」：絶景と非日常を楽しむ韓国オーシャンビューカフェ"
 slug: "badaap-terrace-yeongjongdo-ocean-cafe"
 date: 2026-04-01T16:11:21+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/badaap-terrace-yeongjongdo-ocean-cafe/khack_1777122185_0.webp"
 description: "仁川永宗島にある「海の前のテラス（パダアプ・テラス）」は、目の前に広がる西海の絶景とハイセンスな空間演出が魅力のカフェです。ルーフトップやテラスで非日常のひとときを。"
 categories: ["K-Food Insider"]
 tags: ["永宗島", "オーシャンビューカフェ", "ルーフトップ", "韓国カフェ", "ブルーリボン"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>「パダアプテラス」は永宗島の高層オーシャンビューカフェです。</li>

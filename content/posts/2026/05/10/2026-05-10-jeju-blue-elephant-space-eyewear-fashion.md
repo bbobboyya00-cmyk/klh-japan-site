@@ -11,6 +11,8 @@ tags: ["済州島", "ブルーエレファントスペース", "アイウェア"
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 洗練された空間デザインとアートが融合し、訪れる人々を魅了する非日常体験を提供します。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">👓 個性豊かなアイウェアコレクションが並び、ファッションに敏感な方々の心を掴むでしょう。</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🤫 済州島の自然美と都会的な感性が調和した、まさに親しい友人だけに教えたい秘密の場所です。</li>
@@ -102,8 +104,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/Aewol-eup%20%EB%B8%94%EB%A3%A8%EC%97%98%EB%A6%AC%ED%8E%80%ED%8A%B8%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A0%9C%EC%A3%BC" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/unveiling-jejus-hidden-gem-blue.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

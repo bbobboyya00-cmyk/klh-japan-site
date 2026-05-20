@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/royal-filial-piety-reimagined-2026.htm
 title: "2026年ソウル・昌慶宮「夜宴」ガイド：親への最高の孝行、朝鮮王朝の主人公になる一夜"
 slug: "changgyeonggung-night-banquet-2026-guide"
 date: 2026-03-30T10:42:21+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/changgyeonggung-night-banquet-2026-guide/khack_1776981884_0.webp"
 description: "2026年5月に開催される昌慶宮の体験型プログラム「夜宴（ヤヨン）」を徹底解説。朝鮮王朝の衣装を纏い、王の宴の主人公として過ごす特別な夜。予約方法、価格、見どころまで、K-Life HackのディレクターKがハイエンドな旅のヒントを伝授します。"
 categories: ["K-Travel Hacks"]
 tags: ["昌慶宮夜宴", "韓国伝統体験", "ソウル夜間開場", "親孝行旅行", "2026年韓国イベント"]
 author: "K-Life Hack"
 ---
+
+
 
 こんにちは、K-Life HackのディレクターKです。
 

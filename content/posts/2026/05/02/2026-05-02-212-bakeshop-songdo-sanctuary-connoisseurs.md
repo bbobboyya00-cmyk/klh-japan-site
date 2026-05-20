@@ -11,6 +11,8 @@ tags: ["宋都カフェ", "212ベイクショップ", "焼き菓子", "ディレ
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;">ディレクターKが厳選した、都会の喧騒を忘れさせる至福のひととき。洗練された空間で五感を満たし、完璧なバランスのデザートとドリンクが織りなす極上の焼き菓子体験を。日常を豊かにする、特別な出会いがここにあります。</li></ul>
 </div></blockquote>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/mungyeongsaejae-heritage-guide-to.html
 title: "聞慶セジェで出会う至高の美、聞慶茶碗祭り2026完全ガイド"
 slug: "mungyeong-tea-bowl-festival-guide"
 date: 2026-04-24T16:43:09+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/mungyeong-tea-bowl-festival-guide/khack_1777807489_0.webp"
 description: "聞慶セジェの美しい自然の中で開催される「聞慶茶碗祭り 2026」。伝統陶磁器の職人技、茶道体験、そして朝鮮王朝時代のセット場を巡る、ハイエンドな韓国文化の旅をご紹介します。ディレクターKが贈る、本物の美に触れるガイド。"
 categories: ["Cultural Nuance"]
 tags: ["聞慶茶碗祭り", "韓国伝統陶磁器", "聞慶セジェ", "韓国旅行", "伝統文化体験"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;"><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>見どころ</b>: 伝統韓屋と渓谷が織りなす陶芸の真髄</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催日程</b>: 2026年5月1日から5月10日まで</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>開催場所</b>: 聞慶セジェ・オープンセット場</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>価値</b>: 数百年の歴史を継承する職人精神の結晶</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;"><b>極意</b>: 職人と共に土に触れ、自らの感性を形にする贅沢</li></ul>
@@ -69,8 +71,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/경상북도 문경시 문경읍 새재로 932" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/mungyeongsaejae-heritage-guide-to.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

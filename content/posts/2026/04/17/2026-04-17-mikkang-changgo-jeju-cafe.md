@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/k-travel-hacks-ultimate-aewol-guide-to
 title: "済州島・涯月(エウォル)の静かな休息地。ミッカン倉庫(Mikkang Changgo)で過ごす、蜜柑の香りに包まれた休日"
 slug: "mikkang-changgo-jeju-cafe"
 date: 2026-03-08T19:19:21+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/mikkang-changgo-jeju-cafe/khack_1776436550_0.webp"
 description: "済州島の涯月(エウォル)にある、古いみかん倉庫をリノベーションしたカフェ「ミッカン倉庫」。異国情緒あふれる庭園とこだわりのシグネチャーコーヒーで、極上のリラックスタイムを。"
 categories: ["K-Travel Hacks"]
 tags: ["済州島カフェ", "涯月グルメ", "済州島みかん狩り", "韓国カフェ巡り", "済州島リノベーションカフェ"]
 author: "K-Life Hack"
 ---
+
+
 
 {{< alert type="success" >}}
 
@@ -75,23 +77,7 @@ author: "K-Life Hack"
 
 済州島のカフェは、季節によって営業時間が変動したり、急な店休日が設けられたりすることも珍しくありません。特にミッカン倉庫は、材料が完売すると早めにクローズすることもあるため、公式SNSを事前にチェックしておくことをおすすめします。また、現在はノーキッズ・ノーペットゾーンとして運営されているため、静寂を愛する大人の旅人にとって、これ以上ない隠れ家となるでしょう。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/k-travel-hacks-ultimate-aewol-guide-to.html)<div class="k-weather-section" style="margin-top: 15px; margin-bottom: 10px;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 5px;">📅 現地のお天気ガイド</h3>{{< weather loc="33d50126d53/jeju-si" name="JEJU" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 ミッカン倉庫</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">제주특별자치도 제주시 애월읍 중산간서로 6710-1 ミッカン倉庫</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%95%A0%EC%9B%94%EC%9D%8D%20%EA%B4%91%EB%A0%B9%EB%A6%AC%2019-2%20%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0%20%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%9C%EC%A3%BC%EC%8B%9C%20%EC%95%A0%EC%9B%94%EC%9D%8D%20%EA%B4%91%EB%A0%B9%EB%A6%AC%2019-2%20%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0%20%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0&query_place_id=ChIJG4VRlJP7DDURA_qjiKB_rpQ" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EB%AF%B8%EA%B9%A1%EC%B0%BD%EA%B3%A0" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

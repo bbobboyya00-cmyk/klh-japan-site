@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/bybly-2026-aesthetic-of-modular-beauty
 title: "韓国ABLY初PB「BYBLY」誕生。毛穴を消し去るダルクッションと革新的なリフィルショットの全貌"
 slug: "ably-bybly-korea-beauty-launch-guide"
 date: 2026-03-26T16:52:49+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/ably-bybly-korea-beauty-launch-guide/khack_1776931039_0.webp"
 description: "韓国No.1ファッションプラットフォームABLYが手掛ける初ビューティーPB「BYBLY」をディレクターKが徹底解説。1020世代を魅了するミニマルなデザインと、毛穴レスな肌を叶える『ダルクッション』、注射器型のリフィルなど、最新トレンドが凝縮されています。"
 categories: ["K-Beauty Insider"]
 tags: ["BYBLY", "バイブリー", "エイブリー", "韓国コスメ", "ダルクッション", "リフィルショット", "MZ世代", "脂性肌クッション", "韓国トレンド"]
 author: "K-Life Hack"
 ---
+
+
 
 K-Life HackのディレクターKです。
 

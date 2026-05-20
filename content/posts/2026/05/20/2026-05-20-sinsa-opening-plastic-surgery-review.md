@@ -11,6 +11,8 @@ tags: ["リジュランヒーラー", "新沙駅 美容外科", "手打ち施術
 author: "K-Life Hack"
 ---
 
+
+
 最近、SNSで「まるで美術館のようなクリニック」と話題の場所、気になりませんか？ （私もずっとチェックしていました…！） 特に、画一的な工場型ではない、院長先生による丁寧な手打ち施術を求めている方々の間で今、熱い視線を集めているんです。✨ 韓国のクリニックでは、初診時に身分証の提示が求められることが多いので、パスポートを忘れずに持参してくださいね！
 
 <div style="position:relative; width:50%; min-width:300px; max-width:100%; margin:40px auto 32px; color:inherit; box-sizing:border-box;"><div style="padding:10px 10px 10px 0px; background:rgba(255, 54, 146, 0.07); border-left:4px solid #ff3692; font-size:15px; line-height:1.5; min-height:22px; text-align:left; line-break:anywhere; box-sizing:border-box;">

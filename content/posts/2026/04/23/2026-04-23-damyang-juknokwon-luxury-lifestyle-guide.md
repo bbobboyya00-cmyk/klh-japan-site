@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/the-vertical-elegance-of-2026.html"
 title: "竹林の静寂と美食の極致。ディレクターKが贈る、潭陽（タミャン）ハイエンド・トラベルガイド"
 slug: "damyang-juknokwon-luxury-lifestyle-guide"
 date: 2026-03-27T19:27:46+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/damyang-juknokwon-luxury-lifestyle-guide/khack_1776949485_0.webp"
 description: "2026年最新。韓国・潭陽の竹緑苑（チュンノグォン）の絶景から、名物トッカルビの美食、そして極上のプライベートヴィラまで。ディレクターKが厳選した大人のためのリトリート・ガイドをお届けします。"
 categories: ["K-Travel Hacks"]
 tags: ["潭陽", "竹緑苑", "トッカルビ", "韓国高級ヴィラ", "竹林散策"]
 author: "K-Life Hack"
 ---
+
+
 
 『K-Life Hack』シニアディレクターのKです。
 

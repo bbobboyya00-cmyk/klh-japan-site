@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/songdo-galmaegi-main-branch-zenith-of.
 title: "1988年から続く伝統の味、松島カルメギ本店で堪能する至高のガストロノミー"
 slug: "songdo-galmaegi-charcoal-grilled-heritage-incheon"
 date: 2026-04-11T10:42:55+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/songdo-galmaegi-charcoal-grilled-heritage-incheon/khack_1777338161_0.webp"
 description: "仁川・松島の象徴、松島カルメギ本店をディレクターKが徹底解説。伝統的な豚ハラミの旨味と洗練された空間が織りなすハイエンドな食体験。2026年最新の訪問ガイド。"
 categories: ["K-Food Insider"]
 tags: ["松島カルメギ", "仁川グルメ", "カルメギサル", "韓国高級焼肉", "松島本店"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>1988年創業、秘伝のタレと洗練された空間が織りなす極上の美食体験。</li>
@@ -75,8 +77,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%86%A1%EB%8F%84%EA%B0%88%EB%A7%A4%EA%B8%B0%20%EB%B3%B8%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/songdo-galmaegi-main-branch-zenith-of.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/unlocking-force-locals-guide-to-star.h
 title: "2026年「スター・ウォーズ・デイ」潜入レポ！ロッテワールドタワーの屋外広場が銀河系に変身"
 slug: "star-wars-day-lotte-tower-jamsil"
 date: 2026-05-07T10:54:26+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/09/star-wars-day-lotte-tower-jamsil/khack_1778267147_1.webp"
 description: "2026年5月、ソウルのランドマークがスター・ウォーズ一色に！巨大グローグーから限定レゴ展示まで、現地エディターが教える攻略法とロッテワールドタワー屋外広場の魅力を徹底解説します。"
 categories: ["K-Pulse Trending"]
 tags: ["スターウォーズ", "ロッテワールドタワー", "ソウル観光", "2026イベント", "蚕室グルメ"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
@@ -103,8 +105,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%A1%AF%EB%8D%B0%EC%9B%94%EB%93%9C%EB%AA%B0%20%EC%9B%94%EB%93%9C%ED%8C%8C%ED%81%AC" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/unlocking-force-locals-guide-to-star.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/escape-to-verdant-sanctuary-suak-oreum
 title: "済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿"
 slug: "jeju-forest-healing-suak-meochewat"
 date: 2026-03-07T16:16:33+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776378798_0.webp"
 description: "『K-Life Hack』のディレクターKがおすすめする、済州島の隠れた森林浴スポット「水岳（スアク）オルム」と「モチェワッ森の道」。家族連れにも優しい緩やかなコースで、自然の中で心ゆくまで癒される特別なハイキングコースをご紹介します。"
 categories: ["K-Travel Hacks"]
 tags: ["済州島", "チェジュ島", "森林浴", "ヒーリング", "ハイキング", "トレッキング", "水岳オルム", "モチェワッ森の道", "自然", "家族旅行"]
 author: "K-Life Hack"
 ---
+
+
 
 皆様、こんにちは。ソウルのハイエンドな日常を届ける『K-Life Hack』のディレクター、Kです。
 今回は、変化の激しいソウルのトレンドから少し離れて、済州島（チェジュド）の奥深い自然の魅力をご紹介したいと思います。
@@ -101,23 +103,7 @@ author: "K-Life Hack"
 
 どちらの場所も公共交通機関でのアクセスは限られているため、レンタカーやタクシーを利用するのが便利です。済州の豊かな自然の中で、心ゆくまでリフレッシュする特別な時間をお過ごしください。私も、またすぐにこの森を訪れたいと思っています！
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/escape-to-verdant-sanctuary-suak-oreum.html)
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 머체왓숲길</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">제주특별자치도 서귀포시 남원읍 서성로 755</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%84%9C%EA%B7%80%ED%8F%AC%EC%8B%9C%20%EB%82%A8%EC%9B%90%EC%9D%8D%20%ED%95%9C%EB%82%A8%EB%A6%AC%201622-3%20%EB%A8%B8%EC%B2%B4%EC%99%93%EC%88%B2%EA%B8%B8&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%84%9C%EA%B7%80%ED%8F%AC%EC%8B%9C%20%EB%82%A8%EC%9B%90%EC%9D%8D%20%ED%95%9C%EB%82%A8%EB%A6%AC%201622-3%20%EB%A8%B8%EC%B2%B4%EC%99%93%EC%88%B2%EA%B8%B8&query_place_id=ChIJo79cUsMADTURoR6D6-AbRAY" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%EB%A8%B8%EC%B2%B4%EC%99%93%EC%88%B2%EA%B8%B8" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

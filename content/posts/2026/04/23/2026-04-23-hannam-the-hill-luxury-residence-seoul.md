@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/hannam-hill-fortress-of-koreas-ultra.h
 title: "ソウル最高峰のラグジュアリーレジデンス「漢南ザ・ヒル」：セレブリティが選ぶ究極の私的空間"
 slug: "hannam-the-hill-luxury-residence-seoul"
 date: 2026-03-27T16:04:03+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/hannam-the-hill-luxury-residence-seoul/khack_1776902552_0.webp"
 description: "K-Life HackディレクターKが、ソウル漢南洞に位置する最高級レジデンス「漢南ザ・ヒル」の魅力を深掘り。セレブリティに愛される理由と、真のハイエンドライフスタイルをご紹介します。"
 categories: ["K-Pulse Trending"]
 tags: ["漢南ザ・ヒル", "ソウル高級住宅", "セレブリティマンション", "漢南洞", "ラグジュアリーライフ"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 
@@ -99,23 +101,7 @@ author: "K-Life Hack"
 
 ディレクターKは、これからも皆様の人生を豊かにする「K-Life Hack」を追求し続けてまいります。次回もどうぞお楽しみに。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/hannam-hill-fortress-of-koreas-ultra.html)<div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background:var(--themeBg-alt);border-radius:24px;border:1px solid var(--themeBd-color);color:var(--themeC);margin-top:40px;overflow:hidden;">
-<div style="padding:20px 20px 10px;">
-<h3 class="k-map-title" style="color:var(--themeC);font-size:1.2rem;font-weight:800;margin:0 0 5px;">📍 漢南ザ・ヒル</h3>
-<p class="k-map-address" style="color:var(--themeC);font-size:0.9rem;margin:0;opacity:0.8;">ソウル特別市龍山区読書堂路111 (서울특별시 용산구 한남동 810)</p>
-</div>
-<div style="background:var(--themeBg-sec);height:350px;width:100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%ED%95%9C%EB%82%A8%EB%8D%94%ED%9E%90&output=embed" style="border:none;filter:grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert,0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding:12px 20px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-<div class="k-map-buttons" style="background:var(--themeBg-sec);display:flex;gap:10px;padding:15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%ED%95%9C%EB%82%A8%EB%8D%94%ED%9E%90" rel="noopener noreferrer" style="background:rgb(66,133,244);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Google マップ</a>
 <a href="https://map.naver.com/p/search/%ED%95%9C%EB%82%A8%EB%8D%94%ED%9E%90" rel="noopener noreferrer" style="background:rgb(0,199,60);border-radius:12px;color:white;flex:1 1 0%;font-size:0.85rem;font-weight:700;padding:12px 10px;text-align:center;text-decoration:none;" target="_blank">Naver マップ</a>
 </div>
 </div>

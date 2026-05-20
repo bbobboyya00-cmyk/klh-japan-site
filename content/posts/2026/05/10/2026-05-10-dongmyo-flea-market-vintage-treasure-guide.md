@@ -11,6 +11,8 @@ tags: ["東廟市場", "ソウルヴィンテージ", "フリーマーケット"
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <ul style="margin:0;padding:0;list-style:none;">
 <li style="margin-bottom:12px; list-style:none; line-height:1.4;">✨ 掘り出し物満載のヴィンテージ天国</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🛍️ 期待を超える高コスパショッピング体験</li><li style="margin-bottom:12px; list-style:none; line-height:1.4;">🚇 駅直結でアクセス抜群、週末のお出かけに最適</li>
@@ -92,8 +94,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%8F%99%EB%AC%98%20%EA%B5%AC%EC%A0%9C%EC%8B%9C%EC%9E%A5" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seoul-vintage-treasure-hunt-ultimate.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

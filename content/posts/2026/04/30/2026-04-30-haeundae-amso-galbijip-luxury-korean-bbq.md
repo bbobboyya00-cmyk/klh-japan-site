@@ -11,6 +11,8 @@ tags: ["海雲台アムソカルビチッ", "釜山グルメ", "韓牛カルビ"
 author: "K-Life Hack"
 ---
 
+
+
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 見どころ: 1964年から続く歴史的な韓屋の情緒と、錆びた鉄材が織りなすモダン建築の美しきコントラスト</li>
 <li>🗓️ 開催日程: 年中無休（ブレイクタイムあり、生カルビは事前予約必須）</li>

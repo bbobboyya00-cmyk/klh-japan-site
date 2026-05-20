@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/seouls-sweetest-secret-pringles-heart.
 title: "韓国限定・世界初の上陸。メガボックスとGSザ・フレッシュで出会う「プリングルズ・ハート・ミニ・ローズ」の誘惑"
 slug: "pringles-heart-rose-korea-edition-snack"
 date: 2026-04-11T19:34:01+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/pringles-heart-rose-korea-edition-snack/khack_1777336150_0.webp"
 description: "世界初、韓国で独占先行販売された「プリングルズ・ハート・ミニ・ローズ」をディレクターKが徹底解剖。ピンクのハート型チップスが放つ圧倒的な視覚的魅力と、賛否両論を呼ぶ優雅なバラの香りの正体に迫ります。"
 categories: ["K-Pulse Trending"]
 tags: ["プリングルズ", "ハート型チップス", "韓国限定", "ピンクスナック", "限定版"]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 60年の歴史で初めて誕生した、造形美を極めたハート型のチップスです。</li>
@@ -50,10 +52,3 @@ author: "K-Life Hack"
 - ペアリング: キリッと冷やしたシャンパンや、ダージリンティーとの相性が格別です
 
 </div></blockquote>
-
-    
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/seouls-sweetest-secret-pringles-heart.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

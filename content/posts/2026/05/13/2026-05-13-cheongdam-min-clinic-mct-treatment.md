@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/05/my-honest-experience-at-cheongdam-min.
 title: "1日7組限定の贅沢。チョンダムドン・ミンクリニックで体験する最新MCT幹細胞ケアのすべて"
 slug: "cheongdam-min-clinic-mct-treatment"
 date: 2026-05-13T16:18:53+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/13/cheongdam-min-clinic-mct-treatment/khack_1778656625_1.webp"
 description: "ソウル・清潭洞にある清潭洞ミンクリニックを徹底解説！1日7組限定のプライベート空間で受ける最新のMCT幹細胞ケアとは？美大出身の院長による繊細なデザインと、痛みの少ない施術の秘密をご紹介します。"
 categories: ["K-Beauty Insider"]
 tags: []
 author: "K-Life Hack"
 ---
+
+
 
 ソウルで一番おしゃれなエリア、清潭洞（チョンダムドン）で「本当に肌が変わる」と噂の場所を知っていますか？✨
 
@@ -98,9 +100,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 今すぐ予約 (Book Now)
 </a>
 </div>
-    
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/my-honest-experience-at-cheongdam-min.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

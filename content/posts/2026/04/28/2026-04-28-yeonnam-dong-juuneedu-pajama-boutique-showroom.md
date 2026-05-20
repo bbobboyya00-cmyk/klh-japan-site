@@ -3,13 +3,15 @@ en_url: "https://en.klifehack.com/2026/04/beyond-comfort-curated-pajama-sanctuar
 title: "延南洞の隠れ家で出会う至福の休息。パジャマブティック「Juuneedu（ジュニジュ）」ショールームガイド"
 slug: "yeonnam-dong-juuneedu-pajama-boutique-showroom"
 date: 2026-04-12T19:18:59+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/yeonnam-dong-juuneedu-pajama-boutique-showroom/khack_1777376160_0.webp"
 description: "延南洞の路地裏に佇むパジャマブティック「Juuneedu（ジュニジュ）」。上質な素材と洗練されたデザインが織りなす、韓国発のハイエンドなルームウェア体験をディレクターKが紐解きます。"
 categories: ["K-Beauty Insider"]
 tags: [ジュニジュ, 延南洞, パジャマ, ソウルショッピング, 韓国ライフスタイル, ヨンナムドン, 弘大, 韓国ファッション]
 author: "K-Life Hack"
 ---
+
+
 
 <blockquote class="alert alert-note" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;"><div class="alert-body">
 <li>🏞️ 魅力：感性を刺激する洗練された空間と多彩なパジャマの共演</li>
@@ -64,8 +66,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%A5%AC%EB%8B%88%EC%A5%AC%20%EC%87%BC%EB%A3%B8%20%EC%97%B0%EB%82%A8%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/beyond-comfort-curated-pajama-sanctuary.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>
