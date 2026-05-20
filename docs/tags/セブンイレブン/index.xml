@@ -32,13 +32,4 @@
 &lt;/a&gt;
 &lt;script&gt;
 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-&lt;/script&gt;&lt;/div&gt;
-&lt;hr&gt;
-
- &lt;blockquote&gt;
- &lt;p&gt;🌐 &lt;strong&gt;Read this post in other languages:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://en.klifehack.com/2026/05/seouls-seven-eleven-elevating-urban.html" target="_blank" rel="noopener noreferrer"&gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
- &lt;/blockquote&gt;</description></item></channel></rss>
+&lt;/script&gt;&lt;/div&gt;</description></item></channel></rss>
