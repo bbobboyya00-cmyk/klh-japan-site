@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/gangnam-color-moa-curating-your.html"
 title: "究極のパーソナルカラー診断、江南「カラーモア」で自分だけの輝きを見つける旅 ✨"
 slug: "gangnam-color-moa-signature-hue"
 date: 2026-04-17T10:47:16+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/gangnam-color-moa-signature-hue/khack_1777585381_0.webp"
 description: "2026年最新の韓国ビューティートレンド。江南のカラーモアで、2万件以上の実績を持つ専門家による精密なパーソナルカラー診断を体験しましょう。"
 categories: ["K-Beauty Insider"]
@@ -75,8 +75,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%BB%AC%EB%9F%AC%EB%AA%A8%EC%95%84" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/gangnam-color-moa-curating-your.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

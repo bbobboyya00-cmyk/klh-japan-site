@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/suwon-ilwol-arboretum-nighttime.html"
 title: "水原の夜を彩る幻想的な光のシンフォニー「日月植物園」ナイトガーデン完全ガイド"
 slug: "suwon-ilwol-arboretum-night-garden-guide"
 date: 2026-04-16T10:53:05+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/suwon-ilwol-arboretum-night-garden-guide/khack_1777527489_0.webp"
 description: "水原の新しいランドマーク「日月植物園」の夜間開園ガイド。モネの庭園を再現した温室やホタルの森など、幻想的な夜の散策コースをご紹介します。"
 categories: ["K-Travel Hacks"]
@@ -89,8 +89,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%9D%BC%EC%9B%94%EC%88%98%EB%AA%A9%EC%9B%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/suwon-ilwol-arboretum-nighttime.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

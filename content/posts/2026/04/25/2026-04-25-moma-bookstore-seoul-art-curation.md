@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/moma-bookstore-seoul-curated-sanctuary
 title: "ソウルに誕生、MoMAブックストア：アートとデザインを巡る洗練された旅"
 slug: "moma-bookstore-seoul-art-curation"
 date: 2026-04-02T16:45:48+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/moma-bookstore-seoul-art-curation/khack_1777095394_0.webp"
 description: "K-Life Hack ディレクターKが、ニューヨーク近代美術館MoMAの世界観をソウルで体験できるMoMAブックストアを徹底ガイド。アート、デザイン、建築の書物が織りなす空間の魅力と訪問のヒントをお届けします。"
 categories: ["The Hype Logistics"]

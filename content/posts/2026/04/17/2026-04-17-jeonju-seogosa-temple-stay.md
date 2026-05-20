@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/seogosa-temple-stay-pan-gyo-locals.htm
 title: "全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分"
 slug: "jeonju-seogosa-temple-stay"
 date: 2026-03-07T10:41:51+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776385504_0.webp"
 description: "忙しい日常から離れて、韓国全州に位置する古刹、西古寺(ソゴサ)でのテンプルステイを体験。静かな山寺で瞑想や茶談を通じて、心を癒し、自分と向き合う時間をご紹介します。"
 categories: ["Cultural Nuance"]
@@ -88,23 +88,6 @@ author: "K-Life Hack"
 
 持ち物としては、タオルやドライヤーは持参が必要です。季節によっては朝晩冷え込むこともありますので、羽織るものがあると良いでしょう。心穏やかな時間を過ごしたい方、忙しい日常に休息が必要な方には、西古寺でのテンプルステイを心からおすすめします。ぜひ、韓国で心に残るヒーリング体験をしてみてください。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/seogosa-temple-stay-pan-gyo-locals.html)
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 서고사</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">전북특별자치도 전주시 덕진구 정여립로 1010-90</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%A0%84%EB%B6%81%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%84%EC%A3%BC%EC%8B%9C%20%EB%8D%95%EC%A7%84%EA%B5%AC%20%EB%A7%8C%EC%84%B1%EB%8F%99%2084%20%EB%8C%80%ED%95%9C%EB%B6%88%EA%B5%90%EC%A1%B0%EA%B3%84%EC%A2%85%20%EC%84%9C%EA%B3%A0%EC%82%AC&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%A0%84%EB%B6%81%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84%20%EC%A0%84%EC%A3%BC%EC%8B%9C%20%EB%8D%95%EC%A7%84%EA%B5%AC%20%EB%A7%8C%EC%84%B1%EB%8F%99%2084%20%EB%8C%80%ED%95%9C%EB%B6%88%EA%B5%90%EC%A1%B0%EA%B3%84%EC%A2%85%20%EC%84%9C%EA%B3%A0%EC%82%AC&query_place_id=ChIJ6ZfXL387cDUReeiHgCnVOXQ" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EB%8C%80%ED%95%9C%EB%B6%88%EA%B5%90%EC%A1%B0%EA%B3%84%EC%A2%85%20%EC%84%9C%EA%B3%A0%EC%82%AC" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

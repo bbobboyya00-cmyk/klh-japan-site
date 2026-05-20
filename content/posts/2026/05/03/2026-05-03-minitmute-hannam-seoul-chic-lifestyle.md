@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/minitmute-hannam-seouls-chic-lifestyle
 title: "漢南洞の感性を纏う、ミニミュート・ハンナム・フラッグシップストア完全ガイド"
 slug: "minitmute-hannam-seoul-chic-lifestyle"
 date: 2026-04-24T19:47:12+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/minitmute-hannam-seoul-chic-lifestyle/khack_1777786184_0.webp"
 description: "ソウル・漢南洞に位置するミニミュートの旗艦店を徹底解説。2026年最新の店舗情報から、おすすめのフロア構成、人気のレザーアイテムまで、ディレクターKがハイエンドなライフスタイルをご提案します。"
 categories: ["The Hype Logistics"]
@@ -78,8 +78,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%AF%B8%EB%8B%9B%EB%AE%A4%ED%8A%B8%20%ED%95%9C%EB%82%A8%20%ED%94%8C%EB%9E%98%EA%B7%B8%EC%89%BD%20%EC%8A%A4%ED%86%A0%EC%96%B4" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/minitmute-hannam-seouls-chic-lifestyle.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

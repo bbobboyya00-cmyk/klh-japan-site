@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/seoul-insider-guide-why-new-at-dawn.ht
 title: "聖水洞の秘密基地！「NEW AT DAWN 聖水」で味わう至福のデザートと絶景ルーフトップ"
 slug: "new-at-dawn-seongsu-dessert-guide"
 date: 2026-05-06T10:04:12+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/09/new-at-dawn-seongsu-dessert-guide/khack_1778310343_1.webp"
 description: "ソウルっ子がこっそり教える聖水洞の隠れ家カフェ。青と黒の洗練された空間で、絶品タルトや南山を望むルーフトップを体験しませんか？2026年のトレンドを先取りする、現地エディター一押しのスポットをご紹介します。"
 categories: ["K-Food Insider"]
@@ -63,8 +63,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%89%B4%EC%95%B3%EB%8D%98%20%EC%84%B1%EC%88%98" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seoul-insider-guide-why-new-at-dawn.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

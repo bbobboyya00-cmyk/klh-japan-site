@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/the-korea-tea-museum-2026-curators.htm
 title: "2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ"
 slug: "boseong-korean-tea-museum-heritage-guide-2026"
 date: 2026-03-30T16:14:56+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/boseong-korean-tea-museum-heritage-guide-2026/khack_1777020019_0.webp"
 description: "全羅南道・宝城の広大な茶畑に佇む「韓国茶博物館」の完全ガイド。2026年度の最新展示情報、茶道体験、5階展望台からの絶景まで、上質な旅を求める方へ向けたハイエンドな情報をお届けします。"
 categories: ["K-Travel Hacks"]

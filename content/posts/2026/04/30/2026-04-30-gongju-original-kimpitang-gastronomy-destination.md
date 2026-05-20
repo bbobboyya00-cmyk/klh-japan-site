@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/gongju-gastronomy-destination-original
 title: "公州の美食遺産、元祖キムピタンの深淵に触れる：ピタンキムタン"
 slug: "gongju-original-kimpitang-gastronomy-destination"
 date: 2026-04-14T10:25:18+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/gongju-original-kimpitang-gastronomy-destination/khack_1777517487_0.webp"
 description: "韓国・公州で絶大な人気を誇る元祖キムピタンの名店「ピタンキムタン」。キムチ、チーズ、タンスユクが織りなす独創的なガストロノミーの世界をディレクターKが解説します。"
 categories: ["K-Food Insider"]
@@ -87,8 +87,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%ED%94%BC%ED%83%95%EA%B9%80%ED%83%95" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/gongju-gastronomy-destination-original.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

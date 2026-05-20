@@ -73,8 +73,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EA%B2%BD%EB%B3%B5%EA%B6%81" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seouls-royal-palaces-2026-culture.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

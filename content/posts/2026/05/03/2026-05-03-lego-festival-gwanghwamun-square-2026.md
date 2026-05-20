@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/gwanghwamun-square-lego-festival-lets.
 title: "光化門広場で迎える2026年「レッツプレイ光化門」完全ガイド"
 slug: "lego-festival-gwanghwamun-square-2026"
 date: 2026-04-23T10:08:29+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/lego-festival-gwanghwamun-square-2026/khack_1777785140_0.webp"
 description: "2026年5月、ソウルの中心部で開催されるレゴフェスティバル「レッツプレイ光化門」をディレクターKが徹底解説。家族で楽しむための秘訣を伝授します。"
 categories: ["K-Pulse Trending"]
@@ -80,8 +80,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EA%B4%91%ED%99%94%EB%AC%B8%EA%B4%91%EC%9E%A5" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/gwanghwamun-square-lego-festival-lets.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

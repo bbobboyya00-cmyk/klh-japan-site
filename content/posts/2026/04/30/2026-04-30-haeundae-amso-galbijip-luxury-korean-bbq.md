@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/haeundae-amso-galbijip-timeless.html"
 title: "釜山の伝説、海雲台アムソカルビチッで極める最高峰の韓牛ガストロノミー"
 slug: "haeundae-amso-galbijip-luxury-korean-bbq"
 date: 2026-04-15T19:33:06+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/haeundae-amso-galbijip-luxury-korean-bbq/khack_1777521805_0.webp"
 description: "1964年創業、釜山・海雲台の至宝「海雲台アムソカルビチッ」。ミシュランが認めた最高級韓牛の食感と、名物ポテト麺の深い味わいをディレクターKがハイエンドな視点で徹底解説します。"
 categories: ["K-Food Insider"]
@@ -86,8 +86,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%ED%95%B4%EC%9A%B4%EB%8C%80%EC%95%94%EC%86%8C%EA%B0%88%EB%B9%84%EC%A7%91" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/haeundae-amso-galbijip-timeless.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

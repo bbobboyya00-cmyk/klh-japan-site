@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/migliore-myeongdong-definitive.html"
 title: "明洞のランドマーク、ミリオレ明洞店で楽しむ最先端のKファッション 🛍️"
 slug: "migliore-myeongdong-fashion-lifestyle-hub"
 date: 2026-04-18T16:50:41+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/migliore-myeongdong-fashion-lifestyle-hub/khack_1777586697_0.webp"
 description: "2026年の明洞を象徴するミリオレ明洞店。グローバルブランドからKカルチャー、癒やしのカフェまで、ディレクターKが厳選したハイエンドな楽しみ方を徹底ガイドします。"
 categories: ["Smart Living"]
@@ -80,8 +80,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%B0%80%EB%A6%AC%EC%98%A4%EB%A0%88%20%EB%AA%85%EB%8F%99%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/migliore-myeongdong-definitive.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/seongsu-neungdong-minari-my-secret-go.
 title: "ソウルの聖水洞で今一番熱い！「ヌンドンミナリ」の絶品セリ料理とユッケビビンバ完全ガイド"
 slug: "seongsu-neungdong-minari-korean-eats"
 date: 2026-05-11T13:05:31+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/seongsu-neungdong-minari-korean-eats/khack_1778429091_1.webp"
 description: "ソウルのトレンド発信地、聖水洞（ソンスドン）で大行列を作る「ヌンドンミナリ」を徹底解説。香り高いセリ（ミナリ）をたっぷり使ったコムタンや新鮮なユッケビビンバなど、現地のロカルも認める健康美食の魅力を、待ち時間のコツと共に詳しくお届けします。"
 categories: ["K-Food Insider"]
@@ -100,8 +100,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%84%B1%EC%88%98%EB%8F%99%20%EB%8A%A5%EB%8F%99%EB%AF%B8%EB%82%98%EB%A6%AC%20%EC%84%B1%EC%88%98%EC%A7%80%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seongsu-neungdong-minari-my-secret-go.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/standard-bread-seongsu-architectural.h
 title: "聖水洞の新たなランドマーク、職人技が光る「スタンダードブレッド」の極上トースト体験"
 slug: "standard-bread-seongsu-bakery-lifestyle"
 date: 2026-04-27T19:55:32+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/standard-bread-seongsu-bakery-lifestyle/khack_1777824396_0.webp"
 description: "2026年、ソウル・聖水洞で最も注目を集めるベーカリー「スタンダードブレッド」。職人のこだわりが詰まった食パンと、都会の喧騒を忘れる美しい庭園でのひとときを、ディレクターKがハイエンドな視点でナビゲートします。"
 categories: ["K-Food Insider"]
@@ -70,8 +70,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%8A%A4%ED%83%A0%EB%8B%A4%EB%93%9C%EB%B8%8C%EB%A0%88%EB%93%9C%20%EC%84%B1%EC%88%98" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/standard-bread-seongsu-architectural.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

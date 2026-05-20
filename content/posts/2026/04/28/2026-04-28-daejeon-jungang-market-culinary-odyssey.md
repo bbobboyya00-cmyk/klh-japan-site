@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/daejeon-jungang-market-culinary-odysse
 title: "大田中央市場：五感を刺激する美食と伝統が息づくハイエンド・ローカルガイド"
 slug: "daejeon-jungang-market-culinary-odyssey"
 date: 2026-04-09T10:26:13+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/28/daejeon-jungang-market-culinary-odyssey/khack_1777381427_0.webp"
 description: "大田（テジョン）を代表する「大田中央市場」の美食をディレクターKが徹底解説。風味豊かな民物エビカルグクスから、職人技が光る絶品チキンまで、本物の韓国の味をご堪能ください。"
 categories: ["K-Food Insider"]
@@ -87,8 +87,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%A4%91%EC%95%99%EC%8B%9C%EC%9E%A5" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/daejeon-jungang-market-culinary-odyssey.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/escape-crowds-at-jungnang-seoul-rose.h
 title: "2026年中浪ソウルバラ祭り完全攻略！地元民が教える秘密のバラカフェ体験記"
 slug: "jungnang-seoul-rose-festival-cafe-guide"
 date: 2026-05-15T16:39:50+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/15/jungnang-seoul-rose-festival-cafe-guide/khack_1778830713_1.webp"
 description: "2026年5月のソウル旅行必見！中浪ソウルバラ祭りの見どころと、SNS映え間違いなしの中浪バラカフェを徹底レポ。限定のローズラッテや可愛いお土産情報も満載です。"
 categories: ["K-Travel Hacks"]
@@ -144,8 +144,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%AC%B5%EB%8F%99%20%EC%A4%91%EB%9E%91%EC%9E%A5%EB%AF%B8%EC%B9%B4%ED%8E%98" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/escape-crowds-at-jungnang-seoul-rose.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

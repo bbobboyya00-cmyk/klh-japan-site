@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/happy-chowon-ranch-chuncheons-highland
 title: "春川のアルプス、ハッピーチョウォン牧場で出逢う極上のパノラマ"
 slug: "happy-chowon-ranch-chuncheon-highland"
 date: 2026-04-15T16:04:14+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/30/happy-chowon-ranch-chuncheon-highland/khack_1777543491_0.webp"
 description: "春川の「韓国のアルプス」と呼ばれるハッピーチョウォン牧場。大自然の中での動物との交流と、山頂から望む絶景フォトスポットをディレクターKがナビゲートします。"
 categories: ["K-Travel Hacks"]
@@ -81,8 +81,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%ED%95%B4%ED%94%BC%EC%B4%88%EC%9B%90%EB%AA%A9%EC%9E%A5" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/happy-chowon-ranch-chuncheons-highland.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

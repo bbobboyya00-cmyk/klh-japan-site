@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/seouls-culinary-landmark-tous-les-jour
 title: "芸術的なパンの聖地、ソウル・東大門の「トゥレジュール本店」完全ガイド"
 slug: "seoul-tous-les-jours-flagship-bakery"
 date: 2026-04-26T10:22:13+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/seoul-tous-les-jours-flagship-bakery/khack_1777835226_0.webp"
 description: "ソウル中区のCJ第一製糖センター内に位置するトゥレジュール本店は、韓国ベーカリーの頂点です。話題の「アグジャク」ケーキから、職人の技が光る12種類のシグネチャーメニューまで、2026年の最新トレンドをディレクターKが徹底解説。洗練された空間で贅沢なひとときを。"
 categories: ["K-Food Insider"]
@@ -74,8 +74,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%9A%9C%EB%A0%88%EC%A5%AC%EB%A5%B4%20%EB%B3%B8%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seouls-culinary-landmark-tous-les-jours.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

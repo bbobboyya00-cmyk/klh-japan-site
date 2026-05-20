@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/sinsas-opening-plastic-surgery-my.html
 title: "新沙駅のオフニング美容外科でリジュラン6cc！手打ち施術の丁寧さに感動した正直レポ"
 slug: "sinsa-opening-plastic-surgery-review"
 date: 2026-05-20T06:32:55+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/20/sinsa-opening-plastic-surgery-review/khack_1779226293_1.webp"
 description: "新沙駅すぐの「オフニング美容外科」を徹底リサーチ！リジュランヒーラーの手打ち施術がなぜ人気なのか、美術館のような空間から院長先生のこだわりまで、渡韓美容の最新トレンドを詳しくお伝えします。"
 categories: ["K-Beauty Insider"]
@@ -150,8 +150,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EC%98%A4%ED%94%84%EB%8B%9D%EC%84%B1%ED%98%95%EC%99%B8%EA%B3%BC%EC%9D%98%EC%9B%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/sinsas-opening-plastic-surgery-my.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

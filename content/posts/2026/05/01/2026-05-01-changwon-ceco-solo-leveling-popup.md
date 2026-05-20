@@ -73,8 +73,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%B0%BD%EC%9B%90%EC%BB%A8%EB%B2%A4%EC%85%98%EC%84%BC%ED%84%B0" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/changwon-ceco-solo-leveling-pop-up.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

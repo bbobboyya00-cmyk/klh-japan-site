@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/the-68th-miryang-arirang-festival.html
 title: "2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド"
 slug: "miryang-arirang-festival-2026-guide"
 date: 2026-03-28T19:19:09+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/miryang-arirang-festival-2026-guide/khack_1776918086_0.webp"
 description: "2026年5月に開催される密陽アリラン大祝祭をK-Life Hack ディレクターKが徹底解説。歴史あるアリランの調べと壮大な実景ミュージカル、家族で楽しめる体験プログラムまで、ハイエンドな韓国文化体験を求めるあなたへ。"
 categories: ["K-Travel Hacks"]

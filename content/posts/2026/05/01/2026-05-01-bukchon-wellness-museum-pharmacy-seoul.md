@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/bukchon-wellness-museum-sanctuary-of.h
 title: "北村の静寂と調和する癒やしの聖地、北村ウェルネスミュージアムで体験する究極のセルフケア"
 slug: "bukchon-wellness-museum-pharmacy-seoul"
 date: 2026-04-17T19:18:09+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/bukchon-wellness-museum-pharmacy-seoul/khack_1777618960_0.webp"
 description: "2026年、ソウル北村に誕生した「北村ウェルネスミュージアム」をディレクターKが徹底ガイド。伝統的な韓屋の景観とモダンなウェルネス体験が融合した、ハイエンドな癒やしの空間をご紹介します。"
 categories: ["K-Beauty Insider"]
@@ -67,8 +67,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%B6%81%EC%B4%8C%EC%9B%B0%EB%8B%88%EC%8A%A4%EB%AE%A4%EC%A7%80%EC%97%84%EC%95%BD%EA%B5%AD" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/bukchon-wellness-museum-sanctuary-of.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/myeongdong-arts-theater-juno-hairs.htm
 title: "明洞芸術劇場店で体験する、韓国最新ヘアスタイルの極意"
 slug: "juno-hair-myeongdong-arts-theater"
 date: 2026-04-23T19:58:01+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/juno-hair-myeongdong-arts-theater/khack_1777795115_0.webp"
 description: "ディレクターKが提案する、明洞芸術劇場店でのハイエンドなヘアスタイル体験。最先端の技術と心温まるおもてなしで、新しい自分に出会う旅へ。"
 categories: ["K-Beauty Insider"]
@@ -63,8 +63,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%A4%80%EC%98%A4%ED%97%A4%EC%96%B4%20%EB%AA%85%EB%8F%99%EC%98%88%EC%88%A0%EA%B7%B9%EC%9E%A5%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/myeongdong-arts-theater-juno-hairs.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

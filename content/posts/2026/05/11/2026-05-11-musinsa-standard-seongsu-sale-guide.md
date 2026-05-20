@@ -73,8 +73,3 @@ author: "K-Life Hack"
 ・韓国の 最新トレンドアイテムをリーズナブルに手に入れたい方
 ・聖水洞で失敗しないショッピングスポットを探している方
 ・親子でリンクコーデを楽しめる高品質な基本アイテムが欲しい方
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/musinsa-standard-seongsu-super-sale.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

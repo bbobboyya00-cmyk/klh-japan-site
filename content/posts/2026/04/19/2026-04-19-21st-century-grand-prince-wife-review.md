@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/21st-century-grand-princes-lady-royal.
 title: "21世紀の皇室ロマンス「21世紀の大君夫人」：現代韓国が恋に落ちた、美しき禁忌の物語"
 slug: "21st-century-grand-prince-wife-review"
 date: 2026-03-11T19:14:22+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/21st-century-grand-prince-wife-review/khack_1776565486_0.webp"
 description: "現代韓国に王室が存在するという設定で話題のドラマ「21世紀の大君夫人」。アイユーとピョン・ウソクが織りなす、契約結婚から始まる官能的で高貴なロマンスの魅力を深掘りします。"
 categories: ["K-Pulse Trending"]

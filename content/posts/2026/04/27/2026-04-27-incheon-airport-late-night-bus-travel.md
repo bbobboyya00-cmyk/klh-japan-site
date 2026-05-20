@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/incheon-airport-nocturne-high-end-late
 title: "仁川国際空港：眠らぬ旅人を支える深夜リムジンバスの完全ガイド"
 slug: "incheon-airport-late-night-bus-travel"
 date: 2026-04-08T19:40:00+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/27/incheon-airport-late-night-bus-travel/khack_1777269402_0.webp"
 description: "2026年度版、仁川国際空港の深夜バスガイド。ディレクターKが、深夜便や早朝便を利用する旅人のためのプレミアムな移動術と空港内でのスマートな過ごし方を徹底解説します。"
 categories: ["Smart Living"]
@@ -79,8 +79,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%9D%B8%EC%B2%9C%EA%B5%AD%EC%A0%9C%EA%B3%B5%ED%95%AD" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/incheon-airport-nocturne-high-end-late.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

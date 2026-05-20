@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/seouls-seven-eleven-elevating-urban.ht
 title: "セブンイレブン プレミアム ライフスタイル ガイド ソウル フラッグシップ"
 slug: "seven-eleven-seoul-urban-essentials-curation"
 date: 2026-04-21T16:56:00+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/seven-eleven-seoul-urban-essentials-curation/khack_1777684044_0.webp"
 description: "2026年のソウルで体験する、セブンイレブンのハイエンドな進化。ディレクターKが贈る、究極のリテールガイド。"
 categories: ["K-Pulse Trending"]
@@ -66,8 +66,3 @@ author: "K-Life Hack"
 ディレクターKが選ぶこの場所は、あなたのソウル滞在をより豊かに、そしてスタイリッシュに彩る。進化し続けるリテールの最前線で、新しいライフスタイルのヒントを見出すことだ。
 
 <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seouls-seven-eleven-elevating-urban.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

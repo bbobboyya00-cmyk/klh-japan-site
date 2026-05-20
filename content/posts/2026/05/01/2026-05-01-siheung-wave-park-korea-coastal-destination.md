@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/siheung-wave-park-koreas-premier.html"
 title: "シフン・ウェーブパーク：都会のオアシスで波に乗るハイエンド体験"
 slug: "siheung-wave-park-korea-coastal-destination"
 date: 2026-04-19T19:18:40+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/01/siheung-wave-park-korea-coastal-destination/khack_1777608315_0.webp"
 description: "ディレクターKが提案するシフン・ウェーブパーク。世界最大級の人工サーフィンラグーンで、極上の波と非日常を体験するハイエンドガイド。"
 categories: ["K-Travel Hacks"]
@@ -74,8 +74,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%A5%B4%EC%BB%AC%EB%A0%89%ED%8B%B0%EB%B8%8C%20%EC%8B%9C%ED%9D%A5%EC%9B%A8%EC%9D%B4%EB%B8%8C%ED%8C%8C%ED%81%AC" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/siheung-wave-park-koreas-premier.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

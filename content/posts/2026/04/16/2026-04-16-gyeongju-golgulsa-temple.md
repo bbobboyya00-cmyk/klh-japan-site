@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/gyeongju-golgulsa-temple-guide-sunmudo
 title: "慶州「骨窟寺（コルグルサ）」：1500年の時を刻む石窟寺院と、身心を整える「禅武道」の聖地へ"
 slug: "gyeongju-golgulsa-temple"
 date: 2026-03-04T10:17:34+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776346165_0.webp"
 description: "慶州の「骨窟寺（コルグルサ）」ガイド。韓国唯一の石窟寺院で体験する伝統武術「禅武道」や、絶壁に刻まれた磨崖如来坐像、人気のテンプルステイ情報を詳しく紹介します。"
 categories: ["Cultural Nuance"]
@@ -86,23 +86,6 @@ author: "K-Life Hack"
 ## 骨窟寺への行き方（アクセス）
 慶州市内からは車で約30分、仏国寺（プルグッサ）からは約20分ほどです。公共交通機関を利用する場合は、慶州駅から700番バス、または市外バスターミナルから100番・150番バスに乗り、「骨窟寺・祇林寺入口」で下車後、徒歩約15〜20分です。上り坂が続くため、タクシーの利用も検討してみてください。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/gyeongju-golgulsa-temple-guide-sunmudo.html)
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 골굴사</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">경상북도 경주시 문무대왕면 기림로 101-5 골굴사</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EA%B2%BD%EC%A3%BC%EC%8B%9C%20%EB%AC%B8%EB%AC%B4%EB%8C%80%EC%99%95%EB%A9%B4%20%EC%95%88%EB%8F%99%EB%A6%AC%20%EC%82%B0304%20%EA%B3%A8%EA%B5%B4%EC%82%AC%20%EA%B3%A8%EA%B5%B4%EC%82%AC&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EA%B2%BD%EC%A3%BC%EC%8B%9C%20%EB%AC%B8%EB%AC%B4%EB%8C%80%EC%99%95%EB%A9%B4%20%EC%95%88%EB%8F%99%EB%A6%AC%20%EC%82%B0304%20%EA%B3%A8%EA%B5%B4%EC%82%AC%20%EA%B3%A8%EA%B5%B4%EC%82%AC&query_place_id=ChIJVRr9rQeuZzURKYR62hhb_7g" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EA%B3%A8%EA%B5%B4%EC%82%AC" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

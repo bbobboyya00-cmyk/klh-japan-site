@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/olive-young-n-seongsu-lounge-exclusive
 title: "聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息"
 slug: "seongsu-olive-young-n-lounge"
 date: 2026-03-15T10:08:06+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560628_0.webp"
 description: "聖水洞（ソンスドン）のオリーブヤングN聖水に誕生した「オリーブメンバーズラウンジ」。ゴールド会員限定の優雅な空間で、無料の本格デザートとドリンクを楽しむ至福のひとときを、現地の最新トレンドと共にエディターKが徹底解説します。"
 categories: ["K-Beauty Insider"]
@@ -71,23 +71,6 @@ author: "K-Life Hack"
 
 オリーブヤングN 聖水のラウンジは、単なる休憩室ではなく、美しさへの感性を刺激し、自分自身を労わるための「デスティネーション」です。対象となる条件を満たしている方は、ぜひこの機会に、聖水の中心で特別なピクニックを楽しんでみてはいかがでしょうか。そこには、日常を忘れさせてくれる上質な体験と、明日への美しさをチャージする時間が待っています。</p></p></p></p></p>
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/olive-young-n-seongsu-lounge-exclusive.html)<div class="k-weather-section" style="margin: 20px -25px 15px; padding: 0; width: calc(100% + 50px); overflow: hidden;"><h3 style="font-size: 1.1rem; font-weight: 800; color: var(--themeC) !important; margin-bottom: 10px; padding-left: 25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 オリーブヤングN 聖水 (Olive Young N Seongsu)</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">ソウル特別市 城東区 聖水二路 108</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EC%98%AC%EB%A6%AC%EB%B8%8C%EC%98%81N%20%EC%84%B1%EC%88%98&hl=ja&t=&z=17&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EC%98%AC%EB%A6%AC%EB%B8%8C%EC%98%81N%20%EC%84%B1%EC%88%98&query_place_id=ChIJ14znQAClfDURT1IQuqyAwlA" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
-<a href="https://map.naver.com/p/search/%E8%81%96%E6%B0%B4%E6%B4%9E%20%EC%98%AC%EB%A6%AC%EB%B8%8C%EC%98%81N%20%EC%84%B1%EC%88%98" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

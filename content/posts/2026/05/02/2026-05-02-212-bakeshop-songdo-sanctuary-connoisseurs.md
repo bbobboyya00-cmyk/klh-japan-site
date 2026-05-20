@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/212-bake-shop-songdo-sanctuary-for.htm
 title: "宋都セントラルパークの隠れ家：212ベイクショップで味わう至福の時間"
 slug: "212-bakeshop-songdo-sanctuary-connoisseurs"
 date: 2026-04-19T16:10:48+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/02/212-bakeshop-songdo-sanctuary-connoisseurs/khack_1777662345_0.webp"
 description: "洗練された宋都セントラルパークに佇む「212ベイクショップ」。ディレクターKが提案する、日常を彩る上質な焼き菓子とコーヒーのハーモニー。"
 categories: ["K-Food Insider"]
@@ -73,8 +73,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/212%EB%B2%A0%EC%9D%B4%ED%81%AC%EC%83%B5" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/212-bake-shop-songdo-sanctuary-for.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

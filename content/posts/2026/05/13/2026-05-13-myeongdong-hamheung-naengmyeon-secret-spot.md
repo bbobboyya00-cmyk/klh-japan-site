@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/my-secret-myeongdong-naengmyeon-spot.h
 title: "明洞の路地裏で見つけた！地元っ子が密かに通う咸興冷麺の名店「明洞咸興麺屋」正直レポ"
 slug: "myeongdong-hamheung-naengmyeon-secret-spot"
 date: 2026-05-13T09:56:55+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/13/myeongdong-hamheung-naengmyeon-secret-spot/khack_1778633736_1.webp"
 description: 2026年5月のソウル旅行で絶対外せない！明洞グルメの決定版。路地裏にある老舗「明洞咸興麺屋」を徹底解説。独特な食感の刺身冷麺と、おかわり自由の絶品温スープは一度飲んだら忘れられません。日曜定休などの注意点も正直にお伝えします。"
 categories: ["K-Food Insider"]
@@ -62,8 +62,3 @@ author: "K-Life Hack"
 <img alt="店内の給水器と時計" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/13/myeongdong-hamheung-naengmyeon-secret-spot/khack_1778633749_9.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt="営業時間の案内板" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/13/myeongdong-hamheung-naengmyeon-secret-spot/khack_1778633751_10.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <img alt="明洞咸興麺屋のメイン看板" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/13/myeongdong-hamheung-naengmyeon-secret-spot/khack_1778633753_11.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/my-secret-myeongdong-naengmyeon-spot.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

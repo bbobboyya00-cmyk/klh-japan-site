@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/modoo-ui-card-k-pass-guide-maximizing.
 title: "韓国在住日本人向け：K-パス「モドゥエカード」で賢く交通費を節約する究極ガイド ✨"
 slug: "k-pass-modu-card-guide"
 date: 2026-03-13T16:56:29+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/k-pass-modu-card-guide/khack_1776528236_0.webp"
 description: "2026年1月より導入された新しい交通費払い戻し制度「モドゥエカード」を徹底解説。従来のK-パスとの違いや申請方法、賢い活用術をご紹介します。"
 categories: ["Smart Living"]

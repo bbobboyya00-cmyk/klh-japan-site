@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/the-2026-han-river-night-view-tour.htm
 title: "ソウル漢江の夜景に酔いしれる：2026年度版ナイトビュー完全ガイド"
 slug: "seoul-han-river-night-view-guide-2026"
 date: 2026-04-03T16:55:08+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/seoul-han-river-night-view-guide-2026/khack_1777057482_0.webp"
 description: "K-Life HackディレクターKが贈る、2026年度の漢江（ハンガン）夜景ツアー決定版。無料の公式解説ツアーから豪華ヨット体験、空飛ぶソウル月（SEOUL DAL）まで、最旬のナイトライフ情報を網羅したハイエンドガイド。"
 categories: ["K-Travel Hacks"]

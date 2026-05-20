@@ -79,8 +79,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%8F%99%EB%8C%80%EB%AC%B8%EB%94%94%EC%9E%90%EC%9D%B8%ED%94%8C%EB%9D%BC%EC%9E%90DDP" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/seoul-friendship-festival-2026-global.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

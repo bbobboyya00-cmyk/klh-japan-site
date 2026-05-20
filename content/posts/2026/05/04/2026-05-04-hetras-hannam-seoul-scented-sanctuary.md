@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/hetras-hannam-seouls-scented-sanctuary
 title: "ヘトラス漢南：洗練された香りが織りなす極上のライフスタイル空間"
 slug: "hetras-hannam-seoul-scented-sanctuary"
 date: 2026-04-25T16:09:22+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/hetras-hannam-seoul-scented-sanctuary/khack_1777871711_0.webp"
 description: "ヘトラス漢南は、香水、ハンドクリーム、ライフスプレーなど、上質な香りのアイテムが揃うライフスタイルショップです。特別な空間で心豊かな体験をお楽しみください。"
 categories: ["K-Pulse Trending"]
@@ -86,8 +86,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%ED%97%A4%ED%8A%B8%EB%9D%BC%EC%8A%A4%20%ED%95%9C%EB%82%A8" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/hetras-hannam-seouls-scented-sanctuary.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

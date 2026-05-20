@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/jeju-boromwat-symphony-of-seasonal.htm
 title: "済州の風が育む色彩の楽園、ボロムワッで出会う至高の春"
 slug: "jeju-boromwat-seasonal-flower-farm"
 date: 2026-04-22T10:36:23+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/jeju-boromwat-seasonal-flower-farm/khack_1777770232_0.webp"
 description: "済州島の広大な大地に広がる色彩の楽園「ボロムワッ」。ドラマ『月刊彼氏』のロケ地としても名高いこの場所で、チューリップやソバの花が織りなす至高の春の風景と、感性を刺激するプレミアムな休息をディレクターKがご案内します。"
 categories: ["K-Travel Hacks"]
@@ -76,8 +76,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%B3%B4%EB%A1%AC%EC%99%93" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/jeju-boromwat-symphony-of-seasonal.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -83,8 +83,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EB%B8%94%EB%A3%A8%EC%8A%A4%ED%80%98%EC%96%B4" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/blue-squares-2026-billy-elliot-preview.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/jilhal-bros-cheongdam-authentic-new.ht
 title: "ニューヨークの熱気を清潭で味わう、ジラールブロス清潭店のハイエンドなストリートフード体験"
 slug: "jilhal-bros-cheongdam-halal-street-food"
 date: 2026-04-25T10:17:31+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/jilhal-bros-cheongdam-halal-street-food/khack_1777857360_0.webp"
 description: "ソウル清潭洞で味わうニューヨーク直伝のハラルフード。ジラールブロス清潭店の洗練された空間と、チキンオーバーライスの魅力をディレクターKが解説します。"
 categories: ["K-Food Insider"]
@@ -63,8 +63,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EC%A7%88%ED%95%A0%EB%B8%8C%EB%A1%9C%EC%8A%A4%20%EC%B2%AD%EB%8B%B4%EC%A0%90" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/jilhal-bros-cheongdam-authentic-new.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

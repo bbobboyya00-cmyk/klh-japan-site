@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/the-2026-olive-young-day-guide.html"
 title: "2026年韓国オリーブヤングセール完全攻略ガイド：日程・おすすめ・裏技まとめ"
 slug: "2026-korea-olive-young-sale-guide"
 date: 2026-04-01T19:48:16+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/2026-korea-olive-young-sale-guide/khack_1777046944_0.webp"
 description: "2026年の韓国オリーブヤング最新セール日程をディレクターKが徹底解説。ビッグセールやオリヤンデーの攻略法から、今買うべきおすすめアイテム、江南フラッグシップストアの情報まで網羅したハイエンドガイド。"
 categories: ["K-Beauty Insider"]

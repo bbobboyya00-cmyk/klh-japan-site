@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/05/musinsa-megastore-seongsu-curated.html
 title: "聖水洞のファッション聖地：ムシンサメガストア完全攻略ガイド"
 slug: "musinsa-megastore-seongsu-lifestyle-nexus"
 date: 2026-04-24T10:36:22+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/03/musinsa-megastore-seongsu-lifestyle-nexus/khack_1777813878_0.webp"
 description: "ソウル聖水洞に誕生したムシンサメガストア。最新ファッションとライフスタイルを体験できる、ディレクターKによるハイエンドガイドです。"
 categories: ["K-Pulse Trending"]
@@ -76,8 +76,3 @@ style="background: #000000; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,
 <a href="https://map.naver.com/p/search/%EB%AC%B4%EC%8B%A0%EC%82%AC%20%EB%A9%94%EA%B0%80%EC%8A%A4%ED%86%A0%EC%96%B4%20%EC%84%B1%EC%88%98" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/05/musinsa-megastore-seongsu-curated.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>

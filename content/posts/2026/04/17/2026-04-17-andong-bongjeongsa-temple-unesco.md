@@ -3,7 +3,7 @@ en_url: "https://en.klifehack.com/2026/04/bongjeongsa-temple-unesco-heritage-sit
 title: "時を止めた千年古刹、安東・鳳停寺(ポンジョンサ)へ。韓国最古の木造建築と出会う静謐な旅"
 slug: "andong-bongjeongsa-temple-unesco"
 date: 2026-03-06T16:13:13+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/khack_1776374710_0.webp"
 description: "韓国・安東にあるユネスコ世界遺産『鳳停寺(ポンジョンサ)』。韓国最古の木造建築『極楽殿』やエリザベス女王も訪れた名刹の魅力を、冬の美しい風景と共に紹介します。"
 categories: ["Cultural Nuance"]
@@ -86,23 +86,6 @@ author: "K-Life Hack"
 
 千年の時を越えて守り継がれてきた鳳停寺。その門を叩けば、慌ただしい日常で忘れていた『心の静寂』をきっと取り戻せるはずです。
 
----
 
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/bongjeongsa-temple-unesco-heritage-site.html)
-
-## 📍 地図・アクセス
-<div class="k-map-box" style="background: var(--themeBg-alt); border-radius: 24px; border: 1px solid var(--themeBd-color); color: var(--themeC); margin-top: 40px; overflow: hidden;">
-<div style="padding: 20px 20px 10px;">
-<h3 class="k-map-title" style="color: var(--themeC); font-size: 1.2rem; font-weight: 800; margin: 0px 0px 5px;">📍 봉정사</h3>
-<p class="k-map-address" style="color: var(--themeC); font-size: 0.9rem; margin: 0px; opacity: 0.8;">경상북도 안동시 서후면 봉정사길 222</p>
-</div>
-<div style="background: var(--themeBg-sec); height: 350px; width: 100%;">
-<iframe frameborder="0" height="100%" width="100%" scrolling="no" src="https://www.google.com/maps?q=%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EC%95%88%EB%8F%99%EC%8B%9C%20%EC%84%9C%ED%9B%84%EB%A9%B4%20%ED%83%9C%EC%9E%A5%EB%A6%AC%20901%20%EB%B4%89%EC%A0%95%EC%82%AC&hl=ja&t=&z=18&ie=UTF8&iwloc=&output=embed" style="border: none; filter: grayscale(0.2) contrast(1.1) invert(var(--dark-mode-invert, 0));"></iframe>
-</div>
-<div class="k-map-notice" style="padding: 12px 20px; background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); font-size: 0.8rem; line-height: 1.5; color: var(--themeC); opacity: 0.7;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ 旅行者のための注意</span>変化の激しいエリアでは、Googleマップの情報が 最新でない場合があります。 より正確な位置確認のために、 <b>Naverマップ</b> の使用を推奨します。</div>
-<div class="k-map-buttons" style="background: var(--themeBg-sec); display: flex; gap: 10px; padding: 15px 20px;">
-<a href="https://www.google.com/maps/search/?api=1&query=%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EC%95%88%EB%8F%99%EC%8B%9C%20%EC%84%9C%ED%9B%84%EB%A9%B4%20%ED%83%9C%EC%9E%A5%EB%A6%AC%20901%20%EB%B4%89%EC%A0%95%EC%82%AC&query_place_id=ChIJg02KjvKnZjURlUhtklzyM60" rel="noopener noreferrer" style="background: rgb(66, 133, 244); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Google マップ</a>
-<a href="https://map.naver.com/p/search/%EB%B4%89%EC%A0%95%EC%82%AC" rel="noopener noreferrer" style="background: rgb(0, 199, 60); border-radius: 12px; color: white; flex: 1 1 0%; font-size: 0.85rem; font-weight: 700; padding: 12px 10px; text-align: center; text-decoration: none;" target="_blank">Naver マップ</a>
 </div>
 </div>

@@ -73,8 +73,3 @@ author: "K-Life Hack"
 <a href="https://map.naver.com/p/search/%EA%B5%AD%EB%A6%BD%EC%83%9D%EB%AC%BC%EC%9E%90%EC%9B%90%EA%B4%80" class="btn-naver" target="_blank" rel="noopener noreferrer">Naver マップ</a>
 </div>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * <a href="https://en.klifehack.com/2026/04/national-institute-of-biological.html" target="_blank" rel="noopener noreferrer">🇺🇸 **English Version**</a>
