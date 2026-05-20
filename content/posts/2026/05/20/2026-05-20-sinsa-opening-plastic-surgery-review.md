@@ -90,15 +90,6 @@ author: "K-Life Hack"
 <img alt="清潔で専門的な手術室の様子" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/20/sinsa-opening-plastic-surgery-review/khack_1779226307_10.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
-
-エレガントで長い廊下を進むと、まるでホテルにいるような気分になりますよ。廊下も隅々まで綺麗に保たれていて、本当に気持ちが良いんです。廊下を歩くだけでも癒されるって、すごいですよね！
-
-
-
-<img alt="エレガントな雰囲気の長い廊下" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/20/sinsa-opening-plastic-surgery-review/khack_1779226305_9.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
-
-
-
 ただ、一点だけ正直な感想を言うと、人気すぎて予約が本当に取りにくいこと。😭 特に週末は<b>数週間前</b>から埋まっちゃうから、早めの計画が必須ですよ！（私、一度直前予約しようとして撃沈しました…😢。未来のあなたのためにも、早めの予約をおすすめします！）
 
 ## アクセスと予約のコツ
@@ -125,6 +116,18 @@ author: "K-Life Hack"
 
 <img alt="ジュベルック認定証と待合ソファ" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/20/sinsa-opening-plastic-surgery-review/khack_1779226299_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
+
+
+施術直後の肌の状態がこちらです。
+（左が打った直後のポコポコした状態で、右が鎮静パック後です…！）
+
+<div class="psImg">
+<img alt="リジュラン施術直後の肌のエンボス状態" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/20/sinsa-opening-plastic-surgery-review/op11.webp" />
+<img alt="鎮静ケア後の赤みが引いた肌の状態" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/20/sinsa-opening-plastic-surgery-review/op22.webp" />
+</div>
+
+直後は細かな注射針の跡（エンボス現象）と赤みが出ますが、丁寧に冷やしてもらえるので帰る頃にはかなり落ち着きますよ。うっすら残る跡も2〜3日できれいに消えて、そこから一気にお肌のハリツヤが湧き上がってくるんです。✨
+（この数日間の変化を待つ時間さえ、なんだかワクワクしちゃいました…笑）
 
 
 たまには自分へのご褒美に、こんな贅沢な美容医療もいいですよね！ （未来の肌がきっと喜んでくれますよ！）
