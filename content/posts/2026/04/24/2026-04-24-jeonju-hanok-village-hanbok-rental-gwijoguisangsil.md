@@ -134,21 +134,16 @@ K-Life Hack ディレクターKです。
 <img alt="白と水色の韓服を着た人が高い竹林の中に立っており、穏やかな伝統的な雰囲気を捉えています。 - 全州韓屋村で優雅な韓服体験：『貴族衣装室』で叶える特別な一日" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/jeonju-hanok-village-hanbok-rental-gwijoguisangsil/khack_1777003581_12.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="SEOUL" >}}</div>
 <div class="k-map-box">
-    <div class="k-map-header">
-        <h3 class="k-map-title">📍 貴族衣装室</h3>
-        <p class="k-map-address">全羅北道 全州市 完山区 崔明姫キル 17-5 1階 (전북 전주시 완산구 최명희길 17-5 1층)</p>
-    </div>
-    <div class="k-map-iframe-wrap">
-        <iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EA%B7%80%EC%A1%B1%EC%9D%98%EC%83%81%EC%8B%A4&output=embed"></iframe>
-    </div>
-    <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-    <div class="k-map-buttons">
-        <a href="https://www.google.com/maps/search/?api=1&query=%EA%B7%80%EC%A1%B1%EC%9D%98%EC%83%81%EC%8B%A4" class="btn-google" target="_blank">Google マップ</a>
-        <a href="https://map.naver.com/p/search/%EA%B7%80%EC%A1%B1%EC%9D%98%EC%83%81%EC%8B%A4" class="btn-naver" target="_blank">Naver マップ</a>
-    </div>
+<div class="k-map-header">
+<h3 class="k-map-title">📍 貴族衣装室</h3>
+<p class="k-map-address">全羅北道 全州市 完山区 崔明姫キル 17-5 1階 (전북 전주시 완산구 최명희길 17-5 1층)</p>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/noble-boutique-elevating-your-jeonju.html)
+<div class="k-map-iframe-wrap">
+<iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EA%B7%80%EC%A1%B1%EC%9D%98%EC%83%81%EC%8B%A4&output=embed"></iframe>
+</div>
+<div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
+<div class="k-map-buttons">
+<a href="https://www.google.com/maps/search/?api=1&query=%EA%B7%80%EC%A1%B1%EC%9D%98%EC%83%81%EC%8B%A4" class="btn-google" target="_blank">Google マップ</a>
+<a href="https://map.naver.com/p/search/%EA%B7%80%EC%A1%B1%EC%9D%98%EC%83%81%EC%8B%A4" class="btn-naver" target="_blank">Naver マップ</a>
+</div>
+</div>

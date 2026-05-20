@@ -45,8 +45,3 @@ author: "K-Life Hack"
 - 新規加入特典：2026年4月に新規登録したユーザーにはTマイレージを別途10%追加積立
 
 </div></blockquote>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/the-climate-card-revolution-navigating.html)

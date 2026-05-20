@@ -52,22 +52,17 @@ author: "K-Life Hack"
 </div></blockquote>
 <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="YONGIN" >}}</div>
 <div class="k-map-box">
-    <div class="k-map-header">
-        <h3 class="k-map-title">📍 조아용in스토어 용인시청점</h3>
-        <p class="k-map-address">경기도 용인시 처인구 중부대로 1199</p>
-    </div>
-    <div class="k-map-iframe-wrap">
-      
-      <iframe frameborder="0" scrolling="no" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25404.449190805026!2d127.14667019999999!3d37.25823705!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b51003ceff487%3A0xbf6b2f2f5c0d5d79!2z7KGw7JWE7JqpaW7siqTthqDslrQg7Jqp7J247Iuc7LKt7KCQ!5e0!3m2!1sko!2skr!4v1777159195701!5m2!1sko!2skr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
-    <div class="k-map-notice" style="background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); color: var(--themeC); font-size: 0.8rem; line-height: 1.5; opacity: 0.7; padding: 12px 25px;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ Traveler's Note:</span>Google Maps may have outdated information or missing listings. For the most accurate locations in Korea, we highly recommend using <b>Naver Maps</b>.</div>
-    <div class="k-map-buttons">
-        <a class="btn-google" href="https://www.google.com/maps/search/?api=1&amp;query=조아용in스토어 용인시청점" target="_blank">Google Maps</a>
-        <a class="btn-naver" href="https://map.naver.com/p/search/조아용in스토어 용인시청점" target="_blank">Naver Maps</a>
-    </div>
+<div class="k-map-header">
+<h3 class="k-map-title">📍 조아용in스토어 용인시청점</h3>
+<p class="k-map-address">경기도 용인시 처인구 중부대로 1199</p>
+</div>
+<div class="k-map-iframe-wrap">
+
+<iframe frameborder="0" scrolling="no" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25404.449190805026!2d127.14667019999999!3d37.25823705!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b51003ceff487%3A0xbf6b2f2f5c0d5d79!2z7KGw7JWE7JqpaW7siqTthqDslrQg7Jqp7J247Iuc7LKt7KCQ!5e0!3m2!1sko!2skr!4v1777159195701!5m2!1sko!2skr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+<div class="k-map-notice" style="background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); color: var(--themeC); font-size: 0.8rem; line-height: 1.5; opacity: 0.7; padding: 12px 25px;"><span style="display: block; font-weight: 700; margin-bottom: 2px;">⚠️ Traveler's Note:</span>Google Maps may have outdated information or missing listings. For the most accurate locations in Korea, we highly recommend using <b>Naver Maps</b>.</div>
+<div class="k-map-buttons">
+<a class="btn-google" href="https://www.google.com/maps/search/?api=1&amp;query=조아용in스토어 용인시청점" target="_blank">Google Maps</a>
+<a class="btn-naver" href="https://map.naver.com/p/search/조아용in스토어 용인시청점" target="_blank">Naver Maps</a>
+</div>
 </div></div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/joayongs-popcorn-journey-e-mart.html)

@@ -114,21 +114,16 @@ author: "K-Life Hack"
 慶州の月精橋は、昼夜を問わずその美しさを堪能できる場所です。特に夜は、ライトアップされた橋が水面に映る光景が息をのむほど美しく、ディレクターKは日本の皆様にもぜひ一度訪れていただきたいと願っています。周辺観光地と合わせて、新羅の歴史と文化に触れる慶州旅行をお楽しみください。
 <div class="k-weather-section" style="margin:20px -25px 15px;padding:0;width:calc(100% + 50px);overflow:hidden;"><h3 style="font-size:1.1rem;font-weight:800;color:var(--themeC) !important;margin-bottom:10px;padding-left:25px;">📅 現地のお天気ガイド</h3>{{< weather loc="37d57126d98/seoul" name="GYEONGJU" >}}</div>
 <div class="k-map-box">
-    <div class="k-map-header">
-        <h3 class="k-map-title">📍 月精橋</h3>
-        <p class="k-map-address">慶尚北道 慶州市 橋村洞 274 (경상북도 경주시 교동 274)</p>
-    </div>
-    <div class="k-map-iframe-wrap">
-        <iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%9B%94%EC%A0%95%EA%B5%90&output=embed"></iframe>
-    </div>
-    <div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
-    <div class="k-map-buttons">
-        <a href="https://www.google.com/maps/search/?api=1&query=%EC%9B%94%EC%A0%95%EA%B5%90" class="btn-google" target="_blank">Google マップ</a>
-        <a href="https://map.naver.com/p/search/%EC%9B%94%EC%A0%95%EA%B5%90" class="btn-naver" target="_blank">Naver マップ</a>
-    </div>
+<div class="k-map-header">
+<h3 class="k-map-title">📍 月精橋</h3>
+<p class="k-map-address">慶尚北道 慶州市 橋村洞 274 (경상북도 경주시 교동 274)</p>
 </div>
-
----
-
-> 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/gyeongju-woljeonggyo-luminous-echo-of.html)
+<div class="k-map-iframe-wrap">
+<iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%9B%94%EC%A0%95%EA%B5%90&output=embed"></iframe>
+</div>
+<div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"><span style="display:block;font-weight:700;margin-bottom:2px;">⚠️ 旅行者のための注意</span>Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、<b>Naverマップ</b>の使用を強く推奨します。</div>
+<div class="k-map-buttons">
+<a href="https://www.google.com/maps/search/?api=1&query=%EC%9B%94%EC%A0%95%EA%B5%90" class="btn-google" target="_blank">Google マップ</a>
+<a href="https://map.naver.com/p/search/%EC%9B%94%EC%A0%95%EA%B5%90" class="btn-naver" target="_blank">Naver マップ</a>
+</div>
+</div>
