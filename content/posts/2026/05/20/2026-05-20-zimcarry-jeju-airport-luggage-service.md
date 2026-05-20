@@ -25,7 +25,7 @@ author: "K-Life Hack"
 <img alt="済州空港の荷物預かり所へ続く通路" fetchpriority="high" height="294" loading="eager" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/20/zimcarry-jeju-airport-luggage-service/khack_1779285004_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" width="392"/>
 
 
-<span style="font-size:1.4em; font-weight:bold;">5番ゲートを目指せば迷わない！ジムキャリーの場所と受付</span>
+## 5番ゲートを目指せば迷わない！ジムキャリーの場所と受付
 
 済州空港の1階、到着ロビーの5番ゲート付近に<b>ジムキャリー（Zimcarry）</b>のカウンターがあります。大きな看板が出ているので、初めての方でもすぐに見つけられるはずです。空港内は意外と広いので、5番ゲートという数字だけを頼りに進むのが一番効率的ですよ。
 
@@ -47,7 +47,7 @@ author: "K-Life Hack"
 <img alt="1階へ降りるエスカレーター" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/20/zimcarry-jeju-airport-luggage-service/khack_1779285010_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
-<span style="font-size:1.4em; font-weight:bold;">宿泊先から空港まで！実際に使ってみた驚きの便利さ</span>
+## 宿泊先から空港まで！実際に使ってみた驚きの便利さ
 
 今回は、翰京面にある「ヘノンステイ済州」から空港まで配送をお願いしました。公式サイトで事前に日付と荷物の数（今回はSサイズとMサイズを1つずつ）を入力するだけで予約完了！韓国の電話番号がなくても公式サイトから予約できるので、海外旅行者にも優しいシステムです。🌏✈️
 
@@ -67,7 +67,7 @@ author: "K-Life Hack"
 
 公式サイトで予約後、カカオトーク（KakaoTalk）で案内が届くので、指示に従って荷物の写真を1枚アップロードするのを忘れないでくださいね。これが紛失防止の鍵になるんです！🗝️ 万が一のトラブルを防ぐためにも、特徴的なステッカーを貼ったり、タグを付けておくとより安心ですよ。
 
-<span style="font-size:1.4em; font-weight:bold;">荷物から解放された後に広がる済州島 徒歩旅行の絶景</span>
+## 荷物から解放された後に広がる済州島 徒歩旅行の絶景
 
 スーツケースを預けた後は、身軽なリュック一つで済州市内を散策しました。🚶‍♀️💖 黄金色に染まる夕焼けを眺めたり、普段なら避けてしまうような狭い石垣の路地裏にも足を踏み入れることができました。この写真の夕焼けの質感、手ぶらで心に余裕があるからこそ、より美しく見えた気がします。✨
 
