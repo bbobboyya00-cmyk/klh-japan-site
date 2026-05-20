@@ -62,7 +62,7 @@ fi
 
 # [3단계] 리소스 정리 및 빌드
 echo "🧹 Running Hugo Garbage Collection & Build..."
-if ! hugo -D -F --gc --minify --cleanDestinationDir; then
+if ! hugo --gc --minify --cleanDestinationDir; then
     echo "❌ [ERROR] Hugo build failed!"
     exit 1
 fi
