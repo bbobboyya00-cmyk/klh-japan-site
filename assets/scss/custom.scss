@@ -56,14 +56,12 @@ body.article-page .article-header .article-image {
 }
 
 .psImg img, .psimg img {
-    flex: 1 1 calc(50% - 5px) !important; /* 너비 비중 명시 */
-    width: 100% !important;
+    flex: 1 1 0% !important;
+    width: 100% !important;           /* auto에서 100%로 변경하여 할당된 공간을 꽉 채움 */
     max-width: calc(50% - 5px) !important;
-    height: auto !important;
-    aspect-ratio: 1 / 1 !important;
-    object-fit: contain !important;
-    border-radius: 12px !important;
-    margin: 0 !important;
+    margin: 0 !important; 
+    object-fit: cover !important;     /* contain에서 cover로 변경하여 여백 없이 프레임을 채움 */
+    aspect-ratio: 1 / 1 !important;   /* 정정사각형 비율 유지 */
 }
 
 @media screen and (max-width: 768px) {
