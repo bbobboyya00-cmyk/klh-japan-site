@@ -62,26 +62,16 @@
 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 &lt;/script&gt;&lt;/div&gt;
 &lt;div class="k-map-box"&gt;
- &lt;div class="k-map-header"&gt;
- &lt;h3 class="k-map-title"&gt;📍 月精橋&lt;/h3&gt;
- &lt;p class="k-map-address"&gt;慶尚北道 慶州市 橋村洞 274 (경상북도 경주시 교동 274)&lt;/p&gt;
- &lt;/div&gt;
- &lt;div class="k-map-iframe-wrap"&gt;
- &lt;iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%9B%94%EC%A0%95%EA%B5%90&amp;output=embed"&gt;&lt;/iframe&gt;
- &lt;/div&gt;
- &lt;div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"&gt;&lt;span style="display:block;font-weight:700;margin-bottom:2px;"&gt;⚠️ 旅行者のための注意&lt;/span&gt;Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、&lt;b&gt;Naverマップ&lt;/b&gt;の使用を強く推奨します。&lt;/div&gt;
- &lt;div class="k-map-buttons"&gt;
- &lt;a href="https://www.google.com/maps/search/?api=1&amp;query=%EC%9B%94%EC%A0%95%EA%B5%90" class="btn-google" target="_blank"&gt;Google マップ&lt;/a&gt;
- &lt;a href="https://map.naver.com/p/search/%EC%9B%94%EC%A0%95%EA%B5%90" class="btn-naver" target="_blank"&gt;Naver マップ&lt;/a&gt;
- &lt;/div&gt;
+&lt;div class="k-map-header"&gt;
+&lt;h3 class="k-map-title"&gt;📍 月精橋&lt;/h3&gt;
+&lt;p class="k-map-address"&gt;慶尚北道 慶州市 橋村洞 274 (경상북도 경주시 교동 274)&lt;/p&gt;
 &lt;/div&gt;
-&lt;hr&gt;
-
- &lt;blockquote&gt;
- &lt;p&gt;🌐 &lt;strong&gt;Read this post in other languages:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a class="link" href="https://en.klifehack.com/2026/04/gyeongju-woljeonggyo-luminous-echo-of.html" target="_blank" rel="noopener"
- &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
- &lt;/blockquote&gt;</description></item></channel></rss>
+&lt;div class="k-map-iframe-wrap"&gt;
+&lt;iframe frameborder="0" scrolling="no" src="https://www.google.com/maps?q=%EC%9B%94%EC%A0%95%EA%B5%90&amp;output=embed"&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;div class="k-map-notice" style="padding:12px 25px;background:var(--themeBg-sec);border-top:1px solid var(--themeBd-color);font-size:0.8rem;line-height:1.5;color:var(--themeC);opacity:0.7;"&gt;&lt;span style="display:block;font-weight:700;margin-bottom:2px;"&gt;⚠️ 旅行者のための注意&lt;/span&gt;Googleマップは情報の更新が遅れたり、場所が掲載されていない場合があります。韓国国内でのより正確な位置確認のために、&lt;b&gt;Naverマップ&lt;/b&gt;の使用を強く推奨します。&lt;/div&gt;
+&lt;div class="k-map-buttons"&gt;
+&lt;a href="https://www.google.com/maps/search/?api=1&amp;query=%EC%9B%94%EC%A0%95%EA%B5%90" class="btn-google" target="_blank"&gt;Google マップ&lt;/a&gt;
+&lt;a href="https://map.naver.com/p/search/%EC%9B%94%EC%A0%95%EA%B5%90" class="btn-naver" target="_blank"&gt;Naver マップ&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item></channel></rss>

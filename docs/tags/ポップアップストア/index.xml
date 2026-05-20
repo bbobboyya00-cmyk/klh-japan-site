@@ -87,27 +87,16 @@
 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 &lt;/script&gt;&lt;/div&gt;
 &lt;div class="k-map-box"&gt;
- &lt;div class="k-map-header"&gt;
- &lt;h3 class="k-map-title"&gt;📍 조아용in스토어 용인시청점&lt;/h3&gt;
- &lt;p class="k-map-address"&gt;경기도 용인시 처인구 중부대로 1199&lt;/p&gt;
- &lt;/div&gt;
- &lt;div class="k-map-iframe-wrap"&gt;
-&lt;pre&gt;&lt;code&gt; &amp;lt;iframe frameborder=&amp;quot;0&amp;quot; scrolling=&amp;quot;no&amp;quot; src=&amp;quot;https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25404.449190805026!2d127.14667019999999!3d37.25823705!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b51003ceff487%3A0xbf6b2f2f5c0d5d79!2z7KGw7JWE7JqpaW7siqTthqDslrQg7Jqp7J247Iuc7LKt7KCQ!5e0!3m2!1sko!2skr!4v1777159195701!5m2!1sko!2skr&amp;quot; width=&amp;quot;600&amp;quot; height=&amp;quot;450&amp;quot; style=&amp;quot;border:0;&amp;quot; allowfullscreen=&amp;quot;&amp;quot; loading=&amp;quot;lazy&amp;quot; referrerpolicy=&amp;quot;no-referrer-when-downgrade&amp;quot;&amp;gt;&amp;lt;/iframe&amp;gt;
-&amp;lt;/div&amp;gt;
-&amp;lt;div class=&amp;quot;k-map-notice&amp;quot; style=&amp;quot;background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); color: var(--themeC); font-size: 0.8rem; line-height: 1.5; opacity: 0.7; padding: 12px 25px;&amp;quot;&amp;gt;&amp;lt;span style=&amp;quot;display: block; font-weight: 700; margin-bottom: 2px;&amp;quot;&amp;gt;⚠️ Traveler's Note:&amp;lt;/span&amp;gt;Google Maps may have outdated information or missing listings. For the most accurate locations in Korea, we highly recommend using &amp;lt;b&amp;gt;Naver Maps&amp;lt;/b&amp;gt;.&amp;lt;/div&amp;gt;
-&amp;lt;div class=&amp;quot;k-map-buttons&amp;quot;&amp;gt;
- &amp;lt;a class=&amp;quot;btn-google&amp;quot; href=&amp;quot;https://www.google.com/maps/search/?api=1&amp;amp;amp;query=조아용in스토어 용인시청점&amp;quot; target=&amp;quot;_blank&amp;quot;&amp;gt;Google Maps&amp;lt;/a&amp;gt;
- &amp;lt;a class=&amp;quot;btn-naver&amp;quot; href=&amp;quot;https://map.naver.com/p/search/조아용in스토어 용인시청점&amp;quot; target=&amp;quot;_blank&amp;quot;&amp;gt;Naver Maps&amp;lt;/a&amp;gt;
-&amp;lt;/div&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;hr&gt;
-
- &lt;blockquote&gt;
- &lt;p&gt;🌐 &lt;strong&gt;Read this post in other languages:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a class="link" href="https://en.klifehack.com/2026/04/joayongs-popcorn-journey-e-mart.html" target="_blank" rel="noopener"
- &gt;🇺🇸 &lt;strong&gt;English Version&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
- &lt;/blockquote&gt;</description></item></channel></rss>
+&lt;div class="k-map-header"&gt;
+&lt;h3 class="k-map-title"&gt;📍 조아용in스토어 용인시청점&lt;/h3&gt;
+&lt;p class="k-map-address"&gt;경기도 용인시 처인구 중부대로 1199&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="k-map-iframe-wrap"&gt;
+&lt;iframe frameborder="0" scrolling="no" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25404.449190805026!2d127.14667019999999!3d37.25823705!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b51003ceff487%3A0xbf6b2f2f5c0d5d79!2z7KGw7JWE7JqpaW7siqTthqDslrQg7Jqp7J247Iuc7LKt7KCQ!5e0!3m2!1sko!2skr!4v1777159195701!5m2!1sko!2skr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;div class="k-map-notice" style="background: var(--themeBg-sec); border-top: 1px solid var(--themeBd-color); color: var(--themeC); font-size: 0.8rem; line-height: 1.5; opacity: 0.7; padding: 12px 25px;"&gt;&lt;span style="display: block; font-weight: 700; margin-bottom: 2px;"&gt;⚠️ Traveler's Note:&lt;/span&gt;Google Maps may have outdated information or missing listings. For the most accurate locations in Korea, we highly recommend using &lt;b&gt;Naver Maps&lt;/b&gt;.&lt;/div&gt;
+&lt;div class="k-map-buttons"&gt;
+&lt;a class="btn-google" href="https://www.google.com/maps/search/?api=1&amp;amp;query=조아용in스토어 용인시청점" target="_blank"&gt;Google Maps&lt;/a&gt;
+&lt;a class="btn-naver" href="https://map.naver.com/p/search/조아용in스토어 용인시청점" target="_blank"&gt;Naver Maps&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description></item></channel></rss>
