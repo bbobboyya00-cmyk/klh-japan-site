@@ -32,7 +32,7 @@ hasCJKLanguage = true
     tag = "tags"
 
 # [3. URL 구조]
-[Permalinks]
+[permalinks]
     posts = "/p/:slug/"
 
 [params]
@@ -128,9 +128,14 @@ hasCJKLanguage = true
   [services.googleAnalytics]
     ID = 'G-4KGC4HJF0E'
 
+[sitemap]
+    changefreq = "daily"
+    priority = 0.5
+    filename = "sitemap.xml"
+	
 [outputs]
-    home = ["HTML", "RSS", "JSON", "Sitemap"]  # 👈 Sitemap 추가
-    page = ["HTML"]
+    home = ["html", "rss", "json", "sitemap"]
+    page = ["html"]
 
 [params.search]
     enable = true
