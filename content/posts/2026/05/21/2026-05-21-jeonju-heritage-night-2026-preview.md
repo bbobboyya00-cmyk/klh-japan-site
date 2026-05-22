@@ -34,14 +34,14 @@ author: "K-Life Hack"
 
 歴史的な空間と全州の物語が融合した没入型コンテンツで、まるでタイムスリップしたみたいに感じられること間違いなし！✨
 
-<div class="alert-box">
+<blockquote class="alert alert-tip" style="margin-left: calc(var(--card-padding) * -1); margin-right: calc(var(--card-padding) * -1); border-radius: 0;\"><div class="alert-header\"></div><div class="alert-body\">
 <ul>
 <li>📍 <b>場所</b>: 全州韓屋村 (全羅北道全州市完山区泰祖路44 (豊南洞3街))</li>
 <li>⏰ <b>開催期間</b>: 2026年6月5日(金)～6月6日(土) 18:00～22:00</li>
 <li>🎫 <b>入場料</b>: 無料</li>
 <li>💡 <b>エディターズ・シークレット</b>: 夜の慶基殿（キョンギジョン）は、特に写真映えするから要チェックだよ📸。伝統衣装で記念撮影するなら、ここがベストスポット！</li>
 </ul>
-</div>
+</div></blockquote>
 
 ## 歴史を巡る夜の散策、何が見どころ？プログラムを深掘りしちゃうよ！🤩
 
