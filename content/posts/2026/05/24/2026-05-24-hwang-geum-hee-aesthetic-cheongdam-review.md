@@ -63,7 +63,7 @@ author: "K-Life Hack"
 
 
 
-## **<mark>オールハンドマッサージ</mark>**で解きほぐされる70分
+## <b><mark>オールハンドマッサージ</mark></b>で解きほぐされる70分
 
 案内された管理室は完全プライベートな空間で、清潔なリネンが用意されたふかふかのベッドが印象的です。今回受けた「水分・再生ケア」は、クレンジングから始まり、1次パックの間に受けるデコルテマッサージが非常に丁寧でした。
 
@@ -78,7 +78,7 @@ author: "K-Life Hack"
 <img alt="プライベートな施術室の全景" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/24/hwang-geum-hee-aesthetic-cheongdam-review/khack_1779623564_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
-施術には、30年のノウハウが詰まった**<mark>自社開発コスメ</mark>**が贅沢に使用されます。手技によるフェイシャルマッサージは、肌の弾力を引き上げるような心地よい圧で、心身ともにリラックスできる時間でした。
+施術には、30年のノウハウが詰まった<b><mark>自社開発コスメ</mark></b>が贅沢に使用されます。手技によるフェイシャルマッサージは、肌の弾力を引き上げるような心地よい圧で、心身ともにリラックスできる時間でした。
 
 
 
@@ -94,5 +94,5 @@ author: "K-Life Hack"
 <img alt="施術後の身だしなみを整えるパウダールーム" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/24/hwang-geum-hee-aesthetic-cheongdam-review/khack_1779623567_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
-清潭洞で長く愛される理由が、この確かな手仕事にあるのだと実感しました。**<mark>清潭洞エステ</mark>**で本格的な肌管理を検討しているなら、選択肢の一つとして間違いない一軒です。
+清潭洞で長く愛される理由が、この確かな手仕事にあるのだと実感しました。<b><mark>清潭洞エステ</mark></b>で本格的な肌管理を検討しているなら、選択肢の一つとして間違いない一軒です。
 
