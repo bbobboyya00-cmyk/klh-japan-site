@@ -38,7 +38,7 @@ author: "K-Life Hack"
 
 ## 多様なコンセプトで構成されたフロア空間
 
-地下1階から地上8階、そしてルーフトップまで備えたこの建物は、**<b><mark>江南 ギャラリーカフェ</mark></b>**としての側面も持っています。各フロアを移動するごとに、異なる雰囲気に触れることができます。
+地下1階から地上8階、そしてルーフトップまで備えたこの建物は、<b><mark>江南 ギャラリーカフェ</mark></b>としての側面も持っています。各フロアを移動するごとに、異なる雰囲気に触れることができます。
 
 ラウンジフロアには壁一面に本棚が設置されており、ホテルのライブラリーのような落ち着いた空間が広がっています。また、別のフロアでは現代アートが展示されたギャラリー風の席も用意されており、好みの環境を選択可能です。
 
@@ -77,7 +77,7 @@ author: "K-Life Hack"
 <img alt="陳列棚に並ぶ色とりどりのティラミス" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/25/selected-nicks-gangnam-cafe-tiramisu-review/khack_1779675402_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
-今回は、フレッシュなイチゴが乗った**<b><mark>セレクティッドニックス</mark></b>**のシグネチャー、イチゴティラミスを注文しました。甘さと酸味のバランスが整った一品で、アイスコーヒーともよく合います。
+今回は、フレッシュなイチゴが乗った<b><mark>セレクティッドニックス</mark></b>のシグネチャー、イチゴティラミスを注文しました。甘さと酸味のバランスが整った一品で、アイスコーヒーともよく合います。
 
 
 
@@ -93,5 +93,5 @@ author: "K-Life Hack"
 <img alt="店内に飾られた巨大なロリポップ" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/25/selected-nicks-gangnam-cafe-tiramisu-review/khack_1779675405_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
 
 
-用途に合わせてフロアを選べるため、一人で作業に集中したい時や、友人とアートを楽しみたい時のどちらにも対応可能です。**<b><mark>江南駅 カフェ</mark></b>**を探している際の選択肢の一つとして、候補に入れてみてもよさそうです。
+用途に合わせてフロアを選べるため、一人で作業に集中したい時や、友人とアートを楽しみたい時のどちらにも対応可能です。<b><mark>江南駅 カフェ</mark></b>を探している際の選択肢の一つとして、候補に入れてみてもよさそうです。
 
