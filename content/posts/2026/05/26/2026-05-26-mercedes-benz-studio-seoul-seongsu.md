@@ -6,7 +6,7 @@ draft: false
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/26/mercedes-benz-studio-seoul-seongsu/khack_1779761044_1.webp"
 description: "ソウル・聖水洞にオープンしたMercedes-Benz Studio Seoulを現地レポ。新型Sクラスの美しい造形から、世界初の自動車の展示、ベルリン発のカフェコラボまで、車とライフスタイルが融合した空間の魅力を詳しくお届けします。"
 categories: ["The Hype Logistics"]
-tags: []
+tags: ["メルセデス・ベンツ", "Mercedes-Benz", "スタジオソウル", "聖水洞ポップアップ", "ザ・バーン", "Sクラス", "ソウルカフェ"]
 author: "K-Life Hack"
 ---
 
