@@ -3,7 +3,7 @@ title: "ソウルで増えている韓国伝統茶カフェ。現代空間で再
 slug: "seoul-modern-korean-tea-cafe-trend"
 date: 2026-05-27T09:50:00+09:00
 draft: false
-image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/assets/2026/05/etc/food/food1.webp"
+image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/food/food1.webp"
 description: "近年ソウルでは、伝統茶を現代的な空間で楽しめるカフェが増えています。韓国茶文化の特徴や味の構成、空間演出の変化について整理しました。"
 categories: ["K-Food Insider"]
 tags: ["韓国伝統茶","ソウルカフェ","韓国デザート","韓国茶文化","韓国グルメ"]
@@ -16,7 +16,7 @@ author: "K-Life Hack"
 
 特に聖水洞（ソンスドン）、北村（プクチョン）、西村（ソチョン）周辺では、昔ながらの韓国茶文化を現代的なデザインと組み合わせたカフェが増えています。
 
-<img alt="韓国伝統茶とモダンな茶器" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/assets/2026/05/etc/food/food1.webp"/>
+<img alt="韓国伝統茶とモダンな茶器" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/food/food1.webp"/>
 
 ## 韓国伝統茶が再び注目されている理由
 
@@ -53,7 +53,7 @@ author: "K-Life Hack"
 
 一口目と後味で印象が変化するため、強い刺激よりも緩やかな変化を楽しむ飲み物として紹介されることがあります。
 
-<img alt="韓国伝統茶と伝統菓子" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/assets/2026/05/etc/food/food2.webp"/>
+<img alt="韓国伝統茶と伝統菓子" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/food/food2.webp"/>
 
 ## 一緒に提供される韓国伝統菓子の変化
 
@@ -84,7 +84,7 @@ author: "K-Life Hack"
 
 そのため店内では大きな音楽を流さず、比較的静かな雰囲気を維持している場所も少なくありません。
 
-<img alt="韓屋スタイルのモダンカフェ空間" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/assets/2026/05/etc/food/food3.webp"/>
+<img alt="韓屋スタイルのモダンカフェ空間" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/food/food3.webp"/>
 
 ## 初めて韓国伝統茶カフェを利用する場合のポイント
 
