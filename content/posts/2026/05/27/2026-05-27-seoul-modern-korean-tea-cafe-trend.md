@@ -64,7 +64,7 @@ author: "K-Life Hack"
 - ナツメチップ
 - 米菓子
 
-<img alt="韓国伝統菓子セット" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/food/food2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" />
+<img alt="韓国伝統菓子セット" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/food/food3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" />
 
 最近では、一口サイズに調整された小さな構成も見られます。
 
@@ -76,7 +76,7 @@ author: "K-Life Hack"
 
 特に北村周辺では、古い韓屋を改装して利用するケースも多く見られます。
 
-<img alt="韓屋を改装した静かなカフェ空間" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/food/food3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" />
+<img alt="韓屋を改装した静かなカフェ空間" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/food/food2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" />
 
 特徴としては次のような要素があります。
 
