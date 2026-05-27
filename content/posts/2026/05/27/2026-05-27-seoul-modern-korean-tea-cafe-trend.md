@@ -1,7 +1,7 @@
 ---
 title: "ソウルで増えている韓国伝統茶カフェ。現代空間で再解釈される韓国茶文化"
 slug: "seoul-modern-korean-tea-cafe-trend"
-date: 2026-05-27T13:30:00+09:00
+date: 2026-05-27T09:50:00+09:00
 draft: false
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/assets/2026/05/etc/food/food1.webp"
 description: "近年ソウルでは、伝統茶を現代的な空間で楽しめるカフェが増えています。韓国茶文化の特徴や味の構成、空間演出の変化について整理しました。"
