@@ -87,26 +87,26 @@ author: "K-Life Hack"
 
 派手な装飾よりも、素材そのものの質感を重視する空間構成が多く見られます。
 
-## Access
+## アクセス情報
 
 <table>
 <tr>
-<th>Area</th>
-<td>Samcheong-dong / Bukchon, Jongno-gu, Seoul</td>
+<th>エリア</th>
+<td>三清洞・北村エリア</td>
 </tr>
 
 <tr>
-<th>Nearest Subway</th>
-<td>Anguk Station</td>
+<th>最寄り駅</th>
+<td>安国駅（アングク駅）</td>
 </tr>
 
 <tr>
-<th>Recommended Timing</th>
-<td>Morning or weekday daytime</td>
+<th>おすすめ時間帯</th>
+<td>午前中または平日の日中</td>
 </tr>
 </table>
 
-## FAQ
+## よくある質問
 
 ### 五味子茶はかなり甘いですか？
 
@@ -124,7 +124,7 @@ author: "K-Life Hack"
 
 韓国伝統茶は茶葉以外の素材を使用するものも多いため、コーヒーとは異なる選択肢として利用できます。
 
-## Closing Note
+## まとめ
 
 ソウルのカフェ文化というと大型ベーカリーや流行のデザートが注目されることも多いですが、伝統茶を中心とした空間には異なる魅力があります。
 
