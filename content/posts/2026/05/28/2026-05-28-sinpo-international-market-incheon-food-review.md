@@ -43,6 +43,10 @@ author: "K-Life Hack"
 
 今回の目的地は、昔ながらの佇まいが魅力の<b><mark>メッドルカルグクス</mark></b>です。テレビ番組でも紹介された有名店で、店内には多くのサインが飾られていました。
 
+
+<img alt="油で揚げられる伝統的な韓国のドーナツ" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/28/sinpo-international-market-incheon-food-review/khack_1779963030_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/>
+
+
 名物のカルグクス（8,000ウォン）は、たっぷりの揚げ玉が乗っているのが特徴的です。揚げたてのドーナツのような香ばしさが漂う市場の風景と重なって、食欲をそそります。 🍜
 
 
