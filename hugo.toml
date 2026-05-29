@@ -47,7 +47,7 @@ hasCJKLanguage = true
         lastUpdated = "2006/01/02"
 
     [params.sidebar]
-        avatar = "img/logo.webp" 
+        avatar = "img/persona_k_ambient.webp" 
         name = "K-Life Hack"
         subtitle = "ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。"
 
