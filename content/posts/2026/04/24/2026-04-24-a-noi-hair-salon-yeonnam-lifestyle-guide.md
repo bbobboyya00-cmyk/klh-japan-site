@@ -117,4 +117,3 @@ A.NOIには、それぞれ独自の専門性を持つ実力派ディレクター
 ---
 
 > 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/anoi-hair-mapo-yeonnam-masterclass-in.html)

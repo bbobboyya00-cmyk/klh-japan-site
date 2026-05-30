@@ -121,4 +121,3 @@ author: "K-Life Hack"
 ---
 
 > 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/the-korea-tea-museum-2026-curators.html)

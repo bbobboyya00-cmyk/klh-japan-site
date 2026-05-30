@@ -77,4 +77,3 @@ BYBLYの登場は、韓国のビューティー市場における「データの
 ---
 
 > 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/bybly-2026-aesthetic-of-modular-beauty.html)

@@ -134,4 +134,3 @@ K-Life HackのディレクターKです。
 ---
 
 > 🌐 **Read this post in other languages:**
-> * [🇺🇸 **English Version**](https://en.klifehack.com/2026/04/k-life-hack-imshil-cheese-theme-parks.html)
