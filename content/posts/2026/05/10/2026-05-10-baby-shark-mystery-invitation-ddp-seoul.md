@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/upcoming-2026-dive-into-baby-shark.html"
 title: "アナタだけが知る！DDP「ベイビーシャーク秘密の招待状」2026年プレビューガイド"
 slug: "baby-shark-mystery-invitation-ddp-seoul"
 date: 2026-05-08T10:08:00+09:00

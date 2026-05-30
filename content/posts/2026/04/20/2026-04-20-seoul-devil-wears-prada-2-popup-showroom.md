@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/the-devil-wears-prada-2-exclusive-pop.html"
 title: "K-Life Hack独占: 聖水洞『プラダを着た悪魔2』ポップアップで感じるハイエンドなソウル体験"
 slug: "seoul-devil-wears-prada-2-popup-showroom"
 date: 2026-03-19T19:26:38+09:00

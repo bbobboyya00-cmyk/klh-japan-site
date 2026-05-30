@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/long-lines-for-hoonhoon-hotteok-in.html"
 title: "平日夕方でも行列！望遠市場「フンフンホットク」の正直レポ"
 slug: "mangwon-market-hoonhoon-hotteok-review"
 date: 2026-05-17T19:15:54+09:00

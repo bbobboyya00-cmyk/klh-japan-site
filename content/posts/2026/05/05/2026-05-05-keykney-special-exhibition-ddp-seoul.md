@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/healing-art-therapy-at-ddp-keykney.html"
 title: "DDPで心温まる癒やしを。2026年「キークニ特別展」の見どころと現地レポート"
 slug: "keykney-special-exhibition-ddp-seoul"
 date: 2026-04-28T10:31:55+09:00

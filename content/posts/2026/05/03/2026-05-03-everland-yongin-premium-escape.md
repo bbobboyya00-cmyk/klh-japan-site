@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/yongin-everland-sanctuary-of-elevated.html"
 title: "龍仁エバーランド：四季が織りなす感動のハイエンド体験ガイド"
 slug: "everland-yongin-premium-escape"
 date: 2026-04-22T16:17:12+09:00

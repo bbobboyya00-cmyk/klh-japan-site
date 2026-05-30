@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/naksansa-temple-stay-serene-east-sea.html"
 title: "東海の観音聖地、洛山寺テンプルステイで心の平穏を"
 slug: "naksansa-temple-stay-coastal-retreat"
 date: 2026-04-16T16:13:19+09:00

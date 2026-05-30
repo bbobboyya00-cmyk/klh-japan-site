@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/haeundae-amso-galbijip-timeless.html"
 title: "釜山の伝説、海雲台アムソカルビチッで極める最高峰の韓牛ガストロノミー"
 slug: "haeundae-amso-galbijip-luxury-korean-bbq"
 date: 2026-04-15T19:33:06+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/damsoyo-serene-high-end-garden-cafe.html"
 title: "済州島の静寂を歩く。ハルラ山の麓に佇む秘密の庭園カフェ「ダムソヨ（DAMSOYO）」完全ガイド ✨"
 slug: "jeju-damsoyo-garden-cafe"
 date: 2026-03-09T10:36:39+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/the-ultimate-melt-in-your-mouth-bossam.html"
 title: "35年の伝統が語る本物の味！ソウル長安洞で出会う「パク・マンベアリランポッサム」の絶品ガブリサル体験"
 slug: "park-manbae-arirang-bossam-jangan"
 date: 2026-04-30T10:28:17+09:00

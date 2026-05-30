@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/raive-seongsu-hidden-contemporary.html"
 title: "友達にこっそり教えたい！ソウルの森「RAIVE」で最旬トレンドを先取り！"
 slug: "raive-seongsu-seoul-forest-showroom"
 date: 2026-05-04T19:30:15+09:00

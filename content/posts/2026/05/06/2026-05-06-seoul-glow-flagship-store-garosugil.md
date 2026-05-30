@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seouls-chicest-beauty-hub-2026-preview.html"
 title: "ソウルで見つけた秘密の美空間：GLOWフラッグシップストアを徹底解剖！"
 slug: "seoul-glow-flagship-store-garosugil"
 date: 2026-05-01T16:26:28+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/mungyeongsaejae-heritage-guide-to.html"
 title: "聞慶セジェで出会う至高の美、聞慶茶碗祭り2026完全ガイド"
 slug: "mungyeong-tea-bowl-festival-guide"
 date: 2026-04-24T16:43:09+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/k-life-hack-imshil-cheese-theme-parks.html"
 title: "2026年「第1回 林實(イムシル)Nバラ祭り」完全ガイド：韓国チーズの聖地がバラの海に染まる4日間"
 slug: "2026-imsil-n-rose-festival-guide"
 date: 2026-03-29T10:53:34+09:00

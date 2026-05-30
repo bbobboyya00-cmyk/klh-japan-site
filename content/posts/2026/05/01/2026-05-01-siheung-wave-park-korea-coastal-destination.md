@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/siheung-wave-park-koreas-premier.html"
 title: "シフン・ウェーブパーク：都会のオアシスで波に乗るハイエンド体験"
 slug: "siheung-wave-park-korea-coastal-destination"
 date: 2026-04-19T19:18:40+09:00

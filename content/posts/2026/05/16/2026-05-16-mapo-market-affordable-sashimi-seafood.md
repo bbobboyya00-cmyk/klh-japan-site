@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/why-i-keep-going-back-to-mapo-market.html"
 title: "平日昼間に「マポ農水産物市場」へ！新鮮刺身をコスパ良くテイクアウトした正直レポ 🤤"
 slug: "mapo-market-affordable-sashimi-seafood"
 date: 2026-05-16T10:05:37+09:00

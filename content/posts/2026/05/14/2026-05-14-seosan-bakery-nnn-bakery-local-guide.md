@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/authentic-french-vibes-at-nnn-bakery.html"
 title: "瑞山（ソサン）で絶対外せない！「NNNベーカリー」の塩パンとメロンパンが絶品すぎる件🥐✨"
 slug: "seosan-bakery-nnn-bakery-local-guide"
 date: 2026-05-14T10:10:40+09:00

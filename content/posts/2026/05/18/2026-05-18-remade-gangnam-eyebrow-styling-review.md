@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/i-spent-exactly-60-minutes-getting-my.html"
 title: "江南アプクジョンで1時間体験！リメイドの眉毛アートメイク、待ち時間ゼロの秘密"
 slug: "remade-gangnam-eyebrow-styling-review"
 date: 2026-05-18T16:48:06+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/golden-waves-in-may-your-2026-guri.html"
 title: "2026年九里菜の花祭り！地元エディターがこっそり教える黄金色のヒーリング名所"
 slug: "guri-canola-flower-festival-2026"
 date: 2026-05-09T10:01:52+09:00

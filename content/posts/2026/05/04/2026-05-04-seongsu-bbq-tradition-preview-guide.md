@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/experience-best-of-seongsus-30-year-bbq.html"
 title: "昨年の感動を胸に！2026年、聖水で再訪したい「内故郷精肉食堂」の魅力"
 slug: "seongsu-bbq-tradition-preview-guide"
 date: 2026-04-26T16:14:49+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/my-honest-experience-at-cheongdam-min.html"
 title: "1日7組限定の贅沢。チョンダムドン・ミンクリニックで体験する最新MCT幹細胞ケアのすべて"
 slug: "cheongdam-min-clinic-mct-treatment"
 date: 2026-05-13T16:18:53+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/mastering-ergonomic-comfort-deep-dive.html"
 title: "デスクワークの悩みを解決！韓国で話題の「メディエイド スタイルケア 背中ストレッチバンド」を徹底解説"
 slug: "medi-aid-posture-care-korea"
 date: 2026-03-14T19:33:58+09:00

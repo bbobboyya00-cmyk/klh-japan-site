@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/lotte-giants-x-will-be-play-essential.html"
 title: "ソウル最新！ロッテジャイアンツ公式グッズ『ウィルビプレイ』徹底ガイド"
 slug: "lotte-giants-willbeplay-seoul-goods-guide"
 date: 2026-03-18T16:35:20+09:00

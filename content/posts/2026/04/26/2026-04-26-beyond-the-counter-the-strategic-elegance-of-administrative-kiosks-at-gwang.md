@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/beyond-counter-strategic-elegance-of.html"
 title: "旅と暮らしを繋ぐスマートな境界線：韓国「無人民願自動発行機」活用ガイド"
 slug: "beyond-the-counter-the-strategic-elegance-of-administrative-kiosks-at-gwang"
 date: 2026-04-04T19:13:29+09:00

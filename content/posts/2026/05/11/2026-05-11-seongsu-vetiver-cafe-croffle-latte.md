@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/hidden-gem-in-seongsu-my-secret-spot.html"
 title: "聖水洞の隠れ家カフェ「ベティバー」！究極のクロッフルと濃厚ラテを味わう現地レポ"
 slug: "seongsu-vetiver-cafe-croffle-latte"
 date: 2026-05-11T10:43:47+09:00

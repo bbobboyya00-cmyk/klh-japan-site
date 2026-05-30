@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/musinsa-standard-seongsu-super-sale.html"
 title: "【聖水洞】2026年最大のセール到来！ムシンサ・スタンダード聖水で狙うべき神アイテム＆攻略法"
 slug: "musinsa-standard-seongsu-sale-guide"
 date: 2026-05-11T16:12:23+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/i-found-perfect-4000-krw-latte-at.html"
 title: "潜室のバラ団地で見つけたテンパーセントコーヒー潜室新川店の熟成ラテを持って漢江へ"
 slug: "tenpercent-coffee-jamsil-sincheon-latte"
 date: 2026-05-17T16:06:14+09:00

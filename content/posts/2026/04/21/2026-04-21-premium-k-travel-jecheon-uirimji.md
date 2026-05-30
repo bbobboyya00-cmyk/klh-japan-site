@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/a-thousand-years-of-stillness.html"
 title: "癒やしと歴史が交差する、忠清北道・堤川「義林池」の極上トラベルガイド"
 slug: "premium-k-travel-jecheon-uirimji"
 date: 2026-03-22T10:06:35+09:00

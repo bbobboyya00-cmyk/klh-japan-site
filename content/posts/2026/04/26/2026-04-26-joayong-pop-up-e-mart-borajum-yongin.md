@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/joayongs-popcorn-journey-e-mart.html"
 title: "龍仁市マスコット「チョアヨン」ポップアップストア徹底ガイド：2026年最新情報"
 slug: "joayong-pop-up-e-mart-borajum-yongin"
 date: 2026-04-05T10:54:17+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/busans-central-district-alluring.html"
 title: "釜山中央洞「クンジョクグクス」：粘り強い魅力と異国情緒の融合"
 slug: "busan-central-kkeunjeok-guksu-experience"
 date: 2026-04-19T10:16:03+09:00

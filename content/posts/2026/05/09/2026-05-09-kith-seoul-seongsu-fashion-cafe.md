@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/unlocking-seongsus-hottest-secret-deep.html"
 title: "ソウル最旬！聖水洞『Kith Seoul』で体験するファッションとカルチャーの融合"
 slug: "kith-seoul-seongsu-fashion-cafe"
 date: 2026-05-06T16:50:07+09:00

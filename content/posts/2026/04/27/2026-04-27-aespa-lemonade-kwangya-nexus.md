@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/navigating-lemonade-nexus-aespas.html"
 title: "aespa正規2集『Lemonade』が描き出す「広野」の新たな特異点"
 slug: "aespa-lemonade-kwangya-nexus"
 date: 2026-04-07T19:12:57+09:00

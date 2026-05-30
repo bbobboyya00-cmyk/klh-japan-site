@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/sizzling-stone-plate-black-bean-noodles.html"
 title: "大田で熱々の感動を！「ドゥンサン石焼ジャジャン」2026年最新プレビューガイド"
 slug: "daejeon-dunsan-dol-jjajang-noodles-guide"
 date: 2026-04-27T10:46:08+09:00

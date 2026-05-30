@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/gwanghwamun-square-lego-festival-lets.html"
 title: "光化門広場で迎える2026年「レッツプレイ光化門」完全ガイド"
 slug: "lego-festival-gwanghwamun-square-2026"
 date: 2026-04-23T10:08:29+09:00

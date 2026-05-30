@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/i-visited-mangwon-dong-instant-udon-at.html"
 title: "平日15時でも行列？望遠洞即席うどんで1万ウォンの巨大トンカツを食べた正直レポ"
 slug: "mangwon-instant-udon-weekday-visit"
 date: 2026-05-18T10:43:47+09:00

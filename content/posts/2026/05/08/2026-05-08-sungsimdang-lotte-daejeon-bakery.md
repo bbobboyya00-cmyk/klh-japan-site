@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/sungsimdang-lotte-daejeon-your-secret.html"
 title: "親友だけに教える！大田ロッテ百貨店「聖心堂」で出会う絶品パン体験"
 slug: "sungsimdang-lotte-daejeon-bakery"
 date: 2026-05-05T19:59:28+09:00

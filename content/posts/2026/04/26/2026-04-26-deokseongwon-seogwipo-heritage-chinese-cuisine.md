@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/jeju-heritage-gastronomy-timeless.html"
 title: "1945年創業、済州・西帰浦の歴史を刻む「徳成園」のカニチャンポン体験記"
 slug: "deokseongwon-seogwipo-heritage-chinese-cuisine"
 date: 2026-04-04T16:24:52+09:00

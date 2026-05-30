@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/migliore-myeongdong-definitive.html"
 title: "明洞のランドマーク、ミリオレ明洞店で楽しむ最先端のKファッション 🛍️"
 slug: "migliore-myeongdong-fashion-lifestyle-hub"
 date: 2026-04-18T16:50:41+09:00

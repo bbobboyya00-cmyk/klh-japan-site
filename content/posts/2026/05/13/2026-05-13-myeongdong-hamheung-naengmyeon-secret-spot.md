@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/my-secret-myeongdong-naengmyeon-spot.html"
 title: "明洞の路地裏で見つけた！地元っ子が密かに通う咸興冷麺の名店「明洞咸興麺屋」正直レポ"
 slug: "myeongdong-hamheung-naengmyeon-secret-spot"
 date: 2026-05-13T09:56:55+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seongsu-neungdong-minari-my-secret-go.html"
 title: "ソウルの聖水洞で今一番熱い！「ヌンドンミナリ」の絶品セリ料理とユッケビビンバ完全ガイド"
 slug: "seongsu-neungdong-minari-korean-eats"
 date: 2026-05-11T13:05:31+09:00

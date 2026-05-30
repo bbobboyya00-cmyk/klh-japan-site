@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/beyond-comfort-curated-pajama-sanctuary.html"
 title: "延南洞の隠れ家で出会う至福の休息。パジャマブティック「Juuneedu（ジュニジュ）」ショールームガイド"
 slug: "yeonnam-dong-juuneedu-pajama-boutique-showroom"
 date: 2026-04-12T19:18:59+09:00

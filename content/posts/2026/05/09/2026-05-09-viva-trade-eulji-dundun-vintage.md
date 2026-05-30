@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seoul-insider-guide-massive-vintage.html"
 title: "東大門の隠れ家？200坪のヴィンテージ天国『ビバ貿易』をエディターが徹底解説"
 slug: "viva-trade-eulji-dundun-vintage"
 date: 2026-05-08T19:56:17+09:00

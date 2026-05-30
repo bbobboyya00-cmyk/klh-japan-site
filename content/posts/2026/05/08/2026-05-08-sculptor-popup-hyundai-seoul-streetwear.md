@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/exclusive-sculptor-pop-up-guide-hyundai.html"
 title: "【2026速報】ザ・現代ソウルで絶対行きたい！スカルプターのポップアップ完全攻略ガイド"
 slug: "sculptor-popup-hyundai-seoul-streetwear"
 date: 2026-05-04T16:47:23+09:00

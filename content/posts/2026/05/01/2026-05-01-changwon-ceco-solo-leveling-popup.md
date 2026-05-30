@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/changwon-ceco-solo-leveling-pop-up.html"
 title: "チャンウォン・セコ「俺だけレベルアップな件」ポップアップストア完全ガイド"
 slug: "changwon-ceco-solo-leveling-popup"
 date: 2026-04-17T16:12:17+09:00

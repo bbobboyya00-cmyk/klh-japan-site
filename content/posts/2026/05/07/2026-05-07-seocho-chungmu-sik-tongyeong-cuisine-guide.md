@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seoul-secret-authentic-tongyeong.html"
 title: "ソウル・瑞草洞で見つけた！大切な人にだけ教えたい「忠武食」の本場統営グルメ"
 slug: "seocho-chungmu-sik-tongyeong-cuisine-guide"
 date: 2026-05-02T10:16:59+09:00

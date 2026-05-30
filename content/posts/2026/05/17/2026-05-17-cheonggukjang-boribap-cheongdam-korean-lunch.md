@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/my-18000-krw-cheongdam-lunch-honest.html"
 title: "清潭洞でこのクオリティは驚き！チョングッチャン苦手さんも大満足の絶品タコ炒めと韓定食"
 slug: "cheonggukjang-boribap-cheongdam-korean-lunch"
 date: 2026-05-17T01:08:43+09:00

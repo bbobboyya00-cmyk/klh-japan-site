@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/unleashing-beasts-deep-dive-into.html"
 title: "2026年注目作『ブラッドハウンド』シーズン2：圧倒的肉体美とノワールアクションの深淵へ"
 slug: "bloodhounds-season-2-netflix-aeo-guide"
 date: 2026-03-20T16:43:33+09:00

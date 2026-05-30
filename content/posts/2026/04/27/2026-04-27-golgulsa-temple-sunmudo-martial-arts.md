@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/golgulsa-temple-ascetic-luxury-in.html"
 title: "慶州・骨窟寺：千年の石窟と「禅武道」が織りなす究極の心身修練ガイド"
 slug: "golgulsa-temple-sunmudo-martial-arts"
 date: 2026-04-07T10:54:57+09:00

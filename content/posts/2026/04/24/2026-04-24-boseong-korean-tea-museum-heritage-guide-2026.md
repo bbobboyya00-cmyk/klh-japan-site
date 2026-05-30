@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/the-korea-tea-museum-2026-curators.html"
 title: "2026年、静寂を巡る緑の旅へ。韓国茶の聖地、宝城「韓国茶博物館」で体験する究極のヘリテージ"
 slug: "boseong-korean-tea-museum-heritage-guide-2026"
 date: 2026-03-30T16:14:56+09:00

@@ -4,6 +4,7 @@ theme = 'hugo-theme-stack'
 publishDir = 'docs'
 #languageCode = 'ja'             # 👈 'en-us'에서 변경
 defaultContentLanguage = 'ja'   # 👈 'en'에서 변경
+defaultContentLanguageInSubdir = false # 🎯 [v2606.044 TA] 일어 트랙의 루트(/p/) 경로 무결성 사수 및 영어만 /en/ 배치
 hasCJKLanguage = true
 
 #disqusShortname = "klifehack-com"
@@ -36,7 +37,6 @@ hasCJKLanguage = true
     posts = "/p/:slug/"
 
 [params]
-	locale = "ja"             # 👈 구글 봇에게 명확한 일본어 사이트임을 선언 (languageCode 대체)
     enableRobotsTXT = true    # 👈 [핵심] 자동으로 완전한 robots.txt를 생성하여 색인 속도 향상
     mainSections = ["posts"]
     featuredImageField = "image"
@@ -45,11 +45,6 @@ hasCJKLanguage = true
     [params.dateFormat]
         published = "2006/01/02"
         lastUpdated = "2006/01/02"
-
-    [params.sidebar]
-        avatar = "img/persona_k_ambient.webp" 
-        name = "K-Life Hack"
-        subtitle = "ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。"
 
     [params.widgets]
         homepage = [
@@ -73,47 +68,128 @@ hasCJKLanguage = true
         enabled = true
         type = "disqus"
 
-[menu]
-	[[menu.main]]
-        identifier = "search"
-        name = "検索"
-        url = "/search/"
-        weight = 5           # 홈(10)보다 위에 배치하려면 낮은 숫자 부여
-        [menu.main.params]
-            icon = "search"
-			
-    [[menu.main]]
-        identifier = "home"
-        name = "ホーム"         # 👈 Home -> ホーム
-        url = "/"
-        weight = 10
-        [menu.main.params]
-            icon = "home"
 
-    [[menu.main]]
-        identifier = "archives"
-        name = "アーカイブ"      # 👈 Archives -> アーカイブ
-        url = "/archives/"
-        weight = 20
-        [menu.main.params]
-            icon = "archive"
+# =============================================================================
+# [4. 다국어 아키텍처 및 로컬라이징 제어 벨트 - v2606.044 TA]
+# =============================================================================
+[languages]
+  # ---------------------------------------------------------------------------
+  # 일본어 독립 매거진 섹션 (기존 순정 프로필 완벽 보존)
+  # ---------------------------------------------------------------------------
+  [languages.ja]
+    languageCode = 'ja'
+    languageName = '日本語'
+    weight = 1
+    title = 'K-Life Hack | 韓国ハイエンド・ライフスタイルガイド'
+    
+    [languages.ja.params]
+        locale = "ja"             # 👈 구글 봇에게 명확한 일본어 사이트임을 선언 (languageCode 대체)
+        [languages.ja.params.sidebar]
+            avatar = "img/persona_k_ambient.webp" 
+            name = "K-Life Hack"
+            subtitle = "ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。"
 
-    [[menu.main]]
-        identifier = "about"
-        name = "紹介"           # 👈 About -> 紹介 (또는 プロフィール)
-        url = "/about/" 
-        weight = 30
-        [menu.main.params]
-            icon = "user"
+  # ---------------------------------------------------------------------------
+  # 영어 독립 매거진 섹션 (글로벌 멸균 트랙 전용 명세 구축)
+  # ---------------------------------------------------------------------------
+  [languages.en]
+    languageCode = 'en'
+    languageName = 'English'
+    weight = 2
+    title = 'K-Life Hack | Seoul Gastronomy & Travel Guide'
+    
+    [languages.en.params]
+        locale = "en"             # 👈 글로벌 구글 봇 독립 언어 지표 주입
+        [languages.en.params.sidebar]
+            avatar = "img/persona_k_ambient.webp" 
+            name = "K-Life Hack (Global)"
+            subtitle = "Latest Korean trends and refined daily life decoded with data by Seoul-based IT Architect 'K'."
 
-    [[menu.main]]
-        identifier = "contact"
-        name = "お問い合わせ"             # 👈 '문의'의 일본어 표기
-        url = "mailto:contact@klifehack.com"
-        weight = 40
-        [menu.main.params]
-            icon = "mail"
-			
+
+# =============================================================================
+# [5. 다국어 독립 메뉴 분리 시스템]
+# =============================================================================
+# --- 일본어 메뉴 구성 ---
+[[languages.ja.menu.main]]
+    identifier = "search"
+    name = "検索"
+    url = "/search/"
+    weight = 5           # 홈(10)보다 위에 배치하려면 낮은 숫자 부여
+    [languages.ja.menu.main.params]
+        icon = "search"
+		
+[[languages.ja.menu.main]]
+    identifier = "home"
+    name = "ホーム"         # 👈 Home -> ホーム
+    url = "/"
+    weight = 10
+    [languages.ja.menu.main.params]
+        icon = "home"
+
+[[languages.ja.menu.main]]
+    identifier = "archives"
+    name = "アーカイブ"      # 👈 Archives -> アーカイブ
+    url = "/archives/"
+    weight = 20
+    [languages.ja.menu.main.params]
+        icon = "archive"
+
+[[languages.ja.menu.main]]
+    identifier = "about"
+    name = "紹介"           # 👈 About -> 紹介 (또는 プロフィール)
+    url = "/about/" 
+    weight = 30
+    [languages.ja.menu.main.params]
+        icon = "user"
+
+[[languages.ja.menu.main]]
+    identifier = "contact"
+    name = "お問い合わせ"             # 👈 '문의'의 일본어 표기
+    url = "mailto:contact@klifehack.com"
+    weight = 40
+    [languages.ja.menu.main.params]
+        icon = "mail"
+
+# --- 영어 메뉴 구성 ---
+[[languages.en.menu.main]]
+    identifier = "search"
+    name = "Search"
+    url = "/en/search/"
+    weight = 5
+    [languages.en.menu.main.params]
+        icon = "search"
+		
+[[languages.en.menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/en/"
+    weight = 10
+    [languages.en.menu.main.params]
+        icon = "home"
+
+[[languages.en.menu.main]]
+    identifier = "archives"
+    name = "Archives"
+    url = "/en/archives/"
+    weight = 20
+    [languages.en.menu.main.params]
+        icon = "archive"
+
+[[languages.en.menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/en/about/" 
+    weight = 30
+    [languages.en.menu.main.params]
+        icon = "user"
+
+[[languages.en.menu.main]]
+    identifier = "contact"
+    name = "Contact"
+    url = "mailto:contact@klifehack.com"
+    weight = 40
+    [languages.en.menu.main.params]
+        icon = "mail"
 
 
 [markup]

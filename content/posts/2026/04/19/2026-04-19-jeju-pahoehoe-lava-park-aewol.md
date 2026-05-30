@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/a-journey-into-jejus-volcanic-soul.html"
 title: "済州島の新名所、パホイホイ溶岩地質公園を巡る。太古の記憶を歩く、大人のための感性トリップ"
 slug: "jeju-pahoehoe-lava-park-aewol"
 date: 2026-03-13T19:53:39+09:00

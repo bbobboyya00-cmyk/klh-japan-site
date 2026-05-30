@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/local-secret-in-seongsu-why-office.html"
 title: "聖水洞の会社員が通うガチの穴場！「キワンセンゴギ」で味わうコスパ最高の厚切り焼肉"
 slug: "seongsu-kiwang-saenggogi-korean-bbq-review"
 date: 2026-05-12T16:07:52+09:00

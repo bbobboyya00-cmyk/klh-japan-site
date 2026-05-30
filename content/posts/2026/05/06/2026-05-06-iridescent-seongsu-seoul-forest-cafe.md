@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/sipping-unexpected-why-iridescent.html"
 title: "聖水の隠れ家カフェ「イリデセント」：2026年も話題のエゴマの葉グラニータ体験記"
 slug: "iridescent-seongsu-seoul-forest-cafe"
 date: 2026-04-30T19:23:00+09:00

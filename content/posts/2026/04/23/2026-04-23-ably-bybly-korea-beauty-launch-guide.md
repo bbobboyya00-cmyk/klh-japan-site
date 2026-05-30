@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/bybly-2026-aesthetic-of-modular-beauty.html"
 title: "韓国ABLY初PB「BYBLY」誕生。毛穴を消し去るダルクッションと革新的なリフィルショットの全貌"
 slug: "ably-bybly-korea-beauty-launch-guide"
 date: 2026-03-26T16:52:49+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/the-legend-of-seongsu-why-zesty-saloons.html"
 title: "聖水洞の絶対王者！「ゼスティサルーン」のわさびシュリンプバーガーが革命的すぎる件"
 slug: "zesty-saloon-seongsu-shrimp-burger-guide"
 date: 2026-05-05T16:20:05+09:00

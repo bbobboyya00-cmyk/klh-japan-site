@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/essential-guide-obtaining-foreigners.html"
 title: "ソウルでの不動産購入を成功させる：外国人不動産登記用登録番号ガイド"
 slug: "seoul-real-estate-foreigner-registration-number-guide"
 date: 2026-03-19T10:26:01+09:00

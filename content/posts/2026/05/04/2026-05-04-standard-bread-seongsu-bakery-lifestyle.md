@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/standard-bread-seongsu-architectural.html"
 title: "聖水洞の新たなランドマーク、職人技が光る「スタンダードブレッド」の極上トースト体験"
 slug: "standard-bread-seongsu-bakery-lifestyle"
 date: 2026-04-27T19:55:32+09:00

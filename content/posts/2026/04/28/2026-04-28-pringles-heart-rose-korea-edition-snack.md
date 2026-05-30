@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/seouls-sweetest-secret-pringles-heart.html"
 title: "韓国限定・世界初の上陸。メガボックスとGSザ・フレッシュで出会う「プリングルズ・ハート・ミニ・ローズ」の誘惑"
 slug: "pringles-heart-rose-korea-edition-snack"
 date: 2026-04-11T19:34:01+09:00

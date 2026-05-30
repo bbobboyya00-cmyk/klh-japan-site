@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/sanyi-garden-haenams-premier.html"
 title: "海南の自然と芸術が響き合う、極上のヒーリング空間「サニ庭園」"
 slug: "sanyi-garden-haenam-horticultural-sanctuary"
 date: 2026-04-20T10:05:36+09:00

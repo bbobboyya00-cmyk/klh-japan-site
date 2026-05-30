@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/authentic-sapporo-soup-curry-gem.html"
 title: "合井の隠れ家で発見！とろけるチーズご飯と絶品スープカレーのマリアージュ"
 slug: "kareshi-hapjeong-sapporo-soup-curry"
 date: 2026-05-06T19:57:01+09:00

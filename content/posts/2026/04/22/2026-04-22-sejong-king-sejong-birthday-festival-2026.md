@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/sejongs-legacy-illuminated-cultural.html"
 title: "2026年5月、世宗特別自治市で出会うハングルの美学。第629回 世宗大王誕辰記念ガイド"
 slug: "sejong-king-sejong-birthday-festival-2026"
 date: 2026-03-26T19:38:31+09:00

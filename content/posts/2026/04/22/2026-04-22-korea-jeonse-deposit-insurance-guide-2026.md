@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/safeguarding-your-assets-definitive.html"
 title: "2026年最新版：韓国での資産を守る「チョンセ保証保険」完全ガイド 🛡️"
 slug: "korea-jeonse-deposit-insurance-guide-2026"
 date: 2026-03-25T10:14:11+09:00

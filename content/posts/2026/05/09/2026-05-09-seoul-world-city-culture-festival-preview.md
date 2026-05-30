@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/your-ultimate-preview-to-2026-seoul.html"
 title: "2026年ソウル世界都市文化フェスティバル：DDPで世界を旅する2日間を先行体験！"
 slug: "seoul-world-city-culture-festival-preview"
 date: 2026-05-07T16:13:06+09:00

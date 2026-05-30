@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/gangnam-color-moa-curating-your.html"
 title: "究極のパーソナルカラー診断、江南「カラーモア」で自分だけの輝きを見つける旅 ✨"
 slug: "gangnam-color-moa-signature-hue"
 date: 2026-04-17T10:47:16+09:00

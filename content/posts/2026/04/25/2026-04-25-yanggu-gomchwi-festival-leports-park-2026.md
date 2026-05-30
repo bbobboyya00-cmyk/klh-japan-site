@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/verdant-sophistication-at-yanggu.html"
 title: "2026年、春の香りを贈る。韓国・楊口「ゴムチ祭り」究極のハイエンド・ガイド"
 slug: "yanggu-gomchwi-festival-leports-park-2026"
 date: 2026-04-03T10:19:20+09:00

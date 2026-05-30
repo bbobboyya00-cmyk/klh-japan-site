@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/hongdaes-cutest-omurice-spot-omeal-is.html"
 title: "弘大の隠れ家カフェ「Oh! Meal」で発見！絶品オムライスとパスタに舌鼓！"
 slug: "oh-meal-hongdae-omurice-pasta"
 date: 2026-05-12T10:05:40+09:00

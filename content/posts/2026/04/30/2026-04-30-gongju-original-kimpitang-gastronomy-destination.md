@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/gongju-gastronomy-destination-original.html"
 title: "公州の美食遺産、元祖キムピタンの深淵に触れる：ピタンキムタン"
 slug: "gongju-original-kimpitang-gastronomy-destination"
 date: 2026-04-14T10:25:18+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/the-hyundai-seoul-your-ultimate-guide.html"
 title: "ソウルのトレンド最前線！ザ・ヒュンダイ・ソウルで出会う絶品スイーツ体験"
 slug: "hyundai-seoul-yeouido-trendiest-hub"
 date: 2026-05-03T10:21:44+09:00

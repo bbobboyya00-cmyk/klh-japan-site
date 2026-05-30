@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/national-institute-of-biological.html"
 title: "仁川の秘密の森、国立生物資源館で出会う地球の宝物"
 slug: "incheon-national-institute-biological-resources"
 date: 2026-04-15T10:24:29+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/kidult-paradise-real-2026-eoreuni.html"
 title: "「大人買い」が止まらない！建大コモングラウンドで開催中のオルニマーケット潜入レポ"
 slug: "eoreuni-market-common-ground-review"
 date: 2026-05-11T19:08:07+09:00

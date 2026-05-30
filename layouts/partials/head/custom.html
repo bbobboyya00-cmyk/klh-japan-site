@@ -32,15 +32,6 @@
 
 <link rel="alternate" hreflang="ja" href="{{ .Permalink }}" />
 
-{{ if .Params.en_url }}
-  <link rel="alternate" hreflang="en" href="{{ .Params.en_url }}" />
-  <link rel="alternate" hreflang="x-default" href="{{ .Params.en_url }}" />
-{{ else if .IsHome }}
-  <link rel="alternate" hreflang="en" href="https://en.klifehack.com/" />
-  <link rel="alternate" hreflang="x-default" href="https://en.klifehack.com/" />
-{{ else }}
-  <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
-{{ end }}
 
 {{ if or (eq .Kind "taxonomy") (eq .Kind "term") }}
   <meta name="robots" content="noindex, follow">

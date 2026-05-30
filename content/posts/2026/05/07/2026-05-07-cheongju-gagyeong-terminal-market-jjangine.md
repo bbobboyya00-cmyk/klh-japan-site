@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/cheongjus-hidden-gem-gagyeong-terminal.html"
 title: "清州・加慶ターミナル市場：地元民が愛する絶品グルメと活気溢れる日常"
 slug: "cheongju-gagyeong-terminal-market-jjangine"
 date: 2026-05-02T19:04:36+09:00

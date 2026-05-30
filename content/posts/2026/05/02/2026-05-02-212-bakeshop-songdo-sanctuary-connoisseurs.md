@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/212-bake-shop-songdo-sanctuary-for.html"
 title: "宋都セントラルパークの隠れ家：212ベイクショップで味わう至福の時間"
 slug: "212-bakeshop-songdo-sanctuary-connoisseurs"
 date: 2026-04-19T16:10:48+09:00

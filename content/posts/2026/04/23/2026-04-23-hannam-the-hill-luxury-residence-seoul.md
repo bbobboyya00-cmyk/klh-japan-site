@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/hannam-hill-fortress-of-koreas-ultra.html"
 title: "ソウル最高峰のラグジュアリーレジデンス「漢南ザ・ヒル」：セレブリティが選ぶ究極の私的空間"
 slug: "hannam-the-hill-luxury-residence-seoul"
 date: 2026-03-27T16:04:03+09:00

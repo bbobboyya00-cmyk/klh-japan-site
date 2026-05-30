@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/a-symphony-of-falling-stars-450-year.html"
 title: "韓国安東・河回船遊縄火遊びガイド：芙蓉台から降り注ぐ伝統の光の雨を愉しむ"
 slug: "andong-hahoe-seonyu-julbul-nori-complete-guide"
 date: 2026-03-24T16:52:22+09:00

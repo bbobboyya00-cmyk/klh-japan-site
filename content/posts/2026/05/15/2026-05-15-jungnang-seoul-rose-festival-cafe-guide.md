@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/escape-crowds-at-jungnang-seoul-rose.html"
 title: "2026年中浪ソウルバラ祭り完全攻略！地元民が教える秘密のバラカフェ体験記"
 slug: "jungnang-seoul-rose-festival-cafe-guide"
 date: 2026-05-15T16:39:50+09:00

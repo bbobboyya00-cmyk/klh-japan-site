@@ -1,6 +1,5 @@
 ---
 title: "【統営・西湖市場】50年の歳月が醸す究極の解毒、名店「万成フグ店」で触れる五感の美食"
-en_url: "https://en.klifehack.com/2026/04/tongyeong-gastronomy-transcendent.html"
 slug: "manseong-bokjip-tongyeong-pufferfish-guide"
 date: 2026-04-13T16:07:17+09:00
 draft: true

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/songdo-yeokjeon-market-confluence-of.html"
 title: "仁川松島駅前市場：歴史とグルメを巡るタイムトリップガイド"
 slug: "songdo-yeokjeon-market-incheon-heritage"
 date: 2026-04-06T16:07:19+09:00

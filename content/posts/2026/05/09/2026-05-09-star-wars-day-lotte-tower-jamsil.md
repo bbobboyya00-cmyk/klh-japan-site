@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/unlocking-force-locals-guide-to-star.html"
 title: "2026年「スター・ウォーズ・デイ」潜入レポ！ロッテワールドタワーの屋外広場が銀河系に変身"
 slug: "star-wars-day-lotte-tower-jamsil"
 date: 2026-05-07T10:54:26+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/mimiok-hanok-shabu-shabu-gem-made.html"
 title: "龍山の韓屋で味わう至高のソウルスタイル・シャブシャブ「ミミオク」完全ガイド"
 slug: "mimiok-hanok-shabu-shabu-yongsan"
 date: 2026-05-02T16:15:21+09:00

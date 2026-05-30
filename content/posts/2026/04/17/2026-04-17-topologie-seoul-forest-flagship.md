@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/a-new-paradigm-of-modular-utility.html"
 title: "ソウルの森に誕生した Topologie 韓国初フラッグシップ：2026 SS ‘The Starbound’ の世界 🧭"
 slug: "topologie-seoul-forest-flagship"
 date: 2026-03-08T10:43:34+09:00

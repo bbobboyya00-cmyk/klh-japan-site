@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/jamsil-cafe-pepper-my-top-pick-for.html"
 title: "✨【保存版】ソンニダンキル カフェ巡りなら外せない！チャムシル カフェペッパーで絶品グルテンフリー デザートを堪能！"
 slug: "jamsil-songnidan-gil-cafe-pepper-desserts"
 date: 2026-05-13T19:19:20+09:00

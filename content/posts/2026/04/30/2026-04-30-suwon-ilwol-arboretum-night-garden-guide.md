@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/suwon-ilwol-arboretum-nighttime.html"
 title: "水原の夜を彩る幻想的な光のシンフォニー「日月植物園」ナイトガーデン完全ガイド"
 slug: "suwon-ilwol-arboretum-night-garden-guide"
 date: 2026-04-16T10:53:05+09:00

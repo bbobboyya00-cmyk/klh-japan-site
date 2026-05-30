@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/o-wols-gimbap-nakseongdae-your-2026.html"
 title: "行列必至！ソウル・楽聖大「五月のキンパ」2026年最新予約攻略ガイド"
 slug: "owols-gimbap-nakseongdae-seoul-rolls"
 date: 2026-04-29T19:27:27+09:00

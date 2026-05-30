@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seongsus-legendary-gamjatang-2026.html"
 title: "2026年版！聖水洞伝説のカムジャタンを巡る旅：ソムンナン聖水カムジャタン"
 slug: "seongsu-legendary-gamjatang-pork-stew"
 date: 2026-04-29T16:53:26+09:00

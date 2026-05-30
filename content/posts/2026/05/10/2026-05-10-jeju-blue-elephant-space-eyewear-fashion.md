@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/unveiling-jejus-hidden-gem-blue.html"
 title: "知る人ぞ知る、済州島の隠れ家！「ブルーエレファントスペース」で特別な体験を"
 slug: "jeju-blue-elephant-space-eyewear-fashion"
 date: 2026-05-10T19:34:24+09:00

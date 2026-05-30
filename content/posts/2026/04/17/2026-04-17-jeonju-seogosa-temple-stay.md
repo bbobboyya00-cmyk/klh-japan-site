@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/seogosa-temple-stay-pan-gyo-locals.html"
 title: "全州(チョンジュ)西古寺(ソゴサ)で心癒すテンプルステイ体験：静寂の中で見つける本当の自分"
 slug: "jeonju-seogosa-temple-stay"
 date: 2026-03-07T10:41:51+09:00

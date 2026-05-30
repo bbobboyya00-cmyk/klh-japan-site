@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/seomyeon-sanctuary-defining-high-end.html"
 title: "釜山西面の中心で出会う究極の小顔美学、カインミガのハイエンドケア 💎"
 slug: "busan-seomyeon-gainmiga-facial-contouring"
 date: 2026-04-14T16:56:23+09:00

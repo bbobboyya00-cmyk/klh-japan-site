@@ -1,6 +1,5 @@
 ---
 title: "2026年最新版｜ロッテワールド完全攻略ガイド：都心のファンタジー、その洗練された楽しみ方"
-en_url: "https://en.klifehack.com/2026/04/lotte-world-jamsil-ultimate-multi.html"
 slug: "jamsil-lotte-world-lifestyle-guide"
 date: 2026-04-12T10:59:44+09:00
 draft: true

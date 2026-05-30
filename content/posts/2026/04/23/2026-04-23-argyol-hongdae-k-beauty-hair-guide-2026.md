@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/beyond-neon-precision-of-k-beauty.html"
 title: "2026年ソウル美容旅：弘大の最旬サロン『アールギョル』で叶える至高のK-Beauty体験"
 slug: "argyol-hongdae-k-beauty-hair-guide-2026"
 date: 2026-03-26T10:25:14+09:00

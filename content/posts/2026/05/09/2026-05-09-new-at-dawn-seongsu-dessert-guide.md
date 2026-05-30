@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seoul-insider-guide-why-new-at-dawn.html"
 title: "聖水洞の秘密基地！「NEW AT DAWN 聖水」で味わう至福のデザートと絶景ルーフトップ"
 slug: "new-at-dawn-seongsu-dessert-guide"
 date: 2026-05-06T10:04:12+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/your-2026-preview-olive-young.html"
 title: "2026年プレビュー：明洞の心臓部、オリーブヤング明洞タウン店で最旬Kコスメを先取り！"
 slug: "olive-young-myeongdong-town-kbeauty"
 date: 2026-04-26T19:29:15+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/2026-local-guide-is-golmok-tteokbokki.html"
 title: "【ソウル】地元民が教える「ソウル3大トッポッキ」の聖地！文井洞のコルモックトッポッキは絶対外せない！！"
 slug: "seoul-golmok-tteokbokki-munjeong-guide"
 date: 2026-05-13T15:38:29+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/waku-waku-gwangalli-high-end.html"
 title: "広安里に輝くエンターテイメントの聖地「ワクワク広安里店」ハイエンドガイド"
 slug: "waku-waku-gwangalli-entertainment-oasis"
 date: 2026-04-27T16:01:50+09:00

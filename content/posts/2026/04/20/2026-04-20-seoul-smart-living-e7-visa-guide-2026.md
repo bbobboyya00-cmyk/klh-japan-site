@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/mastering-e-7-professional-visa.html"
 title: "ソウルでプロフェッショナルとして生きるためのE-7ビザ完全ガイド 2026年度版"
 slug: "seoul-smart-living-e7-visa-guide-2026"
 date: 2026-03-20T19:49:42+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/yeongjongdos-maedream-grand.html"
 title: "永宗島 メイドリーム：教会を再生した幻想的な空間で味わうハイエンドな休息"
 slug: "yeongjongdo-maedream-grand-cafe-escape"
 date: 2026-04-22T19:26:09+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seoul-insider-guide-discovering-curated.html"
 title: "聖水洞で行くべき場所はここだけ！29CM SEONGSUの最新キュレーションガイド"
 slug: "seoul-seongsu-29cm-lifestyle-guide"
 date: 2026-05-03T19:14:31+09:00

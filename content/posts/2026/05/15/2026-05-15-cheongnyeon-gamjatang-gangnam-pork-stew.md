@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/massive-pork-bone-tower-at-cheongnyeon.html"
 title: "江南で超話題！青年カムジャタン江南駅店のタワー級ボリュームに驚愕✨"
 slug: "cheongnyeon-gamjatang-gangnam-pork-stew"
 date: 2026-05-15T13:52:11+09:00

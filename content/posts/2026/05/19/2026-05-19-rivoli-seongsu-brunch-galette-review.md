@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/2026-seongsu-dong-guide-visiting-rivoli.html"
 title: "聖水洞の「Rivoli」正直レポ！パリ気分で味わうガレットとブランチ体験記"
 slug: "rivoli-seongsu-brunch-galette-review"
 date: 2026-05-19T19:22:04+09:00

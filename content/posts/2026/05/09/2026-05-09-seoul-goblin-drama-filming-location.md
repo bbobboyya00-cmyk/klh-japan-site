@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/stepping-into-kim-shins-sanctuary-real.html"
 title: "伝説のドラマ『トッケビ』の世界へ！ソウルの隠れた名所「雲峴宮洋館」現地レポート"
 slug: "seoul-goblin-drama-filming-location"
 date: 2026-05-07T19:20:00+09:00

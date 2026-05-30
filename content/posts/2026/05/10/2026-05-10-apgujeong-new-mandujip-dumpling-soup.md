@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/unveiling-apgujeongs-best-kept-secret.html"
 title: "狎鴎亭ニューマンドゥチプ：地元民が愛する絶品マンドゥクッの隠れ家"
 slug: "apgujeong-new-mandujip-dumpling-soup"
 date: 2026-05-08T16:35:39+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/chasing-iron-bag-chef-2026-guide-to.html"
 title: "2026年も行列必至！西村「度量（ドリャン）」の絶品東坡肉とシェフの温かいおもてなし"
 slug: "doryang-seochon-chinese-dining-guide"
 date: 2026-04-28T19:38:22+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/olive-young-n-seongsu-lounge-exclusive.html"
 title: "聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息"
 slug: "seongsu-olive-young-n-lounge"
 date: 2026-03-15T10:08:06+09:00

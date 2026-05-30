@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/apgujeong-rodeo-gastronomy-timeless.html"
 title: "アックジョン・ロデオの伝説を味わう。究極の鶏カルビ専門店『タクロガ』本店完全ガイド"
 slug: "apgujeong-rodeo-dak-euro-ga-dakgalbi"
 date: 2026-04-09T16:31:18+09:00

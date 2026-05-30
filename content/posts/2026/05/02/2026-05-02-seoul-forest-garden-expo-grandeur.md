@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seoul-forest-urban-oasis-of.html"
 title: "ソウル森で紡がれる緑の叙事詩：2026年ソウル国際庭園博覧会ガイド"
 slug: "seoul-forest-garden-expo-grandeur"
 date: 2026-04-21T19:52:24+09:00

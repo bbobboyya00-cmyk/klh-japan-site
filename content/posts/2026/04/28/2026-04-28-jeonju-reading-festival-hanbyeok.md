@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/jeonju-hanbyeoks-literary-canvas-2026.html"
 title: "「全州韓壁文化館」：歴史と知性が交差する秋、全州読書大典で出会う最上の休息"
 slug: "jeonju-reading-festival-hanbyeok"
 date: 2026-04-10T16:35:45+09:00

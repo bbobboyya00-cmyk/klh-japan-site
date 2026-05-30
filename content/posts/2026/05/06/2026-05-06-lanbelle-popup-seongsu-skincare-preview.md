@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/lanbelle-pop-ups-green-escape-2026.html"
 title: "聖水の隠れ家スポット！ランベル(Lanbelle)ポップアップで癒やしのスキンケア体験"
 slug: "lanbelle-popup-seongsu-skincare-preview"
 date: 2026-04-30T16:20:56+09:00

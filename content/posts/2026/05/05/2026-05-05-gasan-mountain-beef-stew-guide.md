@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/scaling-epic-beef-mountain-gasan.html"
 title: "2026年最新版：加山デジタル団地の名物！山盛りムルカルビ＆百年プルコギへの期待"
 slug: "gasan-mountain-beef-stew-guide"
 date: 2026-04-28T16:52:51+09:00

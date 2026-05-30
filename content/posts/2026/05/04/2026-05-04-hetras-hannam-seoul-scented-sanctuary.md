@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/hetras-hannam-seouls-scented-sanctuary.html"
 title: "ヘトラス漢南：洗練された香りが織りなす極上のライフスタイル空間"
 slug: "hetras-hannam-seoul-scented-sanctuary"
 date: 2026-04-25T16:09:22+09:00

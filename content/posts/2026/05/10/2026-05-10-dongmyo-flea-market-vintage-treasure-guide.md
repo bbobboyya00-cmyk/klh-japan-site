@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seoul-vintage-treasure-hunt-ultimate.html"
 title: "親しい友人にだけ教えたい！ソウル東廟フリーマーケットの隠れた魅力"
 slug: "dongmyo-flea-market-vintage-treasure-guide"
 date: 2026-05-09T16:21:37+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/maedrim-120-year-old-church-reimagined.html"
 title: "メイドリム（Made 林）：120年の歴史を刻む教会がカフェへ、永宗島の文化空間"
 slug: "maedrim-incheon-church-cafe-guide"
 date: 2026-03-22T19:16:20+09:00

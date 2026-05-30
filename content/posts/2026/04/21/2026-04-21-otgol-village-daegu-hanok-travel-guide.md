@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/a-sanctuary-of-scholarly-grace.html"
 title: "400年の時を刻む大邱・漆谷（オッコル）村。伝統美と静寂が交差するハイエンドな旅の休息地"
 slug: "otgol-village-daegu-hanok-travel-guide"
 date: 2026-03-22T16:41:58+09:00

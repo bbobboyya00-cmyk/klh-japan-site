@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/the-68th-miryang-arirang-festival.html"
 title: "2026年 密陽アリラン大祝祭：伝統と革新が交差する感動体験ガイド"
 slug: "miryang-arirang-festival-2026-guide"
 date: 2026-03-28T19:19:09+09:00

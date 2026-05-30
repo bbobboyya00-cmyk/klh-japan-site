@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/anoi-hair-mapo-yeonnam-masterclass-in.html"
 title: "延南洞（ヨンナムドン）の最旬ヘアサロン「A.NOI（エイノイ）」完全ガイド。建築美とパーソナル技術の融合"
 slug: "a-noi-hair-salon-yeonnam-lifestyle-guide"
 date: 2026-03-30T19:34:44+09:00

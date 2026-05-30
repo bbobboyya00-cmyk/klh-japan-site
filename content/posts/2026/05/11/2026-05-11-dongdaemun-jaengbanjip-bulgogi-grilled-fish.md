@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/authentic-charcoal-bulgogi-and-stew.html"
 title: "【東大門】地元っ子がこっそり教える名店！「ジェンバンジッ」の絶品プルコギ定食"
 slug: "dongdaemun-jaengbanjip-bulgogi-grilled-fish"
 date: 2026-05-11T07:19:56+09:00

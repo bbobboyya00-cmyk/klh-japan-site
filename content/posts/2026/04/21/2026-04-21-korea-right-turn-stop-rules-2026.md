@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/navigating-pause-essential-2026-guide.html"
 title: "ソウル生活の必須知識：韓国の「右折一時停止」完全攻略ガイド"
 slug: "korea-right-turn-stop-rules-2026"
 date: 2026-03-21T16:09:50+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seouls-culinary-landmark-tous-les-jours.html"
 title: "芸術的なパンの聖地、ソウル・東大門の「トゥレジュール本店」完全ガイド"
 slug: "seoul-tous-les-jours-flagship-bakery"
 date: 2026-04-26T10:22:13+09:00

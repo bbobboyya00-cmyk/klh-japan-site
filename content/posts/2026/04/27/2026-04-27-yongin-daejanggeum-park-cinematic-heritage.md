@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/cinematic-grandeur-architectural-time.html"
 title: "龍仁大長今（ヨンイン・チャングム）パーク：時空を超越した麗しの叙情詩"
 slug: "yongin-daejanggeum-park-cinematic-heritage"
 date: 2026-04-09T19:42:40+09:00

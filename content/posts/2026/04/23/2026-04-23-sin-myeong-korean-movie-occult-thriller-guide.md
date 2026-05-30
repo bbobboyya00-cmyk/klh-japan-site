@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/the-shamanic-shadows-of-power-unmasking.html"
 title: "呪術と権力の狂騒曲、韓国映画『神明』が暴く2026年の真実と聖地巡礼の記録"
 slug: "sin-myeong-korean-movie-occult-thriller-guide"
 date: 2026-03-29T19:20:01+09:00

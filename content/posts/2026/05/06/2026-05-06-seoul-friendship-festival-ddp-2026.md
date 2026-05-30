@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seoul-friendship-festival-2026-global.html"
 title: "2026年ソウル世界都市文化祭り：DDPで世界一周の旅を体験！"
 slug: "seoul-friendship-festival-ddp-2026"
 date: 2026-05-01T19:57:54+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/sinsas-opening-plastic-surgery-my.html"
 title: "新沙駅のオフニング美容外科でリジュラン6cc！手打ち施術の丁寧さに感動した正直レポ"
 slug: "sinsa-opening-plastic-surgery-review"
 date: 2026-05-20T06:32:55+09:00

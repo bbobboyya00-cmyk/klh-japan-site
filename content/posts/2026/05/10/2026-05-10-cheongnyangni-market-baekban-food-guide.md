@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/the-ultimate-6000-won-feast-why-seoul.html"
 title: "清涼里の隠れ家！6,000ウォンの幸せ「忠清道食堂」現地エディターの秘密のガイド"
 slug: "cheongnyangni-market-baekban-food-guide"
 date: 2026-05-09T19:14:06+09:00

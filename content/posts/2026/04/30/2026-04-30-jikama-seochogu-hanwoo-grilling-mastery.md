@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/seocho-gus-jikhwa-jangin-masterclass-in.html"
 title: "直火匠人 教大店：ソウルの美食家を唸らせる極上の和牛体験"
 slug: "jikama-seochogu-hanwoo-grilling-mastery"
 date: 2026-04-16T19:02:59+09:00

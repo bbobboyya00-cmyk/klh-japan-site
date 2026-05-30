@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/the-korean-collagen-revolution.html"
 title: "2026年、ソウルの美意識が選ぶ「レッドタッチ・プロ」。コラーゲンを呼び覚ます、次世代の肌管理"
 slug: "seoul-kbeauty-redtouch-pro"
 date: 2026-03-16T10:33:39+09:00

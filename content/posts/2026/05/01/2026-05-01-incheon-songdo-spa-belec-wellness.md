@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/songdo-sanctuary-masterclass-in-high.html"
 title: "仁川・松島セントラルパークを望む極上の癒やし、スパ・ザ・ベレックの贅沢体験"
 slug: "incheon-songdo-spa-belec-wellness"
 date: 2026-04-18T19:45:54+09:00

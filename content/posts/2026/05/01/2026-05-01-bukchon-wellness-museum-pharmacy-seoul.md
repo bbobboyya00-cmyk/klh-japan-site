@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/bukchon-wellness-museum-sanctuary-of.html"
 title: "北村の静寂と調和する癒やしの聖地、北村ウェルネスミュージアムで体験する究極のセルフケア"
 slug: "bukchon-wellness-museum-pharmacy-seoul"
 date: 2026-04-17T19:18:09+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/seouls-seven-eleven-elevating-urban.html"
 title: "セブンイレブン プレミアム ライフスタイル ガイド ソウル フラッグシップ"
 slug: "seven-eleven-seoul-urban-essentials-curation"
 date: 2026-04-21T16:56:00+09:00

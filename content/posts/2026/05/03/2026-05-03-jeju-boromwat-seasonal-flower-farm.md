@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/jeju-boromwat-symphony-of-seasonal.html"
 title: "済州の風が育む色彩の楽園、ボロムワッで出会う至高の春"
 slug: "jeju-boromwat-seasonal-flower-farm"
 date: 2026-04-22T10:36:23+09:00

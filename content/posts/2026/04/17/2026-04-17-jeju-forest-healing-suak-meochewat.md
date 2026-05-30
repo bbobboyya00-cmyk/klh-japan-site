@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/escape-to-verdant-sanctuary-suak-oreum.html"
 title: "済州島、心癒される森の道へ：水岳オルムとモチェワッの秘密 🌿"
 slug: "jeju-forest-healing-suak-meochewat"
 date: 2026-03-07T16:16:33+09:00

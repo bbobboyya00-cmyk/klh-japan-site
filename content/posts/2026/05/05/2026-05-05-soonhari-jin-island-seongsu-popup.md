@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/refreshing-escape-to-soonhari-jin.html"
 title: "聖水のピクセルアートな島へ！「スナリ・ジン・アイランド」2026年ポップアップ完全ガイド"
 slug: "soonhari-jin-island-seongsu-popup"
 date: 2026-04-29T10:19:42+09:00

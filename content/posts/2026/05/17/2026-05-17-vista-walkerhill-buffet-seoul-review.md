@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/i-paid-198000-krw-for-vista-walkerhill.html"
 title: "1人198,000ウォンの価値はある？ビスタウォーカーヒル「ザ・ビュッフェ」週末ランチの正直レポ"
 slug: "vista-walkerhill-buffet-seoul-review"
 date: 2026-05-17T07:55:27+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/emis-k-fashion-brand-redefining.html"
 title: "K-POPアイドルも夢中！ 韓国発「emis（イミス）」の魅力に迫る最旬ガイド ✨"
 slug: "emis-kfashion-seongsu-guide"
 date: 2026-03-09T19:50:24+09:00

@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/aewols-sunset-sanctuary-why-haejigae.html"
 title: "済州島・涯月（エウォル）の海を飲み込む贅沢。韓屋と絶景が織りなす『ヘジゲ（海知開）』完全ガイド"
 slug: "jeju-aewol-haejigae-cafe-guide"
 date: 2026-03-06T10:41:23+09:00

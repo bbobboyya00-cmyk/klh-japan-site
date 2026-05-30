@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/myeongdong-arts-theater-juno-hairs.html"
 title: "明洞芸術劇場店で体験する、韓国最新ヘアスタイルの極意"
 slug: "juno-hair-myeongdong-arts-theater"
 date: 2026-04-23T19:58:01+09:00

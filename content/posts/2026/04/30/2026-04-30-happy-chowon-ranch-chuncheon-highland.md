@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/happy-chowon-ranch-chuncheons-highland.html"
 title: "春川のアルプス、ハッピーチョウォン牧場で出逢う極上のパノラマ"
 slug: "happy-chowon-ranch-chuncheon-highland"
 date: 2026-04-15T16:04:14+09:00

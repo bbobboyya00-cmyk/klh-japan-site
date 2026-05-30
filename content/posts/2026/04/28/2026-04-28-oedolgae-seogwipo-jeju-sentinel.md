@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/oedolgae-seogwipo-high-end-guide-to.html"
 title: "西帰浦外ドルゲ：済州の絶景を巡るハイエンドガイド"
 slug: "oedolgae-seogwipo-jeju-sentinel"
 date: 2026-04-10T10:33:46+09:00

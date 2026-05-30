@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/urban-sanctuary-navigating-pokemon-mega.html"
 title: "聖水洞・ソウルの森がポケモンの世界に。2026 メガフェスタ完全ガイド"
 slug: "pokemon-mega-festa-seoul-forest"
 date: 2026-04-20T16:26:13+09:00

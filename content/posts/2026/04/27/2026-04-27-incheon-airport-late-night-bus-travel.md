@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/04/incheon-airport-nocturne-high-end-late.html"
 title: "仁川国際空港：眠らぬ旅人を支える深夜リムジンバスの完全ガイド"
 slug: "incheon-airport-late-night-bus-travel"
 date: 2026-04-08T19:40:00+09:00

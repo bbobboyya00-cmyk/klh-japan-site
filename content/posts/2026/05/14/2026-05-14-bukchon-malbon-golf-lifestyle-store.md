@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/bukchon-malbon-where-traditional-hanok.html"
 title: "北村マルボン韓屋店！伝統とモダンが融合したプレミアムゴルフファッションの聖地を巡る✨"
 slug: "bukchon-malbon-golf-lifestyle-store"
 date: 2026-05-14T19:12:04+09:00

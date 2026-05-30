@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/minitmute-hannam-seouls-chic-lifestyle.html"
 title: "漢南洞の感性を纏う、ミニミュート・ハンナム・フラッグシップストア完全ガイド"
 slug: "minitmute-hannam-seoul-chic-lifestyle"
 date: 2026-04-24T19:47:12+09:00

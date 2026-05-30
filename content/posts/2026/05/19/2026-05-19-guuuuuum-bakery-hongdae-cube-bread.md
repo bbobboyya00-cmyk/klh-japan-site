@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/i-waited-10-minutes-for-table-at.html"
 title: "弘大入口駅から徒歩5分！GUUUUUUM BAKERY 弘大店で人気のメロンパンが完売していた件"
 slug: "guuuuuum-bakery-hongdae-cube-bread"
 date: 2026-05-19T09:46:41+09:00

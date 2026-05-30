@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/garak-mall-sky-park-epicenter-of-koreas.html"
 title: "ソウルの空の下で出会う究極のベーカリー：可楽モール『全国パン自慢』ガイド"
 slug: "garak-mall-national-bread-pride"
 date: 2026-04-20T19:16:20+09:00

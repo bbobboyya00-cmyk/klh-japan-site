@@ -1,5 +1,4 @@
 ---
-en_url: "https://en.klifehack.com/2026/05/ultimate-purple-tea-therapy-teafference.html"
 title: "江南の隠れ家で「パープルティー」体験。心身を整える究極のティーラピー、ティーファレンス江南。"
 slug: "teafference-gangnam-purple-tea-therapy"
 date: 2026-05-10T16:10:37+09:00
