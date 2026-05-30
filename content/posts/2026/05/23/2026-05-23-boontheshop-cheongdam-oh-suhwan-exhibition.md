@@ -2,7 +2,7 @@
 title: "清潭洞のBOONTHESHOP Cheongdamで開催中。呉守煥個展「After Gesture」の静かな熱気に触れてきました"
 slug: "boontheshop-cheongdam-oh-suhwan-exhibition"
 date: 2026-05-23T11:06:46+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/23/boontheshop-cheongdam-oh-suhwan-exhibition/khack_1779501992_1.webp"
 description: "2026年6月10日まで清潭洞のBOONTHESHOP地下1階で開催中の呉守煥（オ・スファン）個展。洗練された空間で楽しむ現代アートの記録。無料入場や駐車情報も詳しくまとめました。"
 categories: ["K-Pulse Trending"]

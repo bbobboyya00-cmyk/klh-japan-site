@@ -2,7 +2,7 @@
 title: "全州韓屋村で優雅な韓服体験：『貴族衣装室』で叶える特別な一日"
 slug: "jeonju-hanok-village-hanbok-rental-gwijoguisangsil"
 date: 2026-03-31T16:10:40+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/24/jeonju-hanok-village-hanbok-rental-gwijoguisangsil/khack_1777003556_0.webp"
 description: "K-Life Hack ディレクターKが全州韓屋村の『貴族衣装室』をご紹介。伝統韓服からレトロな開化期衣装まで、豊富な選択肢とプロのスタイリングで特別な思い出を。"
 categories: ["Cultural Nuance"]

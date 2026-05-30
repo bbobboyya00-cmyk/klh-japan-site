@@ -2,7 +2,7 @@
 title: "✨【保存版】ソンニダンキル カフェ巡りなら外せない！チャムシル カフェペッパーで絶品グルテンフリー デザートを堪能！"
 slug: "jamsil-songnidan-gil-cafe-pepper-desserts"
 date: 2026-05-13T19:19:20+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/13/jamsil-songnidan-gil-cafe-pepper-desserts/khack_1778667473_1.webp"
 description: "ソウル在住インフルエンサーがこっそり教える、チャムシル カフェペッパーの魅力！映える店内と身体に優しいグルテンフリー デザートは、ソウルカフェ巡りの必須コースですよ！"
 categories: ["K-Food Insider"]

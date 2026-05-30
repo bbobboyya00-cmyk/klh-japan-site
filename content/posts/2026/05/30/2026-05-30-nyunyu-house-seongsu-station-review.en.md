@@ -2,7 +2,7 @@
 title: "NYUNYU HOUSE Seongsu Station Branch Review: Exploring Four Floors of Kitsch Fashion"
 slug: "nyunyu-house-seongsu-station-review"
 date: 2026-05-30T21:49:03+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/30/nyunyu-house-seongsu-station-review/khack_1780145326_1.webp"
 description: "I explored the massive NYUNYU HOUSE in Seongsu to find the best 2026 spring accessory trends. From teddy bear keyrings to minimalist bags, here is what to expect across four floors."
 categories: ["K-Beauty Insider"]

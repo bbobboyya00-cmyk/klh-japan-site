@@ -2,7 +2,7 @@
 title: "済州空港の荷物配送ジムキャリー（Zimcarry）体験記！手ぶらで楽しむ済州島旅行完全攻略"
 slug: "zimcarry-jeju-airport-luggage-service"
 date: 2026-05-20T22:50:24+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/20/zimcarry-jeju-airport-luggage-service/khack_1779285006_1.webp"
 description: "済州島旅行の最終日、重いスーツケースを持って移動するのはもう終わり！済州空港にあるジムキャリー（Zimcarry）の荷物配送サービスを実際に使ってみた正直な感想をまとめました。5月の爽やかな済州を手ぶらで満喫する秘訣をお教えします。"
 categories: ["K-Travel Hacks"]

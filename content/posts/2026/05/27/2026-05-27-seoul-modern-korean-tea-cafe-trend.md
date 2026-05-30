@@ -2,7 +2,7 @@
 title: "ソウル・三清洞の伝統茶カフェ文化。韓屋空間で楽しむ韓国茶と茶菓の魅力"
 slug: "seoul-samcheongdong-traditional-tea-culture"
 date: 2026-05-27T09:50:00+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/food/food1.webp"
 description: "ソウル・三清洞や北村エリアで見られる韓国伝統茶カフェ文化を紹介します。五味子茶や韓菓、韓屋空間の特徴など、初めて訪れる人向けに整理しました。"
 categories: ["K-Food Insider"]

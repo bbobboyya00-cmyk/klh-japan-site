@@ -2,7 +2,7 @@
 title: "駅三 ソディスエスプレッソバー：オフィス街のオアシス体験記"
 slug: "sodis-espresso-bar-yeoksam-oasis"
 date: 2026-05-22T15:10:14+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/22/sodis-espresso-bar-yeoksam-oasis/khack_1779430206_1.webp"
 description: "ソウル駅三駅近くの「ソディスエスプレッソバー」へ！看板メニューのナッティクリームラテやスコッチクリームラテ、エッグタルトの美味しさに感動。オフィス街の隠れた人気カフェの魅力と、平日昼間でも満席になる理由を徹底解説します。"
 categories: ["K-Food Insider"]

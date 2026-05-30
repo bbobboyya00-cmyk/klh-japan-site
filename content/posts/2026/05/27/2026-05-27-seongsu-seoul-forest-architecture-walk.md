@@ -2,7 +2,7 @@
 title: "ソウル・聖水洞とソウルの森。工場跡地から生まれた空間デザインを歩く"
 slug: "seongsu-seoul-forest-architecture-walk"
 date: 2026-05-27T10:10:00+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/tr1.webp"
 description: "ソウル・聖水洞（ソンスドン）とソウルの森エリアを歩きながら、古い工場建築と現代的なデザイン空間が融合した街並みを紹介します。アクセス方法や散策ルートも整理しました。"
 categories: ["K-Travel Hacks"]

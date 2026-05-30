@@ -2,7 +2,7 @@
 title: "聖水の隠れ家スポット！ランベル(Lanbelle)ポップアップで癒やしのスキンケア体験"
 slug: "lanbelle-popup-seongsu-skincare-preview"
 date: 2026-04-30T16:20:56+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/lanbelle-popup-seongsu-skincare-preview/khack_1778039075_1.webp"
 description: "聖水の中心で自然を感じる「ランベル」の10周年ポップアップを徹底ガイド。豪華なサンプルキットから現品が当たるゲームまで、2026年の再来が待ち遠しい現地の熱気をエディターがこっそり教えます。"
 categories: ["K-Beauty Insider"]

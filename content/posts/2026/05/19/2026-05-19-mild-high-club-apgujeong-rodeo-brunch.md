@@ -2,7 +2,7 @@
 title: "圧鴎亭ロデオの「Mild High Club」で話題のダッチベイビーパンケーキを食べてきた話"
 slug: "mild-high-club-apgujeong-rodeo-brunch"
 date: 2026-05-19T10:08:07+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/19/mild-high-club-apgujeong-rodeo-brunch/khack_1779152775_1.webp"
 description: "狎鴎亭ロデオ駅から徒歩圏内にあるマイルドハイクラブ狎鴎亭店は、日常を忘れさせる癒しの空間。新鮮な食材と手作りソースが織りなす絶品ブランチメニューを体験！特に窓際席でのんびり過ごす時間は最高ですよ。"
 categories: ["K-Food Insider"]

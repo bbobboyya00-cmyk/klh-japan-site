@@ -2,7 +2,7 @@
 title: "弘大の路地裏で見つけた自分に似合う眉毛デザイン。Studio Obeliaの体験記"
 slug: "studio-obelia-hongdae-eyebrow-styling"
 date: 2026-05-26T15:04:34+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/26/studio-obelia-hongdae-eyebrow-styling/khack_1779775456_1.webp"
 description: "弘大入口駅から徒歩5分の場所にあるStudio Obelia。1対1のプライベート空間で、一人ひとりの目の形に合わせた自然な眉デザインを提案してくれます。"
 categories: ["K-Beauty Insider"]

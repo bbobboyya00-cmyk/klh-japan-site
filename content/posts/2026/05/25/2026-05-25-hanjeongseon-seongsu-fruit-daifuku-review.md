@@ -2,7 +2,7 @@
 title: "ハンジョンソン（Hanjeongseon）聖水本店のフルーツ大福正直レポ！ドバイ大福のリアルな待ち時間とおすすめメニュー"
 slug: "hanjeongseon-seongsu-fruit-daifuku-review"
 date: 2026-05-25T15:04:31+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/25/hanjeongseon-seongsu-fruit-daifuku-review/khack_1779689056_1.webp"
 description: "ソウルで話題のプレミアムフルーツ大福ブランド「ハンジョンソン（Hanjeongseon）」。大粒のフルーツを薄いお餅で包んだ贅沢な味わいと、SNSで話題の生イチゴドバイ大福の魅力、聖水本店の混雑状況やおすすめの組み合わせを詳しくご紹介します。"
 categories: ["K-Food Insider"]

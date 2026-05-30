@@ -2,7 +2,7 @@
 title: "2026年最新版：韓国での資産を守る「チョンセ保証保険」完全ガイド 🛡️"
 slug: "korea-jeonse-deposit-insurance-guide-2026"
 date: 2026-03-25T10:14:11+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/22/korea-jeonse-deposit-insurance-guide-2026/khack_1776841377_0.webp"
 description: "2026年度の韓国生活で最も重要なチョンセ保証保険をディレクターKが徹底解説。HUG/HF/SGIの比較から、126%ルールの仕組み、契約同行サービスまで、あなたの資産を守るハイエンドな知恵を凝縮しました。"
 categories: ["Smart Living"]

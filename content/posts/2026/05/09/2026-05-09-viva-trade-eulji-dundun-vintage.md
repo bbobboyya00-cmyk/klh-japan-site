@@ -2,7 +2,7 @@
 title: "東大門の隠れ家？200坪のヴィンテージ天国『ビバ貿易』をエディターが徹底解説"
 slug: "viva-trade-eulji-dundun-vintage"
 date: 2026-05-08T19:56:17+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/09/viva-trade-eulji-dundun-vintage/khack_1778256468_1.webp"
 description: "ソウルのトレンドセッターが密かに通う『ビバ貿易 乙支ドゥンドゥン店』。200坪の広大な空間に並ぶハイブランドからストリートまで、2026年も絶対に見逃せないヴィンテージハンティングの魅力を現地エディターが生レポートします。"
 categories: ["K-Pulse Trending"]

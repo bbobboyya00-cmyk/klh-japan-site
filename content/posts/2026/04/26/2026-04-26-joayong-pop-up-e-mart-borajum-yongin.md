@@ -2,7 +2,7 @@
 title: "龍仁市マスコット「チョアヨン」ポップアップストア徹底ガイド：2026年最新情報"
 slug: "joayong-pop-up-e-mart-borajum-yongin"
 date: 2026-04-05T10:54:17+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/26/joayong-pop-up-e-mart-borajum-yongin/khack_1777143789_0.webp"
 description: "2026年、龍仁市の愛されマスコット「チョアヨン」ポップアップストアがイートマートポラ店で開催予定。限定グッズやフォトゾーンの魅力をディレクターKが解説します。"
 categories: ["The Hype Logistics"]

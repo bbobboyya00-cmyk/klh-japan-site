@@ -2,7 +2,7 @@
 title: "平日昼間に「マポ農水産物市場」へ！新鮮刺身をコスパ良くテイクアウトした正直レポ 🤤"
 slug: "mapo-market-affordable-sashimi-seafood"
 date: 2026-05-16T10:05:37+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/16/mapo-market-affordable-sashimi-seafood/khack_1778893442_1.webp"
 description: "ソウルワールドカップ競技場近くの「マポ農水産物市場」へ！活気ある市場で新鮮な海鮮、特に刺身をコスパ良くテイクアウトしてきました。地元の雰囲気を感じながら、美味しいソウルグルメを楽しめる穴場スポットを正直にレビューします！"
 categories: ["K-Food Insider"]

@@ -2,7 +2,7 @@
 title: "江南駅の喧騒を離れて過ごす6階建て大型カフェ「Selected Nick's」正直レポ"
 slug: "selected-nicks-gangnam-cafe-tiramisu-review"
 date: 2026-05-25T11:16:54+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/25/selected-nicks-gangnam-cafe-tiramisu-review/khack_1779675400_1.webp"
 description: "江南駅すぐの「Selected Nick's」は、6階建て＋ルーフトップという圧倒的スケールのギャラリーカフェ。種類豊富なティラミスや静かなスタディスペースまで、用途に合わせて使える都会の隠れ家を詳しくご紹介します。"
 categories: ["K-Food Insider"]

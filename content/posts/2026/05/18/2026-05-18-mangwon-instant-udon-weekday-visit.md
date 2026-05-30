@@ -2,7 +2,7 @@
 title: "平日15時でも行列？望遠洞即席うどんで1万ウォンの巨大トンカツを食べた正直レポ"
 slug: "mangwon-instant-udon-weekday-visit"
 date: 2026-05-18T10:43:47+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/18/mangwon-instant-udon-weekday-visit/khack_1779068537_1.webp"
 description: "望遠洞の超有名店「望遠洞即席うどん」へ！ピリ辛のうどんと昔ながらの巨大トンカツの組み合わせが最高すぎました。注文方法や待ち時間など、現地で感じたリアルな情報をお届けします。"
 categories: ["K-Food Insider"]

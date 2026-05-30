@@ -2,7 +2,7 @@
 title: "聖水洞で行くべき場所はここだけ！29CM SEONGSUの最新キュレーションガイド"
 slug: "seoul-seongsu-29cm-lifestyle-guide"
 date: 2026-05-03T19:14:31+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/07/seoul-seongsu-29cm-lifestyle-guide/khack_1778137444_1.webp"
 description: "ソウルのトレンド発信地、聖水洞で今最も熱い「29CM SEONGSU」。2026年春の最新ポップアップ情報から、現地の人だけが知る楽しみ方まで、洗練されたエディターがこっそり教える完全ガイドをお届けします。"
 categories: ["The Hype Logistics"]

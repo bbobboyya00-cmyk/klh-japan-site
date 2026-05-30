@@ -2,7 +2,7 @@
 title: "2026年ソウル世界都市文化祭り：DDPで世界一周の旅を体験！"
 slug: "seoul-friendship-festival-ddp-2026"
 date: 2026-05-01T19:57:54+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/06/seoul-friendship-festival-ddp-2026/khack_1778029433_1.webp"
 description: "2026年5月に開催される「ソウル世界都市文化祭り」の見どころを徹底解説！DDPで世界各国の文化、グルメ、パフォーマンスを一度に楽しめる、30周年記念の特別な祭典を先取りでご紹介します。"
 categories: ["Cultural Nuance"]

@@ -2,7 +2,7 @@
 title: "ピピカードで仁川空港スカイハブラウンジを完全攻略！賢く利用する正直レポ"
 slug: "skyhub-lounge-incheon-pp-card-guide"
 date: 2026-05-21T11:43:52+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/21/skyhub-lounge-incheon-pp-card-guide/khack_1779331419_1.webp"
 description: "仁川空港のスカイハブラウンジをピピカードで無料で利用する方法から、割引情報まで徹底解説！待ち時間や料金も正直にレビューします。"
 categories: ["K-Travel Hacks"]

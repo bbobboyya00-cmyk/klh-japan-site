@@ -2,7 +2,7 @@
 title: "ソンス洞が紫に染まる！ポケモン30周年記念「メタモン遊び場」徹底解説"
 slug: "seongsu-metamong-playground-pokemon-30th"
 date: 2026-03-28T10:53:05+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/23/seongsu-metamong-playground-pokemon-30th/1.webp"
 description: "K-Life HackディレクターKが、ソウル・ソンス洞に登場したポケモン30周年記念ポップアップ「メタモン遊び場」を徹底解説。限定グッズや工業的な街並みに溶け込む空間演出を深掘りします。"
 categories: ["The Hype Logistics"]

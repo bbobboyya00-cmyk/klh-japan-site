@@ -2,7 +2,7 @@
 title: "1900年代へタイムスリップ。論山サンシャインスタジオのドラマそのままの風景を正直レポ"
 slug: "nonsan-sunshine-studio-drama-filming-site"
 date: 2026-05-24T11:07:18+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/24/nonsan-sunshine-studio-drama-filming-site/khack_1779588428_1.webp"
 description: "ドラマ「ミスター・サンシャイン」の世界観がそのまま再現された論山サンシャインスタジオ。グローリーホテルやブランシェ製菓店など、20世紀初頭の韓国を完璧に再現したオープンセットの魅力を、現地を訪れたリアルな視点でお届けします。"
 categories: ["K-Travel Hacks"]

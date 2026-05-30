@@ -2,7 +2,7 @@
 title: "「全州国家遺産夜行2026」歴史と文化が織りなす夜の散策！見どころとおすすめプログラム予測"
 slug: "jeonju-heritage-night-2026-preview"
 date: 2026-05-21T19:09:35+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/21/jeonju-heritage-night-2026-preview/khack_1779358164_1.webp"
 description: "2026年6月に開催される「全州国家遺産夜行」は、全州の歴史的空間を舞台にした特別な夜のツアー。地元在住者が注目プログラムと見どころを徹底予測！"
 categories: ["Cultural Nuance"]

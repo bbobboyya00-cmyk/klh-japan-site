@@ -2,7 +2,7 @@
 title: "聖水洞の路地裏で見つけたオットギ食品の生サムギョプサルとノポの空気感"
 slug: "seongsu-ottogi-food-pork-belly-nopo"
 date: 2026-05-25T19:05:28+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/25/seongsu-ottogi-food-pork-belly-nopo/khack_1779703514_1.webp"
 description: "聖水洞（ソンスドン）の静かな路地裏で、地元の人々に愛され続ける「オットギ食品」を訪ねました。分厚い生サムギョプサルと、どこか懐かしいガメク（売店居酒屋）の雰囲気が融合した、2026年の今こそ体験したい特別な空間の記録です。"
 categories: ["K-Food Insider"]

@@ -2,7 +2,7 @@
 title: "龍仁大長今パークの効率的な散策ルートと撮影ポイント。広大な時代劇セットの歩き方"
 slug: "yongin-daejanggeum-park-historical-set"
 date: 2026-05-27T11:12:28+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/27/yongin-daejanggeum-park-historical-set/khack_1779847925_1.webp"
 description: "龍仁大長今パークを実際に歩きながら確認した効率的な散策ルート、王宮エリアの建築美とおすすめの撮影アングル、傾斜の難易度や所要時間の目安を実用的に整理しました。"
 categories: ["K-Travel Hacks"]

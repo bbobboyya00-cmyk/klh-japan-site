@@ -2,7 +2,7 @@
 title: "Front Seoul Sinsa-dong Cafe Honest Review"
 slug: "front-seoul-sinsa-dong-cafe-review"
 date: 2026-05-30T13:10:08+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/30/front-seoul-sinsa-dong-cafe-review/khack_1780114192_1.webp"
 description: "Explore Front Seoul, a three-story cafe in Sinsa-dong featuring European architecture, signature cream lattes, and fresh mango bingsu."
 categories: ["K-Food Insider"]

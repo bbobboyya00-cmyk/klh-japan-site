@@ -2,7 +2,7 @@
 title: "ソウル森の隠れ家ダックファット聖水で味わう至福のフレンチコース正直レポ"
 slug: "duckfat-seongsu-seoul-french-course-review"
 date: 2026-05-23T19:05:49+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/23/duckfat-seongsu-seoul-french-course-review/khack_1779530733_1.webp"
 description: "ソウル森の隠れ家フレンチレストラン「ダックファット聖水」。静かでプライベートな空間で、シェフの説明とともに味わう9品の季節限定コースは、特別な日の食事にぴったり。予約のコツやメニューの詳細、食後のソウル森散策まで、正直な体験レポをお届けします。"
 categories: ["K-Food Insider"]

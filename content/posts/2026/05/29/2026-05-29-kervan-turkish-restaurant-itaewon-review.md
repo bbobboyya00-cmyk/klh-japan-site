@@ -2,7 +2,7 @@
 title: "梨泰院のケルバンで味わう本格トルコ料理ミックスグリル体験記"
 slug: "kervan-turkish-restaurant-itaewon-review"
 date: 2026-05-29T19:10:12+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/29/kervan-turkish-restaurant-itaewon-review/khack_1780049397_1.webp"
 description: "梨泰院のメインストリートで異国情緒に浸るひととき。炭火で焼き上げたジューシーなミックスグリルや、蜜が溢れる伝統菓子バクラヴァなど、本場トルコの味を堪能できるスポットを詳しくレポートします。2026年の梨泰院散策の参考に。"
 categories: ["K-Food Insider"]

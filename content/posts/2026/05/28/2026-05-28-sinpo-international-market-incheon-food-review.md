@@ -2,7 +2,7 @@
 title: "仁川・新浦国際市場の散策記とメッドルカルグクスの正直な実食レポ"
 slug: "sinpo-international-market-incheon-food-review"
 date: 2026-05-28T19:10:40+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/28/sinpo-international-market-incheon-food-review/khack_1779963026_1.webp"
 description: "仁川チャイナタウン近くの活気あふれる新浦国際市場へ。名物のコンガルパンから、テレビで話題のメッドルカルグクスまで、2026年春の市場の雰囲気と正直な味の感想を詳しくお届けします。"
 categories: ["K-Food Insider"]

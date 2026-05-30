@@ -2,7 +2,7 @@
 title: "聖水洞のランドマーク NYUNYU HOUSE 聖水店 フロア別アイテムと価格帯まとめ"
 slug: "nyunyu-house-seongsu-station-review"
 date: 2026-05-30T21:50:31+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/30/nyunyu-house-seongsu-station-review/khack_1780145326_1.webp"
 description: "聖水洞（ソンスドン）で話題の大型雑貨ショップ「NYUNYU HOUSE」を徹底レポ！地下1階から3階まで、プチプラアクセサリーや可愛いキーリング、韓国トレンド雑貨の最新情報を詳しくお届けします。"
 categories: ["K-Beauty Insider"]

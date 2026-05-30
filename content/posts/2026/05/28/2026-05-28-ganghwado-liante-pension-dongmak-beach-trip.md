@@ -2,7 +2,7 @@
 title: "江華島リアントゥペンションに泊まる週末旅行！東幕海水浴場の干潟を望むテラスBBQ体験記"
 slug: "ganghwado-liante-pension-dongmak-beach-trip"
 date: 2026-05-28T15:05:21+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/28/ganghwado-liante-pension-dongmak-beach-trip/khack_1779948299_1.webp"
 description: "ソウル近郊の江華島にあるリアントゥペンションの宿泊体験記。東幕海水浴場から車で5分の静かなプライベート空間で、美しい干潟の景色とテラスでの炭火焼きBBQ、可愛い猫たちに囲まれた週末をご紹介します。"
 categories: ["K-Food Insider"]

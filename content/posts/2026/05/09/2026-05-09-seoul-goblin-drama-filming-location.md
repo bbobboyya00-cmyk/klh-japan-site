@@ -2,7 +2,7 @@
 title: "伝説のドラマ『トッケビ』の世界へ！ソウルの隠れた名所「雲峴宮洋館」現地レポート"
 slug: "seoul-goblin-drama-filming-location"
 date: 2026-05-07T19:20:00+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/09/seoul-goblin-drama-filming-location/khack_1778277866_1.webp"
 description: "ドラマ『トッケビ』でコン・ユが演じたキム・シンの家、実はソウルの中心にあるんです。歴史的な洋館の美しさとドラマの余韻に浸れる特別なスポット「雲峴宮洋館」の魅力を、現地のトレンドセッターが詳しくご紹介します。"
 categories: ["K-Pulse Trending"]

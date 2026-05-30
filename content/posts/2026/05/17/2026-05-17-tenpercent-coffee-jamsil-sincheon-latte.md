@@ -2,7 +2,7 @@
 title: "潜室のバラ団地で見つけたテンパーセントコーヒー潜室新川店の熟成ラテを持って漢江へ"
 slug: "tenpercent-coffee-jamsil-sincheon-latte"
 date: 2026-05-17T16:06:14+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/17/tenpercent-coffee-jamsil-sincheon-latte/khack_1779001504_1.webp"
 description: "2026年5月の潜室（チャムシル）散歩。テンパーセントコーヒー潜室新川店の濃厚なシグネチャーラテの正直レビュー。漢江ピクニックに最適なテイクアウト専門店の魅力を紹介します。"
 categories: ["K-Food Insider"]

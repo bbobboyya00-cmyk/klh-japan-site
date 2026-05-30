@@ -2,7 +2,7 @@
 title: "新沙洞カロスキルのおしゃれカフェ「Front Seoul」で楽しむ限定マンゴーかき氷とシグネチャーラテ体験記"
 slug: "front-seoul-sinsa-dong-cafe-review"
 date: 2026-05-30T13:14:40+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/30/front-seoul-sinsa-dong-cafe-review/khack_1780114192_1.webp"
 description: "ソウル・新沙洞カロスキルにあるヨーロッパ風の大型カフェ「Front Seoul」の正直レポ。季節限定の生マンゴー雪花かき氷やシグネチャークリームラテ、ホテルライクな内装から実用的なアクセス情報まで詳しくご紹介します。"
 categories: ["K-Food Insider"]

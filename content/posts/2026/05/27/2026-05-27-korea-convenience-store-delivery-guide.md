@@ -2,7 +2,7 @@
 title: "韓国のコンビニ宅配サービス完全ガイド。初めてでも分かる発送手順と利用の流れ"
 slug: "korea-convenience-store-delivery-guide"
 date: 2026-05-27T10:30:00+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/etc/sl1.webp"
 description: "韓国のコンビニ宅配サービスを初めて利用する方向けに、端末操作、送り状の入力方法、料金の目安、利用時の注意点を順番に整理しました。"
 categories: ["Smart Living"]

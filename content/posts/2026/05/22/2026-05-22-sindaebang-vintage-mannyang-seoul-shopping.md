@@ -2,7 +2,7 @@
 title: "新大方の Vintage Mannyang 体験記！120坪の圧倒的物量に驚いた一日"
 slug: "sindaebang-vintage-mannyang-seoul-shopping"
 date: 2026-05-22T19:09:14+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/22/sindaebang-vintage-mannyang-seoul-shopping/khack_1779444544_1.webp"
 description: "新大方にある120坪の巨大ビンテージショップ「Vintage Mannyang」をレポ。ポロやラルフローレンが6,000ウォンから手に入る驚きのコスパと、お買い物前に知っておきたい注意点をまとめました。"
 categories: ["K-Pulse Trending"]

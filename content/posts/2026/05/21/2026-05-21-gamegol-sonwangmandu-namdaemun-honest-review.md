@@ -2,7 +2,7 @@
 title: "南大門市場のガメゴルソンワンマンドゥ本店：行列に納得の正直レポ！"
 slug: "gamegol-sonwangmandu-namdaemun-honest-review"
 date: 2026-05-21T15:15:19+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/21/gamegol-sonwangmandu-namdaemun-honest-review/khack_1779344104_1.webp"
 description: "南大門市場で大人気のガメゴルソンワンマンドゥ本店を徹底レポート！ジューシーな肉餡とモチモチ皮の手作りマンドゥは、一度食べたら忘れられない味。並ぶ価値ありの絶品グルメ、外国人観光客にもおすすめですよ。"
 categories: ["K-Food Insider"]

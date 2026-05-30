@@ -2,7 +2,7 @@
 title: "江南アプクジョンで1時間体験！リメイドの眉毛アートメイク、待ち時間ゼロの秘密"
 slug: "remade-gangnam-eyebrow-styling-review"
 date: 2026-05-18T16:48:06+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/18/remade-gangnam-eyebrow-styling-review/khack_1779090366_1.webp"
 description: "江南アプクジョンにある「リメイド江南店」は、完全予約制で待ち時間なくプライベートな空間で眉毛アートメイクが受けられると話題。顔の形に合わせたオーダーメイドデザインで、自然な仕上がりが魅力です。"
 categories: ["K-Beauty Insider"]

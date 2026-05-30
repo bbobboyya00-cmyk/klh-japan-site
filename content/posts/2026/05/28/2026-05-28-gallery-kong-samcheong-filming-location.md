@@ -2,7 +2,7 @@
 title: "財閥家の末息子ロケ地巡り！三清洞のギャラリー・コン体験記"
 slug: "gallery-kong-samcheong-filming-location"
 date: 2026-05-28T11:12:46+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/28/gallery-kong-samcheong-filming-location/khack_1779934353_1.webp"
 description: "ドラマ「財閥家の末息子」のロケ地として知られる三清洞のギャラリー・コン。洗練された白い建築と現代アートが織りなす空間の魅力、アクセス方法まで詳しくレポートします。"
 categories: ["Cultural Nuance"]

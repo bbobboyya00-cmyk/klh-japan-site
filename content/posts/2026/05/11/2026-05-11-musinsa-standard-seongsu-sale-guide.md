@@ -2,7 +2,7 @@
 title: "【聖水洞】2026年最大のセール到来！ムシンサ・スタンダード聖水で狙うべき神アイテム＆攻略法"
 slug: "musinsa-standard-seongsu-sale-guide"
 date: 2026-05-11T16:12:23+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/11/musinsa-standard-seongsu-sale-guide/khack_1778483333_1.webp"
 description: "2026年SSスーパーセール開催中の「ムシンサ・スタンダード聖水」を現地レポート！最大80%オフの 驚愕セールから、韓国MZ世代が熱狂する最新トレンドアイテム、混雑を避けるための秘策まで。ソウル在住インフルエンサーが教える、失敗しないショッピングガイドです。"
 categories: ["K-Beauty Insider"]

@@ -2,7 +2,7 @@
 title: "慶州 月精橋：新羅の美が息づく夜景と歴史散策ガイド"
 slug: "gyeongju-woljeonggyo-night-view-history"
 date: 2026-04-02T19:08:16+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/04/25/gyeongju-woljeonggyo-night-view-history/khack_1777074484_0.webp"
 description: "慶州の月精橋は、新羅時代の息吹を感じさせる美しい木造橋です。夜には幻想的にライトアップされ、その壮大な姿は訪れる人々を魅了します。周辺の観光スポットやアクセス方法もご紹介します。"
 categories: ["Cultural Nuance"]

@@ -2,7 +2,7 @@
 title: "昌徳宮（チャンドックン）の伝統美を堪能。2026年春の工芸ショップと茶菓体験レポ"
 slug: "changdeokgung-palace-royal-culture-experience"
 date: 2026-05-27T07:44:39+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/27/changdeokgung-palace-royal-culture-experience/khack_1779835467_1.webp"
 description: "2026年5月、新緑が美しいソウルの昌徳宮を訪れました。伝統美が詰まった商品館「サラン」や、王室のデザートを再現した特別なティータイムなど、現地でしか味わえない情緒あふれる空間を詳しくレポートします。"
 categories: ["Cultural Nuance"]

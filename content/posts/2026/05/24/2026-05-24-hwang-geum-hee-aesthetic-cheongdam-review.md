@@ -2,7 +2,7 @@
 title: "黄金姫エステティック清潭本店で体験した70分の水分・再生ケア正直レポ"
 slug: "hwang-geum-hee-aesthetic-cheongdam-review"
 date: 2026-05-24T20:52:51+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/24/hwang-geum-hee-aesthetic-cheongdam-review/khack_1779623559_1.webp"
 description: "清潭洞の路地裏で見つけた、30年の経歴が光るエステサロン。オールハンドのデコルテマッサージから肌再生ケアまで、実際に体験して感じた本音のディテールを記録しました。"
 categories: ["K-Beauty Insider"]

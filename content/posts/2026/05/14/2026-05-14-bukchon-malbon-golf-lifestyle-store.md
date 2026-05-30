@@ -2,7 +2,7 @@
 title: "北村マルボン韓屋店！伝統とモダンが融合したプレミアムゴルフファッションの聖地を巡る✨"
 slug: "bukchon-malbon-golf-lifestyle-store"
 date: 2026-05-14T19:12:04+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/14/bukchon-malbon-golf-lifestyle-store/khack_1778753410_1.webp"
 description: "ソウル北村にオープンした「マルボン韓屋」店を徹底レポート！伝統的な空間でゴルフウェアやライフスタイルアイテムを体験できる、特別な場所の魅力を深掘りします。限定カスタマイズやイベント情報も必見ですよ。"
 categories: ["K-Pulse Trending"]

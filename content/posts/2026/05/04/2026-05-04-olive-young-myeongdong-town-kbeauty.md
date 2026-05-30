@@ -2,7 +2,7 @@
 title: "2026年プレビュー：明洞の心臓部、オリーブヤング明洞タウン店で最旬Kコスメを先取り！"
 slug: "olive-young-myeongdong-town-kbeauty"
 date: 2026-04-26T19:29:15+09:00
-draft: false
+draft: true
 image: "https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/05/04/olive-young-myeongdong-town-kbeauty/khack_1777880217_0.webp"
 description: "2026年も大注目のオリーブヤング明洞タウン店！最先端のK-Beautyトレンドから限定おやつまで、現場の活気をディレクターKがレポートします。"
 categories: ["K-Beauty Insider"]

@@ -2,7 +2,7 @@
 title: "道谷駅近くで見つけた本場アメリカの味！ザ・オリジナル・パンケーキハウス道谷店の平日ブランチ体験記"
 slug: "original-pancake-house-dogok-brunch"
 date: 2026-05-29T15:19:33+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/29/original-pancake-house-dogok-brunch/khack_1780035564_1.webp"
 description: "ソウル道谷洞で味わう1953年創業の伝統の味。ふわふわのパンケーキとチーズたっぷりのハラペーニョオムレツなど、ボリューム満点のアメリカンブランチを詳しくレポートします。"
 categories: ["K-Food Insider"]

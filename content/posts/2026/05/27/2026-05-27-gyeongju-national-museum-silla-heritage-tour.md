@@ -2,7 +2,7 @@
 title: "慶州国立博物館で新羅の黄金文化とエミレの鐘の音に包まれる歴史散策"
 slug: "gyeongju-national-museum-silla-heritage-tour"
 date: 2026-05-27T19:04:59+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/27/gyeongju-national-museum-silla-heritage-tour/khack_1779876279_1.webp"
 description: "新羅千年の歴史が息づく慶州国立博物館を徹底レポート。黄金の王冠からエミレの鐘の音色、限定の半跏思惟像グッズまで、2026年の春に訪れたい見どころを詳しく紹介します。"
 categories: ["Cultural Nuance"]

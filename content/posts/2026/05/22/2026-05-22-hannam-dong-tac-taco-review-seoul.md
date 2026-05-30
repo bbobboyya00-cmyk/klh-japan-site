@@ -2,7 +2,7 @@
 title: "漢南洞の路地裏で見つけた「TAC」の絶品タコスとウェイティング攻略レポ"
 slug: "hannam-dong-tac-taco-review-seoul"
 date: 2026-05-22T11:08:47+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/22/hannam-dong-tac-taco-review-seoul/khack_1779415710_1.webp"
 description: "漢南洞（ハンナムドン）で今最もホットなタコス専門店「TAC」を徹底取材！シグネチャーのフィッシュタコスから店内のモダンな雰囲気、現地でのウェイティングのコツまで、2026年最新の情報を詳しくお届けします。"
 categories: ["K-Food Insider"]

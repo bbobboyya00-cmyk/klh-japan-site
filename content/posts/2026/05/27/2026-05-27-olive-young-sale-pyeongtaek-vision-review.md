@@ -2,7 +2,7 @@
 title: "オリーブヤング平澤ビジョン店セール攻略！ラッキー価格ゾーンで見つけた驚きの戦利品レポ"
 slug: "olive-young-sale-pyeongtaek-vision-review"
 date: 2026-05-27T15:13:10+09:00
-draft: false
+draft: true
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/27/olive-young-sale-pyeongtaek-vision-review/khack_1779862370_1.webp"
 description: "平澤（ピョンテク）にある大型店、オリーブヤング平澤ビジョン店のセール現場を徹底レポ！最大級のラッキー価格ゾーンや限定コラボアイテムの在庫状況など、渡韓時に役立つ情報をまとめました。"
 categories: ["K-Beauty Insider"]
