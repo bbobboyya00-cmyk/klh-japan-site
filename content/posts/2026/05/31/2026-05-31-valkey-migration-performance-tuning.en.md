@@ -1,12 +1,12 @@
 ---
 title: "Improving Cache Throughput and Eliminating Latency Spikes by Migrating to Valkey 8.0"
 slug: "valkey-migration-performance-tuning"
-date: 2026-05-31T11:55:55+09:00
+date: 2026-05-23T09:55:55+09:00
 draft: false
 image: ""
 description: "Engineering log on improving AI agent request processing capacity by 3x through migration from Redis to Valkey 8.0. Details the departure from 'Pet' infrastructure and throughput verification results under high-load environments."
 categories: ["Backend Architecture"]
-tags: ["valkey-8.0", "redis-migration", "latency-optimization", "throughput-benchmark", "devops-2026"]
+tags: ["valkey-8.0", "redis-migration", "latency-optimization", "throughput-benchmark"]
 author: "K-Life Hack"
 ---
 

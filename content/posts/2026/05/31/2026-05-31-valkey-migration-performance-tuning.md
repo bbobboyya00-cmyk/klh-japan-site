@@ -1,12 +1,12 @@
 ---
 title: "Valkey 8.0 への移行によるキャッシュスループットの改善とレイテンシスパイクの解消"
 slug: "valkey-migration-performance-tuning"
-date: 2026-05-31T11:55:55+09:00
+date: 2026-05-23T09:55:55+09:00
 draft: false
 image: ""
 description: "RedisからValkey 8.0への移行により、AIエージェントのリクエスト処理能力を3倍に向上させたエンジニアリングログ。'Pet'型インフラからの脱却と、高負荷環境下でのスループット検証結果を詳述します。"
 categories: ["Backend Architecture"]
-tags: ["valkey-8.0", "redis-migration", "latency-optimization", "throughput-benchmark", "devops-2026"]
+tags: ["valkey-8.0", "redis-migration", "latency-optimization", "throughput-benchmark"]
 author: "K-Life Hack"
 ---
 
