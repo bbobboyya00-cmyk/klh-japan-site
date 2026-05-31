@@ -1,7 +1,7 @@
 ---
 title: "Troubleshooting Errors in Kubernetes Deployment Automation with GitHub Actions and Windows Self-Hosted Runner"
 slug: "github-actions-windows-runner-kubernetes"
-date: 2026-05-31T10:53:13+09:00
+date: 2026-05-22T13:53:13+09:00
 draft: false
 image: ""
 description: "Steps to resolve PEM block parsing errors, DNS resolution failures, and PowerShell syntax errors during Kubernetes deployment using GitHub Actions integrated with a Windows Self-Hosted Runner."

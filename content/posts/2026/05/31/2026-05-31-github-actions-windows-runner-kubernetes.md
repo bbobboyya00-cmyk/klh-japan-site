@@ -1,7 +1,7 @@
 ---
 title: "GitHub ActionsとWindows Self-Hosted RunnerによるKubernetesデプロイ自動化時のエラー解決"
 slug: "github-actions-windows-runner-kubernetes"
-date: 2026-05-31T10:53:12+09:00
+date: 2026-05-22T13:53:12+09:00
 draft: false
 image: ""
 description: "Windows環境のSelf-Hosted RunnerとGitHub Actionsを連携し、Kubernetesへのデプロイ時に発生するPEMブロック解析エラー、DNS解決失敗、PowerShell構文エラーを解決する手順。"
