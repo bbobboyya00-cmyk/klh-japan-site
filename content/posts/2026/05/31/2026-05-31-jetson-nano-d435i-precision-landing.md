@@ -1,7 +1,7 @@
 ---
 title: "Jetson NanoとRealSense D435iを統合した自律精密着陸システムの構築とTensorRTによる推論最適化"
 slug: "jetson-nano-d435i-precision-landing"
-date: 2026-05-31T12:31:27+09:00
+date: 2026-05-23T12:31:27+09:00
 draft: false
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/31/jetson-nano-d435i-precision-landing/khack_1780198272_0.webp"
 description: "Jetson NanoとD435iを用い、YOLOv8とTensorRTを組み合わせたUAV精密着陸システムの技術ログ。合成データセット生成からMAVLink通信、3D座標変換の実装工程と、推論レイテンシのトラブルシューティングを詳述します。"

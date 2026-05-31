@@ -1,7 +1,7 @@
 ---
 title: "Building an Autonomous Precision Landing System Integrating Jetson Nano and RealSense D435i with TensorRT Inference Optimization"
 slug: "jetson-nano-d435i-precision-landing"
-date: 2026-05-31T12:31:28+09:00
+date: 2026-05-23T12:31:28+09:00
 draft: false
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/31/jetson-nano-d435i-precision-landing/khack_1780198272_0.webp"
 description: "Technical log of a UAV precision landing system using Jetson Nano, D435i, YOLOv8, and TensorRT. Details the implementation process from synthetic dataset generation to MAVLink communication, 3D coordinate transformation, and inference latency troubleshooting."
