@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ssh-Timeout on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/ssh-timeout/</link><description>Recent content in Ssh-Timeout on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 31 May 2026 11:34:53 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/ssh-timeout/index.xml" rel="self" type="application/rss+xml"/><item><title>Resolving Ansible Provisioning Failures Caused by Netmiko SSH Timeouts</title><link>https://klifehack.com/en/p/netmiko-ssh-timeout-ansible-fix/</link><pubDate>Sun, 31 May 2026 11:34:53 +0900</pubDate><guid>https://klifehack.com/en/p/netmiko-ssh-timeout-ansible-fix/</guid><description>&lt;img src="https://klifehack.com/" alt="Featured image of post Resolving Ansible Provisioning Failures Caused by Netmiko SSH Timeouts" /&gt;&lt;h1 id="netmiko-timeout-mitigation-and-pyats-verification-automation-for-bulk-acl-application-to-200-cisco-ios-switches"&gt;Netmiko Timeout Mitigation and pyATS Verification Automation for Bulk ACL Application to 200 Cisco IOS Switches
+&lt;/h1&gt;&lt;p&gt;This document records the troubleshooting steps for Netmiko SSH timeout errors (&lt;code&gt;NetmikoTimeoutException&lt;/code&gt;) and subsequent configuration drift that occurred during bulk ACL application to 200 Cisco IOS switches during production deployment on May 31, 2026. The issue was resolved by introducing concurrency semaphore control on the control node, optimizing Netmiko connection parameters (&lt;code&gt;global_delay_factor&lt;/code&gt; and &lt;code&gt;read_timeout_override&lt;/code&gt;), and automating post-verification using &lt;b&gt;&lt;mark&gt;pyATS&lt;/mark&gt;&lt;/b&gt;.&lt;/p&gt;
+&lt;p&gt;The system employs a NetDevOps architecture with Git as the single Source of Truth.&lt;/p&gt;
+&lt;img alt="System operational pipeline topology flow description" fetchpriority="high" height="376" loading="eager" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/31/netmiko-ssh-timeout-ansible-fix/khack_1780194891_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" width="672"/&gt;
+&lt;h2 id="detection-of-ssh-disconnections-and-partial-applications-during-large-scale-deployment"&gt;Detection of SSH Disconnections and Partial Applications During Large-Scale Deployment
+&lt;/h2&gt;&lt;p&gt;When running the Ansible playbook via the GitLab CI/CD pipeline, tasks were interrupted on specific legacy switches, resulting in an SSH timeout error log. This caused settings to be applied only to some devices, leading to configuration inconsistency (configuration drift) across the network.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;netmiko.exceptions.NetmikoTimeoutException: Connection to device timed-out: cisco_ios 192.168.10.15:22
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This error caused the pipeline to terminate abnormally, leaving 15 out of 200 target switches in an intermediate state.&lt;/p&gt;
+&lt;h2 id="synergistic-effect-of-cpu-resource-saturation-and-command-response-delays"&gt;Synergistic Effect of CPU Resource Saturation and Command Response Delays
+&lt;/h2&gt;&lt;p&gt;Post-incident analysis identified two main causes for the timeouts:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Excessive Concurrency on the Control Node&lt;/b&gt;: Because the Ansible &lt;code&gt;forks&lt;/code&gt; parameter was left at its default, the control node attempted to establish too many concurrent SSH sessions, driving CPU utilization to 100%. This caused delays in SSH handshakes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Command Processing Delays on Legacy Hardware&lt;/b&gt;: The target Cisco IOS switches (such as the Catalyst 2960 series) experience high CPU load when compiling large ACLs (100+ lines), requiring more time than usual to respond to commands. This exceeded Netmiko&amp;rsquo;s default read timeout (100 seconds), causing the connection to drop.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="dynamic-timeout-adjustment-and-flow-control-via-semaphores"&gt;Dynamic Timeout Adjustment and Flow Control via Semaphores
+&lt;/h2&gt;&lt;p&gt;To resolve this issue, connection parameters were optimized and semaphore control was introduced to limit concurrency.&lt;/p&gt;
+&lt;h3 id="1-parameter-tuning-in-netmiko-connection-script-"&gt;1. Parameter Tuning in Netmiko Connection Script 🛠️
+&lt;/h3&gt;&lt;p&gt;In the Python concurrent execution script, &lt;code&gt;global_delay_factor&lt;/code&gt; was increased to &lt;code&gt;2.0&lt;/code&gt;, and &lt;code&gt;read_timeout_override&lt;/code&gt; was set to &lt;code&gt;300&lt;/code&gt; seconds. This ensures sufficient wait time for responses from slower devices.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; netmiko &lt;span style="color:#f92672"&gt;import&lt;/span&gt; ConnectHandler
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;device_params &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;device_type&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;cisco_ios&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;host&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;192.168.10.15&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;username&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;admin&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;secure_password&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;global_delay_factor&amp;#39;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;2.0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;read_timeout_override&amp;#39;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; ConnectHandler(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;device_params) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; net_connect:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;output &lt;span style="color:#f92672"&gt;=&lt;/span&gt; net_connect&lt;span style="color:#f92672"&gt;.&lt;/span&gt;send_config_set(config_commands)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(output)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-optimizing-connection-settings-in-ansible-"&gt;2. Optimizing Connection Settings in Ansible 💡
+&lt;/h3&gt;&lt;p&gt;On the Ansible playbook side, variables were added to &lt;code&gt;ansible.cfg&lt;/code&gt; and inventory variables to control SSH keepalives and timeouts.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ansible.cfg&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[defaults]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;forks&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;timeout&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;300&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[ssh_connection]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ssh_args&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;-o ControlMaster=auto -o ControlPersist=60s -o ServerAliveInterval=30 -o ServerAliveCountMax=3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="state-verification-with-pyats-and-deployment-time-measurement"&gt;State Verification with pyATS and Deployment Time Measurement
+&lt;/h2&gt;&lt;p&gt;After applying the fixes, verification steps were performed in the test and production environments.&lt;/p&gt;
+&lt;h3 id="1-pipeline-re-run-and-execution-log-verification-"&gt;1. Pipeline Re-run and Execution Log Verification ⚠️
+&lt;/h3&gt;&lt;p&gt;The script was executed with concurrency limited to 10, and CPU utilization was verified to be stable.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ansible-playbook -i inventory.ini deploy_acl.yml --forks=10
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PLAY [Deploy ACL to Cisco IOS Switches] &amp;lt;b&amp;gt;TASK [Gathering Facts]&amp;lt;/b&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ok: [switch-01]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ok: [switch-02]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;TASK [Apply ACL Configuration] &amp;lt;b&amp;gt;&amp;lt;/b&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;changed: [switch-01]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;changed: [switch-02]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PLAY RECAP &amp;lt;b&amp;gt;&amp;lt;/b&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;switch-01 : ok=2 changed=1 unreachable=0 failed=0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;switch-02 : ok=2 changed=1 unreachable=0 failed=0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-configuration-consistency-verification-using-pyats"&gt;2. Configuration Consistency Verification Using pyATS
+&lt;/h3&gt;&lt;p&gt;Following deployment completion, pyATS was used to parse the ACL application state of all devices, automatically verifying that no unapplied or inconsistent configurations existed.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; genie.testbed &lt;span style="color:#f92672"&gt;import&lt;/span&gt; load
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;testbed &lt;span style="color:#f92672"&gt;=&lt;/span&gt; load(&lt;span style="color:#e6db74"&gt;&amp;#39;testbed.yaml&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;device &lt;span style="color:#f92672"&gt;=&lt;/span&gt; testbed&lt;span style="color:#f92672"&gt;.&lt;/span&gt;devices[&lt;span style="color:#e6db74"&gt;&amp;#39;switch-01&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;device&lt;span style="color:#f92672"&gt;.&lt;/span&gt;connect()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;parsed_output &lt;span style="color:#f92672"&gt;=&lt;/span&gt; device&lt;span style="color:#f92672"&gt;.&lt;/span&gt;parse(&lt;span style="color:#e6db74"&gt;&amp;#39;show ip access-lists&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;assert&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;MY_SECURE_ACL&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;in&lt;/span&gt; parsed_output
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;&amp;#34;ACL verification passed successfully.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As a result of the verification, there were 0 disconnections due to timeouts, and it was confirmed that the intended ACLs were successfully applied to all 200 switches. Total processing time was reduced from the previous 1,200 seconds (which included timeout retry delays) to 45 seconds due to stable concurrent processing.&lt;/p&gt;</description></item></channel></rss>
