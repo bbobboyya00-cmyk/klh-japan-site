@@ -1,7 +1,7 @@
 ---
 title: "urllib3 Connection PoolにおけるIPS検知時の再試行制御とNATパケット解析"
 slug: "snort-ips-inline-sqli-detection"
-date: 2026-05-31T08:33:09+09:00
+date: 2026-05-21T01:33:09+09:00
 draft: false
 image: ""
 description: "IPSによるインラインブロックやNAT環境下でのパケット損失に対し、urllib3のConnection Pool設定と再試行ロジックを最適化し、システムの可用性を担保する手法を解説します。"

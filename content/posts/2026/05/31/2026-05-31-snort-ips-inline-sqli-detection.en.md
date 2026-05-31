@@ -1,7 +1,7 @@
 ---
 title: "Implementing Snort IPS Inline Mode and PCRE Rules for SQL Injection Prevention"
 slug: "snort-ips-inline-sqli-detection"
-date: 2026-05-31T08:32:15+09:00
+date: 2026-05-21T01:32:15+09:00
 draft: false
 image: ""
 description: "Technical analysis of Snort IPS inline mode implementation, ICMP drop rule validation, and PCRE-based SQL injection detection for secure backend operations."
