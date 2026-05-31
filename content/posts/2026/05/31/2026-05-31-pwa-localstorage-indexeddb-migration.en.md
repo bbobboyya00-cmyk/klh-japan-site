@@ -1,7 +1,7 @@
 ---
 title: "Analysis of LocalStorage Data Loss in PWA and IndexedDB Migration Steps via localForage"
 slug: "pwa-localstorage-indexeddb-migration"
-date: 2026-05-31T10:42:03+09:00
+date: 2026-05-22T10:42:03+09:00
 draft: false
 image: ""
 description: "Analyzes the root cause of sudden LocalStorage data loss in PWA environments and explains the migration to IndexedDB using localForage and verification steps for data persistence."

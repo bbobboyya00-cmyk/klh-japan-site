@@ -1,7 +1,7 @@
 ---
 title: "PWAにおけるLocalStorageデータ消失の解析とlocalForageによるIndexedDB移行手順"
 slug: "pwa-localstorage-indexeddb-migration"
-date: 2026-05-31T10:42:03+09:00
+date: 2026-05-22T10:42:03+09:00
 draft: false
 image: ""
 description: "PWA環境でLocalStorageのデータが突然消失する挙動の根本原因を解析し、localForageを用いたIndexedDBへの移行、データ永続化の検証手順を解説します。"
