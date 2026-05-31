@@ -1,7 +1,7 @@
 ---
 title: "Implementation of Prompt Compiler Switches and Suppression of Skeleton Collapse in SA-IR v2.0"
 slug: "sair-v2-compiler-switch-fix"
-date: 2026-05-31T22:48:58+09:00
+date: 2026-05-23T17:49:58+09:00
 draft: false
 image: ""
 description: "Implementation log of system compiler switches to suppress skeleton collapse and 'uncanny valley' phenomena in AI latent space within the SA-IR v2.0 framework. Details token weight control via backend mapping and verification processes using GitHub Actions."
