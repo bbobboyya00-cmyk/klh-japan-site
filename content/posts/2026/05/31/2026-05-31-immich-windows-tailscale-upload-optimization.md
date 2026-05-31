@@ -1,7 +1,7 @@
 ---
 title: "Windows 11 ProとWSL2環境におけるImmichサーバー構築とTailscaleによるセキュアな外部アクセス実装"
 slug: "immich-windows-tailscale-upload-optimization"
-date: 2026-05-31T09:44:15+09:00
+date: 2026-05-21T17:44:15+09:00
 draft: false
 image: ""
 description: "Windows 11 ProとWSL2を基盤に、Immichを用いたセルフホスト型写真管理サーバーを構築。Tailscaleによるセキュアな外部接続と、Upload Optimizerによるストレージ容量の動的制御を実装したエンジニアリングログ。"

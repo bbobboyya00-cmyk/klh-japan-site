@@ -1,7 +1,7 @@
 ---
 title: "Deploying Immich on Windows 11 with Tailscale and Upload Optimization"
 slug: "immich-windows-tailscale-upload-optimization"
-date: 2026-05-31T09:43:23+09:00
+date: 2026-05-21T17:43:23+09:00
 draft: false
 image: ""
 description: "Technical deployment of Immich on Windows 11 using WSL2, Tailscale for secure mesh networking, and a proxy-based upload optimizer for storage efficiency."
