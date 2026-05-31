@@ -4,7 +4,7 @@ slug: "argocd-kubernetes-gitops-migration-log"
 date: 2026-05-31T10:23:37+09:00
 draft: false
 image: "https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/31/argocd-kubernetes-gitops-migration-log/khack_1780190612_0.webp"
-description: "Detailed process of migrating from legacy "Pet" infrastructure to a GitOps model using Argo CD. Implementation log covering elimination of configuration drift, enabling self-healing, and deployment automation via declarative control."
+description: "Detailed process of migrating from legacy 'Pet' infrastructure to a GitOps model using Argo CD. Implementation log covering elimination of configuration drift, enabling self-healing, and deployment automation via declarative control."
 categories: ["DevOps Logistics"]
 tags: ["argo-cd", "kubernetes", "gitops", "cloud-native", "iac"]
 author: "K-Life Hack"
