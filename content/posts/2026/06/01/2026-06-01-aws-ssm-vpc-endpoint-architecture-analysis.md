@@ -1,7 +1,7 @@
 ---
 title: "AWS Systems ManagerにおけるVPCエンドポイントの設計と実装：Interface型とGateway型の構造的差異"
 slug: "aws-ssm-vpc-endpoint-architecture-analysis"
-date: 2026-06-01T21:53:22+09:00
+date: 2026-05-27T10:40:20+09:00
 draft: false
 image: ""
 description: "AWS Systems Manager (SSM) をプライベートサブネットで運用するためのVPCエンドポイント設計ガイド。Interface型とGateway型の違い、セキュリティグループ設定、CLIによる検証手順を詳説します。"

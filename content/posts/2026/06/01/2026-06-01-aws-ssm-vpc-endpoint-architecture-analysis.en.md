@@ -1,7 +1,7 @@
 ---
 title: "Design and Implementation of VPC Endpoints in AWS Systems Manager: Structural Differences Between Interface and Gateway Types"
 slug: "aws-ssm-vpc-endpoint-architecture-analysis"
-date: 2026-06-01T21:53:22+09:00
+date: 2026-05-27T10:40:20+09:00
 draft: false
 image: ""
 description: "A VPC endpoint design guide for operating AWS Systems Manager (SSM) in private subnets. Detailed explanation of the differences between Interface and Gateway types, security group settings, and CLI verification procedures."
