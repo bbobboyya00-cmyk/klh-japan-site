@@ -1,7 +1,7 @@
 ---
 title: "Agent Configuration in GitHub Copilot CLI and Introduction of everything-copilot-cli"
 slug: "github-copilot-cli-agent-implementation"
-date: 2026-05-31T23:10:20+09:00
+date: 2026-05-24T23:10:20+09:00
 draft: false
 image: ""
 description: "Describes the installation procedures for the everything-copilot-cli framework, which extends GitHub Copilot CLI from a simple completion tool to an autonomous agent, and the configuration of multi-AI orchestration."
