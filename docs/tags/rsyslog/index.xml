@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Rsyslog on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/rsyslog/</link><description>Recent content in Rsyslog on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 01 Jun 2026 10:21:24 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/rsyslog/index.xml" rel="self" type="application/rss+xml"/><item><title>auditdとrsyslogを用いたプロセス監査およびログ転送の実装</title><link>https://klifehack.com/p/linux-process-audit-rsyslog-implementation/</link><pubDate>Mon, 01 Jun 2026 10:21:24 +0900</pubDate><guid>https://klifehack.com/p/linux-process-audit-rsyslog-implementation/</guid><description>&lt;h1 id="linuxシステムにおける監査ログ管理基盤の構築auditdとrsyslogによるセキュアなシステムコール監視と外部転送"&gt;Linuxシステムにおける監査ログ管理基盤の構築：auditdとrsyslogによるセキュアなシステムコール監視と外部転送
+&lt;/h1&gt;&lt;h2 id="1-監査およびログ管理における課題と背景"&gt;1. 監査およびログ管理における課題と背景
+&lt;/h2&gt;&lt;p&gt;Linuxシステムにおいて、プロセスの実行状態やシステムコールの監視はセキュリティ確保の基本です。しかし、標準的なアプリケーションレベルのログ出力（syslogなど）のみに依存する場合、いくつかの深刻な課題が生じます。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;ログの改ざんリスク:&lt;/b&gt; 攻撃者がroot権限を奪取した場合、ローカルに保存されたプレーンテキストのログファイル（/var/log/auth.logなど）は容易に消去または改ざんされます。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;システムコールレベルの可視性不足:&lt;/b&gt; 標準のsyslogはアプリケーションが自己申告的に出力するログに依存するため、不正なバイナリが直接実行するシステムコール（ファイル書き換え、権限昇格など）を強制的に捕捉することができません。&lt;/p&gt;
+&lt;p&gt;これらの課題に対処するため、カーネルレベルでシステムコールをインターセプトするauditdと、信頼性の高いTCP接続でログを外部転送するrsyslogを組み合わせた監査基盤の実装手順を定義します。&lt;/p&gt;
+&lt;h2 id="2-技術選定とトレードオフ"&gt;2. 技術選定とトレードオフ
+&lt;/h2&gt;&lt;p&gt;システム監査およびログ管理の設計において、以下のトレードオフを考慮しました。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;syslog と auditd の比較:&lt;/b&gt; syslogはアプリケーション層のイベント記録に適していますが、プロセスの挙動を強制的に追跡することはできません。一方、auditdはカーネル境界でシステムコールを捕捉するため、プロセスの回避行動を防ぐことができます。ただし、ルール設定によっては大量のログが生成され、ディスクI/Oおよびストレージ容量を圧迫するトレードオフがあります。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;UDP転送 と TCP転送 の比較:&lt;/b&gt; rsyslogによるリモート転送において、UDP（@）は高速ですがパケットロスのリスクがあります。TCP（@@）は接続指向であり、ネットワーク一時切断時にも再送制御が行われるため、セキュリティ監査ログの転送にはTCPを採用します。&lt;/p&gt;
+&lt;h2 id="3-実装手順"&gt;3. 実装手順
+&lt;/h2&gt;&lt;h3 id="31-auditdのインストールと有効化"&gt;3.1 auditdのインストールと有効化
+&lt;/h3&gt;&lt;p&gt;Debian/Ubuntu環境において、以下のコマンドを実行してauditdを導入し、サービスを有効化します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y auditd audispd-plugins
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl enable --now auditd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-監査ルールの定義"&gt;3.2 監査ルールの定義
+&lt;/h3&gt;&lt;p&gt;/etc/audit/rules.d/audit.rulesにカスタムルールを追加し、重要なファイルやディレクトリへのアクセスを監視します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-w /etc/shadow -p wa -k shadow_watch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-w /etc/sudoers -p wa -k sudoers_watch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;設定を反映させるため、監査ルールを再読み込みします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo auigenrules --load
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="33-rsyslogによるリモートtcp転送設定"&gt;3.3 rsyslogによるリモートTCP転送設定
+&lt;/h3&gt;&lt;p&gt;ローカルログの改ざんを防ぐため、/etc/rsyslog.conf（または/etc/rsyslog.d/配下の設定ファイル）にリモート転送ルールを追加します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;*.* @@remote-log-server:514
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;設定変更後、rsyslogサービスを再起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl restart rsyslog
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-運用検証とログ解析パイプライン"&gt;4. 運用検証とログ解析パイプライン
+&lt;/h2&gt;&lt;h3 id="41-監査ログの検索-ausearch"&gt;4.1 監査ログの検索 (ausearch)
+&lt;/h3&gt;&lt;p&gt;定義したキー（shadow_watch）に一致するイベントを検索し、数値を人間が読める形式に変換して表示します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ausearch -k shadow_watch -i
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-削除された実行バイナリの検知"&gt;4.2 削除された実行バイナリの検知
+&lt;/h3&gt;&lt;p&gt;💡 メモリ上で実行中でありながら、ディスク上から削除された不審なプロセスを特定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ls -l /proc/*/exe | grep &lt;span style="color:#e6db74"&gt;&amp;#34;deleted&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="43-sshブルートフォース攻撃の集計"&gt;4.3 SSHブルートフォース攻撃の集計
+&lt;/h3&gt;&lt;p&gt;/var/log/auth.logからログイン失敗回数の多いIPアドレスを抽出し、降順でソートします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;grep &lt;span style="color:#e6db74"&gt;&amp;#34;Failed password&amp;#34;&lt;/span&gt; /var/log/auth.log | awk &lt;span style="color:#e6db74"&gt;&amp;#39;{print $(NF-3)}&amp;#39;&lt;/span&gt; | sort | uniq -c | sort -nr
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-導入効果"&gt;5. 導入効果
+&lt;/h2&gt;&lt;p&gt;本構成の導入により、以下の効果が確認されました。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;監査の網羅性向上:&lt;/b&gt; /etc/shadowや/etc/sudoersに対する変更操作が、実行したユーザーID（auid）とともにカーネルレベルで確実に記録されるようになりました。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;ログの保全性確保:&lt;/b&gt; rsyslogのTCP転送設定により、ローカルログが消去された場合でも、リモートのログサーバー側でイベント履歴を追跡可能な状態が維持されます。&lt;/p&gt;</description></item></channel></rss>
