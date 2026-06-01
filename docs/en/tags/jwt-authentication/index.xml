@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jwt-Authentication on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/jwt-authentication/</link><description>Recent content in Jwt-Authentication on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 01 Jun 2026 22:04:17 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/jwt-authentication/index.xml" rel="self" type="application/rss+xml"/><item><title>Construction of a Stateless Authentication Infrastructure Using OAuth2 and JWT in Spring Boot 3.x</title><link>https://klifehack.com/en/p/spring-boot-oauth2-jwt-stateless-auth/</link><pubDate>Mon, 01 Jun 2026 22:04:17 +0900</pubDate><guid>https://klifehack.com/en/p/spring-boot-oauth2-jwt-stateless-auth/</guid><description>&lt;h2 id="1-evolution-of-authentication-architecture-and-background-of-statelessness"&gt;1. Evolution of Authentication Architecture and Background of Statelessness
+&lt;/h2&gt;&lt;p&gt;In modern microservices architectures and scalable web applications, the design of the authentication infrastructure directly impacts system availability and security. Traditional session-based authentication (Stateful) involves managing session IDs on the server side and maintaining user information in memory or a database. This model causes session synchronization issues (Session Clustering) during horizontal scaling of servers, increasing infrastructure overhead.&lt;/p&gt;
+&lt;p&gt;In contrast, JWT (JSON Web Token) based authentication (Stateless), recommended under Spring Boot 3.x and Spring Security 6.x environments, eliminates the need for server-side state maintenance by including user information within the token itself. Technical analysis of implementing a robust authentication pipeline combining OAuth2 social login with JWT:&lt;/p&gt;
+&lt;h2 id="2-structural-analysis-and-signing-mechanism-of-jwt-rfc-7519"&gt;2. Structural Analysis and Signing Mechanism of JWT (RFC 7519)
+&lt;/h2&gt;&lt;p&gt;JWT is a standard consisting of three segments separated by dots (.): Header.Payload.Signature.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Header&lt;/b&gt;: Defines the token type (JWT) and the signing algorithm (e.g., HS256).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Payload&lt;/b&gt;: Contains data in key-value format called Claims. In addition to standard claims such as iss (Issuer), sub (Subject), and exp (Expiration), custom claims such as user permissions (Role) are placed here. Since the payload is only Base64URL encoded and not encrypted, sensitive information such as passwords must not be included.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Signature&lt;/b&gt;: Hashes the header and payload using a server-side secret key to detect tampering.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Conceptual formula for signature generation using HMAC SHA256&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HMACSHA256(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; base64UrlEncode(header) &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;.&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; base64UrlEncode(payload),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secret_key
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-countermeasures-against-security-vulnerabilities-and-implementation-guardrails"&gt;3. Countermeasures Against Security Vulnerabilities and Implementation Guardrails
+&lt;/h2&gt;&lt;p&gt;JWT implementation requires defensive measures against vulnerabilities identified from technical logs.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;&amp;lsquo;none&amp;rsquo; algorithm attack&lt;/b&gt;: To counter attempts to bypass signature verification by changing the header&amp;rsquo;s alg to none, implement logic that explicitly fixes the algorithm on the backend side and rejects none.&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Secret Key Management&lt;/b&gt;: If the key used for signing is short or leaked, token forgery becomes possible. Keys must be managed via environment variables (e.g., application.properties) and must be of sufficient length.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Token Invalidation Issue&lt;/b&gt;: Due to its stateless nature, it is difficult to immediately revoke an issued JWT on the server side. This is addressed by using a blacklist method with Redis or the refresh token strategy.&lt;/p&gt;
+&lt;h2 id="4-implementation-stack-in-spring-boot-321"&gt;4. Implementation Stack in Spring Boot 3.2.1
+&lt;/h2&gt;&lt;p&gt;Implementation stack for dependency consistency:&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Framework&lt;/b&gt;: Spring Boot 3.2.1&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Security&lt;/b&gt;: Spring Security 6.2.1&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;JWT Library&lt;/b&gt;: jjwt 0.12.3 (Note: API changed significantly from versions prior to 0.11.5)&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Database&lt;/b&gt;: MySQL 8.0 / Spring Data JPA&lt;/p&gt;
+&lt;h3 id="41-configuration-of-securityconfig"&gt;4.1 Configuration of SecurityConfig
+&lt;/h3&gt;&lt;p&gt;SecurityFilterChain configuration for stateless environment and session management deactivation:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@EnableWebSecurity&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;SecurityConfig&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Bean&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; SecurityFilterChain &lt;span style="color:#a6e22e"&gt;filterChain&lt;/span&gt;(HttpSecurity http) &lt;span style="color:#66d9ef"&gt;throws&lt;/span&gt; Exception {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;csrf&lt;/span&gt;(AbstractHttpConfigurer::disable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;formLogin&lt;/span&gt;(AbstractHttpConfigurer::disable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;httpBasic&lt;/span&gt;(AbstractHttpConfigurer::disable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;authorizeHttpRequests&lt;/span&gt;(auth &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; auth
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;requestMatchers&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/login&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;/join&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;permitAll&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;requestMatchers&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/admin&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;hasRole&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;ADMIN&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;anyRequest&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;authenticated&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;sessionManagement&lt;/span&gt;(session &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; session
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;sessionCreationPolicy&lt;/span&gt;(SessionCreationPolicy.&lt;span style="color:#a6e22e"&gt;STATELESS&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; http.&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-filter-architecture-separation-of-authentication-and-authorization"&gt;5. Filter Architecture: Separation of Authentication and Authorization
+&lt;/h2&gt;&lt;h3 id="51-loginfilter-issuance-phase"&gt;5.1 LoginFilter (Issuance Phase)
+&lt;/h3&gt;&lt;p&gt;LoginFilter intercepts login attempts and issues a JWT upon successful authentication. On success, the token is attached to the Authorization header in the format Bearer &lt;token&gt; and returned to the client.&lt;/token&gt;&lt;/p&gt;
+&lt;h3 id="52-jwtfilter-verification-phase"&gt;5.2 JWTFilter (Verification Phase)
+&lt;/h3&gt;&lt;p&gt;JWTFilter inherits from OncePerRequestFilter to verify token validity for each request. The token is extracted from the request header, and its expiration and signature are checked using JWTUtil. Valid tokens result in authentication information being set in the SecurityContextHolder for the duration of the request.&lt;/p&gt;
+&lt;h2 id="6-token-strategy-access-token-and-refresh-token-rtr"&gt;6. Token Strategy: Access Token and Refresh Token (RTR)
+&lt;/h2&gt;&lt;p&gt;&lt;b&gt;Access Token&lt;/b&gt; is short-lived (15 minutes to 1 hour) and used for API request authorization. &lt;b&gt;Refresh Token&lt;/b&gt; is long-lived (1 week to 2 weeks) and used for reissuing the Access Token. This is managed on the server side (e.g., Redis) and client side (HttpOnly Cookie).&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Refresh Token Rotation (RTR)&lt;/b&gt; ensures a new refresh token is reissued and the old one is invalidated upon every use. This minimizes the risk of replay attacks due to token theft.&lt;/p&gt;
+&lt;h2 id="7-integration-of-oauth2-social-login"&gt;7. Integration of OAuth2 Social Login
+&lt;/h2&gt;&lt;p&gt;Integration with providers such as Google and Kakao is automated via spring-boot-starter-oauth2-client. Authorization Code Grant flow processing sequence:&lt;/p&gt;
+&lt;p&gt;The user is redirected to the provider&amp;rsquo;s authorization server. After consent, an authorization code is obtained via the redirect URI. The authorization code is exchanged for an access token via a back-channel, and user information is retrieved. Saving or updating to the local DB is performed via CustomOAuth2UserService, and a JWT is issued to complete the login.&lt;/p&gt;
+&lt;h2 id="8-operational-notes"&gt;8. Operational Notes
+&lt;/h2&gt;&lt;p&gt;Operational considerations and implementation details:&lt;/p&gt;
+&lt;p&gt;jjwt 0.12.3 introduces a fluent interface where Jwts.parserBuilder() is integrated into Jwts.parser(). Appropriate CORS policy must be set within SecurityConfig to allow exposure of the Authorization header if frontend and backend domains differ. Implementation of an AuthenticationEntryPoint to return 401 Unauthorized upon JWT verification failure is required.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;Building an authentication infrastructure in Spring Boot 3.x centers on the migration to the functional configuration of Spring Security 6.x and stateless design using JWT. Combining external authentication via OAuth2 with JWT management applying RTR realizes a modern authentication system balancing scalability and security.&lt;/p&gt;</description></item></channel></rss>
