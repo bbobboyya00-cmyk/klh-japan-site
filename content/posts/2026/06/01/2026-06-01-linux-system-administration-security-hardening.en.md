@@ -1,7 +1,7 @@
 ---
 title: "Security Hardening and Network Infrastructure Implementation Essentials in Linux System Administration"
 slug: "linux-system-administration-security-hardening"
-date: 2026-06-01T11:49:20+09:00
+date: 2026-05-25T17:49:20+09:00
 draft: false
 image: ""
 description: "Explains SSH key authentication mechanisms, communication tunneling via port forwarding, network bonding, and detailed access control implementation methods using FACL in Linux server operations."
