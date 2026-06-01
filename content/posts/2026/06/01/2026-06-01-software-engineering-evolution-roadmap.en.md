@@ -1,7 +1,7 @@
 ---
 title: "Technical Evolution Stages and Domain Architecture Analysis for Software Engineers"
 slug: "software-engineering-evolution-roadmap"
-date: 2026-06-01T12:40:20+09:00
+date: 2026-05-26T10:40:20+09:00
 draft: false
 image: ""
 description: "A technical roadmap classifying the growth process of software engineers into five phases, analyzing the required tech stacks and career paths by domain. Details practical skill sets and growth strategies within CI/CD environments."
