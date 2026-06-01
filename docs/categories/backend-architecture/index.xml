@@ -1,84 +1,107 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 01 Jun 2026 09:37:26 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring Boot 3.x MVCにおけるSpring Securityの実装構成と脆弱性対策</title><link>https://klifehack.com/p/spring-boot-3-mvc-security-implementation/</link><pubDate>Mon, 01 Jun 2026 09:37:26 +0900</pubDate><guid>https://klifehack.com/p/spring-boot-3-mvc-security-implementation/</guid><description>&lt;img src="https://klifehack.com/" alt="Featured image of post Spring Boot 3.x MVCにおけるSpring Securityの実装構成と脆弱性対策" /&gt;&lt;h1 id="spring-boot-3x-における堅牢なセキュリティアーキテクチャの構築"&gt;Spring Boot 3.x における堅牢なセキュリティアーキテクチャの構築
-&lt;/h1&gt;&lt;p&gt;Webアプリケーションの堅牢性を担保するためには、Spring Securityの内部構造を深く理解し、適切なフィルタ構成を適用することが不可欠です。本稿では、Spring Boot 3.xで導入されたコンポーネントベースのセキュリティ設定と、主要な攻撃ベクトルに対する具体的な防御策について、インフラおよびアプリケーションアーキテクチャの視点から整理します。&lt;/p&gt;
-&lt;h2 id="web脆弱性への防御戦略"&gt;Web脆弱性への防御戦略
-&lt;/h2&gt;&lt;p&gt;現代のWebアプリケーションにおいて、以下の4つの主要な脅威に対する防御は必須要件として定義されます。これらは、フレームワークのデフォルト機能と適切なカスタム設定を組み合わせることで制御可能です。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;b&gt;XSS (Cross-Site Scripting)&lt;/b&gt;: 悪意のあるスクリプト注入を防止するため、HTMLエスケープ処理を徹底します。また、&lt;code&gt;JSESSIONID&lt;/code&gt; などの機密性の高いクッキーには &lt;code&gt;HttpOnly&lt;/code&gt; フラグを付与し、クライアントサイドスクリプトからのアクセスを物理的に遮断します。&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;CSRF (Cross-Site Request Forgery)&lt;/b&gt;: 状態変更を伴うリクエスト（POST, PUT, DELETE）に対して、セッションごとに固有のCSRFトークンを発行・検証します。あわせて、クッキーの &lt;code&gt;SameSite&lt;/code&gt; 属性を &lt;code&gt;Lax&lt;/code&gt; または &lt;code&gt;Strict&lt;/code&gt; に設定し、クロスサイトでのリクエスト送信を制限します。&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;CORS (Cross-Origin Resource Sharing)&lt;/b&gt;: 同一生成元ポリシー（SOP）を緩和する際、ワイルドカード（&lt;code&gt;*&lt;/code&gt;）の使用を厳格に禁止し、信頼できる特定のオリジンのみを明示的に許可するホワイトリスト方式を採用します。&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;SQL Injection&lt;/b&gt;: パラメータ化クエリ（Prepared Statements）の使用を原則とします。Spring Data JPA などのORMフレームワークを利用することで、自動的なパラメータバインディングによる防御層を構築します。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;img alt="System operational pipeline topology flow description" fetchpriority="high" height="316" loading="eager" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274231_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" width="629"/&gt;
-&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274233_1.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
-&lt;h2 id="spring-security-の内部アーキテクチャ"&gt;Spring Security の内部アーキテクチャ
-&lt;/h2&gt;&lt;p&gt;Spring Securityは、サーブレットコンテナのフィルタチェーンとして実装されています。リクエストがコントローラーに到達する前に、多層的なセキュリティチェックが実行されます。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;b&gt;DelegatingFilterProxy&lt;/b&gt;: 標準的なサーブレットフィルタであり、Springコンテキスト内のBean（FilterChainProxy）に処理を委譲するブリッジとして機能します。&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;FilterChainProxy&lt;/b&gt;: 複数の &lt;code&gt;SecurityFilterChain&lt;/code&gt; を管理し、リクエストURLや条件に応じて適切なフィルタを順次実行する中心的なエントリポイントです。&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;SecurityContextHolder&lt;/b&gt;: 認証成功後、ユーザー情報を &lt;code&gt;SecurityContext&lt;/code&gt; に保持します。デフォルトで &lt;code&gt;ThreadLocal&lt;/code&gt; 戦略を採用しており、1リクエスト1スレッドモデルにおいて、スレッドセーフにユーザー詳細（Authenticationオブジェクト）へのアクセスを可能にします。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274234_2.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
-&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274235_3.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
-&lt;h2 id="securityfilterchain-によるコンポーネントベース設定"&gt;SecurityFilterChain によるコンポーネントベース設定
-&lt;/h2&gt;&lt;p&gt;Spring Boot 3.x 以降、従来の &lt;code&gt;WebSecurityConfigurerAdapter&lt;/code&gt; の継承による設定は廃止されました。現在は、Lambda式を用いた関数型スタイルによる &lt;code&gt;SecurityFilterChain&lt;/code&gt; のBean定義が推奨されています。これにより、設定の可読性と柔軟性が大幅に向上しています。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Configuration&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@EnableWebSecurity&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;SecurityConfig&lt;/span&gt; {
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 01 Jun 2026 09:44:26 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>データエンジニアリングにおける高度なJava基盤の実装：並列処理から分散エコシステムまで</title><link>https://klifehack.com/p/java-data-engineering-architectural-foundations/</link><pubDate>Mon, 01 Jun 2026 09:44:26 +0900</pubDate><guid>https://klifehack.com/p/java-data-engineering-architectural-foundations/</guid><description>&lt;h1 id="javaによるデータエンジニアリングスケーラブルなパイプラインの構築と最適化"&gt;Javaによるデータエンジニアリング：スケーラブルなパイプラインの構築と最適化
+&lt;/h1&gt;&lt;p&gt;データエンジニアリングは、生データを実用的な形式に変換するためのインフラストラクチャ、アーキテクチャ、およびパイプラインの構築を担います。Javaはその堅牢性とスケーラビリティにより、大規模なデータセットの処理において中心的な役割を果たしています。本稿では、マルチスレッド、非同期処理、リアクティブプログラミング、および分散コンピューティングフレームワークとの統合手法について実装レベルで記述します。&lt;/p&gt;
+&lt;h2 id="executorserviceによる並列データ処理"&gt;ExecutorServiceによる並列データ処理
+&lt;/h2&gt;&lt;p&gt;大量のデータエントリを効率的に処理するため、固定スレッドプールを用いた並列実行モデルを実装します。これにより、CPUリソースの利用率を最適化し、スループットを向上させることが可能です。💡 🛠️&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.concurrent.ExecutorService;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.concurrent.Executors;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.concurrent.TimeUnit;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Bean&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; SecurityFilterChain &lt;span style="color:#a6e22e"&gt;securityFilterChain&lt;/span&gt;(HttpSecurity http) &lt;span style="color:#66d9ef"&gt;throws&lt;/span&gt; Exception {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; http
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;authorizeHttpRequests&lt;/span&gt;(auth &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; auth
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;requestMatchers&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/admin/**&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;hasRole&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;ADMIN&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;requestMatchers&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/user/**&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;authenticated&lt;/span&gt;()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;anyRequest&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;permitAll&lt;/span&gt;()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;formLogin&lt;/span&gt;(form &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; form
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;loginPage&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/login&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;defaultSuccessUrl&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/home&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;permitAll&lt;/span&gt;()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;logout&lt;/span&gt;(logout &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; logout
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;logoutUrl&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/logout&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;invalidateHttpSession&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;deleteCookies&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;JSESSIONID&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; );
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; http.&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;();
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DataParallelProcessor&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;processData&lt;/span&gt;(List&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;dataentry&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; entries) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; coreCount &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Runtime.&lt;span style="color:#a6e22e"&gt;getRuntime&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;availableProcessors&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ExecutorService executor &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Executors.&lt;span style="color:#a6e22e"&gt;newFixedThreadPool&lt;/span&gt;(coreCount);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; (DataEntry entry : entries) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;executor.&lt;span style="color:#a6e22e"&gt;submit&lt;/span&gt;(() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// データ変換ロジックの実装&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;entry.&lt;span style="color:#a6e22e"&gt;transform&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274237_4.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
-&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274238_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
-&lt;h2 id="セッションベース認証の実装プラクティス"&gt;セッションベース認証の実装プラクティス
-&lt;/h2&gt;&lt;p&gt;Thymeleafを利用する伝統的なMVCアプリケーションでは、セッションベースの認証が標準的な選択肢となります。実装においては、以下のセキュリティ基準を遵守する必要があります。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;b&gt;パスワード暗号化&lt;/b&gt;: &lt;code&gt;BCryptPasswordEncoder&lt;/code&gt; を使用し、強力な一方向ハッシュ化アルゴリズムによる保存を徹底します。&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;UserDetailsService&lt;/b&gt;: 永続化レイヤーからユーザー情報を取得し、&lt;code&gt;UserDetails&lt;/code&gt; オブジェクトとしてラップするカスタムロジックを構築します。&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;セッション管理ポリシー&lt;/b&gt;: セッションハイジャックを防止するため、同時ログイン制限や、認証成功時のセッションID固定攻撃対策（Session Fixation Protection）を適用します。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;http.&lt;span style="color:#a6e22e"&gt;sessionManagement&lt;/span&gt;(session &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; session
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;maximumSessions&lt;/span&gt;(1)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;maxSessionsPreventsLogin&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274239_6.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
-&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274240_7.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
-&lt;h2 id="メソッドレベルの認可制御"&gt;メソッドレベルの認可制御
-&lt;/h2&gt;&lt;p&gt;URLベースのセキュリティに加え、ビジネスロジックが記述されるサービスレイヤーやコントローラーのメソッド単位で詳細な認可制御を実施します。&lt;code&gt;@EnableMethodSecurity&lt;/code&gt; を有効化することで、以下の注釈による宣言的なセキュリティ定義が可能になります。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;b&gt;@Secured&lt;/b&gt;: 特定のロールを保持しているかを確認する単純なチェックに使用します。&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;@PreAuthorize&lt;/b&gt;: SpEL（Spring Expression Language）を用いて、複雑な認可ロジックを記述できます。例えば、&lt;code&gt;@PreAuthorize(&amp;quot;#user.id == authentication.principal.id&amp;quot;)&lt;/code&gt; のように記述することで、操作対象のリソースがログインユーザー本人のものであるかを動的に検証可能です。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274242_8.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
-&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274243_9.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
-&lt;h2 id="ビューおよび永続化レイヤーのセキュリティ実装"&gt;ビューおよび永続化レイヤーのセキュリティ実装
-&lt;/h2&gt;&lt;p&gt;フロントエンド（Thymeleaf）およびバックエンド（MyBatis/JPA）の各レイヤーにおいても、固有の脆弱性対策が必要です。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;b&gt;ThymeleafのCSRF保護&lt;/b&gt;: &lt;code&gt;th:action&lt;/code&gt; 属性を使用することで、フォーム内に隠しCSRFトークンが自動的に注入されます。&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;XSS防御の徹底&lt;/b&gt;: &lt;code&gt;th:text&lt;/code&gt; による自動エスケープを基本とし、&lt;code&gt;th:utext&lt;/code&gt;（エスケープなし出力）の使用は厳格に制限します。JSONリクエストのサニタイズが必要な場合は、Jacksonのカスタムシリアライザやサーブレットフィルタでの統合的な処理を検討します。&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;MyBatisにおける安全なバインディング&lt;/b&gt;: SQLインジェクションを完全に排除するため、&lt;code&gt;${value}&lt;/code&gt; による直接置換を避け、必ず &lt;code&gt;#{value}&lt;/code&gt; による型安全なパラメータバインディングを使用してください。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274244_10.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
-&lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/06/01/spring-boot-3-mvc-security-implementation/khack_1780274245_11.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;</description></item><item><title>Valkey 8.0 への移行によるキャッシュスループットの改善とレイテンシスパイクの解消</title><link>https://klifehack.com/p/valkey-migration-performance-tuning/</link><pubDate>Sat, 23 May 2026 09:55:55 +0900</pubDate><guid>https://klifehack.com/p/valkey-migration-performance-tuning/</guid><description>&lt;h1 id="aiエージェントのバーストトラフィックに伴うredisの限界と遅延の発生"&gt;AIエージェントのバーストトラフィックに伴うRedisの限界と遅延の発生
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;executor.&lt;span style="color:#a6e22e"&gt;shutdown&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#f92672"&gt;!&lt;/span&gt;executor.&lt;span style="color:#a6e22e"&gt;awaitTermination&lt;/span&gt;(60, TimeUnit.&lt;span style="color:#a6e22e"&gt;SECONDS&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;executor.&lt;span style="color:#a6e22e"&gt;shutdownNow&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;} &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (InterruptedException e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;executor.&lt;span style="color:#a6e22e"&gt;shutdownNow&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="completablefutureを用いた非同期データ集約"&gt;CompletableFutureを用いた非同期データ集約
+&lt;/h2&gt;&lt;p&gt;データベース、API、ファイルシステムなどの異なるソースからデータを並行して取得し、全体の実行時間を最小化する非同期集約パターンです。複数のI/Oバウンドなタスクを効率的に統合します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.concurrent.CompletableFuture;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DataAggregator&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;aggregateData&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CompletableFuture&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;string&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; dbData &lt;span style="color:#f92672"&gt;=&lt;/span&gt; CompletableFuture.&lt;span style="color:#a6e22e"&gt;supplyAsync&lt;/span&gt;(() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; fetchDataFromDB());
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CompletableFuture&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;string&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; apiData &lt;span style="color:#f92672"&gt;=&lt;/span&gt; CompletableFuture.&lt;span style="color:#a6e22e"&gt;supplyAsync&lt;/span&gt;(() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; fetchDataFromAPI());
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CompletableFuture&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;void&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; combinedFuture &lt;span style="color:#f92672"&gt;=&lt;/span&gt; CompletableFuture.&lt;span style="color:#a6e22e"&gt;allOf&lt;/span&gt;(dbData, apiData)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;thenAccept&lt;/span&gt;(v &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;String result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; dbData.&lt;span style="color:#a6e22e"&gt;join&lt;/span&gt;() &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34; &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; apiData.&lt;span style="color:#a6e22e"&gt;join&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;System.&lt;span style="color:#a6e22e"&gt;out&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Aggregated Result: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; result);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;combinedFuture.&lt;span style="color:#a6e22e"&gt;join&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="project-reactorによるリアクティブストリーム制御"&gt;Project Reactorによるリアクティブストリーム制御
+&lt;/h2&gt;&lt;p&gt;リアルタイムデータフローにおけるバックプレッシャ管理とバッチ処理を、Project ReactorのFluxを用いて実装します。ストリームの流量を制御し、システムの安定性を維持します。⚠️&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; reactor.core.publisher.Flux;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.time.Duration;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ReactiveStreamProcessor&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;processStream&lt;/span&gt;(Flux&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;string&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; dataStream) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dataStream
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;bufferTimeout&lt;/span&gt;(100, Duration.&lt;span style="color:#a6e22e"&gt;ofMillis&lt;/span&gt;(500)) &lt;span style="color:#75715e"&gt;// バッチ処理&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;doOnNext&lt;/span&gt;(batch &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; System.&lt;span style="color:#a6e22e"&gt;out&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Processing batch of size: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; batch.&lt;span style="color:#a6e22e"&gt;size&lt;/span&gt;()))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;subscribe&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="分散処理エコシステムの統合"&gt;分散処理エコシステムの統合
+&lt;/h2&gt;&lt;p&gt;Javaは、Apache Hadoop、Spark、Flinkといった主要な分散処理フレームワークとネイティブに統合されます。以下は、Apache Sparkを用いた分散ワードカウントの実装例であり、クラスタ環境での大規模データ処理を可能にします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.apache.spark.sql.SparkSession;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.apache.spark.api.java.JavaRDD;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.Arrays;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;SparkWordCount&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;static&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;(String&lt;span style="color:#f92672"&gt;[]&lt;/span&gt; args) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SparkSession spark &lt;span style="color:#f92672"&gt;=&lt;/span&gt; SparkSession.&lt;span style="color:#a6e22e"&gt;builder&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;appName&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;DistributedWordCount&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;getOrCreate&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;JavaRDD&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;string&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; lines &lt;span style="color:#f92672"&gt;=&lt;/span&gt; spark.&lt;span style="color:#a6e22e"&gt;read&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;textFile&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;hdfs://path/to/data.txt&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;javaRDD&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; count &lt;span style="color:#f92672"&gt;=&lt;/span&gt; lines.&lt;span style="color:#a6e22e"&gt;flatMap&lt;/span&gt;(line &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; Arrays.&lt;span style="color:#a6e22e"&gt;asList&lt;/span&gt;(line.&lt;span style="color:#a6e22e"&gt;split&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34; &amp;#34;&lt;/span&gt;)).&lt;span style="color:#a6e22e"&gt;iterator&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;count&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;System.&lt;span style="color:#a6e22e"&gt;out&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Total words: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; count);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;spark.&lt;span style="color:#a6e22e"&gt;stop&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="依存関係定義-maven"&gt;依存関係定義 (Maven)
+&lt;/h2&gt;&lt;p&gt;実装に必要な主要ライブラリの定義です。プロジェクトのpom.xmlに以下の依存関係を追加することで、高度なデータ処理機能を導入できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!-- Project Reactor for Reactive Streams --&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;io.projectreactor&lt;span style="color:#f92672"&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;reactor-core&lt;span style="color:#f92672"&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.4.0&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!-- Apache Spark Core for Distributed Computing --&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;org.apache.spark&lt;span style="color:#f92672"&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;spark-core_2.12&lt;span style="color:#f92672"&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.1.1&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="結論とアーキテクチャ選定指針"&gt;結論とアーキテクチャ選定指針
+&lt;/h2&gt;&lt;p&gt;ワークロードの特性に応じて、以下のフレームワークを選択することが推奨されます。システムの要件（レイテンシ、スループット、データ量）に基づいた適切な選定が、データパイプラインの成功を左右します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;バッチ処理&lt;/b&gt;: 信頼性と大規模分散ストレージ（HDFS）を重視する場合、Apache Hadoopを採用します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;インメモリ処理&lt;/b&gt;: 反復的な計算や高速なデータ処理が必要な場合、Apache Sparkを採用します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;リアルタイムストリーム&lt;/b&gt;: 低レイテンシなストリーム処理と複雑なイベント処理（CEP）が必要な場合、Apache Flinkを採用します。&lt;/string&gt;&lt;/string&gt;&lt;/void&gt;&lt;/string&gt;&lt;/string&gt;&lt;/dataentry&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Valkey 8.0 への移行によるキャッシュスループットの改善とレイテンシスパイクの解消</title><link>https://klifehack.com/p/valkey-migration-performance-tuning/</link><pubDate>Sat, 23 May 2026 09:55:55 +0900</pubDate><guid>https://klifehack.com/p/valkey-migration-performance-tuning/</guid><description>&lt;h1 id="aiエージェントのバーストトラフィックに伴うredisの限界と遅延の発生"&gt;AIエージェントのバーストトラフィックに伴うRedisの限界と遅延の発生
 &lt;/h1&gt;&lt;p&gt;2026年5月現在、当社のAIエージェント基盤では、Claude CodeおよびCursorからの同時リクエストが急増しており、バックエンドのキャッシュ層として運用していたRedis 7.2クラスターにおいて深刻なパフォーマンス低下が確認されました。特に、ベクトル検索のメタデータキャッシュおよびセッション管理において、P99レイテンシが平常時の2msから150ms以上にまでスパイクする事象が頻発しました。&lt;/p&gt;
 &lt;p&gt;監視ツール（Prometheus/Grafana）による分析の結果、Redisのシングルスレッドモデルに起因するCPU飽和が原因であることが判明しました。Redis 7系でもI/Oスレッドの分離は可能ですが、2026年のワークロードにおける高度な並列処理要求に対しては、スループットの限界に達していました。これを受け、Linux Foundation傘下で開発が進められている&lt;b&gt;&lt;mark&gt;Valkey 8.0&lt;/mark&gt;&lt;/b&gt;への移行を決定しました。&lt;/p&gt;
 &lt;h2 id="発生していた障害の技術的詳細"&gt;発生していた障害の技術的詳細

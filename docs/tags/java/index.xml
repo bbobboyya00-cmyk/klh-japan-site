@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Java on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/java/</link><description>Recent content in Java on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 01 Jun 2026 09:44:26 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/java/index.xml" rel="self" type="application/rss+xml"/><item><title>データエンジニアリングにおける高度なJava基盤の実装：並列処理から分散エコシステムまで</title><link>https://klifehack.com/p/java-data-engineering-architectural-foundations/</link><pubDate>Mon, 01 Jun 2026 09:44:26 +0900</pubDate><guid>https://klifehack.com/p/java-data-engineering-architectural-foundations/</guid><description>&lt;h1 id="javaによるデータエンジニアリングスケーラブルなパイプラインの構築と最適化"&gt;Javaによるデータエンジニアリング：スケーラブルなパイプラインの構築と最適化
+&lt;/h1&gt;&lt;p&gt;データエンジニアリングは、生データを実用的な形式に変換するためのインフラストラクチャ、アーキテクチャ、およびパイプラインの構築を担います。Javaはその堅牢性とスケーラビリティにより、大規模なデータセットの処理において中心的な役割を果たしています。本稿では、マルチスレッド、非同期処理、リアクティブプログラミング、および分散コンピューティングフレームワークとの統合手法について実装レベルで記述します。&lt;/p&gt;
+&lt;h2 id="executorserviceによる並列データ処理"&gt;ExecutorServiceによる並列データ処理
+&lt;/h2&gt;&lt;p&gt;大量のデータエントリを効率的に処理するため、固定スレッドプールを用いた並列実行モデルを実装します。これにより、CPUリソースの利用率を最適化し、スループットを向上させることが可能です。💡 🛠️&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.concurrent.ExecutorService;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.concurrent.Executors;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.concurrent.TimeUnit;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DataParallelProcessor&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;processData&lt;/span&gt;(List&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;dataentry&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; entries) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; coreCount &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Runtime.&lt;span style="color:#a6e22e"&gt;getRuntime&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;availableProcessors&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ExecutorService executor &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Executors.&lt;span style="color:#a6e22e"&gt;newFixedThreadPool&lt;/span&gt;(coreCount);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; (DataEntry entry : entries) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;executor.&lt;span style="color:#a6e22e"&gt;submit&lt;/span&gt;(() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// データ変換ロジックの実装&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;entry.&lt;span style="color:#a6e22e"&gt;transform&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;executor.&lt;span style="color:#a6e22e"&gt;shutdown&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#f92672"&gt;!&lt;/span&gt;executor.&lt;span style="color:#a6e22e"&gt;awaitTermination&lt;/span&gt;(60, TimeUnit.&lt;span style="color:#a6e22e"&gt;SECONDS&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;executor.&lt;span style="color:#a6e22e"&gt;shutdownNow&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;} &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (InterruptedException e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;executor.&lt;span style="color:#a6e22e"&gt;shutdownNow&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="completablefutureを用いた非同期データ集約"&gt;CompletableFutureを用いた非同期データ集約
+&lt;/h2&gt;&lt;p&gt;データベース、API、ファイルシステムなどの異なるソースからデータを並行して取得し、全体の実行時間を最小化する非同期集約パターンです。複数のI/Oバウンドなタスクを効率的に統合します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.concurrent.CompletableFuture;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DataAggregator&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;aggregateData&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CompletableFuture&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;string&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; dbData &lt;span style="color:#f92672"&gt;=&lt;/span&gt; CompletableFuture.&lt;span style="color:#a6e22e"&gt;supplyAsync&lt;/span&gt;(() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; fetchDataFromDB());
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CompletableFuture&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;string&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; apiData &lt;span style="color:#f92672"&gt;=&lt;/span&gt; CompletableFuture.&lt;span style="color:#a6e22e"&gt;supplyAsync&lt;/span&gt;(() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; fetchDataFromAPI());
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CompletableFuture&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;void&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; combinedFuture &lt;span style="color:#f92672"&gt;=&lt;/span&gt; CompletableFuture.&lt;span style="color:#a6e22e"&gt;allOf&lt;/span&gt;(dbData, apiData)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;thenAccept&lt;/span&gt;(v &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;String result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; dbData.&lt;span style="color:#a6e22e"&gt;join&lt;/span&gt;() &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34; &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; apiData.&lt;span style="color:#a6e22e"&gt;join&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;System.&lt;span style="color:#a6e22e"&gt;out&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Aggregated Result: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; result);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;combinedFuture.&lt;span style="color:#a6e22e"&gt;join&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="project-reactorによるリアクティブストリーム制御"&gt;Project Reactorによるリアクティブストリーム制御
+&lt;/h2&gt;&lt;p&gt;リアルタイムデータフローにおけるバックプレッシャ管理とバッチ処理を、Project ReactorのFluxを用いて実装します。ストリームの流量を制御し、システムの安定性を維持します。⚠️&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; reactor.core.publisher.Flux;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.time.Duration;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ReactiveStreamProcessor&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;processStream&lt;/span&gt;(Flux&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;string&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; dataStream) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dataStream
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;bufferTimeout&lt;/span&gt;(100, Duration.&lt;span style="color:#a6e22e"&gt;ofMillis&lt;/span&gt;(500)) &lt;span style="color:#75715e"&gt;// バッチ処理&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;doOnNext&lt;/span&gt;(batch &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; System.&lt;span style="color:#a6e22e"&gt;out&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Processing batch of size: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; batch.&lt;span style="color:#a6e22e"&gt;size&lt;/span&gt;()))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;subscribe&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="分散処理エコシステムの統合"&gt;分散処理エコシステムの統合
+&lt;/h2&gt;&lt;p&gt;Javaは、Apache Hadoop、Spark、Flinkといった主要な分散処理フレームワークとネイティブに統合されます。以下は、Apache Sparkを用いた分散ワードカウントの実装例であり、クラスタ環境での大規模データ処理を可能にします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.apache.spark.sql.SparkSession;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.apache.spark.api.java.JavaRDD;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.Arrays;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;SparkWordCount&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;static&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;(String&lt;span style="color:#f92672"&gt;[]&lt;/span&gt; args) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SparkSession spark &lt;span style="color:#f92672"&gt;=&lt;/span&gt; SparkSession.&lt;span style="color:#a6e22e"&gt;builder&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;appName&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;DistributedWordCount&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;getOrCreate&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;JavaRDD&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;string&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; lines &lt;span style="color:#f92672"&gt;=&lt;/span&gt; spark.&lt;span style="color:#a6e22e"&gt;read&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;textFile&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;hdfs://path/to/data.txt&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;javaRDD&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; count &lt;span style="color:#f92672"&gt;=&lt;/span&gt; lines.&lt;span style="color:#a6e22e"&gt;flatMap&lt;/span&gt;(line &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; Arrays.&lt;span style="color:#a6e22e"&gt;asList&lt;/span&gt;(line.&lt;span style="color:#a6e22e"&gt;split&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34; &amp;#34;&lt;/span&gt;)).&lt;span style="color:#a6e22e"&gt;iterator&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.&lt;span style="color:#a6e22e"&gt;count&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;System.&lt;span style="color:#a6e22e"&gt;out&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Total words: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; count);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;spark.&lt;span style="color:#a6e22e"&gt;stop&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="依存関係定義-maven"&gt;依存関係定義 (Maven)
+&lt;/h2&gt;&lt;p&gt;実装に必要な主要ライブラリの定義です。プロジェクトのpom.xmlに以下の依存関係を追加することで、高度なデータ処理機能を導入できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!-- Project Reactor for Reactive Streams --&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;io.projectreactor&lt;span style="color:#f92672"&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;reactor-core&lt;span style="color:#f92672"&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.4.0&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!-- Apache Spark Core for Distributed Computing --&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;org.apache.spark&lt;span style="color:#f92672"&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;spark-core_2.12&lt;span style="color:#f92672"&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.1.1&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="結論とアーキテクチャ選定指針"&gt;結論とアーキテクチャ選定指針
+&lt;/h2&gt;&lt;p&gt;ワークロードの特性に応じて、以下のフレームワークを選択することが推奨されます。システムの要件（レイテンシ、スループット、データ量）に基づいた適切な選定が、データパイプラインの成功を左右します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;バッチ処理&lt;/b&gt;: 信頼性と大規模分散ストレージ（HDFS）を重視する場合、Apache Hadoopを採用します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;インメモリ処理&lt;/b&gt;: 反復的な計算や高速なデータ処理が必要な場合、Apache Sparkを採用します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;リアルタイムストリーム&lt;/b&gt;: 低レイテンシなストリーム処理と複雑なイベント処理（CEP）が必要な場合、Apache Flinkを採用します。&lt;/string&gt;&lt;/string&gt;&lt;/void&gt;&lt;/string&gt;&lt;/string&gt;&lt;/dataentry&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item></channel></rss>
