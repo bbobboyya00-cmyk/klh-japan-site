@@ -1,4 +1,101 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 01 Jun 2026 13:49:50 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Connecting Apache on a Docker Container to PHP-FPM on the Host OS via FastCGI Proxy</title><link>https://klifehack.com/en/p/docker-apache-host-php-fpm-proxy/</link><pubDate>Mon, 01 Jun 2026 13:49:50 +0900</pubDate><guid>https://klifehack.com/en/p/docker-apache-host-php-fpm-proxy/</guid><description>&lt;h1 id="building-a-php-execution-environment-with-a-hybrid-configuration-of-docker-container-apache-and-host-os-php-fpm"&gt;Building a PHP Execution Environment with a Hybrid Configuration of Docker Container (Apache) and Host OS (PHP-FPM)
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 01 Jun 2026 21:53:22 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Design and Implementation of VPC Endpoints in AWS Systems Manager: Structural Differences Between Interface and Gateway Types</title><link>https://klifehack.com/en/p/aws-ssm-vpc-endpoint-architecture-analysis/</link><pubDate>Mon, 01 Jun 2026 21:53:22 +0900</pubDate><guid>https://klifehack.com/en/p/aws-ssm-vpc-endpoint-architecture-analysis/</guid><description>&lt;h1 id="aws-vpc-endpoint-design-and-implementation-structural-understanding-of-secure-private-connections"&gt;AWS VPC Endpoint Design and Implementation: Structural Understanding of Secure Private Connections
+&lt;/h1&gt;&lt;p&gt;&lt;b&gt;meta_description&lt;/b&gt;: Detailed explanation of the operating principles of Interface and Gateway VPC endpoints, security design for SSM operations, and CLI verification processes from a system architect&amp;rsquo;s perspective.&lt;/p&gt;
+&lt;h2 id="1-basic-concepts-and-design-philosophy-of-vpc-endpoints"&gt;1. Basic Concepts and Design Philosophy of VPC Endpoints
+&lt;/h2&gt;&lt;p&gt;AWS VPC endpoints are a network feature that enables resources within an Amazon Virtual Private Cloud (VPC) to connect privately to supported AWS services and VPC endpoint services without going through the public internet. With this architecture, traffic between the VPC and the service remains within the Amazon network, improving security and performance.&lt;/p&gt;
+&lt;p&gt;Typically, resources such as EC2 instances, ECS tasks, and Lambda functions deployed in private subnets use VPC endpoints to access services like AWS Systems Manager (SSM), Amazon S3, Amazon CloudWatch Logs, and Amazon ECR.&lt;/p&gt;
+&lt;h3 id="traffic-flow-logic"&gt;Traffic Flow Logic
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;Private Subnet Resource&lt;/code&gt; → &lt;code&gt;AWS Service API Call&lt;/code&gt; → &lt;code&gt;VPC Endpoint&lt;/code&gt; → &lt;code&gt;AWS Service&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;There are four components that must be accurately distinguished during implementation:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;VPC Endpoint&lt;/b&gt;: The private connection feature itself.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;VPC Endpoint Service Name&lt;/b&gt;: The specific AWS service identifier selected during creation (e.g., &lt;code&gt;com.amazonaws.ap-northeast-2.ssm&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Prefix List&lt;/b&gt;: A managed object containing a group of IP address ranges (CIDR blocks).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Endpoint Type&lt;/b&gt;: The underlying connection method (Interface type or Gateway type).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="2-comparative-analysis-of-network-components"&gt;2. Comparative Analysis of Network Components
+&lt;/h2&gt;&lt;p&gt;VPC endpoints differ in purpose from other network features such as Transit Gateway, NAT Gateway, and EC2 Instance Connect. The primary differences are as follows:&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Category&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Purpose&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Representative Flow&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Key Decision Criteria&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;VPC Endpoint&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Private access to AWS services from internal resources&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;EC2 → VPCE → AWS Service&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Used for accessing AWS services&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Transit Gateway&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Routing hub between VPCs, VPNs, and Direct Connect&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;VPC ↔ TGW ↔ VPC/On-premises&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Used for inter-network connectivity&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;NAT Gateway&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Outbound internet transmission from private resources&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;EC2 → NAT → Internet&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Used for external transmission to the internet&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;EIC Endpoint&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;SSH/RDP access to EC2 without public IPs&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;User → EIC Endpoint → EC2&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Used as an access path to EC2&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="3-strict-identification-of-service-names-and-prefix-lists"&gt;3. Strict Identification of Service Names and Prefix Lists
+&lt;/h2&gt;&lt;h3 id="3-1-vpc-endpoint-service-name-format"&gt;3-1. VPC Endpoint Service Name Format
+&lt;/h3&gt;&lt;p&gt;The service name is an identifier used to specify the AWS service to which the endpoint connects. For the Seoul region (ap-northeast-2), the standard format is &lt;code&gt;com.amazonaws.&amp;lt;region&amp;gt;.&amp;lt;service-code&amp;gt;&lt;/code&gt;.&lt;/service-code&gt;&lt;/region&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;com.amazonaws.ap-northeast-2.ssm&lt;/code&gt; (SSM API)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;com.amazonaws.ap-northeast-2.ssmmessages&lt;/code&gt; (Session Manager data channel)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;com.amazonaws.ap-northeast-2.ec2messages&lt;/code&gt; (SSM Agent messaging)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-2-prefix-lists"&gt;3-2. Prefix Lists
+&lt;/h3&gt;&lt;p&gt;Prefix lists are sets of CIDR blocks managed by IDs in the format &lt;code&gt;pl-xxxxxxxx&lt;/code&gt;. AWS-managed prefix lists can be referenced in security groups and route tables, but prefix lists do not exist for all VPC endpoint services. They primarily play an important role in Gateway-type endpoints such as S3 and DynamoDB.&lt;/p&gt;
+&lt;h2 id="4-structural-logic-by-endpoint-type"&gt;4. Structural Logic by Endpoint Type
+&lt;/h2&gt;&lt;h3 id="4-1-interface-endpoints-aws-privatelink"&gt;4-1. Interface Endpoints (AWS PrivateLink)
+&lt;/h3&gt;&lt;p&gt;Interface endpoints utilize AWS PrivateLink. Upon creation, an &lt;b&gt;Endpoint ENI&lt;/b&gt; (Elastic Network Interface) is generated within the specified subnet.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Logic&lt;/b&gt;: &lt;code&gt;EC2&lt;/code&gt; → &lt;code&gt;TCP 443&lt;/code&gt; → &lt;code&gt;Endpoint ENI&lt;/code&gt; → &lt;code&gt;AWS PrivateLink&lt;/code&gt; → &lt;code&gt;AWS Service&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Security&lt;/b&gt;: A security group must be attached to the Endpoint ENI to control inbound traffic.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-2-gateway-endpoints"&gt;4-2. Gateway Endpoints
+&lt;/h3&gt;&lt;p&gt;Gateway endpoints do not use ENIs or security groups. Instead, they function by directly modifying &lt;b&gt;route tables&lt;/b&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Mechanism&lt;/b&gt;: A route is added to the route table with the destination set to an AWS-managed prefix list (e.g., S3) and the target set to the VPC endpoint ID (&lt;code&gt;vpce-xxxxxxxx&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Logic&lt;/b&gt;: &lt;code&gt;EC2&lt;/code&gt; → &lt;code&gt;Route Table (Dest: S3 Prefix List, Target: VPCE)&lt;/code&gt; → &lt;code&gt;S3/DynamoDB&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-security-design-of-interface-endpoints-in-ssm-operations"&gt;5. Security Design of Interface Endpoints in SSM Operations
+&lt;/h2&gt;&lt;p&gt;Since services such as SSM, Logs, and Monitoring use the Interface type, security group configuration is essential.&lt;/p&gt;
+&lt;h3 id="security-group-standard-settings"&gt;Security Group Standard Settings
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Inbound Rules&lt;/b&gt;: Allow &lt;b&gt;TCP 443&lt;/b&gt; from the source (EC2 instance security group or internal CIDR).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Outbound Rules&lt;/b&gt;: Usually allow &amp;ldquo;All Traffic,&amp;rdquo; but can be restricted according to organizational policy.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Note&lt;/b&gt;: Private DNS must be enabled. This ensures that service URLs resolve to the private IP addresses of the Endpoint ENIs.&lt;/p&gt;
+&lt;h2 id="6-infrastructure-state-verification-procedures-via-cli"&gt;6. Infrastructure State Verification Procedures via CLI
+&lt;/h2&gt;&lt;p&gt;To confirm that the configuration is correct, perform verification using the following steps:&lt;/p&gt;
+&lt;h3 id="step-1-identify-vpc-endpoints"&gt;Step 1: Identify VPC Endpoints
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws ec2 describe-vpc-endpoints --filters Name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vpc-id,Values&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vpc-xxxxxxxx --query &lt;span style="color:#e6db74"&gt;&amp;#39;VpcEndpoints[*].{ID:VpcEndpointId,Service:ServiceName,Type:VpcEndpointType}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-2-confirm-security-group-rules"&gt;Step 2: Confirm Security Group Rules
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws ec2 describe-security-group-rules --filters Name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;group-id,Values&lt;span style="color:#f92672"&gt;=&lt;/span&gt;sg-xxxxxxxx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-3-confirm-dns-resolution"&gt;Step 3: Confirm DNS Resolution
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nslookup ssm.ap-northeast-2.amazonaws.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 If Private DNS is correctly configured, the result will return the private IP addresses of the Interface endpoint ENIs.&lt;/p&gt;
+&lt;h2 id="7-operational-notes"&gt;7. Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Interface Type&lt;/b&gt;: Ensure that the ENI, security group, and Private DNS are all correctly in place.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Gateway Type&lt;/b&gt;: Ensure that an entry exists in the route table with the prefix list as the destination.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;SSM Requirements&lt;/b&gt;: To make SSM fully functional, all three endpoints—&lt;code&gt;ssm&lt;/code&gt;, &lt;code&gt;ssmmessages&lt;/code&gt;, and &lt;code&gt;ec2messages&lt;/code&gt;—are required. If any are missing, Session Manager connection failures or agent offline states will occur.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Implementation of Connecting Apache on a Docker Container to PHP-FPM on the Host OS via FastCGI Proxy</title><link>https://klifehack.com/en/p/docker-apache-host-php-fpm-proxy/</link><pubDate>Tue, 26 May 2026 17:47:20 +0900</pubDate><guid>https://klifehack.com/en/p/docker-apache-host-php-fpm-proxy/</guid><description>&lt;h1 id="building-a-php-execution-environment-with-a-hybrid-configuration-of-docker-container-apache-and-host-os-php-fpm"&gt;Building a PHP Execution Environment with a Hybrid Configuration of Docker Container (Apache) and Host OS (PHP-FPM)
 &lt;/h1&gt;&lt;h2 id="1-architecture-overview-and-selection-rationale"&gt;1. Architecture Overview and Selection Rationale
 &lt;/h2&gt;&lt;p&gt;This article details the implementation process of a hybrid configuration that links the Apache HTTP Server running inside a Docker container with PHP-FPM (FastCGI Process Manager) running directly on the host OS. While it is common in Docker environments to run PHP within the same container or in a sidecar configuration, this setup physically and logically separates the presentation layer (Apache) from the application processing layer (PHP).&lt;/p&gt;
 &lt;h3 id="11-current-issues"&gt;1.1 Current Issues
