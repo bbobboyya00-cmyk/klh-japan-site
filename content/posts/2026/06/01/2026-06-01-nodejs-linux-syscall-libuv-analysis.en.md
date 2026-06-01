@@ -1,7 +1,7 @@
 ---
 title: "Optimizing I/O Performance and Improving Stability through Linux System Call Analysis in Node.js"
 slug: "nodejs-linux-syscall-libuv-analysis"
-date: 2026-06-01T11:03:53+09:00
+date: 2026-05-25T10:03:53+09:00
 draft: false
 image: ""
 description: "To resolve Node.js performance bottlenecks, this article analyzes the behavior of system calls (epoll, read, write) at the boundary between libuv and the Linux kernel, detailing practical implementation patterns and monitoring techniques."
