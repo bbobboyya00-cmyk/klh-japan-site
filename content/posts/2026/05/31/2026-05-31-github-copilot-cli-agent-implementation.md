@@ -1,7 +1,7 @@
 ---
 title: "GitHub Copilot CLIにおけるエージェント構成とeverything-copilot-cliの導入"
 slug: "github-copilot-cli-agent-implementation"
-date: 2026-05-24T23:10:20+09:00
+date: 2026-05-24T03:10:20+09:00
 draft: false
 image: ""
 description: "GitHub Copilot CLIを単なる補完ツールから自律型エージェントへと拡張するeverything-copilot-cliフレームワークの導入手順と、マルチAIオーケストレーションの構成について記述します。"

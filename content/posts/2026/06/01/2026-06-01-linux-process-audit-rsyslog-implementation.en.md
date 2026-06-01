@@ -1,7 +1,7 @@
 ---
 title: "Implementing Process Auditing and Log Forwarding Using auditd and rsyslog"
 slug: "linux-process-audit-rsyslog-implementation"
-date: 2026-06-01T10:21:24+09:00
+date: 2026-05-24T10:21:24+09:00
 draft: false
 image: ""
 description: "Explains the implementation steps for kernel-level process monitoring rule definitions using auditd and tampering prevention measures via remote log forwarding using rsyslog."
