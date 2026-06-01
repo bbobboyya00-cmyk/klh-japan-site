@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pydantic on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/pydantic/</link><description>Recent content in Pydantic on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 02 Jun 2026 07:24:55 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/pydantic/index.xml" rel="self" type="application/rss+xml"/><item><title>FastAPIのアーキテクチャ設計と実装における技術的考察</title><link>https://klifehack.com/p/fastapi-architecture-implementation-deep-dive/</link><pubDate>Tue, 02 Jun 2026 07:24:55 +0900</pubDate><guid>https://klifehack.com/p/fastapi-architecture-implementation-deep-dive/</guid><description>&lt;h1 id="fastapiの内部アーキテクチャとランタイム挙動に関する技術分析"&gt;FastAPIの内部アーキテクチャとランタイム挙動に関する技術分析
+&lt;/h1&gt;&lt;p&gt;FastAPIは、Pythonの標準的な型ヒントを基盤とした、現代的かつ高性能なAPI構築用Webフレームワークです。本稿では、FastAPIの内部アーキテクチャ、データバリデーションのメカニズム、およびランタイムにおける非同期処理の挙動について技術的な分析を行います。&lt;/p&gt;
+&lt;h2 id="1-アーキテクチャの構成要素と設計思想"&gt;1. アーキテクチャの構成要素と設計思想
+&lt;/h2&gt;&lt;p&gt;FastAPIは、独立した2つの主要ライブラリを統合することで、その機能を実現しています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Starlette:&lt;/b&gt; ルーティング、ミドルウェア、ASGI仕様への準拠など、Webエコシステムの基盤を管理します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Pydantic:&lt;/b&gt; データのバリデーション、シリアライゼーション、およびOpenAPIスキーマの生成を担います。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="型ヒントによるランタイム制御"&gt;型ヒントによるランタイム制御
+&lt;/h3&gt;&lt;p&gt;FastAPIの最大の特徴は、Pythonの型ヒントを単なる静的解析のツールとしてではなく、実行時のロジックとして活用する点にあります。フレームワークは型ヒントを参照し、以下の処理を自動化します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;データ抽出:&lt;/b&gt; リクエストのPath、Query、Body、Headerのどこから値を取得するかを決定します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;バリデーション:&lt;/b&gt; 定義された型に基づき、厳密な検証ルールを適用します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;データ変換:&lt;/b&gt; URL経由の文字列などを、&lt;code&gt;int&lt;/code&gt;や&lt;code&gt;float&lt;/code&gt;、あるいは複雑なPydanticモデルへと自動変換します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ドキュメント生成:&lt;/b&gt; OpenAPIスキーマに正確なデータ型と制約を反映させます。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;例えば、パラメータを&lt;code&gt;int&lt;/code&gt;として宣言した場合、変換に失敗するとFastAPIは自動的に &lt;b&gt;422 Unprocessable Entity&lt;/b&gt; を返却します。これにより、開発者が手動でバリデーションロジックを記述する必要性が排除されます。&lt;/p&gt;
+&lt;h2 id="2-実行環境とライフサイクル管理"&gt;2. 実行環境とライフサイクル管理
+&lt;/h2&gt;&lt;p&gt;FastAPIは、開発環境と本番環境で異なる挙動を制御するためのCLIを提供しています。&lt;/p&gt;
+&lt;h3 id="実行モードの差異"&gt;実行モードの差異
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;開発モード (&lt;code&gt;fastapi dev&lt;/code&gt;):&lt;/b&gt; オートリロードが有効化され、セキュリティ上の理由からデフォルトで &lt;code&gt;127.0.0.1&lt;/code&gt; にバインドされます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;本番モード (&lt;code&gt;fastapi run&lt;/code&gt;):&lt;/b&gt; 安定性を優先してオートリロードが無効化され、コンテナ化を想定して &lt;code&gt;0.0.0.0&lt;/code&gt; にバインドされます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="マルチワーカー環境における注意点"&gt;マルチワーカー環境における注意点
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;code&gt;--workers&lt;/code&gt; オプションを使用して複数のワーカープロセスを起動する場合、各ワーカーは独立したメモリ空間を持ちます。そのため、インメモリのグローバル変数（リストやカウンタなど）はワーカー間で共有されません。状態管理が必要な場合は、Redisやデータベースなどの外部ストアを利用する設計が必須となります。&lt;/p&gt;
+&lt;h2 id="3-パラメータハンドリングとannotatedパターン"&gt;3. パラメータハンドリングとAnnotatedパターン
+&lt;/h2&gt;&lt;p&gt;FastAPIでは、&lt;code&gt;typing.Annotated&lt;/code&gt; を使用して型情報とメタデータを分離・統合する実装が推奨されています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Annotated
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI, Query
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_items&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;q: Annotated[str &lt;span style="color:#f92672"&gt;|&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, Query(max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;)] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;size: Annotated[int, Query(ge&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;q&amp;#34;&lt;/span&gt;: q, &lt;span style="color:#e6db74"&gt;&amp;#34;size&amp;#34;&lt;/span&gt;: size}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 &lt;code&gt;Annotated&lt;/code&gt; を使用することで、標準的なPythonツールとの互換性を維持しつつ、&lt;code&gt;ge=1&lt;/code&gt; (1以上) や &lt;code&gt;max_length&lt;/code&gt; といったフレームワーク固有の制約を付与できます。&lt;/p&gt;
+&lt;h2 id="4-pydanticによるデータモデリング"&gt;4. Pydanticによるデータモデリング
+&lt;/h2&gt;&lt;p&gt;リクエストボディの処理には、Pydanticモデルが使用されます。これにより、複雑なJSON構造をPythonオブジェクトとして安全に扱うことが可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel, ConfigDict
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ItemModel&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;id: int
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;name: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: str &lt;span style="color:#f92672"&gt;|&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model_config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ConfigDict(from_attributes&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;🛠️ ORM（SQLAlchemyなど）との連携時には、&lt;code&gt;model_config = ConfigDict(from_attributes=True)&lt;/code&gt; を設定することで、辞書形式だけでなくオブジェクトの属性からのデータ読み込みが可能になります。&lt;/p&gt;
+&lt;h2 id="5-非同期処理の実行モデル-async-def-と-def-の使い分け"&gt;5. 非同期処理の実行モデル: &lt;code&gt;async def&lt;/code&gt; と &lt;code&gt;def&lt;/code&gt; の使い分け
+&lt;/h2&gt;&lt;p&gt;FastAPIは、関数の定義方法によって実行されるスレッドを切り替えます。この挙動の理解は、パフォーマンス最適化において極めて重要です。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;&lt;code&gt;async def&lt;/code&gt;:&lt;/b&gt; イベントループ上で直接実行されます。関数内では非ブロッキングなコード（&lt;code&gt;await&lt;/code&gt; を伴う処理）のみを記述する必要があります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;&lt;code&gt;def&lt;/code&gt;:&lt;/b&gt; 外部のスレッドプールで実行されます。同期的なブロッキング処理（&lt;code&gt;time.sleep()&lt;/code&gt; や同期的なDBドライバなど）が含まれる場合に、イベントループを停止させないための仕組みです。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;⚠️ &lt;b&gt;警告:&lt;/b&gt; &lt;code&gt;async def&lt;/code&gt; 内で &lt;code&gt;time.sleep()&lt;/code&gt; のようなブロッキング関数を呼び出すと、イベントループ全体が停止し、サーバーが他のリクエストを処理できなくなります。ブロッキング処理が必要な場合は、通常の &lt;code&gt;def&lt;/code&gt; を使用するか、&lt;code&gt;await asyncio.sleep()&lt;/code&gt; を検討してください。&lt;/p&gt;
+&lt;h2 id="6-依存性の注入-dependency-injection"&gt;6. 依存性の注入 (Dependency Injection)
+&lt;/h2&gt;&lt;p&gt;FastAPIのDIシステムは、認証、データベースセッション管理、共通パラメータの処理などをモジュール化するために設計されています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Generator
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Depends
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_db_session&lt;/span&gt;() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; Generator:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;db &lt;span style="color:#f92672"&gt;=&lt;/span&gt; SessionLocal()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;yield&lt;/span&gt; db
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 &lt;code&gt;yield&lt;/code&gt; を使用した依存関係では、リクエスト処理前に &lt;code&gt;yield&lt;/code&gt; までのコードが実行され、レスポンス送信後に &lt;code&gt;finally&lt;/code&gt; ブロックが実行されるため、リソースのクリーンアップを確実に行うことができます。&lt;/p&gt;
+&lt;h2 id="7-ミドルウェアとcors設定"&gt;7. ミドルウェアとCORS設定
+&lt;/h2&gt;&lt;p&gt;すべてのリクエストとレスポンスをインターセプトするミドルウェアは、セキュリティ設定において重要な役割を果たします。特に、異なるドメインからのアクセスを許可するCORSの設定は、フロントエンドとの連携において不可欠です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi.middleware.cors &lt;span style="color:#f92672"&gt;import&lt;/span&gt; CORSMiddleware
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;origins &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:3000&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;add_middleware(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CORSMiddleware,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;allow_origins&lt;span style="color:#f92672"&gt;=&lt;/span&gt;origins,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;allow_credentials&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;allow_methods&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;*&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;allow_headers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;*&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="8-アプリケーションの構造化とライフイベント"&gt;8. アプリケーションの構造化とライフイベント
+&lt;/h2&gt;&lt;p&gt;大規模なアプリケーションでは、&lt;code&gt;APIRouter&lt;/code&gt; を使用してルートを分割し、保守性を高めます。また、&lt;code&gt;lifespan&lt;/code&gt; コンテキストマネージャを使用することで、アプリケーションの起動時と終了時に一度だけ実行されるロジック（機械学習モデルのロードやDB接続の確立など）を定義できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; contextlib &lt;span style="color:#f92672"&gt;import&lt;/span&gt; asynccontextmanager
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI, APIRouter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@asynccontextmanager&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;lifespan&lt;/span&gt;(app: FastAPI):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Startup logic (e.g., connection pool initialization)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;yield&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Shutdown logic (e.g., connection pool cleanup)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI(lifespan&lt;span style="color:#f92672"&gt;=&lt;/span&gt;lifespan)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;router &lt;span style="color:#f92672"&gt;=&lt;/span&gt; APIRouter()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@router.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_users&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; [{&lt;span style="color:#e6db74"&gt;&amp;#34;username&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;user1&amp;#34;&lt;/span&gt;}]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;include_router(router)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;FastAPIは、Starletteによる堅牢なASGI基盤とPydanticによる厳密なデータ検証を、Pythonの型ヒントという直感的なインターフェースで統合しています。&lt;code&gt;async def&lt;/code&gt; と &lt;code&gt;def&lt;/code&gt; の適切な使い分け、&lt;code&gt;Annotated&lt;/code&gt; によるメタデータ管理、および &lt;code&gt;lifespan&lt;/code&gt; によるリソース制御を理解することで、スケーラブルで保守性の高いAPIアーキテクチャを構築することが可能となります。&lt;/p&gt;</description></item></channel></rss>
