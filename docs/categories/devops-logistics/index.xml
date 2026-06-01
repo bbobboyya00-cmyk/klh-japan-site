@@ -1,4 +1,59 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 24 May 2026 16:36:25 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>Traefikによるクラウドネイティブ環境での動的ルーティング実装とアーキテクチャ分析</title><link>https://klifehack.com/p/traefik-dynamic-routing-architecture-analysis/</link><pubDate>Sun, 24 May 2026 16:36:25 +0900</pubDate><guid>https://klifehack.com/p/traefik-dynamic-routing-architecture-analysis/</guid><description>&lt;img src="https://klifehack.com/" alt="Featured image of post Traefikによるクラウドネイティブ環境での動的ルーティング実装とアーキテクチャ分析" /&gt;&lt;p&gt;クラウドネイティブなマイクロサービスアーキテクチャにおいて、サービスの頻繁なスケーリングやデプロイに伴うルーティング設定の更新は、運用上の大きなボトルネックとなります。従来の静的なリバースプロキシでは、バックエンドの変更のたびに設定ファイルの書き換えとプロセスの再起動が必要であり、これがダウンタイムやヒューマンエラーの原因となっていました。本稿では、Traefikを用いた動的ルーティングの構築戦略とその内部構造について分析します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 01 Jun 2026 11:26:26 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub ActionsとSelf-hosted RunnerによるローカルKubernetes CI/CDの構築と認証・ネットワーク境界の突破</title><link>https://klifehack.com/p/github-actions-self-hosted-k8s-cicd/</link><pubDate>Mon, 01 Jun 2026 11:26:26 +0900</pubDate><guid>https://klifehack.com/p/github-actions-self-hosted-k8s-cicd/</guid><description>&lt;h2 id="github-actionsとself-hosted-runnerによるローカルkubernetesデプロイの最適化"&gt;GitHub ActionsとSelf-hosted RunnerによるローカルKubernetesデプロイの最適化
+&lt;/h2&gt;&lt;h3 id="1-課題の背景ハイブリッド環境におけるデプロイメントの断絶"&gt;1. 課題の背景：ハイブリッド環境におけるデプロイメントの断絶
+&lt;/h3&gt;&lt;p&gt;モダンなマイクロサービス開発において、Docker Desktop等のローカルKubernetes環境は、本番環境に近い検証を可能にする重要なアセットです。しかし、GitHub Actionsのマネージドランナー（ubuntu-latest等）からローカルクラスターへデプロイを試みる際、二つの大きな障壁に直面します。第一に、パブリッククラウド上のランナーからプライベートネットワーク内のクラスターエンドポイント（kubernetes.docker.internal）への到達不能性。第二に、YAML形式のKubeconfigをGitHub Secretsに保存する際に発生する、改行コードやインデントの崩れによるPEMブロック解析エラーです。&lt;/p&gt;
+&lt;p&gt;本稿では、これらの境界を突破し、Git Pushからローカルクラスターへの同期を完全自動化するCI/CDパイプラインの構築プロセスを詳解します。&lt;/p&gt;
+&lt;h3 id="2-技術選定とトレードオフself-hosted-runnerの採用理由"&gt;2. 技術選定とトレードオフ：Self-hosted Runnerの採用理由
+&lt;/h3&gt;&lt;p&gt;GitHub Actionsからプライベートクラスターへアクセスする手法として、以下の比較検討を行いました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Cloud Runner + VPN/Tunneling (ngrok等)&lt;/b&gt;: 外部からローカルネットワークへのトンネルを構築する手法。セットアップは容易ですが、セキュリティリスクが高く、帯域制限やレイテンシがボトルネックとなります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Self-hosted Runner (採用)&lt;/b&gt;: ローカルマシン上でGitHub Actionsのエージェントを直接稼働させる手法。ファイアウォールの内側で動作するため、外部へのポート開放が不要であり、ローカルのDockerデーモンやK8s APIに直接アクセスできます。また、ビルド済みイメージをレジストリからプルする際のネットワークコストを最小化できる利点があります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-実装詳細認証情報のカプセル化とランナーの構成"&gt;3. 実装詳細：認証情報のカプセル化とランナーの構成
+&lt;/h3&gt;&lt;h4 id="31-kubeconfigのbase64エンコードによる整合性確保"&gt;3.1 KubeconfigのBase64エンコードによる整合性確保
+&lt;/h4&gt;&lt;p&gt;GitHub SecretsにKubeconfigをそのまま保存すると、&lt;b&gt;error: unable to load root certificates: unable to parse bytes as PEM block&lt;/b&gt;というエラーに遭遇する確率が極めて高いです。これを回避するため、PowerShellを用いてバイナリレベルでBase64エンコードを行い、文字列として注入します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# KubeconfigをBase64文字列に変換し、ファイルに出力&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$configPath = &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$HOME&lt;span style="color:#e6db74"&gt;\.kube\config&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$base64Config = [&lt;span style="color:#66d9ef"&gt;Convert&lt;/span&gt;]::ToBase64String([&lt;span style="color:#66d9ef"&gt;IO.File&lt;/span&gt;]::ReadAllBytes($configPath))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$base64Config | Out-File -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;encoded_config.txt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="32-windows-self-hosted-runnerのワークフロー定義"&gt;3.2 Windows Self-hosted Runnerのワークフロー定義
+&lt;/h4&gt;&lt;p&gt;Windows環境でランナーを動作させる場合、デフォルトシェルがPowerShellになるため、Linuxベースのコマンド（mkdir -p等）は動作しません。以下に、冪等性を担保したワークフローの実装例を示します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;self-hosted&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Configure Kubeconfig&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;shell&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pwsh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;|&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;$kubeDir = &amp;#34;$HOME\.kube&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;if (!(Test-Path $kubeDir)) { New-Item -ItemType Directory -Path $kubeDir }&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;$decodedConfig = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String(&amp;#34;${{ secrets.KUBE_CONFIG_DATA }}&amp;#34;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;$decodedConfig | Out-File -FilePath &amp;#34;$kubeDir\config&amp;#34; -Encoding ascii&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy to Local Kubernetes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;|&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;kubectl apply -f ./k8s/deployment.yaml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;kubectl rollout status deployment/api-service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="4-実務における警告と回避策-operational-reality"&gt;4. 実務における警告と回避策 (Operational Reality)
+&lt;/h3&gt;&lt;h4 id="41-errimagepullとimagepullpolicyの最適化"&gt;4.1 ErrImagePullとimagePullPolicyの最適化
+&lt;/h4&gt;&lt;p&gt;ローカル環境での開発時、イメージをレジストリにプッシュした直後にデプロイを行うと、タグがlatestの場合にKubernetesが古いキャッシュを参照したり、プルに失敗して&lt;b&gt;ErrImagePull&lt;/b&gt;を発生させることがあります。これを防ぐため、deployment.yamlでは以下の設定を推奨します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;imagePullPolicy: Always&lt;/b&gt;: 常にレジストリを確認させます。ただし、ネットワーク負荷が増大します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;imagePullPolicy: IfNotPresent&lt;/b&gt;: ローカルビルドしたイメージをそのまま使う場合に有効です。Self-hosted Runnerがクラスターと同じノードで動作している場合、ビルドしたイメージが即座に利用可能になるため、この設定が最も効率的です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="42-永続ボリュームのパス指定における注意点"&gt;4.2 永続ボリュームのパス指定における注意点
+&lt;/h4&gt;&lt;p&gt;⚠️ Docker Desktop for Windowsを使用する場合、hostPathに指定するパスはWindows形式ではなく、Docker VM内のマウントパス（&lt;b&gt;/run/desktop/mnt/host/c/&amp;hellip;&lt;/b&gt;）を指定する必要があります。ここを誤ると、コンテナ起動時にマウントエラーが発生し、共有ディレクトリが正しく認識されません。&lt;/p&gt;
+&lt;h3 id="5-結果と評価"&gt;5. 結果と評価
+&lt;/h3&gt;&lt;p&gt;本構成の導入により、以下の定量的・定性的改善を確認しました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;デプロイ時間の短縮&lt;/b&gt;: 手動でのkubectl操作と比較し、コードプッシュから反映までのリードタイムを約70%削減。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;環境整合性の向上&lt;/b&gt;: Kubeconfigの動的生成により、開発者のローカル環境に依存しない一貫したデプロイパイプラインを確立。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;セキュリティの強化&lt;/b&gt;: 外部からのインバウンド通信を一切許可することなく、GitHub Actionsとの双方向通信を実現。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;本アーキテクチャは、GitHub Actionsの柔軟性とSelf-hosted Runnerのネットワーク的優位性を組み合わせることで、ハイブリッドクラウド環境におけるデプロイの障壁を解消するものです。従来のNginx等の静的設定中心のレガシーな運用から、KubernetesネイティブなGitOpsへの移行期において、運用負荷（Ops Burden）を大幅に軽減する実効的なソリューションとなります。今後は、latestタグ運用を廃止し、GITHUB_RUN_NUMBERを用いたイミュータブルなタグ管理への移行が、さらなる信頼性向上の鍵となります。&lt;/p&gt;</description></item><item><title>Traefikによるクラウドネイティブ環境での動的ルーティング実装とアーキテクチャ分析</title><link>https://klifehack.com/p/traefik-dynamic-routing-architecture-analysis/</link><pubDate>Sun, 24 May 2026 16:36:25 +0900</pubDate><guid>https://klifehack.com/p/traefik-dynamic-routing-architecture-analysis/</guid><description>&lt;p&gt;クラウドネイティブなマイクロサービスアーキテクチャにおいて、サービスの頻繁なスケーリングやデプロイに伴うルーティング設定の更新は、運用上の大きなボトルネックとなります。従来の静的なリバースプロキシでは、バックエンドの変更のたびに設定ファイルの書き換えとプロセスの再起動が必要であり、これがダウンタイムやヒューマンエラーの原因となっていました。本稿では、Traefikを用いた動的ルーティングの構築戦略とその内部構造について分析します。&lt;/p&gt;
 &lt;h3 id="1-静的設定と動的設定の分離構造"&gt;1. 静的設定と動的設定の分離構造
 &lt;/h3&gt;&lt;p&gt;Traefikのアーキテクチャは、その役割に応じて「静的設定（Static Configuration）」と「動的設定（Dynamic Configuration）」の2つのプレーンに厳格に分離されています。&lt;/p&gt;
 &lt;ul&gt;
