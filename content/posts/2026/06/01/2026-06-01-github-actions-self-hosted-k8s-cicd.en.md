@@ -1,7 +1,7 @@
 ---
 title: "Building Local Kubernetes CI/CD with GitHub Actions and Self-hosted Runners: Overcoming Authentication and Network Boundaries"
 slug: "github-actions-self-hosted-k8s-cicd"
-date: 2026-06-01T11:26:26+09:00
+date: 2026-05-25T12:26:26+09:00
 draft: false
 image: ""
 description: "To achieve automated deployment to local Kubernetes environments, this article details the implementation of GitHub Actions Self-hosted Runners, avoiding authentication errors via Base64 encoding of Kubeconfig, and shell control specific to Windows environments."

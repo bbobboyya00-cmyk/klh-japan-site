@@ -1,7 +1,7 @@
 ---
 title: "GitHub ActionsとSelf-hosted RunnerによるローカルKubernetes CI/CDの構築と認証・ネットワーク境界の突破"
 slug: "github-actions-self-hosted-k8s-cicd"
-date: 2026-06-01T11:26:26+09:00
+date: 2026-05-25T12:26:26+09:00
 draft: false
 image: ""
 description: "ローカルKubernetes環境への自動デプロイを実現するため、GitHub ActionsのSelf-hosted Runner導入とKubeconfigのBase64エンコードによる認証エラー回避、Windows環境特有のシェル制御を詳解します。"
