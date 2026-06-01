@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nodejs-Performance on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/nodejs-performance/</link><description>Recent content in Nodejs-Performance on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 01 Jun 2026 11:03:53 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/nodejs-performance/index.xml" rel="self" type="application/rss+xml"/><item><title>Optimizing I/O Performance and Improving Stability through Linux System Call Analysis in Node.js</title><link>https://klifehack.com/en/p/nodejs-linux-syscall-libuv-analysis/</link><pubDate>Mon, 01 Jun 2026 11:03:53 +0900</pubDate><guid>https://klifehack.com/en/p/nodejs-linux-syscall-libuv-analysis/</guid><description>&lt;h1 id="optimizing-the-kernel-boundary-in-nodejs-redefining-performance-via-system-calls"&gt;Optimizing the Kernel Boundary in Node.js: Redefining Performance via System Calls
+&lt;/h1&gt;&lt;p&gt;Many instances of performance degradation and instability in Node.js applications stem not from JavaScript syntax errors, but from a lack of understanding regarding Linux system calls (syscalls). For engineers to design resilient systems and respond rapidly to failures, it is necessary to grasp the detailed behavior of the boundary where the application interfaces with the Linux kernel—specifically calls such as &lt;b&gt;read&lt;/b&gt;, &lt;b&gt;write&lt;/b&gt;, &lt;b&gt;epoll&lt;/b&gt;, and &lt;b&gt;open&lt;/b&gt;.&lt;/p&gt;
+&lt;p&gt;This article analyzes how system calls involve themselves in the Node.js event loop, file I/O, networking, and operational decision-making. We will detail Node.js not merely as an abstraction layer, but as a runtime that controls OS resources, incorporating practical code and monitoring methods.&lt;/p&gt;
+&lt;h2 id="system-calls-as-diagnostic-instruments"&gt;System Calls as Diagnostic Instruments
+&lt;/h2&gt;&lt;p&gt;In practice, system calls function not as implementation details, but as diagnostic tools for interpreting failures. While developers design logical structures using Promises or async/await, the OS processes them as a series of polling operations such as &lt;b&gt;read&lt;/b&gt;, &lt;b&gt;write&lt;/b&gt;, &lt;b&gt;epoll_wait&lt;/b&gt;, &lt;b&gt;openat&lt;/b&gt;, &lt;b&gt;connect&lt;/b&gt;, and &lt;b&gt;accept&lt;/b&gt;.&lt;/p&gt;
+&lt;p&gt;For example, when executing 22 asynchronous monitoring checks in the monitoring bot &amp;ldquo;Dexter,&amp;rdquo; the phenomenon of &amp;ldquo;slow Promise resolution&amp;rdquo; was observed at the JavaScript layer. However, lowering the analysis to the system call level revealed that the bottleneck was a combination of connect latency for specific external sockets and file access delays. By redefining the abstract concept of &amp;ldquo;slow code&amp;rdquo; as &amp;ldquo;kernel wait states,&amp;rdquo; it is possible to identify that the root cause is not CPU execution time, but rather kernel wake-up timing and external resource response speeds. 💡&lt;/p&gt;
+&lt;h2 id="libuv-architecture-and-kernel-interaction"&gt;libuv Architecture and Kernel Interaction
+&lt;/h2&gt;&lt;p&gt;Node.js does not call the kernel directly; instead, it abstracts the OS I/O model via &lt;b&gt;libuv&lt;/b&gt;. In a Linux environment, this is structured around epoll, file descriptors (FDs), sockets, and pipes.&lt;/p&gt;
+&lt;p&gt;System calls are the official entry points for user-space programs to request functionality from kernel space. JavaScript cannot directly control disks or network cards. Instead, it uses libuv to make the following requests:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;File I/O&lt;/b&gt;: Uses the open, read, and write families. Often processed in the thread pool.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Network I/O&lt;/b&gt;: Uses socket, bind, listen, accept, connect, recv, and send.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Event Monitoring&lt;/b&gt;: Utilizes epoll, the core mechanism in Linux.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Traditional server models allocated a thread per connection, which increases context switching costs and memory overhead. Node.js leverages non-blocking I/O and epoll, employing a mechanism where it only receives notifications when events occur on monitored file descriptors. This achieves large-scale concurrency with minimal overhead.&lt;/p&gt;
+&lt;h2 id="design-criteria-and-code-patterns-in-implementation"&gt;Design Criteria and Code Patterns in Implementation
+&lt;/h2&gt;&lt;h3 id="a-optimizing-file-io-via-streaming"&gt;A. Optimizing File I/O via Streaming
+&lt;/h3&gt;&lt;p&gt;Using fs.readFile on massive files causes memory spikes and increases Garbage Collection (GC) load. To control data flow at the kernel level, the use of streams is recommended.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;fs&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;require&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Efficient file processing via streams
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;reader&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;fs&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;createReadStream&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;./large.log&amp;#39;&lt;/span&gt;, {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;highWaterMark&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;64&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt; &lt;span style="color:#75715e"&gt;// Buffering in 64KB units
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;reader&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;on&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;data&amp;#39;&lt;/span&gt;, (&lt;span style="color:#a6e22e"&gt;chunk&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Process per chunk to suppress memory consumption
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;Verification command:&lt;/em&gt; &lt;code&gt;strace -f -e trace=openat,read,close node app.js ./large.log&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="b-managing-network-io-and-backpressure"&gt;B. Managing Network I/O and Backpressure
+&lt;/h3&gt;&lt;p&gt;Ignoring the return value of socket.write() is a major cause of memory leaks and instability. When the write buffer is full, control logic is required to wait for the drain event. ⚠️&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;safeWrite&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;socket&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;canWrite&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;socket&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;write&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#f92672"&gt;!&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;canWrite&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// If buffer is saturated, wait for drain to control backpressure
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;socket&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;once&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;drain&amp;#39;&lt;/span&gt;, () &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;Buffer drained, resuming writes...&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="security-and-visualization-of-supply-chain-attacks"&gt;Security and Visualization of Supply Chain Attacks
+&lt;/h2&gt;&lt;p&gt;In supply chain attacks, malicious scripts attempt to connect to external networks or read sensitive files during postinstall or at runtime. These always leave traces as system calls such as &lt;b&gt;execve&lt;/b&gt;, &lt;b&gt;open&lt;/b&gt;, and &lt;b&gt;connect&lt;/b&gt;. 🛠️&lt;/p&gt;
+&lt;p&gt;By introducing system-call-level monitoring, it is possible to detect suspicious process generation and network activity that do not appear in application logs. This is essential for secure infrastructure operations compliant with OWASP standards.&lt;/p&gt;
+&lt;h2 id="operational-comparison-table-conventional-methods-vs-recommended-practices"&gt;Operational Comparison Table: Conventional Methods vs. Recommended Practices
+&lt;/h2&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Category&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Common Implementation (Deprecated)&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Recommended Engineering Practice&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Reason&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;File Reading&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Heavy use of &lt;code&gt;fs.readFile&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;fs.createReadStream&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Optimization of memory management and flow control&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Socket Writing&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Ignoring &lt;code&gt;write()&lt;/code&gt; return value&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Control via &lt;code&gt;drain&lt;/code&gt; event&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Prevention of buffer saturation and OOM&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;External Command Execution&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;exec&lt;/code&gt; (string concatenation)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;spawn&lt;/code&gt; (argument array)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Prevention of shell injection and resource efficiency&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Observability&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Application logs only&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Logs + &lt;code&gt;/proc&lt;/code&gt; + &lt;code&gt;strace&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Identification of system-level latency causes&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;The ultimate goal of understanding system calls is not optimization, but ensuring &lt;b&gt;predictability&lt;/b&gt;. By grasping how the Node.js event loop interacts with the kernel and identifying when waits occur, &amp;ldquo;unexplained latency&amp;rdquo; in production environments can be logically resolved. Engineers must elevate their perspective from mere syntax writers to architects who efficiently allocate OS resources. One should recognize that errors are not isolated points within code, but lines drawn by the interaction between the system and its environment.&lt;/p&gt;</description></item></channel></rss>
