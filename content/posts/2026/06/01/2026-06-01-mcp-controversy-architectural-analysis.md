@@ -1,7 +1,7 @@
 ---
 title: "MCP (Model Context Protocol) の技術的負債と2026年におけるアーキテクチャ上の再評価"
 slug: "mcp-controversy-architectural-analysis"
-date: 2026-06-01T13:03:39+09:00
+date: 2026-05-26T12:40:20+09:00
 draft: false
 image: ""
 description: "2026年に発生したMCP論争を背景に、トークン消費効率、セキュリティ脆弱性、およびエンタープライズ採用におけるアーキテクチャ上の課題と対策を技術的に詳説します。"

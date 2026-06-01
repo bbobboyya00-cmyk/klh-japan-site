@@ -1,7 +1,7 @@
 ---
 title: "Technical Debt of MCP (Model Context Protocol) and Architectural Re-evaluation in 2026"
 slug: "mcp-controversy-architectural-analysis"
-date: 2026-06-01T13:03:39+09:00
+date: 2026-05-26T12:40:20+09:00
 draft: false
 image: ""
 description: "Against the backdrop of the 2026 MCP controversy, this article provides a technical detailed explanation of token consumption efficiency, security vulnerabilities, and architectural challenges and countermeasures in enterprise adoption."
