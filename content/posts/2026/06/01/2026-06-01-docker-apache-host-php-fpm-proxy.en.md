@@ -1,7 +1,7 @@
 ---
 title: "Implementation of Connecting Apache on a Docker Container to PHP-FPM on the Host OS via FastCGI Proxy"
 slug: "docker-apache-host-php-fpm-proxy"
-date: 2026-06-01T13:49:50+09:00
+date: 2026-05-26T17:47:20+09:00
 draft: false
 image: ""
 description: "This article explains the implementation steps and configuration details for a hybrid setup that links an Apache web server in a Docker container with PHP-FPM on the host OS via a FastCGI proxy to separate dynamic content processing."

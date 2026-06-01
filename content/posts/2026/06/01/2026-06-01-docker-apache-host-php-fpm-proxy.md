@@ -1,7 +1,7 @@
 ---
 title: "Dockerコンテナ上のApacheからホストOSのPHP-FPMへFastCGIプロキシ経由で接続する実装"
 slug: "docker-apache-host-php-fpm-proxy"
-date: 2026-06-01T13:49:50+09:00
+date: 2026-05-26T17:40:20+09:00
 draft: false
 image: ""
 description: "Dockerコンテナ内のApache WebサーバーとホストOS上のPHP-FPMをFastCGIプロキシで連携させ、動的コンテンツ処理を分離するハイブリッド構成の実装手順と設定の詳細を解説します。"
