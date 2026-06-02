@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backstage on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/backstage/</link><description>Recent content in Backstage on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 08:28:52 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/backstage/index.xml" rel="self" type="application/rss+xml"/><item><title>EKS Auto ModeとIDPによるKubernetes運用の抽象化とプラットフォームエンジニアリングの展望</title><link>https://klifehack.com/p/eks-auto-mode-idp-platform-engineering/</link><pubDate>Wed, 03 Jun 2026 08:28:52 +0900</pubDate><guid>https://klifehack.com/p/eks-auto-mode-idp-platform-engineering/</guid><description>&lt;h3 id="1-2026年におけるkubernetes運用のパラドックス"&gt;1. 2026年におけるKubernetes運用のパラドックス
+&lt;/h3&gt;&lt;p&gt;2026年現在、エンタープライズ環境におけるKubernetes（K8s）の採用率は80%に達すると予測されています。しかし、普及が進む一方で、開発者が直接Kubernetesを操作することを避ける「技術的パラドックス」が顕在化しています。etcdの状態管理、コントロールプレーンのアップグレード、CNI（Container Network Interface）の選定、CSI（Container Storage Interface）の構成といった複雑な運用負荷が、本来のビジネスロジック開発を阻害する要因となっているためです。&lt;/p&gt;
+&lt;p&gt;AWSはこの課題に対し、&lt;b&gt;EKS Auto Mode&lt;/b&gt;によるインフラの完全抽象化を提示しています。同時に、プラットフォームエンジニアリングチームは&lt;b&gt;Internal Developer Platform (IDP)&lt;/b&gt;を構築し、Kubernetesの複雑性を隠蔽したセルフサービス型インフラを提供することで、開発者の生産性とガバナンスの両立を図っています。&lt;/p&gt;
+&lt;h3 id="2-eks-auto-modeによるノード管理の自動化"&gt;2. EKS Auto Modeによるノード管理の自動化
+&lt;/h3&gt;&lt;p&gt;EKS Auto Modeは、&lt;b&gt;Karpenter&lt;/b&gt;をコアエンジンとして採用し、ノードのライフサイクル全体を自動化するマネージドサービスです。従来のCluster Autoscalerのような静的なノードグループの定義を必要とせず、Podの要求リソースに基づいたJust-In-Time (JIT) なプロビジョニングを実現します。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;主な技術的特性&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;JITプロビジョニング&lt;/b&gt;: PodのCPU/メモリ要求、Node Selector、Taints/Tolerations、Topology Spread Constraintsをリアルタイムで解析し、最適なEC2インスタンスを即座に起動します。&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;ネイティブ統合&lt;/b&gt;: VPC CNI、EBS CSI、ALB Controllerが標準で管理され、ドライバの手動インストールやパッチ適用が不要です。&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;自動メンテナンス&lt;/b&gt;: OSのパッチ適用やKubernetesのバージョンアップグレードが自動化され、運用負荷が大幅に削減されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app-deployment-example&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;application&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;public.ecr.aws/nginx/nginx:1.25&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;requests&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;cpu&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;memory&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;4Gi&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;limits&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;cpu&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;4&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;memory&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;8Gi&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;nodeSelector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;topology.kubernetes.io/zone&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;us-west-2a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;tolerations&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;dedicated&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;operator&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Equal&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;experimental&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;effect&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;NoSchedule&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-internal-developer-platform-idp-の設計原則"&gt;3. Internal Developer Platform (IDP) の設計原則
+&lt;/h3&gt;&lt;p&gt;IDPは、開発者がKubernetesの専門知識を必要とせずにアプリケーションをデプロイできる「Golden Path」を提供します。プラットフォームチームは以下の原則に基づいてIDPを構築します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;抽象化の優先&lt;/b&gt;: 開発者はYAMLやTerraformを直接記述せず、アプリケーションの要件（CPU、RAM、環境変数）のみを宣言します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;セルフサービス化&lt;/b&gt;: チケットベースの運用を廃止し、開発者がポータルからオンデマンドで環境を構築できるようにします。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;ガードレールの適用&lt;/b&gt;: OPA GatekeeperやKyvernoを使用し、セキュリティポリシーを自動的に強制します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="4-リファレンスアーキテクチャと構成要素"&gt;4. リファレンスアーキテクチャと構成要素
+&lt;/h3&gt;&lt;p&gt;最新のIDPアーキテクチャでは、以下のコンポーネントを統合して運用します。&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Backstage&lt;/b&gt;: Spotifyが開発したオープンソースフレームワークで、サービスカタログやドキュメント、CI/CDの統合インターフェースとして機能します。&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Argo CD&lt;/b&gt;: GitOpsに基づき、GitリポジトリをSingle Source of Truth (SSoT) としてクラスタの状態を同期します。&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Crossplane&lt;/b&gt;: Kubernetes of CRDを使用して、RDSやS3などのAWSリソースを宣言的にプロビジョニングします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;aws.upbound.io/v1beta1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Bucket&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;idp-application-storage&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;forProvider&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;region&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;us-west-2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;writeConnectionSecretToRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;bucket-connection-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;argoproj.io/v1alpha1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Application&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;idp-gitops-application&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;argocd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;project&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;source&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;repoURL&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;https://github.com/example/idp-golden-path.git&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;targetRevision&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;HEAD&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;path&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;manifests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;destination&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;server&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;https://kubernetes.default.svc&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;syncPolicy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;automated&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;prune&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;selfHeal&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="5-責任共有モデルの再定義"&gt;5. 責任共有モデルの再定義
+&lt;/h3&gt;&lt;p&gt;持続可能なプラットフォーム運営のためには、プラットフォームチームとアプリケーションチームの責任境界を明確にする必要があります。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;機能&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;プラットフォームチーム (Provider)&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;アプリケーションチーム (Consumer)&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;インフラストラクチャ&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;EKSクラスタ、VPC、IAM、IDPの維持管理&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;アプリケーションロジック、ビジネスコード&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;自動化&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;CI/CDパイプライン、Golden Pathテンプレート&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;アプリケーションマニフェスト、Podスペック&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;セキュリティ&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ガードレール、コンプライアンス、ポリシー強制&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;アプリケーションレベルのセキュリティ、ロジック&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;運用&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;スケーリングロジック、コスト最適化、アップグレード&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;アプリケーションのパフォーマンス監視、デバッグ&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="6-findings"&gt;6. Findings
+&lt;/h3&gt;&lt;p&gt;🛠️ &lt;b&gt;Findings&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;EKS Auto ModeとKarpenterによるインフラの自動化、そしてBackstageやCrossplaneを活用したIDPの構築は、プラットフォームエンジニアリングにおける標準的なアプローチとなりつつあります。Kubernetesの「トイル（苦労）」を抽象化することで、組織は開発リソースをビジネスロジックに集中させることが可能になります。AWSが提供するEKS Capabilitiesの進化は、複雑なオープンソースツールの運用をマネージドサービスへと転換させ、開発者体験（DX）を飛躍的に向上させる鍵となります。&lt;/p&gt;</description></item></channel></rss>

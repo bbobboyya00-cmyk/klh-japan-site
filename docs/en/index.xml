@@ -1,4 +1,118 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 08:12:27 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Node.js Integration and Verification of WASM-Based PostgreSQL PGlite</title><link>https://klifehack.com/en/p/pglite-wasm-nodejs-integration/</link><pubDate>Wed, 03 Jun 2026 08:12:27 +0900</pubDate><guid>https://klifehack.com/en/p/pglite-wasm-nodejs-integration/</guid><description>&lt;h2 id="overview-and-architectural-features"&gt;Overview and Architectural Features
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 08:28:53 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Abstraction of Kubernetes Operations with EKS Auto Mode and IDP, and the Outlook for Platform Engineering</title><link>https://klifehack.com/en/p/eks-auto-mode-idp-platform-engineering/</link><pubDate>Wed, 03 Jun 2026 08:28:53 +0900</pubDate><guid>https://klifehack.com/en/p/eks-auto-mode-idp-platform-engineering/</guid><description>&lt;h3 id="1-the-kubernetes-operations-paradox-in-2026"&gt;1. The Kubernetes Operations Paradox in 2026
+&lt;/h3&gt;&lt;p&gt;As of 2026, the adoption rate of Kubernetes (K8s) in enterprise environments is projected to reach 80%. However, while adoption progresses, a &amp;ldquo;technological paradox&amp;rdquo; has emerged where developers avoid directly operating Kubernetes. This is because complex operational overhead—such as etcd state management, control plane upgrades, CNI (Container Network Interface) selection, and CSI (Container Storage Interface) configuration—acts as a barrier to actual business logic development.&lt;/p&gt;
+&lt;p&gt;AWS addresses this challenge by presenting complete infrastructure abstraction through &lt;b&gt;EKS Auto Mode&lt;/b&gt;. Simultaneously, platform engineering teams are building &lt;b&gt;Internal Developer Platforms (IDPs)&lt;/b&gt; to provide self-service infrastructure that hides Kubernetes complexity, aiming to balance developer productivity with governance.&lt;/p&gt;
+&lt;h3 id="2-node-management-automation-with-eks-auto-mode"&gt;2. Node Management Automation with EKS Auto Mode
+&lt;/h3&gt;&lt;p&gt;EKS Auto Mode is a managed service that adopts &lt;b&gt;Karpenter&lt;/b&gt; as its core engine to automate the entire node lifecycle. It eliminates the need for static node group definitions like the traditional Cluster Autoscaler, achieving Just-In-Time (JIT) provisioning based on Pod resource requests.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Key Technical Characteristics&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;JIT Provisioning&lt;/b&gt;: Analyzes Pod CPU/memory requests, Node Selectors, Taints/Tolerations, and Topology Spread Constraints in real time to immediately launch the optimal EC2 instances.&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Native Integration&lt;/b&gt;: VPC CNI, EBS CSI, and ALB Controller are managed by default, eliminating the need for manual driver installation or patching.&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Automated Maintenance&lt;/b&gt;: OS patching and Kubernetes version upgrades are automated, significantly reducing operational overhead.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app-deployment-example&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;application&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;public.ecr.aws/nginx/nginx:1.25&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;requests&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;cpu&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;memory&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;4Gi&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;limits&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;cpu&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;4&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;memory&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;8Gi&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;nodeSelector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;topology.kubernetes.io/zone&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;us-west-2a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;tolerations&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;dedicated&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;operator&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Equal&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;experimental&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;effect&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;NoSchedule&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-design-principles-of-internal-developer-platforms-idps"&gt;3. Design Principles of Internal Developer Platforms (IDPs)
+&lt;/h3&gt;&lt;p&gt;An IDP provides a &amp;ldquo;Golden Path&amp;rdquo; that allows developers to deploy applications without requiring deep Kubernetes expertise. Platform teams build IDPs based on the following principles:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Prioritize Abstraction&lt;/b&gt;: Developers do not write YAML or Terraform directly; they only declare application requirements (CPU, RAM, environment variables).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Self-Service&lt;/b&gt;: Eliminate ticket-based operations, enabling developers to provision environments on-demand from a portal.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Apply Guardrails&lt;/b&gt;: Use OPA Gatekeeper or Kyverno to automatically enforce security policies.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="4-reference-architecture-and-components"&gt;4. Reference Architecture and Components
+&lt;/h3&gt;&lt;p&gt;Modern IDP architectures integrate and operate the following components:&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Backstage&lt;/b&gt;: An open-source framework developed by Spotify that serves as an integrated interface for service catalogs, documentation, and CI/CD.&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Argo CD&lt;/b&gt;: Based on GitOps, it synchronizes cluster states using a Git repository as the Single Source of Truth (SSoT).&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Crossplane&lt;/b&gt;: Uses Kubernetes CRDs to declaratively provision AWS resources such as RDS and S3.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;aws.upbound.io/v1beta1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Bucket&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;idp-application-storage&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;forProvider&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;region&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;us-west-2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;writeConnectionSecretToRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;bucket-connection-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;argoproj.io/v1alpha1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Application&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;idp-gitops-application&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;argocd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;project&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;source&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;repoURL&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;https://github.com/example/idp-golden-path.git&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;targetRevision&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;HEAD&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;path&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;manifests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;destination&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;https://kubernetes.default.svc&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;syncPolicy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;automated&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;prune&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selfHeal&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="5-redefining-the-shared-responsibility-model"&gt;5. Redefining the Shared Responsibility Model
+&lt;/h3&gt;&lt;p&gt;For sustainable platform operations, it is necessary to clarify the boundaries of responsibility between the platform team and the application team.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Function&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Platform Team (Provider)&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Application Team (Consumer)&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Infrastructure&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Maintenance and management of EKS clusters, VPC, IAM, and IDP&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Application logic, business code&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Automation&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;CI/CD pipelines, Golden Path templates&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Application manifests, Pod specs&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Security&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Guardrails, compliance, policy enforcement&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Application-level security, logic&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Operations&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Scaling logic, cost optimization, upgrades&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Application performance monitoring, debugging&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="6-findings"&gt;6. Findings
+&lt;/h3&gt;&lt;p&gt;🛠️ &lt;b&gt;Findings&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Infrastructure automation with EKS Auto Mode and Karpenter, along with building IDPs utilizing Backstage and Crossplane, is becoming a standard approach in platform engineering. By abstracting the &amp;ldquo;toil&amp;rdquo; of Kubernetes, organizations can focus development resources on business logic. The evolution of EKS capabilities provided by AWS is key to shifting the operation of complex open-source tools into managed services, dramatically improving the developer experience (DX).&lt;/p&gt;</description></item><item><title>Node.js Integration and Verification of WASM-Based PostgreSQL PGlite</title><link>https://klifehack.com/en/p/pglite-wasm-nodejs-integration/</link><pubDate>Mon, 01 Jun 2026 08:12:26 +0900</pubDate><guid>https://klifehack.com/en/p/pglite-wasm-nodejs-integration/</guid><description>&lt;h2 id="overview-and-architectural-features"&gt;Overview and Architectural Features
 &lt;/h2&gt;&lt;p&gt;PGlite is a fully functional, lightweight PostgreSQL engine compiled to WebAssembly (WASM) and packaged as a client-side JavaScript library. Developed by ElectricSQL, PGlite allows developers to run a PostgreSQL database directly within a Node.js runtime, web browser, or mobile environment (via React Native/Capacitor) without requiring a separate PostgreSQL server, Docker container, or external daemon.&lt;/p&gt;
 &lt;p&gt;This article describes the steps for initializing, operating, benchmarking, and simulating a hybrid synchronization workflow with PGlite in a Node.js environment.&lt;/p&gt;
 &lt;h3 id="key-architectural-features"&gt;Key Architectural Features
