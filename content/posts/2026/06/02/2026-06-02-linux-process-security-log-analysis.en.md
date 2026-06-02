@@ -1,7 +1,7 @@
 ---
 title: "Architectural Design of Linux Process Security and System Log Analysis"
 slug: "linux-process-security-log-analysis"
-date: 2026-06-02T09:40:32+09:00
+date: 2026-05-29T09:40:32+09:00
 draft: false
 image: ""
 description: "Detailed explanation of the core security architecture, from process isolation mechanisms in the Linux kernel (Namespace/cgroups) to advanced log analysis methods using auditd and journald."
