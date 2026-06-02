@@ -1,4 +1,90 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Fastapi on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/fastapi/</link><description>Recent content in Fastapi on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 28 May 2026 10:04:17 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/fastapi/index.xml" rel="self" type="application/rss+xml"/><item><title>Technical Considerations in FastAPI Architecture Design and Implementation</title><link>https://klifehack.com/en/p/fastapi-architecture-implementation-deep-dive/</link><pubDate>Thu, 28 May 2026 10:04:17 +0900</pubDate><guid>https://klifehack.com/en/p/fastapi-architecture-implementation-deep-dive/</guid><description>&lt;h1 id="technical-analysis-of-fastapi-internal-architecture-and-runtime-behavior"&gt;Technical Analysis of FastAPI Internal Architecture and Runtime Behavior
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Fastapi on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/fastapi/</link><description>Recent content in Fastapi on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 02 Jun 2026 11:08:01 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/fastapi/index.xml" rel="self" type="application/rss+xml"/><item><title>Design of Asynchronous Task Processing Infrastructure in AI Studio: Scalable Educational Content Generation Architecture with Celery and Redis</title><link>https://klifehack.com/en/p/classkit-ai-studio-celery-redis-architecture/</link><pubDate>Tue, 02 Jun 2026 11:08:01 +0900</pubDate><guid>https://klifehack.com/en/p/classkit-ai-studio-celery-redis-architecture/</guid><description>&lt;h2 id="1-design-philosophy-and-technical-background-of-ai-studio"&gt;1. Design Philosophy and Technical Background of AI Studio
+&lt;/h2&gt;&lt;p&gt;ClassKit AI Studio is an integrated environment that generates slides, AI voices, and interactive learning content based on text and lecture outlines provided by instructors. While the initial roadmap aimed for &amp;ldquo;100% full automation,&amp;rdquo; prototype validation revealed two major constraints: exponential increases in external API costs and a decrease in immersion due to a lack of educational context.&lt;/p&gt;
+&lt;p&gt;To address these challenges, the architecture was pivoted to a &amp;ldquo;Smart Assembly&amp;rdquo; model, defining AI not as a sole creator but as an assistant responsible for advanced scaffolding. This simultaneously achieves infrastructure cost optimization and improved educational quality.&lt;/p&gt;
+&lt;h2 id="2-overview-of-asynchronous-processing-architecture"&gt;2. Overview of Asynchronous Processing Architecture
+&lt;/h2&gt;&lt;p&gt;Processes such as AI-based speech synthesis and image generation require computation times ranging from several seconds to about a minute per request. Processing these heavy tasks synchronously on the main FastAPI server would degrade overall system latency and fatally impact availability. To eliminate this risk, the following distributed asynchronous processing stack is employed:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;API Layer (FastAPI)&lt;/b&gt;: Receives user requests and immediately returns a Task ID (receipt number).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Message Broker (Redis)&lt;/b&gt;: Manages the task queue and decouples communication between the API server and workers.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Worker Pool (Celery)&lt;/b&gt;: Fetches tasks from Redis and executes the actual AI processing in the background.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# tasks.py (Celery Worker Implementation)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; celery &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Celery
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; time &lt;span style="color:#f92672"&gt;import&lt;/span&gt; sleep
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Celery(&lt;span style="color:#e6db74"&gt;&amp;#39;ai_studio&amp;#39;&lt;/span&gt;, broker&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;redis://localhost:6379/0&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.task&lt;/span&gt;(bind&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, max_retries&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;generate_ai_narration&lt;/span&gt;(self, text, voice_id):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Simulation of request to external API&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; call_external_tts_api(text, voice_id)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; result
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Exception&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; exc:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Retry logic with exponential backoff&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 2^retry_count * delay&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;retry(exc&lt;span style="color:#f92672"&gt;=&lt;/span&gt;exc, countdown&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; &lt;span style="color:#f92672"&gt;**&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;request&lt;span style="color:#f92672"&gt;.&lt;/span&gt;retries)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-ensuring-fault-tolerance-with-exponential-backoff"&gt;3. Ensuring Fault Tolerance with Exponential Backoff
+&lt;/h2&gt;&lt;p&gt;To handle external API instability and network timeouts, an exponential backoff algorithm is implemented instead of simple retries. This prevents requests from concentrating in a short period during external server congestion, ensuring opportunities for recovery.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Retry Strategy&lt;/b&gt;: Doubles the wait time after each failure (e.g., 2s, 4s, 8s).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Benefits&lt;/b&gt;: Resolves errors caused by temporary bottlenecks without the user being aware, maintaining overall infrastructure stability.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-component-management-utilizing-postgresql-jsonb"&gt;4. Component Management Utilizing PostgreSQL jsonb
+&lt;/h2&gt;&lt;p&gt;AI Studio provides 11 types of interactive learning components. To avoid frequent schema changes, these are stored in a single table using the PostgreSQL &lt;b&gt;jsonb&lt;/b&gt; type. This allows for expansion without database downtime when adding new learning formats.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Component Name&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Technical Role&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;REVIEW&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Summary card generation for the previous section&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;QUIZ&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Multiple-choice/short-answer quizzes with auto-grading&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;ROLEPLAY&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Virtual conversation simulation of business scenarios by AI&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;SHADOWING&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Pronunciation training via voice waveform analysis&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;PRONUNCIATION&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;AI analysis and feedback on user-recorded data&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; learning_components (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; id UUID &lt;span style="color:#66d9ef"&gt;PRIMARY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; slide_id UUID &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; slides(id),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; component_type VARCHAR(&lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; payload JSONB, &lt;span style="color:#75715e"&gt;-- Stores configuration values unique to each component
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; created_at &lt;span style="color:#66d9ef"&gt;TIMESTAMP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;WITH&lt;/span&gt; TIME &lt;span style="color:#66d9ef"&gt;ZONE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CURRENT_TIMESTAMP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-cost-performance-optimization-strategy"&gt;5. Cost-Performance Optimization Strategy
+&lt;/h2&gt;&lt;p&gt;To maintain a sustainable fee structure for instructors, the following optimizations were implemented on the infrastructure side.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Engine Selection&lt;/b&gt;: Instead of using the most expensive API by default, comparative analysis was conducted to identify the &amp;ldquo;sweet spot&amp;rdquo; balancing quality and unit price.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Simulation&lt;/b&gt;: Final decisions on API integration were made based on virtual billing simulations and traffic forecasts. This minimizes overhead while maximizing the quality of generated assets.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="6-future-challenges-and-roadmap"&gt;6. Future Challenges and Roadmap
+&lt;/h2&gt;&lt;p&gt;While the current AI Studio ensures backend robustness, the frontend logic has become bloated as the UI grows more complex. Specifically, modules exceeding 700 lines of script exist, making refactoring for improved maintainability an urgent task.&lt;/p&gt;
+&lt;p&gt;Additionally, solving issues stemming from browser security protocols, such as the authentication cookie loss bug (logout failure) that occurred during custom domain implementation, is a goal for the next phase.&lt;/p&gt;
+&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Asynchronous Decoupling&lt;/b&gt;: Separation of FastAPI and Celery/Redis maintains low latency of under 0.1 seconds even during heavy AI processing.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Smart Assembly&lt;/b&gt;: Transition from full automation to an AI-guided assembly method balances educational quality and cost efficiency.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Flexible Data Design&lt;/b&gt;: Adoption of &lt;b&gt;jsonb&lt;/b&gt; allows for the expansion of 11 diverse learning components without schema changes.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Resilience&lt;/b&gt;: Implementation of exponential backoff improves system robustness against unstable external API behavior.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Technical Considerations in FastAPI Architecture Design and Implementation</title><link>https://klifehack.com/en/p/fastapi-architecture-implementation-deep-dive/</link><pubDate>Thu, 28 May 2026 10:04:17 +0900</pubDate><guid>https://klifehack.com/en/p/fastapi-architecture-implementation-deep-dive/</guid><description>&lt;h1 id="technical-analysis-of-fastapi-internal-architecture-and-runtime-behavior"&gt;Technical Analysis of FastAPI Internal Architecture and Runtime Behavior
 &lt;/h1&gt;&lt;p&gt;FastAPI is a modern, high-performance web framework for building APIs based on standard Python type hints. This article provides a technical analysis of FastAPI&amp;rsquo;s internal architecture, data validation mechanisms, and asynchronous processing behavior at runtime.&lt;/p&gt;
 &lt;h2 id="1-architectural-components-and-design-philosophy"&gt;1. Architectural Components and Design Philosophy
 &lt;/h2&gt;&lt;p&gt;FastAPI achieves its functionality by integrating two independent primary libraries.&lt;/p&gt;
