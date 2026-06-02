@@ -1,4 +1,96 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 02 Jun 2026 13:33:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Container Image Security Scan Automation in CI/CD Pipelines</title><link>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</link><pubDate>Tue, 02 Jun 2026 13:33:07 +0900</pubDate><guid>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</guid><description>&lt;h1 id="construction-and-optimization-strategies-for-security-automation-in-container-delivery"&gt;Construction and Optimization Strategies for Security Automation in Container Delivery
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 02 Jun 2026 13:42:15 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Configuration and Health Check Optimization for Blue/Green Deployment Using HAProxy and Spring Boot Actuator</title><link>https://klifehack.com/en/p/haproxy-spring-boot-blue-green-deployment/</link><pubDate>Tue, 02 Jun 2026 13:42:15 +0900</pubDate><guid>https://klifehack.com/en/p/haproxy-spring-boot-blue-green-deployment/</guid><description>&lt;h1 id="high-availability-infrastructure-and-bluegreen-deployment-optimization-with-haproxy-and-spring-boot-actuator"&gt;High Availability Infrastructure and Blue/Green Deployment Optimization with HAProxy and Spring Boot Actuator
+&lt;/h1&gt;&lt;p&gt;This article analyzes the construction of high-availability infrastructure based on HAProxy and Spring Boot Actuator, along with implementation details for Blue/Green deployment strategies. Specifically, it focuses on traffic control for zero downtime and the role of health checks in application lifecycle management to verify a robust system configuration.&lt;/p&gt;
+&lt;h2 id="1-security-protocols-in-deployment-environments"&gt;1. Security Protocols in Deployment Environments
+&lt;/h2&gt;&lt;p&gt;To ensure session management security on cloud platforms such as AWS or Vercel, strict attribute settings for cookie-based authentication are required. To mitigate the risks of Cross-Site Scripting (XSS) and Cross-Site Request Forgery (CSRF), implementation of the following attributes is essential:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;SameSite&lt;/b&gt;: Restricts the scope of cookie transmission in cross-site requests to block unintended requests.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;HttpOnly&lt;/b&gt;: Prohibits access to cookies by client-side scripts to prevent token leakage.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Secure&lt;/b&gt;: Forces cookies to be sent only during encrypted communication via the HTTPS protocol.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These settings must be appropriately handled at the load balancer or application proxy layer.&lt;/p&gt;
+&lt;h2 id="2-monitoring-and-health-management-with-spring-boot-actuator"&gt;2. Monitoring and Health Management with Spring Boot Actuator
+&lt;/h2&gt;&lt;p&gt;Spring Boot Actuator provides endpoints for exposing the operational status of an application to the outside. In infrastructure orchestration, the following endpoints are particularly important:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;/actuator/health&lt;/b&gt;: Returns the application&amp;rsquo;s operational status (UP/DOWN). This is the primary target when load balancers like HAProxy perform backend liveness checks.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;/actuator/metrics&lt;/b&gt;: Provides telemetry data such as JVM memory usage, CPU load, and HTTP request statistics to assist in resource optimization.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;/actuator/env&lt;/b&gt;: Displays the configuration information of environment variables applied to the application, helping to identify configuration inconsistencies during deployment.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-multi-domain-mapping-and-load-balancing-with-haproxy"&gt;3. Multi-domain Mapping and Load Balancing with HAProxy
+&lt;/h2&gt;&lt;p&gt;Configure HAProxy as a reverse proxy and load balancer to integrate multiple Spring Boot applications into a single domain. Precise traffic control is enabled through routing using ACLs (Access Control Lists) and health check configurations utilizing Actuator.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-haproxy" data-lang="haproxy"&gt;defaults
+ mode http
+ timeout connect 5s
+ timeout client 60s
+ timeout server 60s
+ 
+frontend http_front
+ bind *:80
+ # Definition of ACL based on host header
+ acl host_app1 hdr_beg(host) -i app1-127-0-0-1.nip.io
+
+ # Routing to backend if conditions are met
+ use_backend http_back_1 if host_app1
+
+backend http_back_1
+ balance roundrobin
+ # Health check configuration: Use Actuator endpoint instead of root path
+ option httpchk GET /actuator/health
+ 
+ # Check parameters: 2s interval, UP after 1 success, DOWN after 1 failure
+ default-server inter 2s rise 1 fall 1
+ 
+ # Setting to retry requests to other servers on failure
+ option redispatch
+
+ # Definition of backend servers
+ server app_server_1_1 app1_1:8080 check
+ server app_server_1_2 app1_2:8080 check
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="4-bluegreen-deployment-execution-workflow"&gt;4. Blue/Green Deployment Execution Workflow
+&lt;/h2&gt;&lt;p&gt;Blue/Green deployment is a method that eliminates downtime by running old and new environments in parallel and switching traffic between them. This configuration combines Docker container replacement with Readiness Probes implemented via shell scripts.&lt;/p&gt;
+&lt;h3 id="step-1-stopping-the-old-container-green"&gt;Step 1: Stopping the Old Container (Green)
+&lt;/h3&gt;&lt;p&gt;First, stop and remove the &lt;b&gt;app1_2&lt;/b&gt; container. HAProxy detects the health check failure and automatically consolidates traffic to the running &lt;b&gt;app1_1&lt;/b&gt; (Blue).&lt;/p&gt;
+&lt;h3 id="step-2-starting-and-verifying-the-new-container"&gt;Step 2: Starting and Verifying the New Container
+&lt;/h3&gt;&lt;p&gt;Start the container using the new image and wait until the application is fully initialized. It is critical to hold the deletion of the old container until the Actuator &lt;b&gt;/health&lt;/b&gt; endpoint returns &lt;b&gt;UP&lt;/b&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Start new container&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d --network common -p 8081:8080 --name app1_2 chasaem/app260601:1.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Readiness Probe script&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;START_TIME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;date +%s&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; true; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CONTENT&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;curl -s http://localhost:8081/actuator/health&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$CONTENT&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; *&lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#34;status&amp;#34;:&amp;#34;UP&amp;#34;&amp;#39;&lt;/span&gt;* &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Server is UP!&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; break;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CURRENT_TIME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;date +%s&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ELAPSED_TIME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$((&lt;/span&gt;CURRENT_TIME &lt;span style="color:#f92672"&gt;-&lt;/span&gt; START_TIME&lt;span style="color:#66d9ef"&gt;))&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; $ELAPSED_TIME -ge &lt;span style="color:#ae81ff"&gt;60&lt;/span&gt; &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Error: Server did not start within 60 seconds.&amp;#34;&lt;/span&gt; &amp;amp;gt;&amp;amp;amp;2;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; exit 1;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sleep 5;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Delete old container after startup confirmation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker rm -f app1_1 2&amp;amp;gt; /dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-multi-layer-proxy-architecture-integration-of-npm-and-haproxy"&gt;5. Multi-layer Proxy Architecture: Integration of NPM and HAProxy
+&lt;/h2&gt;&lt;p&gt;To streamline SSL/TLS termination and certificate management, a configuration is adopted where Nginx Proxy Manager (NPM) is placed at the front end. HTTPS requests from clients are decrypted by NPM and forwarded to HAProxy (port 80) through the internal network. This multi-layer structure allows for the separation of application-layer load balancing and security management.&lt;/p&gt;
+&lt;h2 id="6-haproxy-health-check-mechanism-details"&gt;6. HAProxy Health Check Mechanism Details
+&lt;/h2&gt;&lt;p&gt;By fine-tuning HAProxy health check parameters, the balance between fault detection sensitivity and system stability can be optimized.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;inter 2s&lt;/b&gt;: Executes a health check every 2 seconds to capture state changes quickly.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;rise 1&lt;/b&gt;: The number of consecutive successful checks required for a server to transition from a DOWN state to an UP state. Setting this to 1 speeds up traffic injection immediately after startup.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;fall 1&lt;/b&gt;: The number of consecutive failed checks required to judge a server as DOWN. Setting this to 1 ensures traffic is cut off immediately when an anomaly occurs.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;option redispatch&lt;/b&gt;: If a selected server goes down while processing a request, the request is resent to another healthy server. This reduces the error rate on the client side.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="7-provisioning-via-infrastructure-as-code-iac"&gt;7. Provisioning via Infrastructure as Code (IaC)
+&lt;/h2&gt;&lt;p&gt;Terraform is used to build AWS EC2 instances. By codifying infrastructure through &lt;b&gt;terraform apply&lt;/b&gt; and managing A records with external DNS services like DNSZI, the operational complexity associated with IP address changes is resolved. On the constructed EC2 environment, the aforementioned HAProxy and Docker-based Blue/Green deployment logic is executed to verify operations in a cloud environment.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;This configuration realizes a robust Blue/Green deployment environment combining precise status monitoring via Spring Boot Actuator with flexible traffic control via HAProxy. In particular, by incorporating Readiness Probes into automation scripts, the risk of traffic flowing in before application initialization is complete is eliminated, confirming that true zero-downtime deployment can be achieved.&lt;/p&gt;</description></item><item><title>Implementation of Container Image Security Scan Automation in CI/CD Pipelines</title><link>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</link><pubDate>Tue, 02 Jun 2026 13:33:07 +0900</pubDate><guid>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</guid><description>&lt;h1 id="construction-and-optimization-strategies-for-security-automation-in-container-delivery"&gt;Construction and Optimization Strategies for Security Automation in Container Delivery
 &lt;/h1&gt;&lt;p&gt;In modern software delivery, ensuring container image security should be a priority equivalent to functional implementation. To identify risks lurking within the vast libraries and dependencies contained in images, an automated scanning process integrated into the CI/CD pipeline is essential, rather than manual inspection. This article explains technical approaches for naturally establishing security as part of the development workflow.&lt;/p&gt;
 &lt;h2 id="1-strategic-background-of-automated-scanning"&gt;1. Strategic Background of Automated Scanning
 &lt;/h2&gt;&lt;p&gt;The primary burden facing development teams is not only the functional integrity of the code but also the elimination of potential risk factors included in the deployment. Manual image inspection is prone to human error and tends to be omitted within tight release schedules. Therefore, automation is not merely an option but a prerequisite for achieving secure delivery.&lt;/p&gt;
