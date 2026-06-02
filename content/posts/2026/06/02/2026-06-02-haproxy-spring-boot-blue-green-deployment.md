@@ -1,7 +1,7 @@
 ---
 title: "HAProxyとSpring Boot Actuatorを用いたBlue/Greenデプロイメントの構成とヘルスチェックの最適化"
 slug: "haproxy-spring-boot-blue-green-deployment"
-date: 2026-06-02T13:42:15+09:00
+date: 2026-05-29T17:40:32+09:00
 draft: false
 image: ""
 description: "HAProxyとSpring Boot Actuatorを組み合わせたBlue/Greenデプロイメントの実装手法を解説。ヘルスチェックの挙動、Dockerコンテナの入れ替え、NPMによるSSL終端を含む多層プロキシ構成について詳述します。"

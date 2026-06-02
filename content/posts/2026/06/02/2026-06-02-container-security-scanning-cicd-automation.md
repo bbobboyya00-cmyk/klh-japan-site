@@ -1,7 +1,7 @@
 ---
 title: "CI/CDパイプラインにおけるコンテナイメージ・セキュリティスキャン自動化の実装"
 slug: "container-security-scanning-cicd-automation"
-date: 2026-06-02T13:33:07+09:00
+date: 2026-05-30T10:33:07+09:00
 draft: false
 image: ""
 description: "コンテナイメージの脆弱性スキャンをCI/CDに統合する際の技術的要件、パフォーマンス最適化、および運用上のアラート管理戦略について詳述します。"

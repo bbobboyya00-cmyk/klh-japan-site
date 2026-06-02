@@ -1,7 +1,7 @@
 ---
 title: "Implementation of Container Image Security Scan Automation in CI/CD Pipelines"
 slug: "container-security-scanning-cicd-automation"
-date: 2026-06-02T13:33:07+09:00
+date: 2026-05-30T10:33:07+09:00
 draft: false
 image: ""
 description: "Details technical requirements, performance optimization, and operational alert management strategies when integrating container image vulnerability scanning into CI/CD."

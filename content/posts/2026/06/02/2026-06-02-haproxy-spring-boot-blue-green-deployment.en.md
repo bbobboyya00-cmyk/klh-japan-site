@@ -1,7 +1,7 @@
 ---
 title: "Configuration and Health Check Optimization for Blue/Green Deployment Using HAProxy and Spring Boot Actuator"
 slug: "haproxy-spring-boot-blue-green-deployment"
-date: 2026-06-02T13:42:15+09:00
+date: 2026-05-29T17:40:32+09:00
 draft: false
 image: ""
 description: "Explains implementation methods for Blue/Green deployment combining HAProxy and Spring Boot Actuator. Details health check behavior, Docker container replacement, and multi-layer proxy configuration including SSL termination via NPM."
