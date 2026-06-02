@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Php-Security on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/php-security/</link><description>Recent content in Php-Security on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 07:41:49 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/php-security/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation Requirements for Security Vulnerability Countermeasures in PHP and Tomcat Environments</title><link>https://klifehack.com/en/p/php-tomcat-security-hardening-checklist/</link><pubDate>Wed, 03 Jun 2026 07:41:49 +0900</pubDate><guid>https://klifehack.com/en/p/php-tomcat-security-hardening-checklist/</guid><description>&lt;h1 id="h1-2026-web-hacking-incident-analysis-and-technical-defense-framework-for-phptomcat-environments"&gt;H1 2026 Web Hacking Incident Analysis and Technical Defense Framework for PHP/Tomcat Environments
+&lt;/h1&gt;&lt;p&gt;In the first half of 2026, a total of 520 web hacking incidents were recorded in specific regions. Statistical analysis revealed that 68% of these breaches exploited known vulnerabilities in PHP and Apache Tomcat environments. This article presents a technical intervention framework at the code and configuration levels that developers and system engineers should apply immediately.&lt;/p&gt;
+&lt;h3 id="target-architecture"&gt;Target Architecture
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Operational Developers:&lt;/b&gt; Personnel responsible for managing PHP 7.x/8.x or Tomcat 8.5/9.x/10.x environments&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Legacy System Engineers:&lt;/b&gt; Personnel responsible for hardening aging infrastructure&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Security Officers:&lt;/b&gt; Personnel executing OWASP Top 10 compliance and patch management&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="2-case-study-breach-analysis-of-a-legacy-e-commerce-system"&gt;2. Case Study: Breach Analysis of a Legacy E-commerce System
+&lt;/h2&gt;&lt;p&gt;In December 2025, a large-scale data breach occurred at a specific e-commerce platform (Company B), targeting a Blind SQL Injection vulnerability in the search function. This case suggests that the lack of input validation leads to fatal consequences.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Category&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Technical Details&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Operating Environment&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;PHP 5.6.40 + MySQL 5.7 + Apache 2.4&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Vulnerability Type&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Time-based Blind SQL Injection (via GET parameter)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Attack Vector&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Lack of input validation in &lt;code&gt;/search.php?keyword=&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Data Leak Scale&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;37,000 user records (name, email, encrypted password)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Recovery Period&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;23 days (code refactoring and patching)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Technical Debt&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Use of EOL (End of Life) PHP 5.6, non-adoption of prepared statements&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="logical-structure-of-the-attack-payload"&gt;Logical Structure of the Attack Payload
+&lt;/h3&gt;&lt;p&gt;The attacker used the payload to confirm the existence of the vulnerability. This method observes whether a 5-second delay occurs in the server response by injecting the SLEEP(5) function. This proved that the input value was being executed directly by the database engine, enabling systematic extraction of the database schema and sensitive tables.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;GET /search.php?keyword=test' AND (SELECT * FROM (SELECT(SLEEP(5)))a)-- -&lt;/code&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="3-vulnerability-countermeasure-checklist-and-implementation-specifications"&gt;3. Vulnerability Countermeasure Checklist and Implementation Specifications
+&lt;/h2&gt;&lt;h3 id="31-sql-injection-defense-implementation-of-prepared-statements"&gt;3.1 SQL Injection Defense: Implementation of Prepared Statements
+&lt;/h3&gt;&lt;p&gt;In the statistics for the first half of 2026, SQL injection accounted for 42% of incidents. All dynamic queries must be converted to prepared statements based on the following specifications.&lt;/p&gt;
+&lt;h4 id="-vulnerable-implementation-example-php"&gt;❌ Vulnerable Implementation Example (PHP)
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$keyword &lt;span style="color:#f92672"&gt;=&lt;/span&gt; $_GET[&lt;span style="color:#e6db74"&gt;&amp;#39;keyword&amp;#39;&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$sql &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM products WHERE name = &amp;#39;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;$keyword&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; $conn&lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;query&lt;/span&gt;($sql);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="-secure-implementation-example-prepared-statements"&gt;✅ Secure Implementation Example (Prepared Statements)
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$stmt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; $pdo&lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;prepare&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;SELECT * FROM products WHERE name = :name&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$stmt&lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;execute&lt;/span&gt;([&lt;span style="color:#e6db74"&gt;&amp;#39;name&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; $_GET[&lt;span style="color:#e6db74"&gt;&amp;#39;keyword&amp;#39;&lt;/span&gt;]]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$user &lt;span style="color:#f92672"&gt;=&lt;/span&gt; $stmt&lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;fetch&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="-handling-in-tomcat--mybatis-environments"&gt;🔧 Handling in Tomcat + MyBatis Environments
+&lt;/h4&gt;&lt;p&gt;When using MyBatis, structurally prevent SQL injection by using #{} which forces parameter mapping, instead of ${} which performs string substitution.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!-- Vulnerable Example --&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SELECT * FROM users WHERE id = ${id}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!-- Secure Example --&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SELECT * FROM users WHERE id = #{id}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="32-file-upload-vulnerability-multi-layered-validation-model"&gt;3.2 File Upload Vulnerability: Multi-layered Validation Model
+&lt;/h3&gt;&lt;p&gt;Web shell uploads are fatal vulnerabilities directly linked to the loss of control over the entire server. Application of a &amp;ldquo;Defense in Depth&amp;rdquo; strategy is essential.&lt;/p&gt;
+&lt;h4 id="-enhanced-file-upload-validation-php-8x"&gt;✅ Enhanced File Upload Validation (PHP 8.x)
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$allowed_types &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#39;image/jpeg&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;image/png&amp;#39;&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$file_info &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;finfo&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;FILEINFO_MIME_TYPE&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$mime_type &lt;span style="color:#f92672"&gt;=&lt;/span&gt; $file_info&lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;file&lt;/span&gt;($_FILES[&lt;span style="color:#e6db74"&gt;&amp;#39;upload&amp;#39;&lt;/span&gt;][&lt;span style="color:#e6db74"&gt;&amp;#39;tmp_name&amp;#39;&lt;/span&gt;]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#f92672"&gt;!&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;in_array&lt;/span&gt;($mime_type, $allowed_types)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;die&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Invalid file type.&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$extension &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;pathinfo&lt;/span&gt;($_FILES[&lt;span style="color:#e6db74"&gt;&amp;#39;upload&amp;#39;&lt;/span&gt;][&lt;span style="color:#e6db74"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;], &lt;span style="color:#a6e22e"&gt;PATHINFO_EXTENSION&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$new_filename &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;bin2hex&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;random_bytes&lt;/span&gt;(&lt;span style="color:#ae81ff"&gt;16&lt;/span&gt;)) &lt;span style="color:#f92672"&gt;.&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;.&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;.&lt;/span&gt; $extension;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;move_uploaded_file&lt;/span&gt;($_FILES[&lt;span style="color:#e6db74"&gt;&amp;#39;upload&amp;#39;&lt;/span&gt;][&lt;span style="color:#e6db74"&gt;&amp;#39;tmp_name&amp;#39;&lt;/span&gt;], &lt;span style="color:#e6db74"&gt;&amp;#39;/var/www/uploads/&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;.&lt;/span&gt; $new_filename);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;Additional Constraints:&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Place the upload directory outside the document root.&lt;/li&gt;
+&lt;li&gt;Disable PHP execution permissions within the upload directory via Apache/Nginx configuration.&lt;/li&gt;
+&lt;li&gt;Impose limits such as &lt;code&gt;upload_max_filesize = 2M&lt;/code&gt; in &lt;code&gt;php.ini&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="33-strict-session-management"&gt;3.3 Strict Session Management
+&lt;/h3&gt;&lt;p&gt;Proper session configuration can block over 90% of session fixation attacks and hijacking.&lt;/p&gt;
+&lt;h4 id="-php-session-security-settings-phpini"&gt;✅ PHP Session Security Settings (php.ini)
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;session.cookie_httponly&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;session.cookie_secure&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;session.use_only_cookies&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;session.cookie_samesite&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Strict&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠️ Always execute session_regenerate_id(true); upon successful login to invalidate the existing session ID.&lt;/p&gt;
+&lt;h4 id="-tomcat-webxml-configuration"&gt;🔧 Tomcat web.xml Configuration
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;session-config&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;cookie-config&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;http-only&amp;gt;&lt;/span&gt;true&lt;span style="color:#f92672"&gt;&amp;lt;/http-only&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;secure&amp;gt;&lt;/span&gt;true&lt;span style="color:#f92672"&gt;&amp;lt;/secure&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/cookie-config&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;tracking-mode&amp;gt;&lt;/span&gt;COOKIE&lt;span style="color:#f92672"&gt;&amp;lt;/tracking-mode&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/session-config&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="4-infrastructure-level-defense-implementation-of-security-headers"&gt;4. Infrastructure-level Defense: Implementation of Security Headers
+&lt;/h2&gt;&lt;p&gt;By appropriately setting HTTP response headers, you can add a defense layer at the browser level and reduce the risk of XSS and clickjacking.&lt;/p&gt;
+&lt;h4 id="-apache-htaccess-configuration-example"&gt;✅ Apache .htaccess Configuration Example
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-apache" data-lang="apache"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Header set Content-Security-Policy &lt;span style="color:#e6db74"&gt;&amp;#34;default-src &amp;#39;self&amp;#39;;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Header set X-Frame-Options &lt;span style="color:#e6db74"&gt;&amp;#34;DENY&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Header set X-Content-Type-Options &lt;span style="color:#e6db74"&gt;&amp;#34;nosniff&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Header set Strict-Transport-Security &lt;span style="color:#e6db74"&gt;&amp;#34;max-age=31536000; includeSubDomains&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="5-automation-of-monitoring-and-auditing"&gt;5. Automation of Monitoring and Auditing
+&lt;/h2&gt;&lt;h3 id="51-real-time-monitoring-framework"&gt;5.1 Real-time Monitoring Framework
+&lt;/h3&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Monitoring Item&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Target Log&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Recommended Tool&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Authentication Failure&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Login attempts (&amp;gt;5 failures)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Fail2ban, OSSEC&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Abnormal Request&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;SQL keywords, special character patterns&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ModSecurity (WAF)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;File Integrity&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Detection of changes within web root&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;AIDE, Tripwire&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Resource Spike&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Sudden increase in CPU/Memory/Traffic&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Zabbix, Prometheus&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="52-security-audit-script-bash"&gt;5.2 Security Audit Script (Bash)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Script for detecting PHP web shells within web root&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SEARCH_DIR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/var/www/html&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;KEYWORDS&lt;span style="color:#f92672"&gt;=(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;passthru&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;shell_exec&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;system&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;base64_decode&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; key in &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;KEYWORDS[@]&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;grep -rnE &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$key&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$SEARCH_DIR&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; --include&lt;span style="color:#f92672"&gt;=&lt;/span&gt;*.php
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;Analysis shows that many of the incidents occurred due to known vulnerabilities and basic configuration errors. By introducing the code-level defense measures detailed in this article, it is possible to prevent more than 68% of common attacks.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Implementation Priorities:&lt;/b&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Immediate Action:&lt;/b&gt; Migration to prepared statements, configuration of security headers. 🛠️&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Within 1 Week:&lt;/b&gt; Implementation of file upload validation, strengthening of session security. ⚠️&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Within 1 Month:&lt;/b&gt; Deployment of automated audit scripts, integration of WAF (Web Application Firewall). 💡&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If you are forced to continue operating legacy systems (such as PHP 5.x), we strongly recommend considering professional security consulting, including a redesign of the entire architecture.&lt;/p&gt;</description></item></channel></rss>

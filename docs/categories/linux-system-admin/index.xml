@@ -1,4 +1,169 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 07:32:38 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Enterprise Linuxにおけるvsftpdの導入とセキュリティ硬化設定</title><link>https://klifehack.com/p/vsftpd-enterprise-linux-hardening/</link><pubDate>Wed, 03 Jun 2026 07:32:38 +0900</pubDate><guid>https://klifehack.com/p/vsftpd-enterprise-linux-hardening/</guid><description>&lt;h1 id="enterprise-linuxにおけるvsftpdの構築とセキュリティ構成chroot隔離とパッシブモードの最適化"&gt;Enterprise Linuxにおけるvsftpdの構築とセキュリティ構成：chroot隔離とパッシブモードの最適化
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 07:41:49 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>PHPおよびTomcat環境におけるセキュリティ脆弱性対策の実装要件</title><link>https://klifehack.com/p/php-tomcat-security-hardening-checklist/</link><pubDate>Wed, 03 Jun 2026 07:41:49 +0900</pubDate><guid>https://klifehack.com/p/php-tomcat-security-hardening-checklist/</guid><description>&lt;h1 id="2026年上半期ウェブハッキングインシデント分析とphptomcat環境の技術的防御フレームワーク"&gt;2026年上半期ウェブハッキングインシデント分析とPHP/Tomcat環境の技術的防御フレームワーク
+&lt;/h1&gt;&lt;p&gt;2026年上半期、特定の地域において合計520件のウェブハッキングインシデントが記録されました。統計分析の結果、これらの侵害の68%がPHPおよびApache Tomcat環境における既知の脆弱性を悪用したものであることが判明しています。本稿では、開発者およびシステムエンジニアが直ちに適用すべき、コードレベルおよび設定レベルでの技術的介入フレームワークを提示します。&lt;/p&gt;
+&lt;h3 id="ターゲットアーキテクチャ"&gt;ターゲットアーキテクチャ
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;運用開発者:&lt;/b&gt; PHP 7.x/8.x または Tomcat 8.5/9.x/10.x 環境の管理担当者&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;レガシーシステムエンジニア:&lt;/b&gt; 老朽化したインフラの硬化（Hardening）責任者&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;セキュリティ責任者:&lt;/b&gt; OWASP Top 10準拠およびパッチ管理の遂行者&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="2-ケーススタディレガシーeコマースシステムの侵害分析"&gt;2. ケーススタディ：レガシーEコマースシステムの侵害分析
+&lt;/h2&gt;&lt;p&gt;2025年12月、特定のEコマースプラットフォーム（B社）において、検索機能のBlind SQL Injection脆弱性を突いた大規模なデータ侵害が発生しました。この事例は、入力値検証の欠如が致命的な結果を招くことを示唆しています。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;カテゴリ&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;技術的詳細&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;動作環境&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;PHP 5.6.40 + MySQL 5.7 + Apache 2.4&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;脆弱性タイプ&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Time-based Blind SQL Injection (GETパラメータ経由)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;攻撃ベクトル&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;/search.php?keyword=&lt;/code&gt; における入力値検証の欠如&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;データ流出規模&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;37,000件のユーザーレコード（氏名、メール、暗号化パスワード）&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;復旧期間&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;23日間（コードのリファクタリングおよびパッチ適用）&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;技術的負債&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;EOL（サポート終了）済みのPHP 5.6の使用、プリペアドステートメントの未採用&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="攻撃ペイロードの論理構造"&gt;攻撃ペイロードの論理構造
+&lt;/h3&gt;&lt;p&gt;攻撃者は以下のペイロードを使用して脆弱性の存在を確認しました。&lt;code&gt;SLEEP(5)&lt;/code&gt;関数を注入することで、サーバーのレスポンスに5秒の遅延が発生するかを観測する手法です。これにより、入力値がデータベースエンジンによって直接実行されていることが証明され、データベーススキーマや機密テーブルの体系的な抽出が可能となりました。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;GET /search.php?keyword=test' AND (SELECT * FROM (SELECT(SLEEP(5)))a)-- -&lt;/code&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="3-脆弱性対策チェックリストと実装仕様"&gt;3. 脆弱性対策チェックリストと実装仕様
+&lt;/h2&gt;&lt;h3 id="31-sqlインジェクション防御プリペアドステートメントの実装"&gt;3.1 SQLインジェクション防御：プリペアドステートメントの実装
+&lt;/h3&gt;&lt;p&gt;2026年上半期の統計では、SQLインジェクションがインシデントの42%を占めています。すべての動的クエリは、以下の仕様に基づきプリペアドステートメントへ変換する必要があります。&lt;/p&gt;
+&lt;h4 id="-脆弱な実装例-php"&gt;❌ 脆弱な実装例 (PHP)
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$keyword &lt;span style="color:#f92672"&gt;=&lt;/span&gt; $_GET[&lt;span style="color:#e6db74"&gt;&amp;#39;keyword&amp;#39;&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$sql &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM products WHERE name = &amp;#39;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;$keyword&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; $conn&lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;query&lt;/span&gt;($sql);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="-安全な実装例-prepared-statements"&gt;✅ 安全な実装例 (Prepared Statements)
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$stmt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; $pdo&lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;prepare&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;SELECT * FROM products WHERE name = :name&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$stmt&lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;execute&lt;/span&gt;([&lt;span style="color:#e6db74"&gt;&amp;#39;name&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; $_GET[&lt;span style="color:#e6db74"&gt;&amp;#39;keyword&amp;#39;&lt;/span&gt;]]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$user &lt;span style="color:#f92672"&gt;=&lt;/span&gt; $stmt&lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;fetch&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="-tomcat--mybatis-環境での対応"&gt;🔧 Tomcat + MyBatis 環境での対応
+&lt;/h4&gt;&lt;p&gt;MyBatisを使用する場合、文字列置換を行う &lt;code&gt;${}&lt;/code&gt; ではなく、パラメータマッピングを強制する &lt;code&gt;#{}&lt;/code&gt; を使用することで、SQLインジェクションを構造的に防止します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!-- 脆弱な例 --&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SELECT * FROM users WHERE id = ${id}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!-- 安全な例 --&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SELECT * FROM users WHERE id = #{id}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="32-ファイルアップロード脆弱性多層検証モデル"&gt;3.2 ファイルアップロード脆弱性：多層検証モデル
+&lt;/h3&gt;&lt;p&gt;ウェブシェルのアップロードは、サーバー全体の制御権喪失に直結する致命的な脆弱性です。「多層防御（Defense in Depth）」戦略の適用が不可欠です。&lt;/p&gt;
+&lt;h4 id="-強化されたファイルアップロード検証-php-8x"&gt;✅ 強化されたファイルアップロード検証 (PHP 8.x)
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$allowed_types &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#39;image/jpeg&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;image/png&amp;#39;&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$file_info &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;finfo&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;FILEINFO_MIME_TYPE&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$mime_type &lt;span style="color:#f92672"&gt;=&lt;/span&gt; $file_info&lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;file&lt;/span&gt;($_FILES[&lt;span style="color:#e6db74"&gt;&amp;#39;upload&amp;#39;&lt;/span&gt;][&lt;span style="color:#e6db74"&gt;&amp;#39;tmp_name&amp;#39;&lt;/span&gt;]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#f92672"&gt;!&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;in_array&lt;/span&gt;($mime_type, $allowed_types)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;die&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Invalid file type.&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$extension &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;pathinfo&lt;/span&gt;($_FILES[&lt;span style="color:#e6db74"&gt;&amp;#39;upload&amp;#39;&lt;/span&gt;][&lt;span style="color:#e6db74"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;], &lt;span style="color:#a6e22e"&gt;PATHINFO_EXTENSION&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$new_filename &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;bin2hex&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;random_bytes&lt;/span&gt;(&lt;span style="color:#ae81ff"&gt;16&lt;/span&gt;)) &lt;span style="color:#f92672"&gt;.&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;.&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;.&lt;/span&gt; $extension;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;move_uploaded_file&lt;/span&gt;($_FILES[&lt;span style="color:#e6db74"&gt;&amp;#39;upload&amp;#39;&lt;/span&gt;][&lt;span style="color:#e6db74"&gt;&amp;#39;tmp_name&amp;#39;&lt;/span&gt;], &lt;span style="color:#e6db74"&gt;&amp;#39;/var/www/uploads/&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;.&lt;/span&gt; $new_filename);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;追加の制約事項:&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;アップロードディレクトリをドキュメントルートの外側に配置する。&lt;/li&gt;
+&lt;li&gt;Apache/Nginxの設定により、アップロードディレクトリ内でのPHP実行権限を無効化する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;php.ini&lt;/code&gt; で &lt;code&gt;upload_max_filesize = 2M&lt;/code&gt; 等の制限を課す。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="33-セッション管理の厳格化"&gt;3.3 セッション管理の厳格化
+&lt;/h3&gt;&lt;p&gt;適切なセッション構成により、セッション固定攻撃（Session Fixation）やハイジャックの90%以上を遮断可能です。&lt;/p&gt;
+&lt;h4 id="-php-セッションセキュリティ設定-phpini"&gt;✅ PHP セッションセキュリティ設定 (&lt;code&gt;php.ini&lt;/code&gt;)
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;session.cookie_httponly&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;session.cookie_secure&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;session.use_only_cookies&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;session.cookie_samesite&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Strict&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠️ ログイン成功時には必ず &lt;code&gt;session_regenerate_id(true);&lt;/code&gt; を実行し、既存のセッションIDを無効化してください。&lt;/p&gt;
+&lt;h4 id="-tomcat-webxml-設定"&gt;🔧 Tomcat &lt;code&gt;web.xml&lt;/code&gt; 設定
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;session-config&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;cookie-config&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;http-only&amp;gt;&lt;/span&gt;true&lt;span style="color:#f92672"&gt;&amp;lt;/http-only&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;secure&amp;gt;&lt;/span&gt;true&lt;span style="color:#f92672"&gt;&amp;lt;/secure&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/cookie-config&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;tracking-mode&amp;gt;&lt;/span&gt;COOKIE&lt;span style="color:#f92672"&gt;&amp;lt;/tracking-mode&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/session-config&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="4-インフラレベルの防御セキュリティヘッダーの実装"&gt;4. インフラレベルの防御：セキュリティヘッダーの実装
+&lt;/h2&gt;&lt;p&gt;HTTPレスポンスヘッダーを適切に設定することで、ブラウザレベルの防御層を追加し、XSSやクリックジャッキングのリスクを低減します。&lt;/p&gt;
+&lt;h4 id="-apache-htaccess-設定例"&gt;✅ Apache &lt;code&gt;.htaccess&lt;/code&gt; 設定例
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-apache" data-lang="apache"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Header set Content-Security-Policy &lt;span style="color:#e6db74"&gt;&amp;#34;default-src &amp;#39;self&amp;#39;;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Header set X-Frame-Options &lt;span style="color:#e6db74"&gt;&amp;#34;DENY&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Header set X-Content-Type-Options &lt;span style="color:#e6db74"&gt;&amp;#34;nosniff&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Header set Strict-Transport-Security &lt;span style="color:#e6db74"&gt;&amp;#34;max-age=31536000; includeSubDomains&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="5-監視および監査の自動化"&gt;5. 監視および監査の自動化
+&lt;/h2&gt;&lt;h3 id="51-リアルタイム監視フレームワーク"&gt;5.1 リアルタイム監視フレームワーク
+&lt;/h3&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;監視項目&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;対象ログ&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;推奨ツール&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;認証失敗&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ログイン試行 (&amp;gt;5回失敗)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Fail2ban, OSSEC&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;異常リクエスト&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;SQLキーワード、特殊文字パターン&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ModSecurity (WAF)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;ファイル整合性&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ウェブルート内の変更検知&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;AIDE, Tripwire&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;リソーススパイク&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;CPU/メモリ/トラフィックの急増&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Zabbix, Prometheus&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="52-セキュリティ監査スクリプト-bash"&gt;5.2 セキュリティ監査スクリプト (Bash)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ウェブルート内のPHPウェブシェル検知スクリプト&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SEARCH_DIR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/var/www/html&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;KEYWORDS&lt;span style="color:#f92672"&gt;=(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;passthru&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;shell_exec&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;system&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;base64_decode&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; key in &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;KEYWORDS[@]&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;grep -rnE &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$key&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$SEARCH_DIR&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; --include&lt;span style="color:#f92672"&gt;=&lt;/span&gt;*.php
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;分析の結果、発生したインシデントの多くは既知の脆弱性と基本的な設定ミスに起因しています。本稿で詳述したコードレベルの防御策を導入することで、一般的な攻撃の68%以上を未然に防ぐことが可能です。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;実装の優先順位:&lt;/b&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;即時対応:&lt;/b&gt; プリペアドステートメントへの移行、セキュリティヘッダーの設定。🛠️&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;1週間以内:&lt;/b&gt; ファイルアップロード検証の実装、セッションセキュリティの強化。⚠️&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;1ヶ月以内:&lt;/b&gt; 自動監査スクリプトのデプロイ、WAF（Web Application Firewall）の統合。💡&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;レガシーシステム（PHP 5.x等）の運用を継続せざるを得ない場合は、アーキテクチャ全体の再設計を含めた専門的なセキュリティコンサルティングの検討を強く推奨します。&lt;/p&gt;</description></item><item><title>Enterprise Linuxにおけるvsftpdの導入とセキュリティ硬化設定</title><link>https://klifehack.com/p/vsftpd-enterprise-linux-hardening/</link><pubDate>Wed, 03 Jun 2026 07:32:38 +0900</pubDate><guid>https://klifehack.com/p/vsftpd-enterprise-linux-hardening/</guid><description>&lt;h1 id="enterprise-linuxにおけるvsftpdの構築とセキュリティ構成chroot隔離とパッシブモードの最適化"&gt;Enterprise Linuxにおけるvsftpdの構築とセキュリティ構成：chroot隔離とパッシブモードの最適化
 &lt;/h1&gt;&lt;p&gt;Enterprise Linux（RHEL, CentOS, Rocky Linux等）において、標準的なFTPデーモンとして採用されている&lt;b&gt;vsftpd&lt;/b&gt; (Very Secure FTP Daemon) は、その名の通りセキュリティを最優先に設計されたアーキテクチャを持ちます。本稿では、vsftpdの導入から、パッシブモードのポート制限、chrootによるユーザー隔離、およびfirewalldを用いたネットワーク境界防御の設定まで、実務レベルの構成手順を詳述します。&lt;/p&gt;
 &lt;h2 id="1-パッケージの導入とサービスライフサイクルの管理"&gt;1. パッケージの導入とサービスライフサイクルの管理
 &lt;/h2&gt;&lt;p&gt;vsftpdは権限分離モデル（Privilege Separation Model）を採用しており、信頼できないネットワーク入力を処理するプロセスの権限を最小化することで、ローカル特権昇格のリスクを低減しています。まず、パッケージの存在確認とインストールを実施します。&lt;/p&gt;
