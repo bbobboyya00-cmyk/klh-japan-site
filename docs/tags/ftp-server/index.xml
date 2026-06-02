@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ftp-Server on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/ftp-server/</link><description>Recent content in Ftp-Server on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 07:32:38 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/ftp-server/index.xml" rel="self" type="application/rss+xml"/><item><title>Enterprise Linuxにおけるvsftpdの導入とセキュリティ硬化設定</title><link>https://klifehack.com/p/vsftpd-enterprise-linux-hardening/</link><pubDate>Wed, 03 Jun 2026 07:32:38 +0900</pubDate><guid>https://klifehack.com/p/vsftpd-enterprise-linux-hardening/</guid><description>&lt;h1 id="enterprise-linuxにおけるvsftpdの構築とセキュリティ構成chroot隔離とパッシブモードの最適化"&gt;Enterprise Linuxにおけるvsftpdの構築とセキュリティ構成：chroot隔離とパッシブモードの最適化
+&lt;/h1&gt;&lt;p&gt;Enterprise Linux（RHEL, CentOS, Rocky Linux等）において、標準的なFTPデーモンとして採用されている&lt;b&gt;vsftpd&lt;/b&gt; (Very Secure FTP Daemon) は、その名の通りセキュリティを最優先に設計されたアーキテクチャを持ちます。本稿では、vsftpdの導入から、パッシブモードのポート制限、chrootによるユーザー隔離、およびfirewalldを用いたネットワーク境界防御の設定まで、実務レベルの構成手順を詳述します。&lt;/p&gt;
+&lt;h2 id="1-パッケージの導入とサービスライフサイクルの管理"&gt;1. パッケージの導入とサービスライフサイクルの管理
+&lt;/h2&gt;&lt;p&gt;vsftpdは権限分離モデル（Privilege Separation Model）を採用しており、信頼できないネットワーク入力を処理するプロセスの権限を最小化することで、ローカル特権昇格のリスクを低減しています。まず、パッケージの存在確認とインストールを実施します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# vsftpdパッケージのインストール&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo yum install -y vsftpd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;インストール完了後、systemdユニットとしてサービスを有効化し、ブート時の自動起動を設定します。また、標準の制御ポート（TCP 21）が正しくリスニングされているかを確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスの起動と有効化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl enable --now vsftpd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# リスニング状態の確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo netstat -ntlp | grep &lt;span style="color:#ae81ff"&gt;21&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 &lt;code&gt;netstat&lt;/code&gt;のオプションにおいて、&lt;code&gt;-n&lt;/code&gt;は数値表示、&lt;code&gt;-t&lt;/code&gt;はTCPプロトコル、&lt;code&gt;-l&lt;/code&gt;はリスニングソケット、&lt;code&gt;-p&lt;/code&gt;はプロセスIDの表示を意味します。&lt;/p&gt;
+&lt;h2 id="2-vsftpdconfの構成とパッシブモードの最適化"&gt;2. vsftpd.confの構成とパッシブモードの最適化
+&lt;/h2&gt;&lt;p&gt;FTPにはアクティブモードとパッシブモードの2種類が存在します。アクティブモードではサーバーからクライアントへデータ接続を開始するため、クライアント側のファイアウォールやNAT環境で通信が遮断されるケースが多いです。これを回避するため、クライアントからデータ接続を開始するパッシブモード（PASV）の利用が推奨されます。&lt;/p&gt;
+&lt;p&gt;設定変更前に、既存の構成ファイルのバックアップを作成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo cp /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.bak
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="パッシブモードとセキュリティパラメータの定義"&gt;パッシブモードとセキュリティパラメータの定義
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;/etc/vsftpd/vsftpd.conf&lt;/code&gt;を編集し、以下のパラメータを追記または修正します。これにより、パッシブモードで使用されるポート範囲を限定し、ファイアウォールでの制御を容易にします。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;# パッシブモードの有効化とポート範囲の指定
+pasv_enable=YES
+pasv_min_port=50001
+pasv_max_port=50010
+
+# ユーザー隔離の設定
+chroot_local_user=YES
+allow_writeable_chroot=YES
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;chroot_local_user=YES&lt;/code&gt;は、ユーザーを自身のホームディレクトリ内に閉じ込め、システムルート（/）へのアクセスを制限する重要なセキュリティ設定です。しかし、セキュリティ上の理由から、chroot先のディレクトリに書き込み権限がある場合、vsftpdはログインを拒否する仕様となっています。&lt;code&gt;allow_writeable_chroot=YES&lt;/code&gt;を併用することで、この制限を緩和しつつ隔離環境を維持できます。&lt;/p&gt;
+&lt;p&gt;🛠️ 設定反映のため、サービスを再起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl restart vsftpd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-firewalldによるネットワークアクセス制御"&gt;3. firewalldによるネットワークアクセス制御
+&lt;/h2&gt;&lt;p&gt;サーバー側のファイアウォール（firewalld）において、FTP制御ポート（21/tcp）および先ほど定義したパッシブポート範囲（50001-50010/tcp）を明示的に許可する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FTPサービスおよびパッシブポート範囲の許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ftp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo firewall-cmd --permanent --add-port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;50001-50010/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-検証用ユーザーの作成と隔離確認"&gt;4. 検証用ユーザーの作成と隔離確認
+&lt;/h2&gt;&lt;p&gt;設定の妥当性を検証するため、専用のテストユーザーを作成します。このユーザーを用いて、外部からの接続およびchrootによるディレクトリ移動制限が機能しているかを確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# テストユーザーの作成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo useradd ftpuser
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo passwd ftpuser
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ログイン後、&lt;code&gt;pwd&lt;/code&gt;コマンド等で自身のホームディレクトリより上位の階層へ移動できないことが確認できれば、chroot jailの構築は成功です。&lt;/p&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;実運用における最適化とリスク管理のために、以下の項目を検討してください。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ポート範囲の設計&lt;/b&gt;: 本構成ではパッシブポートを10個（50001-50010）に制限しています。これは同時接続数が少ない環境を想定したものであり、高負荷環境では接続数に応じてこの範囲を拡張する必要があります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;SELinuxの考慮&lt;/b&gt;: ⚠️ SELinuxがEnforcingモードの場合、&lt;code&gt;ftp_home_dir&lt;/code&gt;などのブール値を適切に設定しないと、ホームディレクトリへのアクセスが拒否される場合があります。必要に応じて &lt;code&gt;setsebool -P ftp_home_dir on&lt;/code&gt; 等の調整を検討してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;暗号化の欠如&lt;/b&gt;: 本構成は標準的なFTP（プレーンテキスト）です。機密情報を扱う場合は、&lt;code&gt;ssl_enable=YES&lt;/code&gt; によるFTPS（FTP over TLS）へのアップグレードが不可欠です。&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
