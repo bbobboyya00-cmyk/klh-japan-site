@@ -1,7 +1,7 @@
 ---
 title: "Implementation Methods for NGINX Reverse Proxy: Nginx Proxy Manager and Manual Configuration"
 slug: "nginx-reverse-proxy-implementation-guide"
-date: 2026-06-02T07:52:01+09:00
+date: 2026-05-28T17:04:17+09:00
 draft: false
 image: ""
 description: "Procedures for constructing a reverse proxy using GUI management via Nginx Proxy Manager and direct editing of nginx.conf. Covers Docker environment preparation, proxy_pass settings, and firewall control."

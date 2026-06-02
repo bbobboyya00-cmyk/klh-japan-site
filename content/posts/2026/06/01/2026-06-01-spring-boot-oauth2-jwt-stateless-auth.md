@@ -1,7 +1,7 @@
 ---
 title: "Spring Boot 3.xにおけるOAuth2およびJWTを用いたステートレス認証基盤の構築"
 slug: "spring-boot-oauth2-jwt-stateless-auth"
-date: 2026-06-01T22:04:17+09:00
+date: 2026-05-27T12:04:17+09:00
 draft: false
 image: ""
 description: "Spring Boot 3.xとSpring Security 6.xを用いた、OAuth2ソーシャルログインおよびJWT認証の実装。セッション管理からステートレスなトークンベース認証への移行、セキュリティ脆弱性への対策、およびRefresh Token Rotation（RTR）の設計について詳述します。"

@@ -1,7 +1,7 @@
 ---
 title: "Construction of a Stateless Authentication Infrastructure Using OAuth2 and JWT in Spring Boot 3.x"
 slug: "spring-boot-oauth2-jwt-stateless-auth"
-date: 2026-06-01T22:04:17+09:00
+date: 2026-05-27T12:04:17+09:00
 draft: false
 image: ""
 description: "Implementation of OAuth2 social login and JWT authentication using Spring Boot 3.x and Spring Security 6.x. Details the migration from session management to stateless token-based authentication, countermeasures against security vulnerabilities, and the design of Refresh Token Rotation (RTR)."

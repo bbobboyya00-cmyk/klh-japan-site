@@ -1,7 +1,7 @@
 ---
 title: "NGINXリバースプロキシ構築におけるNginx Proxy Managerと手動構成の実装手法"
 slug: "nginx-reverse-proxy-implementation-guide"
-date: 2026-06-02T07:52:01+09:00
+date: 2026-05-28T17:04:17+09:00
 draft: false
 image: ""
 description: "Nginx Proxy ManagerによるGUI管理とnginx.confの直接編集によるリバースプロキシ構築手順。Docker環境の整備からproxy_passの設定、ファイアウォール制御までを網羅。"

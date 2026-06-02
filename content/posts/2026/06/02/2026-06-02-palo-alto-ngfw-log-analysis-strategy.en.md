@@ -1,7 +1,7 @@
 ---
 title: "Technical Considerations for Log Analysis Methods and Operational Management in Palo Alto Networks NGFW"
 slug: "palo-alto-ngfw-log-analysis-strategy"
-date: 2026-06-02T07:41:00+09:00
+date: 2026-05-28T12:04:17+09:00
 draft: false
 image: ""
 description: "This article details the structure of various logs (Traffic, Threat, URL, etc.) in Palo Alto Networks NGFW, efficient troubleshooting using filtering syntax, and operational considerations."
