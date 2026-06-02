@@ -4,7 +4,7 @@ slug: "npm-typosquatting-mini-shai-hulud-analysis"
 date: 2026-05-30T10:33:07+09:00
 draft: false
 image: ""
-description: "Analysis of the "Mini Shai-Hulud" credential theft attack via npm packages in May 2026. Details stealth methods exploiting the Bun runtime, AWS/GitHub Secrets leakage risks, and specific defense measures."
+description: "Analysis of the 'Mini Shai-Hulud' credential theft attack via npm packages in May 2026. Details stealth methods exploiting the Bun runtime, AWS/GitHub Secrets leakage risks, and specific defense measures."
 categories: ["DevOps Logistics"]
 tags: ["npm-security", "supply-chain-attack", "typosquatting", "aws-secrets-manager", "github-actions", "bun-runtime"]
 author: "K-Life Hack"
