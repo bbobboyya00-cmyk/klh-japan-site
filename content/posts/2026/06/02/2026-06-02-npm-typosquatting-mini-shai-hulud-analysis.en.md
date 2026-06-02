@@ -1,7 +1,7 @@
 ---
 title: "Technical Analysis of the "Mini Shai-Hulud" npm Ecosystem Supply Chain Attack"
 slug: "npm-typosquatting-mini-shai-hulud-analysis"
-date: 2026-06-02T17:27:22+09:00
+date: 2026-05-30T10:33:07+09:00
 draft: false
 image: ""
 description: "Analysis of the "Mini Shai-Hulud" credential theft attack via npm packages in May 2026. Details stealth methods exploiting the Bun runtime, AWS/GitHub Secrets leakage risks, and specific defense measures."

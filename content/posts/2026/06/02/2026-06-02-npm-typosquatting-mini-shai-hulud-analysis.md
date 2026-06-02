@@ -1,7 +1,7 @@
 ---
 title: "npmエコシステムにおけるサプライチェーン攻撃「Mini Shai-Hulud」の技術解析"
 slug: "npm-typosquatting-mini-shai-hulud-analysis"
-date: 2026-06-02T17:27:22+09:00
+date: 2026-05-30T12:33:07+09:00
 draft: false
 image: ""
 description: "2026年5月に発生したnpmパッケージを介した認証情報窃取攻撃「Mini Shai-Hulud」の解析。Bunランタイムを悪用したステルス手法とAWS/GitHub Secretsの漏洩リスク、および具体的な防御策について詳述します。"
