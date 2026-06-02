@@ -18,55 +18,55 @@
 <span>目次</span></div></summary><nav class=toc-nav><ul><li><ul><li><a href=#1-2026年におけるkubernetes運用のパラドックス>1. 2026年におけるKubernetes運用のパラドックス</a></li><li><a href=#2-eks-auto-modeによるノード管理の自動化>2. EKS Auto Modeによるノード管理の自動化</a></li><li><a href=#3-internal-developer-platform-idp-の設計原則>3. Internal Developer Platform (IDP) の設計原則</a></li><li><a href=#4-リファレンスアーキテクチャと構成要素>4. リファレンスアーキテクチャと構成要素</a></li><li><a href=#5-責任共有モデルの再定義>5. 責任共有モデルの再定義</a></li><li><a href=#6-findings>6. Findings</a></li></ul></li></ul></nav></details></aside><section class=article-content><h3 id=1-2026年におけるkubernetes運用のパラドックス>1. 2026年におけるKubernetes運用のパラドックス</h3><p>2026年現在、エンタープライズ環境におけるKubernetes（K8s）の採用率は80%に達すると予測されています。しかし、普及が進む一方で、開発者が直接Kubernetesを操作することを避ける「技術的パラドックス」が顕在化しています。etcdの状態管理、コントロールプレーンのアップグレード、CNI（Container Network Interface）の選定、CSI（Container Storage Interface）の構成といった複雑な運用負荷が、本来のビジネスロジック開発を阻害する要因となっているためです。</p><p>AWSはこの課題に対し、<b>EKS Auto Mode</b>によるインフラの完全抽象化を提示しています。同時に、プラットフォームエンジニアリングチームは<b>Internal Developer Platform (IDP)</b>を構築し、Kubernetesの複雑性を隠蔽したセルフサービス型インフラを提供することで、開発者の生産性とガバナンスの両立を図っています。</p><h3 id=2-eks-auto-modeによるノード管理の自動化>2. EKS Auto Modeによるノード管理の自動化</h3><p>EKS Auto Modeは、<b>Karpenter</b>をコアエンジンとして採用し、ノードのライフサイクル全体を自動化するマネージドサービスです。従来のCluster Autoscalerのような静的なノードグループの定義を必要とせず、Podの要求リソースに基づいたJust-In-Time (JIT) なプロビジョニングを実現します。</p><p>💡 <b>主な技術的特性</b></p><p>・<b>JITプロビジョニング</b>: PodのCPU/メモリ要求、Node Selector、Taints/Tolerations、Topology Spread Constraintsをリアルタイムで解析し、最適なEC2インスタンスを即座に起動します。</p><p>・<b>ネイティブ統合</b>: VPC CNI、EBS CSI、ALB Controllerが標準で管理され、ドライバの手動インストールやパッチ適用が不要です。</p><p>・<b>自動メンテナンス</b>: OSのパッチ適用やKubernetesのバージョンアップグレードが自動化され、運用負荷が大幅に削減されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
 </span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Pod</span>
 </span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>name</span>: <span style=color:#ae81ff>app-deployment-example</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>default</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>app-deployment-example</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>default</span>
 </span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>containers</span>:
-</span></span><span style=display:flex><span>- <span style=color:#f92672>name</span>: <span style=color:#ae81ff>application</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>image</span>: <span style=color:#ae81ff>public.ecr.aws/nginx/nginx:1.25</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>resources</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>requests</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>cpu</span>: <span style=color:#e6db74>&#34;2&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>memory</span>: <span style=color:#e6db74>&#34;4Gi&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>limits</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>cpu</span>: <span style=color:#e6db74>&#34;4&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>memory</span>: <span style=color:#e6db74>&#34;8Gi&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>nodeSelector</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>topology.kubernetes.io/zone</span>: <span style=color:#ae81ff>us-west-2a</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>tolerations</span>:
-</span></span><span style=display:flex><span>- <span style=color:#f92672>key</span>: <span style=color:#e6db74>&#34;dedicated&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>operator</span>: <span style=color:#e6db74>&#34;Equal&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>value</span>: <span style=color:#e6db74>&#34;experimental&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>effect</span>: <span style=color:#e6db74>&#34;NoSchedule&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>containers</span>:
+</span></span><span style=display:flex><span>  - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>application</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>image</span>: <span style=color:#ae81ff>public.ecr.aws/nginx/nginx:1.25</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>requests</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>cpu</span>: <span style=color:#e6db74>&#34;2&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>memory</span>: <span style=color:#e6db74>&#34;4Gi&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>limits</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>cpu</span>: <span style=color:#e6db74>&#34;4&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>memory</span>: <span style=color:#e6db74>&#34;8Gi&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>nodeSelector</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>topology.kubernetes.io/zone</span>: <span style=color:#ae81ff>us-west-2a</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>tolerations</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>key</span>: <span style=color:#e6db74>&#34;dedicated&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>operator</span>: <span style=color:#e6db74>&#34;Equal&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>value</span>: <span style=color:#e6db74>&#34;experimental&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>effect</span>: <span style=color:#e6db74>&#34;NoSchedule&#34;</span>
 </span></span></code></pre></div><h3 id=3-internal-developer-platform-idp-の設計原則>3. Internal Developer Platform (IDP) の設計原則</h3><p>IDPは、開発者がKubernetesの専門知識を必要とせずにアプリケーションをデプロイできる「Golden Path」を提供します。プラットフォームチームは以下の原則に基づいてIDPを構築します。</p><ol><li><p><b>抽象化の優先</b>: 開発者はYAMLやTerraformを直接記述せず、アプリケーションの要件（CPU、RAM、環境変数）のみを宣言します。</p></li><li><p><b>セルフサービス化</b>: チケットベースの運用を廃止し、開発者がポータルからオンデマンドで環境を構築できるようにします。</p></li><li><p><b>ガードレールの適用</b>: OPA GatekeeperやKyvernoを使用し、セキュリティポリシーを自動的に強制します。</p></li></ol><h3 id=4-リファレンスアーキテクチャと構成要素>4. リファレンスアーキテクチャと構成要素</h3><p>最新のIDPアーキテクチャでは、以下のコンポーネントを統合して運用します。</p><p>・<b>Backstage</b>: Spotifyが開発したオープンソースフレームワークで、サービスカタログやドキュメント、CI/CDの統合インターフェースとして機能します。</p><p>・<b>Argo CD</b>: GitOpsに基づき、GitリポジトリをSingle Source of Truth (SSoT) としてクラスタの状態を同期します。</p><p>・<b>Crossplane</b>: Kubernetes of CRDを使用して、RDSやS3などのAWSリソースを宣言的にプロビジョニングします。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>aws.upbound.io/v1beta1</span>
 </span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Bucket</span>
 </span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>name</span>: <span style=color:#ae81ff>idp-application-storage</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>idp-application-storage</span>
 </span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>forProvider</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>region</span>: <span style=color:#ae81ff>us-west-2</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>writeConnectionSecretToRef</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>name</span>: <span style=color:#ae81ff>bucket-connection-secret</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>default</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>forProvider</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>region</span>: <span style=color:#ae81ff>us-west-2</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>writeConnectionSecretToRef</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>name</span>: <span style=color:#ae81ff>bucket-connection-secret</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>default</span>
 </span></span><span style=display:flex><span>---
 </span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>argoproj.io/v1alpha1</span>
 </span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Application</span>
 </span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>name</span>: <span style=color:#ae81ff>idp-gitops-application</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>argocd</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>idp-gitops-application</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>argocd</span>
 </span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>project</span>: <span style=color:#ae81ff>default</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>source</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>repoURL</span>: <span style=color:#e6db74>&#39;https://github.com/example/idp-golden-path.git&#39;</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>targetRevision</span>: <span style=color:#ae81ff>HEAD</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>path</span>: <span style=color:#ae81ff>manifests</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>destination</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>server</span>: <span style=color:#e6db74>&#39;https://kubernetes.default.svc&#39;</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>default</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>syncPolicy</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>automated</span>:
-</span></span><span style=display:flex><span><span style=color:#f92672>prune</span>: <span style=color:#66d9ef>true</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>selfHeal</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>project</span>: <span style=color:#ae81ff>default</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>source</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>repoURL</span>: <span style=color:#e6db74>&#39;https://github.com/example/idp-golden-path.git&#39;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>targetRevision</span>: <span style=color:#ae81ff>HEAD</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>path</span>: <span style=color:#ae81ff>manifests</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>destination</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>server</span>: <span style=color:#e6db74>&#39;https://kubernetes.default.svc&#39;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>default</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>syncPolicy</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>automated</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>prune</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>selfHeal</span>: <span style=color:#66d9ef>true</span>
 </span></span></code></pre></div><h3 id=5-責任共有モデルの再定義>5. 責任共有モデルの再定義</h3><p>持続可能なプラットフォーム運営のためには、プラットフォームチームとアプリケーションチームの責任境界を明確にする必要があります。</p><div class=table-wrapper><table><thead><tr><th style=text-align:left>機能</th><th style=text-align:left>プラットフォームチーム (Provider)</th><th style=text-align:left>アプリケーションチーム (Consumer)</th></tr></thead><tbody><tr><td style=text-align:left><b>インフラストラクチャ</b></td><td style=text-align:left>EKSクラスタ、VPC、IAM、IDPの維持管理</td><td style=text-align:left>アプリケーションロジック、ビジネスコード</td></tr><tr><td style=text-align:left><b>自動化</b></td><td style=text-align:left>CI/CDパイプライン、Golden Pathテンプレート</td><td style=text-align:left>アプリケーションマニフェスト、Podスペック</td></tr><tr><td style=text-align:left><b>セキュリティ</b></td><td style=text-align:left>ガードレール、コンプライアンス、ポリシー強制</td><td style=text-align:left>アプリケーションレベルのセキュリティ、ロジック</td></tr><tr><td style=text-align:left><b>運用</b></td><td style=text-align:left>スケーリングロジック、コスト最適化、アップグレード</td><td style=text-align:left>アプリケーションのパフォーマンス監視、デバッグ</td></tr></tbody></table></div><h3 id=6-findings>6. Findings</h3><p>🛠️ <b>Findings</b></p><p>EKS Auto ModeとKarpenterによるインフラの自動化、そしてBackstageやCrossplaneを活用したIDPの構築は、プラットフォームエンジニアリングにおける標準的なアプローチとなりつつあります。Kubernetesの「トイル（苦労）」を抽象化することで、組織は開発リソースをビジネスロジックに集中させることが可能になります。AWSが提供するEKS Capabilitiesの進化は、複雑なオープンソースツールの運用をマネージドサービスへと転換させ、開発者体験（DX）を飛躍的に向上させる鍵となります。</p></section><footer class="article-meta article-footer"><section class=article-tags><a href=/tags/eks-auto-mode/>Eks-Auto-Mode</a>
 <a href=/tags/karpenter/>Karpenter</a>
 <a href=/tags/platform-engineering/>Platform-Engineering</a>
