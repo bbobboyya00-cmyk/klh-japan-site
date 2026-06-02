@@ -1,7 +1,7 @@
 ---
 title: "Design of Asynchronous Task Processing Infrastructure in AI Studio: Scalable Educational Content Generation Architecture with Celery and Redis"
 slug: "classkit-ai-studio-celery-redis-architecture"
-date: 2026-06-02T11:08:01+09:00
+date: 2026-05-29T09:40:32+09:00
 draft: false
 image: ""
 description: "This article explains the design of an asynchronous architecture combining FastAPI, Redis, and Celery to achieve load balancing for speech synthesis and image generation in AI Studio, as well as improving fault tolerance in external API integration using exponential backoff."

@@ -1,7 +1,7 @@
 ---
 title: "AI Studioにおける非同期タスク処理基盤の設計：CeleryとRedisによるスケーラブルな教材生成アーキテクチャ"
 slug: "classkit-ai-studio-celery-redis-architecture"
-date: 2026-06-02T11:08:01+09:00
+date: 2026-05-29T12:40:32+09:00
 draft: false
 image: ""
 description: "AI Studioにおける音声合成および画像生成の負荷分散を実現するため、FastAPI、Redis、Celeryを組み合わせた非同期アーキテクチャの設計と、指数バックオフによる外部API連携の耐障害性向上について解説します。"
