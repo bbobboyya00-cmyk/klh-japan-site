@@ -1,7 +1,7 @@
 ---
 title: "Deployment and Security Hardening of vsftpd on Enterprise Linux"
 slug: "vsftpd-enterprise-linux-hardening"
-date: 2026-06-03T07:32:39+09:00
+date: 2026-05-30T17:33:07+09:00
 draft: false
 image: ""
 description: "A practical technical implementation note on the secure deployment of vsftpd in Enterprise Linux environments, covering passive mode restrictions, chroot isolation, and firewalld integration settings."
