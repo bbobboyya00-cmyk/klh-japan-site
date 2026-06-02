@@ -1,0 +1,301 @@
+<!doctype html><html lang=ja dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="大規模なアクティビティログの集計処理を高速化するため、非同期の事前集計パイプラインとRedisキャッシュを組み合わせたアーキテクチャの実装方法を解説します。"><title>大規模アクティビティログのリアルタイム多次元集計パイプラインとキャッシュ戦略</title><link rel=canonical href=https://klifehack.com/p/realtime-log-aggregation-pipeline/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.166aa5bdeb7d404471668645f98967b7803f0e24913be8dca78065ece6f0d352.css><meta property='og:title' content="大規模アクティビティログのリアルタイム多次元集計パイプラインとキャッシュ戦略"><meta property='og:description' content="大規模なアクティビティログの集計処理を高速化するため、非同期の事前集計パイプラインとRedisキャッシュを組み合わせたアーキテクチャの実装方法を解説します。"><meta property='og:url' content='https://klifehack.com/p/realtime-log-aggregation-pipeline/'><meta property='og:site_name' content='K-Life Hack | 韓国ハイエンド・ライフスタイルガイド'><meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='fastapi'><meta property='article:tag' content='redis'><meta property='article:tag' content='mysql'><meta property='article:tag' content='data-pipeline'><meta property='article:tag' content='upsert'><meta property='article:published_time' content='2026-06-03T08:00:22+09:00'><meta property='article:modified_time' content='2026-06-03T08:00:22+09:00'><meta name=twitter:title content="大規模アクティビティログのリアルタイム多次元集計パイプラインとキャッシュ戦略"><meta name=twitter:description content="大規模なアクティビティログの集計処理を高速化するため、非同期の事前集計パイプラインとRedisキャッシュを組み合わせたアーキテクチャの実装方法を解説します。"><script async src="https://www.googletagmanager.com/gtag/js?id=G-4KGC4HJF0E"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-4KGC4HJF0E")}</script><link rel=icon href=/favicon.ico type=image/x-icon><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"K-Life Hack | 韓国ハイエンド・ライフスタイルガイド","item":"https:\/\/klifehack.com\/"},{"@type":"ListItem","position":2,"name":"Posts","item":"https:\/\/klifehack.com\/posts/"},{"@type":"ListItem","position":3,"name":"大規模アクティビティログのリアルタイム多次元集計パイプラインとキャッシュ戦略","item":"https:\/\/klifehack.com\/p\/realtime-log-aggregation-pipeline\/"}]}</script><link rel=alternate hreflang=ja href=https://klifehack.com/p/realtime-log-aggregation-pipeline/><meta property="og:image" content="https://klifehack.com/img/logo.webp"><meta property="twitter:image" content="https://klifehack.com/img/logo.webp"><style>@media(max-width:640px){.pagination{display:flex!important;flex-wrap:nowrap!important;justify-content:center!important;align-items:center!important;overflow:hidden!important;width:100%!important;padding:15px 0!important;margin:0!important;gap:3px!important;box-sizing:border-box!important}.pagination>*{min-width:28px!important;height:32px!important;padding:0 4px!important;text-decoration:none!important;box-sizing:border-box!important;border-radius:4px!important;flex:initial!important}.pagination>:first-child,.pagination>:last-child,.pagination>.pagination-link{min-width:24px!important;padding:0!important}.pagination svg{width:16px!important;height:16px!important;margin:0!important}.pagination>*{display:none!important}.pagination>:first-child,.pagination>:last-child,.pagination>:nth-child(2),.pagination>:nth-last-child(2),.pagination>.pagination-link,.pagination>.current{display:inline-flex!important}.pagination>.current+*,.pagination>.current+*+*{display:inline-flex!important}.pagination>*:has(+.current),.pagination>*:has(+*+.current){display:inline-flex!important}}</style></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=メニューを開く・閉じる>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/persona_k_ambient.webp width=559 height=559 class=site-logo loading=lazy alt=Avatar></a></figure><div class=site-meta><h1 class=site-name><a href=/>K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</a></h1><h2 class=site-description>ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。</h2></div></header><ol class=menu id=main-menu><li><a href=/search/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1014 0A7 7 0 103 10"/><path d="M21 21l-6-6"/></svg>
+<span>検索</span></a></li><li><a href=/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>ホーム</span></a></li><li><a href=/archives/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6a2 2 0 012-2h14a2 2 0 012 2 2 2 0 01-2 2H5A2 2 0 013 6"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><path d="M10 12h4"/></svg>
+<span>アーカイブ</span></a></li><li><a href=/about/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 108 0A4 4 0 008 7"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>紹介</span></a></li><li><a href=mailto:contact@klifehack.com><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7"/><path d="M3 7l9 6 9-6"/></svg>
+<span>お問い合わせ</span></a></li><li class=menu-bottom-section><ol class=menu><li id=i18n-switch><svg class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<select name=language title=language onchange="window.location.href=this.selectedOptions[0].value"><option value=/p/realtime-log-aggregation-pipeline/ selected>日本語</option><option value=/en/p/realtime-log-aggregation-pipeline/>English</option></select></li><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>ダークモード</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><form action=/search/ class="search-form widget"><p><label>検索</label>
+<input name=keyword required placeholder=入力...>
+<button title=検索>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1014 0A7 7 0 103 10"/><path d="M21 21l-6-6"/></svg></button></p></form><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目次</h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ul><li><ul><li><a href=#技術要件と目標>技術要件と目標</a></li></ul></li><li><a href=#従来アプローチにおける技術的課題>従来アプローチにおける技術的課題</a></li><li><a href=#アーキテクチャ設計事前集計への移行>アーキテクチャ設計：事前集計への移行</a><ul><li><a href=#パイプラインの構成要素>パイプラインの構成要素</a></li></ul></li><li><a href=#実装詳細>実装詳細</a><ul><li><a href=#1-集計テーブルのスキーマ設計>1. 集計テーブルのスキーマ設計</a></li><li><a href=#2-非同期集計プロセッサの実装>2. 非同期集計プロセッサの実装</a></li><li><a href=#3-キャッシュ対応apiエンドポイント>3. キャッシュ対応APIエンドポイント</a></li></ul></li><li><a href=#結論と成果>結論と成果</a></li></ul></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-category><a href=/categories/backend-architecture/ style=background-color:#efbed0;color:#3d0f20>Backend Architecture</a></div><div class=article-title-wrapper><h2 class=article-title><a href=/p/realtime-log-aggregation-pipeline/>大規模アクティビティログのリアルタイム多次元集計パイプラインとキャッシュ戦略</a></h2><h3 class=article-subtitle>大規模なアクティビティログの集計処理を高速化するため、非同期の事前集計パイプラインとRedisキャッシュを組み合わせたアーキテクチャの実装方法を解説します。</h3></div><div class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-06-03T08:00:22+09:00>2026/06/03</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span class=article-time--reading>読了時間: 8分</span></div><div class=inline-meta><svg class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<a href=/en/p/realtime-log-aggregation-pipeline/ class=link>English</a></div></div></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span>目次</span></div></summary><nav class=toc-nav><ul><li><ul><li><a href=#技術要件と目標>技術要件と目標</a></li></ul></li><li><a href=#従来アプローチにおける技術的課題>従来アプローチにおける技術的課題</a></li><li><a href=#アーキテクチャ設計事前集計への移行>アーキテクチャ設計：事前集計への移行</a><ul><li><a href=#パイプラインの構成要素>パイプラインの構成要素</a></li></ul></li><li><a href=#実装詳細>実装詳細</a><ul><li><a href=#1-集計テーブルのスキーマ設計>1. 集計テーブルのスキーマ設計</a></li><li><a href=#2-非同期集計プロセッサの実装>2. 非同期集計プロセッサの実装</a></li><li><a href=#3-キャッシュ対応apiエンドポイント>3. キャッシュ対応APIエンドポイント</a></li></ul></li><li><a href=#結論と成果>結論と成果</a></li></ul></nav></details></aside><section class=article-content><h1 id=大規模データセットにおけるダッシュボード描画の高速化事前集計とキャッシュ戦略による最適化>大規模データセットにおけるダッシュボード描画の高速化：事前集計とキャッシュ戦略による最適化</h1><p>エンタープライズWebアプリケーションにおいて、大規模なデータセットに対する分析ダッシュボードのオンデマンド描画は、深刻なパフォーマンス低下を引き起こす主要な要因となります。あるプロジェクトの技術コンサルティングにおいて、月次分析レポートのレンダリングに150秒（2分30秒）を要するという致命的なボトルネックが確認されました。この課題に対し、応答時間を5秒未満に短縮するという厳格な目標を設定し、アーキテクチャの再設計を実施しました。</p><p>本レポートでは、過去3ヶ月間のローリングウィンドウにおけるユーザーアクティビティデータを対象に、秒単位の応答性を実現するための技術的アプローチと実装詳細について解説します。</p><h3 id=技術要件と目標>技術要件と目標</h3><ul><li><b>データソース</b>: 過去3ヶ月間の全サービスユーザーアクティビティログ（最大数億件）</li><li><b>主要指標</b>: DAU（日次アクティブユーザー）、平均セッション時間、直帰率</li><li><b>パフォーマンス目標</b>: ダッシュボード上での描画を1秒未満、または数秒以内に完結</li><li><b>動的フィルタリング</b>: キャンペーンID、年齢層などの多次元フィルタリングへの即時対応</li></ul><hr><h2 id=従来アプローチにおける技術的課題>従来アプローチにおける技術的課題</h2><p>従来の構成では、生のユーザーアクティビティログを標準的なリレーショナルデータベース（MySQL）に格納し、レポート生成時に直接 <code>GROUP BY</code> や <code>JOIN</code> を含む複雑なクエリを実行していました。しかし、データ量の増加に伴い、以下の3つの技術的限界が顕在化しました。</p><pre tabindex=0><code>[生ログテーブル (数億行)] ──(オンデマンド SQL GROUP BY / JOIN)──&amp;gt; [DBボトルネック: 高CPU/IO] ──&amp;gt; [遅い応答: 数十秒〜数分]
+</code></pre><ol><li><b>計算リソースの飽和</b>: 数億行のデータを実行時にスキャン・集計することで、CPUおよびディスクI/Oに極端な負荷がかかります。単純なDAU算出でも10秒以上を要し、多次元フィルター適用時にはタイムアウトが発生する状況でした。</li><li><b>OLTPへの悪影響</b>: 分析用の重いクエリがデータベースの接続プールとI/Oを占有し、メインのトランザクション処理のパフォーマンスを著しく低下させ、システム全体の可用性を損なうリスクが生じました。</li><li><b>運用の硬直化</b>: 新しい分析指標やフィルタリング次元が追加されるたびに、クエリの書き直しやインデックスの再設計が必要となり、開発および運用コストが増大していました。</li></ol><hr><h2 id=アーキテクチャ設計事前集計への移行>アーキテクチャ設計：事前集計への移行</h2><p>オンデマンド計算の物理的限界を打破するため、設計思想を「リクエスト時の計算」から「非同期での事前計算および永続化」へと転換しました。</p><pre tabindex=0><code>[ユーザーアクティビティイベント]
+       │
+       ├──&amp;gt; [メインDB (OLTPストレージ)]
+       │
+       └──&amp;gt; [メッセージキュー (Kafka / Redis Pub/Sub)]
+                  │
+                  ▼
+     [非同期集計サービス]
+                  │
+                  ▼ (UPSERT / バッチ書き込み)
+     [専用集計テーブル (MySQL)] &amp;lt;─── [キャッシュミス] ───┐
+                  │                                             │
+                  ▼ (キャッシュ書き込み / TTL 300秒)            ▼
+           [キャッシュレイヤー (Redis)] ──────────────────&amp;gt; [FastAPI APIゲートウェイ] ──&amp;gt; [Webダッシュボード]
+                                      [キャッシュヒット]
+</code></pre><h3 id=パイプラインの構成要素>パイプラインの構成要素</h3><ol><li><b>非同期データ収集</b>: ユーザーイベント発生時、アプリケーションはメインDBへの書き込みと並行して、メッセージキュー（Apache Kafka等）にイベントをパブリッシュします。これにより、ユーザーの操作レスポンスから集計処理を完全に分離します。</li><li><b>専用集計サービス</b>: 独立したワーカーがキューをサブスクライブし、リアルタイムでログを消費して事前集計テーブルを更新します。時間単位および主要な次元（キャンペーン、属性等）ごとに指標をあらかじめ算出します。</li><li><b>キャッシュレイヤー</b>: 頻繁にアクセスされるクエリ結果をRedisに格納します。これにより、データベースへの問い合わせを最小限に抑え、ミリ秒単位の応答を実現します。</li><li><b>APIゲートウェイ</b>: ダッシュボードからのリクエストに対し、まずRedisを確認するCache-Asideパターンを採用します。キャッシュミス時のみ事前集計テーブルを参照し、結果をキャッシュに書き戻します。</li></ol><hr><h2 id=実装詳細>実装詳細</h2><p>バックエンドには <b>FastAPI</b>、キャッシュには <b>Redis</b>、集計データの保存には <b>MySQL</b> を採用した実装構成です。</p><h3 id=1-集計テーブルのスキーマ設計>1. 集計テーブルのスキーマ設計</h3><p>事前計算された指標を効率的に管理するため、<code>aggregated_daily_metrics</code> テーブルを設計しました。高スループットな <code>UPSERT</code> 操作を支えるため、複合ユニークキーの活用が鍵となります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>CREATE</span> <span style=color:#66d9ef>TABLE</span> aggregated_daily_metrics (
+</span></span><span style=display:flex><span>    id INT AUTO_INCREMENT <span style=color:#66d9ef>PRIMARY</span> <span style=color:#66d9ef>KEY</span>,
+</span></span><span style=display:flex><span>    event_date DATE <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span>,
+</span></span><span style=display:flex><span>    campaign_id VARCHAR(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NULL</span>,
+</span></span><span style=display:flex><span>    age_group VARCHAR(<span style=color:#ae81ff>50</span>) <span style=color:#66d9ef>NULL</span>,
+</span></span><span style=display:flex><span>    total_users INT <span style=color:#66d9ef>DEFAULT</span> <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>    total_sessions INT <span style=color:#66d9ef>DEFAULT</span> <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>    bounce_count INT <span style=color:#66d9ef>DEFAULT</span> <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>    average_session_duration DECIMAL(<span style=color:#ae81ff>10</span>, <span style=color:#ae81ff>2</span>) <span style=color:#66d9ef>DEFAULT</span> <span style=color:#ae81ff>0</span>.<span style=color:#ae81ff>00</span>,
+</span></span><span style=display:flex><span>    last_updated DATETIME <span style=color:#66d9ef>DEFAULT</span> <span style=color:#66d9ef>CURRENT_TIMESTAMP</span> <span style=color:#66d9ef>ON</span> <span style=color:#66d9ef>UPDATE</span> <span style=color:#66d9ef>CURRENT_TIMESTAMP</span>,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>UNIQUE</span> <span style=color:#66d9ef>KEY</span> uq_date_campaign_age (event_date, campaign_id, age_group)
+</span></span><span style=display:flex><span>);
+</span></span></code></pre></div><p>この設計では、<code>event_date</code>、<code>campaign_id</code>、<code>age_group</code> の組み合わせをユニークインデックスとして定義しています。これにより、同一条件のデータが重複することを防ぎ、アトミックな更新を可能にします。</p><hr><h3 id=2-非同期集計プロセッサの実装>2. 非同期集計プロセッサの実装</h3><p>以下の <code>AggregationProcessor</code> クラスは、バッチ処理と <code>ON DUPLICATE KEY UPDATE</code> 句を組み合わせることで、書き込みパフォーマンスを最大化します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> mysql.connector
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> json
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> datetime <span style=color:#f92672>import</span> datetime
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> collections <span style=color:#f92672>import</span> defaultdict
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># データベース設定</span>
+</span></span><span style=display:flex><span>DB_CONFIG <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;host&#39;</span>: <span style=color:#e6db74>&#39;localhost&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;user&#39;</span>: <span style=color:#e6db74>&#39;aggregator_user&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;password&#39;</span>: <span style=color:#e6db74>&#39;your_password&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;database&#39;</span>: <span style=color:#e6db74>&#39;analytics_db&#39;</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AggregationProcessor</span>:
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>__init__</span>(self, db_config):
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>db_config <span style=color:#f92672>=</span> db_config
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>connection <span style=color:#f92672>=</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_get_db_connection</span>(self):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        データベース接続を取得します。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        接続切断に対処するための再接続ロジックを含みます。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> self<span style=color:#f92672>.</span>connection <span style=color:#f92672>is</span> <span style=color:#66d9ef>None</span> <span style=color:#f92672>or</span> <span style=color:#f92672>not</span> self<span style=color:#f92672>.</span>connection<span style=color:#f92672>.</span>is_connected():
+</span></span><span style=display:flex><span>            print(<span style=color:#e6db74>&#34;Connecting to database...&#34;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>connection <span style=color:#f92672>=</span> mysql<span style=color:#f92672>.</span>connector<span style=color:#f92672>.</span>connect(<span style=color:#f92672>**</span>self<span style=color:#f92672>.</span>db_config)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> self<span style=color:#f92672>.</span>connection
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>process_event_batch</span>(self, events):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        データベースI/Oのオーバーヘッドを最小限に抑えるため、イベントのバッチを処理します。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> events:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># バッチを集計するための一時的なインメモリ構造</span>
+</span></span><span style=display:flex><span>        aggregated_data <span style=color:#f92672>=</span> defaultdict(<span style=color:#66d9ef>lambda</span>: {
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#39;total_users&#39;</span>: set(),  <span style=color:#75715e># ユニークユーザーを自動的に重複排除するためのセット</span>
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#39;total_sessions&#39;</span>: <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#39;bounce_count&#39;</span>: <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#39;session_durations&#39;</span>: []  <span style=color:#75715e># 平均値計算用のセッション時間を格納するリスト</span>
+</span></span><span style=display:flex><span>        })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># バッチ内の各イベントを処理してインメモリ集計を構築</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> event <span style=color:#f92672>in</span> events:
+</span></span><span style=display:flex><span>            <span style=color:#75715e># 必須フィールドが欠落している不正なイベントをスキップ</span>
+</span></span><span style=display:flex><span>            required_fields <span style=color:#f92672>=</span> [<span style=color:#e6db74>&#39;user_id&#39;</span>, <span style=color:#e6db74>&#39;session_id&#39;</span>, <span style=color:#e6db74>&#39;event_type&#39;</span>, <span style=color:#e6db74>&#39;timestamp&#39;</span>, <span style=color:#e6db74>&#39;campaign_id&#39;</span>, <span style=color:#e6db74>&#39;age_group&#39;</span>]
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> all(k <span style=color:#f92672>in</span> event <span style=color:#66d9ef>for</span> k <span style=color:#f92672>in</span> required_fields):
+</span></span><span style=display:flex><span>                print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Skipping malformed event: </span><span style=color:#e6db74>{</span>event<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>continue</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e># 次元の抽出</span>
+</span></span><span style=display:flex><span>            event_date <span style=color:#f92672>=</span> datetime<span style=color:#f92672>.</span>fromisoformat(event[<span style=color:#e6db74>&#39;timestamp&#39;</span>])<span style=color:#f92672>.</span>strftime(<span style=color:#e6db74>&#39;%Y-%m-</span><span style=color:#e6db74>%d</span><span style=color:#e6db74>&#39;</span>)
+</span></span><span style=display:flex><span>            campaign_id <span style=color:#f92672>=</span> event[<span style=color:#e6db74>&#39;campaign_id&#39;</span>] <span style=color:#66d9ef>if</span> event[<span style=color:#e6db74>&#39;campaign_id&#39;</span>] <span style=color:#66d9ef>else</span> <span style=color:#e6db74>&#39;NULL&#39;</span>
+</span></span><span style=display:flex><span>            age_group <span style=color:#f92672>=</span> event[<span style=color:#e6db74>&#39;age_group&#39;</span>] <span style=color:#66d9ef>if</span> event[<span style=color:#e6db74>&#39;age_group&#39;</span>] <span style=color:#66d9ef>else</span> <span style=color:#e6db74>&#39;NULL&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e># 複合キーの定義</span>
+</span></span><span style=display:flex><span>            key <span style=color:#f92672>=</span> (event_date, campaign_id, age_group)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e># ユニークユーザーの追跡</span>
+</span></span><span style=display:flex><span>            aggregated_data[key][<span style=color:#e6db74>&#39;total_users&#39;</span>]<span style=color:#f92672>.</span>add(event[<span style=color:#e6db74>&#39;user_id&#39;</span>])
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e># セッションおよび直帰イベントの処理</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> event[<span style=color:#e6db74>&#39;event_type&#39;</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;session_start&#39;</span>:
+</span></span><span style=display:flex><span>                aggregated_data[key][<span style=color:#e6db74>&#39;total_sessions&#39;</span>] <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>elif</span> event[<span style=color:#e6db74>&#39;event_type&#39;</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;session_end&#39;</span>:
+</span></span><span style=display:flex><span>                session_duration <span style=color:#f92672>=</span> event<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;duration&#39;</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>                aggregated_data[key][<span style=color:#e6db74>&#39;session_durations&#39;</span>]<span style=color:#f92672>.</span>append(session_duration)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>elif</span> event[<span style=color:#e6db74>&#39;event_type&#39;</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;bounce_event&#39;</span>:
+</span></span><span style=display:flex><span>                aggregated_data[key][<span style=color:#e6db74>&#39;bounce_count&#39;</span>] <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>_update_database(aggregated_data)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_update_database</span>(self, aggregated_data):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        MySQLでアトミックなUPSERT (INSERT ... ON DUPLICATE KEY UPDATE) を実行します。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        conn <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>_get_db_connection()
+</span></span><span style=display:flex><span>        cursor <span style=color:#f92672>=</span> conn<span style=color:#f92672>.</span>cursor()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># 同時更新を効率的に処理するためのアトミックなUPSERTクエリ</span>
+</span></span><span style=display:flex><span>        upsert_query <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            INSERT INTO aggregated_daily_metrics (
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                event_date, campaign_id, age_group, total_users, total_sessions, bounce_count, average_session_duration
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            ) VALUES (</span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            ON DUPLICATE KEY UPDATE
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                total_users = total_users + VALUES(total_users),
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                total_sessions = total_sessions + VALUES(total_sessions),
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                bounce_count = bounce_count + VALUES(bounce_count),
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                average_session_duration = (
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                    (average_session_duration * total_sessions) + (VALUES(average_session_duration) * VALUES(total_sessions))
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                ) / (total_sessions + VALUES(total_sessions))
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        records_to_upsert <span style=color:#f92672>=</span> []
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> key, metrics <span style=color:#f92672>in</span> aggregated_data<span style=color:#f92672>.</span>items():
+</span></span><span style=display:flex><span>            event_date, campaign_id, age_group <span style=color:#f92672>=</span> key
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#75715e># このバッチ内のユニークユーザー数を算出</span>
+</span></span><span style=display:flex><span>            current_total_users <span style=color:#f92672>=</span> len(metrics[<span style=color:#e6db74>&#39;total_users&#39;</span>])
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#75715e># このバッチ内の平均セッション時間を算出</span>
+</span></span><span style=display:flex><span>            avg_duration <span style=color:#f92672>=</span> sum(metrics[<span style=color:#e6db74>&#39;session_durations&#39;</span>]) <span style=color:#f92672>/</span> len(metrics[<span style=color:#e6db74>&#39;session_durations&#39;</span>]) <span style=color:#66d9ef>if</span> metrics[<span style=color:#e6db74>&#39;session_durations&#39;</span>] <span style=color:#66d9ef>else</span> <span style=color:#ae81ff>0.0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            records_to_upsert<span style=color:#f92672>.</span>append((
+</span></span><span style=display:flex><span>                event_date,
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>None</span> <span style=color:#66d9ef>if</span> campaign_id <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;NULL&#39;</span> <span style=color:#66d9ef>else</span> campaign_id,
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>None</span> <span style=color:#66d9ef>if</span> age_group <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;NULL&#39;</span> <span style=color:#66d9ef>else</span> age_group,
+</span></span><span style=display:flex><span>                current_total_users,
+</span></span><span style=display:flex><span>                metrics[<span style=color:#e6db74>&#39;total_sessions&#39;</span>],
+</span></span><span style=display:flex><span>                metrics[<span style=color:#e6db74>&#39;bounce_count&#39;</span>],
+</span></span><span style=display:flex><span>                avg_duration
+</span></span><span style=display:flex><span>            ))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>try</span>:
+</span></span><span style=display:flex><span>            <span style=color:#75715e># ネットワーク往復を最小限に抑えるため、バッチUPSERTを実行</span>
+</span></span><span style=display:flex><span>            cursor<span style=color:#f92672>.</span>executemany(upsert_query, records_to_upsert)
+</span></span><span style=display:flex><span>            conn<span style=color:#f92672>.</span>commit()
+</span></span><span style=display:flex><span>            print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Successfully processed </span><span style=color:#e6db74>{</span>len(records_to_upsert)<span style=color:#e6db74>}</span><span style=color:#e6db74> aggregated records.&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>except</span> mysql<span style=color:#f92672>.</span>connector<span style=color:#f92672>.</span>Error <span style=color:#66d9ef>as</span> err:
+</span></span><span style=display:flex><span>            conn<span style=color:#f92672>.</span>rollback()
+</span></span><span style=display:flex><span>            print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Database error: </span><span style=color:#e6db74>{</span>err<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>finally</span>:
+</span></span><span style=display:flex><span>            cursor<span style=color:#f92672>.</span>close()
+</span></span></code></pre></div><p>💡 <b>実装のポイント</b>: マイクロバッチ処理によりネットワーク往復を削減し、Pythonの <code>set</code> を用いたインメモリ重複排除によって、DB書き込み前の負荷を軽減しています。また、アトミックな <code>UPSERT</code> により、アプリケーション側での <code>SELECT</code> を伴う確認処理を排除しました。</p><hr><h3 id=3-キャッシュ対応apiエンドポイント>3. キャッシュ対応APIエンドポイント</h3><p>ダッシュボードにデータを提供するAPIレイヤーでは、決定論的なキャッシュキー生成とTTL管理を徹底しています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> fastapi <span style=color:#f92672>import</span> FastAPI, Depends, HTTPException
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> redis <span style=color:#f92672>import</span> Redis
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> mysql.connector
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> json
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> datetime <span style=color:#f92672>import</span> date
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> typing <span style=color:#f92672>import</span> Optional
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>app <span style=color:#f92672>=</span> FastAPI()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>REDIS_HOST <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;localhost&#39;</span>
+</span></span><span style=display:flex><span>REDIS_PORT <span style=color:#f92672>=</span> <span style=color:#ae81ff>6379</span>
+</span></span><span style=display:flex><span>DB_CONFIG <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;host&#39;</span>: <span style=color:#e6db74>&#39;localhost&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;user&#39;</span>: <span style=color:#e6db74>&#39;api_user&#39;</span>,  <span style=color:#75715e># API専用の読み取り専用ユーザー</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;password&#39;</span>: <span style=color:#e6db74>&#39;your_password&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;database&#39;</span>: <span style=color:#e6db74>&#39;analytics_db&#39;</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Redis接続プールの初期化</span>
+</span></span><span style=display:flex><span>redis_client <span style=color:#f92672>=</span> Redis(host<span style=color:#f92672>=</span>REDIS_HOST, port<span style=color:#f92672>=</span>REDIS_PORT, db<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># データベース接続の依存関係</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get_db_connection</span>():
+</span></span><span style=display:flex><span>    conn <span style=color:#f92672>=</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>try</span>:
+</span></span><span style=display:flex><span>        conn <span style=color:#f92672>=</span> mysql<span style=color:#f92672>.</span>connector<span style=color:#f92672>.</span>connect(<span style=color:#f92672>**</span>DB_CONFIG)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>yield</span> conn
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>finally</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> conn <span style=color:#f92672>and</span> conn<span style=color:#f92672>.</span>is_connected():
+</span></span><span style=display:flex><span>            conn<span style=color:#f92672>.</span>close()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.get</span>(<span style=color:#e6db74>&#34;/analytics/daily_metrics&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get_daily_metrics</span>(
+</span></span><span style=display:flex><span>    start_date: date,
+</span></span><span style=display:flex><span>    end_date: date,
+</span></span><span style=display:flex><span>    campaign_id: Optional[str] <span style=color:#f92672>=</span> <span style=color:#66d9ef>None</span>,
+</span></span><span style=display:flex><span>    age_group: Optional[str] <span style=color:#f92672>=</span> <span style=color:#66d9ef>None</span>,
+</span></span><span style=display:flex><span>    db_conn: mysql<span style=color:#f92672>.</span>connector<span style=color:#f92672>.</span>connection<span style=color:#f92672>.</span>MySQLConnection <span style=color:#f92672>=</span> Depends(get_db_connection)
+</span></span><span style=display:flex><span>):
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 1. クエリパラメータに基づいて一意のキャッシュキーを生成</span>
+</span></span><span style=display:flex><span>    cache_key_parts <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;daily_metrics:</span><span style=color:#e6db74>{</span>start_date<span style=color:#f92672>.</span>isoformat()<span style=color:#e6db74>}</span><span style=color:#e6db74>:</span><span style=color:#e6db74>{</span>end_date<span style=color:#f92672>.</span>isoformat()<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;campaign:</span><span style=color:#e6db74>{</span>campaign_id <span style=color:#66d9ef>if</span> campaign_id <span style=color:#66d9ef>else</span> <span style=color:#e6db74>&#39;all&#39;</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;age_group:</span><span style=color:#e6db74>{</span>age_group <span style=color:#66d9ef>if</span> age_group <span style=color:#66d9ef>else</span> <span style=color:#e6db74>&#39;all&#39;</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    ]
+</span></span><span style=display:flex><span>    cache_key <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;:&#34;</span><span style=color:#f92672>.</span>join(cache_key_parts)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 2. Redisキャッシュの確認 (キャッシュヒットパス)</span>
+</span></span><span style=display:flex><span>    cached_data <span style=color:#f92672>=</span> redis_client<span style=color:#f92672>.</span>get(cache_key)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> cached_data:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Cache hit for key: </span><span style=color:#e6db74>{</span>cache_key<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> json<span style=color:#f92672>.</span>loads(cached_data)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Cache miss for key: </span><span style=color:#e6db74>{</span>cache_key<span style=color:#e6db74>}</span><span style=color:#e6db74>. Fetching from DB...&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 3. キャッシュミス時にデータベースに問い合わせ</span>
+</span></span><span style=display:flex><span>    cursor <span style=color:#f92672>=</span> db_conn<span style=color:#f92672>.</span>cursor(dictionary<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    query <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        SELECT 
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            event_date, campaign_id, age_group, total_users, total_sessions, bounce_count, average_session_duration 
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        FROM 
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            aggregated_daily_metrics 
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        WHERE 
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            event_date BETWEEN </span><span style=color:#e6db74>%s</span><span style=color:#e6db74> AND </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    params <span style=color:#f92672>=</span> [start_date, end_date]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 動的フィルタリングロジックの処理</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> campaign_id:
+</span></span><span style=display:flex><span>        query <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#34; AND campaign_id = </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>        params<span style=color:#f92672>.</span>append(campaign_id)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>        query <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#34; AND campaign_id IS NULL&#34;</span>  <span style=color:#75715e># 事前集計されたグローバル指標を取得</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> age_group:
+</span></span><span style=display:flex><span>        query <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#34; AND age_group = </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>        params<span style=color:#f92672>.</span>append(age_group)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>        query <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#34; AND age_group IS NULL&#34;</span>  <span style=color:#75715e># 事前集計されたグローバル指標を取得</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>try</span>:
+</span></span><span style=display:flex><span>        cursor<span style=color:#f92672>.</span>execute(query, params)
+</span></span><span style=display:flex><span>        results <span style=color:#f92672>=</span> cursor<span style=color:#f92672>.</span>fetchall()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># JSONシリアライズのために日付オブジェクトを文字列フォーマットに変換</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> row <span style=color:#f92672>in</span> results:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> isinstance(row[<span style=color:#e6db74>&#39;event_date&#39;</span>], date):
+</span></span><span style=display:flex><span>                row[<span style=color:#e6db74>&#39;event_date&#39;</span>] <span style=color:#f92672>=</span> row[<span style=color:#e6db74>&#39;event_date&#39;</span>]<span style=color:#f92672>.</span>isoformat()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># 4. 結果を5分間のTTL (300秒) でRedisに保存</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> results:
+</span></span><span style=display:flex><span>            redis_client<span style=color:#f92672>.</span>setex(cache_key, <span style=color:#ae81ff>300</span>, json<span style=color:#f92672>.</span>dumps(results))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> results
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>except</span> mysql<span style=color:#f92672>.</span>connector<span style=color:#f92672>.</span>Error <span style=color:#66d9ef>as</span> err:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>raise</span> HTTPException(status_code<span style=color:#f92672>=</span><span style=color:#ae81ff>500</span>, detail<span style=color:#f92672>=</span><span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Database error: </span><span style=color:#e6db74>{</span>err<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>finally</span>:
+</span></span><span style=display:flex><span>        cursor<span style=color:#f92672>.</span>close()
+</span></span></code></pre></div><p>🛠️ <b>最適化のポイント</b>: クエリパラメータの組み合わせから一意のキャッシュキーを生成し、5分間（300秒）のTTLを設定しています。これにより、データの鮮度を保ちつつ、データベースへの冗長なアクセスを物理的に遮断します。</p><hr><h2 id=結論と成果>結論と成果</h2><p>オンデマンドの生ログ集計から非同期事前集計パイプラインへ移行した結果、数億行のスキャンに伴う計算オーバーヘッドを完全に排除することに成功しました。</p><p>複合ユニークキーを活用した集計テーブル設計と、Redisによるキャッシュ戦略を組み合わせることで、ダッシュボードの応答時間は150秒からミリ秒単位へと劇的に改善されました。このアーキテクチャは、データ量が増大し続けるエンタープライズ環境においても高いスケーラビリティを発揮し、安定したユーザー体験を提供するための堅牢な基盤となります。</p></section><footer class="article-meta article-footer"><section class=article-tags><a href=/tags/fastapi/>Fastapi</a>
+<a href=/tags/redis/>Redis</a>
+<a href=/tags/mysql/>Mysql</a>
+<a href=/tags/data-pipeline/>Data-Pipeline</a>
+<a href=/tags/upsert/>Upsert</a></section></footer></article><aside><h2 class=section-title>関連するコンテンツ</h2><div class=subsection-list><div class=article-list--tile><article><a href=/p/classkit-ai-studio-celery-redis-architecture/><div class=article-details><h2 class=article-title>AI Studioにおける非同期タスク処理基盤の設計：CeleryとRedisによるスケーラブルな教材生成アーキテクチャ</h2></div></a></article><article><a href=/p/fastapi-architecture-implementation-deep-dive/><div class=article-details><h2 class=article-title>FastAPIのアーキテクチャ設計と実装における技術的考察</h2></div></a></article><article><a href=/p/spring-boot-oauth2-jwt-stateless-auth/><div class=article-details><h2 class=article-title>Spring Boot 3.xにおけるOAuth2およびJWTを用いたステートレス認証基盤の構築</h2></div></a></article><article><a href=/p/nodejs-linux-syscall-libuv-analysis/><div class=article-details><h2 class=article-title>Node.jsにおけるLinuxシステムコール解析を通じたI/Oパフォーマンスの最適化と安定性向上</h2></div></a></article><article><a href=/p/valkey-migration-performance-tuning/><div class=article-details><h2 class=article-title>Valkey 8.0 への移行によるキャッシュスループットの改善とレイテンシスパイクの解消</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><div class=copyright>&copy;
+2026 K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</div><div class=powerby><a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> で構築されています。<br>テーマ <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.0>Stack</a></b> は <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> によって設計されています。</div></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script><div style=text-align:center;margin-top:15px;font-size:.85em;opacity:.6><a href=/privacy-policy/ style="color:inherit;text-decoration:none;margin:0 10px">Privacy Policy</a>
+<a href=/disclaimer/ style="color:inherit;text-decoration:none;margin:0 10px">Disclaimer</a>
+<a href=mailto:contact@klifehack.com style="color:inherit;text-decoration:none;margin:0 10px">Contact</a></div></body></html>
