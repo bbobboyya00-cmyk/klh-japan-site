@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 30 May 2026 10:33:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Container Image Security Scan Automation in CI/CD Pipelines</title><link>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</link><pubDate>Sat, 30 May 2026 10:33:07 +0900</pubDate><guid>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</guid><description>&lt;h1 id="construction-and-optimization-strategies-for-security-automation-in-container-delivery"&gt;Construction and Optimization Strategies for Security Automation in Container Delivery
+&lt;/h1&gt;&lt;p&gt;In modern software delivery, ensuring container image security should be a priority equivalent to functional implementation. To identify risks lurking within the vast libraries and dependencies contained in images, an automated scanning process integrated into the CI/CD pipeline is essential, rather than manual inspection. This article explains technical approaches for naturally establishing security as part of the development workflow.&lt;/p&gt;
+&lt;h2 id="1-strategic-background-of-automated-scanning"&gt;1. Strategic Background of Automated Scanning
+&lt;/h2&gt;&lt;p&gt;The primary burden facing development teams is not only the functional integrity of the code but also the elimination of potential risk factors included in the deployment. Manual image inspection is prone to human error and tends to be omitted within tight release schedules. Therefore, automation is not merely an option but a prerequisite for achieving secure delivery.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Building an immediate feedback loop&lt;/b&gt;: Embed scanners within the build process to immediately fail the build or notify alerts if vulnerabilities are detected. This prevents vulnerable code from propagating to production environments.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Granular policy application&lt;/b&gt;: Beyond simply introducing tools, formulate blocking policies based on vulnerability severity (Critical, High, Medium, etc.).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Promoting standardization&lt;/b&gt;: By applying unified security benchmarks across the entire team, eliminate variations in judgment based on individual subjectivity and minimize security gaps.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-technical-optimization-in-cicd-integration"&gt;2. Technical Optimization in CI/CD Integration
+&lt;/h2&gt;&lt;p&gt;Pipeline execution speed directly impacts developer productivity. Strategies are needed to ensure security scanning does not excessively increase build times. Optimization at the infrastructure level is required to achieve efficient scanning.&lt;/p&gt;
+&lt;h3 id="performance-improvement-methods"&gt;Performance Improvement Methods
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Leveraging layer caching&lt;/b&gt;: Introduce caching mechanisms that target only changed layers for scanning to reduce redundant processing.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Image weight reduction&lt;/b&gt;: Adopt multi-stage builds and &lt;code&gt;distroless&lt;/code&gt; images to eliminate unnecessary packages, narrowing the scope of the scan and shortening deployment time.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Example of reducing attack surface via multi-stage builds&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;golang:1.22-alpine&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; &lt;span style="color:#e6db74"&gt;builder&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WORKDIR&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/app&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; . .&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; go build -o main .&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Minimal binary placement in execution environment&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;gcr.io/distroless/static-debian12&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; --from&lt;span style="color:#f92672"&gt;=&lt;/span&gt;builder /app/main /main&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CMD&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;/main&amp;#34;&lt;/span&gt;]&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="vulnerability-database-management"&gt;Vulnerability Database Management
+&lt;/h3&gt;&lt;p&gt;The effectiveness of a scanner depends on the freshness of the database it references. Update policies must be strictly managed to ensure the latest vulnerability definitions are reflected in real-time, reducing the risk of false negatives.&lt;/p&gt;
+&lt;h2 id="3-layering-automated-security-inspection-frameworks"&gt;3. Layering Automated Security Inspection Frameworks
+&lt;/h2&gt;&lt;p&gt;To increase system reliability and accelerate root cause analysis during failures, the inspection process is structured. It is important to select tools appropriate for each phase.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Phase&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Main Inspection Items&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Examples of Automation Tools&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Implementation Timing&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Build Phase&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Vulnerabilities in source code&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;SAST tools&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Immediately after commit&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Image Creation&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;OS package/dependency vulnerabilities&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Trivy, Clair&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Upon build completion&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Deployment Verification&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Config file permissions/compliance&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;OPA, Kyverno&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Immediately before deployment&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="4-advanced-security-controls-and-scaling"&gt;4. Advanced Security Controls and Scaling
+&lt;/h2&gt;&lt;p&gt;As the scale of the organization grows, manual verification reaches its limits. Introduce the concept of Policy as Code (PaC) and aim for a scalable design.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Image signing and integrity verification&lt;/b&gt;: Use tools such as &lt;code&gt;Cosign&lt;/code&gt; or &lt;code&gt;Notary&lt;/code&gt; to restrict execution in production environments to only signed and verified images. This mitigates the risk of supply chain attacks.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Admission controller integration&lt;/b&gt;: In Kubernetes environments, use Admission Controllers to enforce policies that reject the deployment of containers that do not meet security standards at the cluster level.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Example of running a scan in a CI pipeline using Trivy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;trivy image --severity CRITICAL,HIGH --exit-code &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; my-repository/my-app:latest
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-developer-experience-and-alert-fatigue-management"&gt;5. Developer Experience and Alert Fatigue Management
+&lt;/h2&gt;&lt;p&gt;Excessive warning messages cause &amp;ldquo;alert fatigue,&amp;rdquo; leading to the erosion of security protocols. Adjustments are necessary to ensure operational sustainability.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Priority-based notifications&lt;/b&gt;: Limit low-priority warnings to log entries, and set &amp;ldquo;Fail&amp;rdquo; thresholds that stop the pipeline only for vulnerabilities directly linked to actual business risks.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Thorough secret management&lt;/b&gt;: To prevent sensitive information from being hardcoded in environment variables or configuration files during the build process, integrate with secret management tools within virtualized environments.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Rethinking cache strategies&lt;/b&gt;: 💡 If increased build time is an issue, consider moving to an incremental scanning method triggered only when image layers or dependencies change, rather than performing a full scan daily.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Ensuring visibility&lt;/b&gt;: 🛠️ By building a dashboard to track vulnerability trends in running images, it becomes possible to make data-driven decisions on the direction of future security improvements.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Log integration&lt;/b&gt;: ⚠️ It is recommended to integrate logging environments so that when a deployment error occurs, it can be quickly determined whether it is due to a functional defect or a security policy violation.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Technical Analysis of the 'Mini Shai-Hulud' npm Ecosystem Supply Chain Attack</title><link>https://klifehack.com/en/p/npm-typosquatting-mini-shai-hulud-analysis/</link><pubDate>Sat, 30 May 2026 10:33:07 +0900</pubDate><guid>https://klifehack.com/en/p/npm-typosquatting-mini-shai-hulud-analysis/</guid><description>&lt;h1 id="analysis-report-of-the-mini-shai-hulud-npm-supply-chain-attack-advanced-credential-theft-methods-exploiting-the-bun-runtime"&gt;Analysis Report of the &amp;ldquo;Mini Shai-Hulud&amp;rdquo; npm Supply Chain Attack: Advanced Credential Theft Methods Exploiting the Bun Runtime
+&lt;/h1&gt;&lt;p&gt;On May 28, 2026, an advanced supply chain attack campaign named &amp;ldquo;Mini Shai-Hulud&amp;rdquo; was identified in the npm ecosystem. This attack distributed 14 malicious packages within a 4-hour window, aiming to immediately extract high-value credentials from cloud environments and CI/CD pipelines. This report analyzes the technical execution flow, evolution for increased stealth, and defense measures required for infrastructure security.&lt;/p&gt;
+&lt;h2 id="1-attack-origin-typosquatting-and-metadata-impersonation"&gt;1. Attack Origin: Typosquatting and Metadata Impersonation
+&lt;/h2&gt;&lt;p&gt;The attacker targeted ecosystems related to OpenSearch and ElasticSearch, which are widely utilized in corporate environments. A maintainer account with the identifier &lt;b&gt;vpmdhaj&lt;/b&gt; employed the following sophisticated methods:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Typosquatting&lt;/b&gt;: Adopted names such as &lt;code&gt;opensearch-setup&lt;/code&gt; and &lt;code&gt;env-config-manager&lt;/code&gt;, which are easily mistaken for official utility packages. This exploits developer typos or the assumption of official status.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Metadata Manipulation&lt;/b&gt;: The repository URL in the &lt;code&gt;package.json&lt;/code&gt; was modified to point to the actual official OpenSearch GitHub repository to deceive automated audit tools and manual developer inspections.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-execution-mechanism-exploitation-of-npm-lifecycle-hooks"&gt;2. Execution Mechanism: Exploitation of npm Lifecycle Hooks
+&lt;/h2&gt;&lt;p&gt;A critical risk of this attack is that developers do not need to explicitly call the package via &lt;code&gt;require()&lt;/code&gt; or &lt;code&gt;import&lt;/code&gt;. The attack code is executed using the &lt;code&gt;preinstall&lt;/code&gt; hook, a standard npm feature.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;opensearch-setup&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;version&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;1.0.0&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;preinstall&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;node ./scripts/setup.js&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The moment a developer executes &lt;code&gt;npm install &amp;lt;package-name&amp;gt;&lt;/code&gt; in the terminal, the npm client automatically triggers the &lt;code&gt;preinstall&lt;/code&gt; script. This causes the malicious payload to execute immediately on the local environment or build server before static analysis or code reviews can occur.&lt;/package-name&gt;&lt;/p&gt;
+&lt;h2 id="3-evolution-of-stealth-analysis-of-second-generation-gen-2-stagers"&gt;3. Evolution of Stealth: Analysis of Second-Generation (Gen-2) Stagers
+&lt;/h2&gt;&lt;p&gt;In the &amp;ldquo;Mini Shai-Hulud&amp;rdquo; campaign, detection evasion techniques evolved rapidly. The transition to &amp;ldquo;Living off the Land (LotL)&amp;rdquo; in the second generation is particularly noteworthy.&lt;/p&gt;
+&lt;h3 id="generation-1-gen-1"&gt;Generation 1 (Gen-1)
+&lt;/h3&gt;&lt;p&gt;Initial payloads connected directly to the attacker&amp;rsquo;s C2 (Command and Control) server to download secondary binaries. This method is relatively easy to detect through network egress monitoring.&lt;/p&gt;
+&lt;h3 id="generation-2-gen-2-living-off-the-land-lotl"&gt;Generation 2 (Gen-2): Living off the Land (LotL)
+&lt;/h3&gt;&lt;p&gt;To evade detection, the attacker shifted to methods exploiting legitimate binaries.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Acquisition of Legitimate Runtime&lt;/b&gt;: The script downloads the signed, legitimate &lt;b&gt;Bun runtime (v1.3.13)&lt;/b&gt; directly from the official GitHub release page (&lt;code&gt;github.com/oven-sh/bun/releases/download&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Payload Execution&lt;/b&gt;: A hidden malicious script of approximately 195KB within the package is executed using the downloaded legitimate Bun runtime. Consequently, EDR (Endpoint Detection and Response) systems process it as a standard process by a trusted binary, bypassing anomaly detection.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="4-target-assets-and-post-exploitation-impact"&gt;4. Target Assets and Post-Exploitation Impact
+&lt;/h2&gt;&lt;p&gt;The executed payload begins scanning the core components of cloud-native environments. AWS environments and CI/CD pipelines are the primary targets.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;AWS Infrastructure Credential Theft&lt;/b&gt;: Attempts to access EC2 Instance Metadata Service (IMDSv2) and ECS task metadata to obtain temporary IAM role information. It automatically scans AWS Secrets Manager across &lt;b&gt;more than 16 AWS regions&lt;/b&gt; to extract API keys, database credentials, and encryption keys.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;CI/CD Pipeline Hijacking&lt;/b&gt;: Identifies if the execution environment is GitHub Actions and targets &lt;code&gt;GITHUB_TOKEN&lt;/code&gt; and other secrets stored in environment variables. This enables repository manipulation or backdoor injection into build artifacts.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cascading Supply Chain Compromise&lt;/b&gt;: Uses stolen npm deployment tokens to publish unauthorized updates to other legitimate open-source packages managed by the victim, expanding the scope of damage.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-recommended-defense-and-mitigation-measures"&gt;5. Recommended Defense and Mitigation Measures
+&lt;/h2&gt;&lt;p&gt;To protect environments from fluid supply chain attacks, the following technical controls are recommended.&lt;/p&gt;
+&lt;h3 id="i-disabling-automatic-script-execution"&gt;I. Disabling Automatic Script Execution
+&lt;/h3&gt;&lt;p&gt;The most effective way to prevent exploitation of lifecycle hooks is to explicitly prohibit script execution during installation.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --ignore-scripts
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm config set ignore-scripts true
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ii-immediate-credential-rotation"&gt;II. Immediate Credential Rotation
+&lt;/h3&gt;&lt;p&gt;If there is evidence of suspicious package installation or if build environments were active after May 28, 2026, immediately update the following information:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AWS IAM users and STS temporary credentials&lt;/li&gt;
+&lt;li&gt;HashiCorp Vault access tokens&lt;/li&gt;
+&lt;li&gt;GitHub Actions Personal Access Tokens (PAT) and repository secrets&lt;/li&gt;
+&lt;li&gt;npm registry publishing tokens&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="iii-enhanced-network-and-process-monitoring"&gt;III. Enhanced Network and Process Monitoring
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Egress Filtering&lt;/b&gt;: Monitor for unexpected binary downloads from Node.js or pnpm processes to the release section of &lt;code&gt;github.com&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Process Auditing&lt;/b&gt;: Check for the presence of processes initialized with the environment variable &lt;code&gt;__DAEMONIZED=1&lt;/code&gt;. This is a signature used by &amp;ldquo;Mini Shai-Hulud&amp;rdquo; when attempting background persistence.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="6-conclusion"&gt;6. Conclusion
+&lt;/h2&gt;&lt;p&gt;&amp;ldquo;Mini Shai-Hulud&amp;rdquo; is a typical example of a modern supply chain attack that evades security products by exploiting legitimate runtimes. Based on Zero Trust principles, it is essential to strictly manage dependency locking and restrict script execution.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Attack Method&lt;/b&gt;: Typosquatting, immediate execution via &lt;code&gt;preinstall&lt;/code&gt; hooks, LotL attacks using the Bun runtime.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Primary Targets&lt;/b&gt;: AWS Secrets Manager, GitHub Actions tokens, npm deployment tokens.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Countermeasures&lt;/b&gt;: Strict enforcement of &lt;code&gt;--ignore-scripts&lt;/code&gt;, monitoring for suspicious binary downloads, and rapid token rotation.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Technical Evolution Stages and Domain Architecture Analysis for Software Engineers</title><link>https://klifehack.com/en/p/software-engineering-evolution-roadmap/</link><pubDate>Tue, 26 May 2026 10:40:20 +0900</pubDate><guid>https://klifehack.com/en/p/software-engineering-evolution-roadmap/</guid><description>&lt;h1 id="systematic-analysis-of-engineering-evolution-processes-and-technical-requirements"&gt;Systematic Analysis of Engineering Evolution Processes and Technical Requirements
+&lt;/h1&gt;&lt;p&gt;In the modern software development ecosystem, engineer growth is not limited to mastering programming languages. There is a strong demand for the ability to deeply understand overall system architecture and drive operational automation. This analysis details the five-stage evolution process and the technical requirements for each domain, assuming a development environment based on automation tools such as Jenkins CI/CD.&lt;/p&gt;
+&lt;h2 id="1-five-stage-model-of-engineering-evolution"&gt;1. Five-Stage Model of Engineering Evolution
+&lt;/h2&gt;&lt;p&gt;Software engineer growth transitions incrementally from building basic logic to large-scale system design. The technical focus and objectives for each phase represent a structured progression.&lt;/p&gt;
+&lt;h3 id="stage-1-mastery-of-basic-logic-introductory-phase"&gt;Stage 1: Mastery of Basic Logic (Introductory Phase)
+&lt;/h3&gt;&lt;p&gt;This stage focuses on understanding basic programming syntax and algorithms. It is a period for solidifying the foundations of memory management and control flow, including variable declarations, data types, conditional branching, loops, and function definitions. The technical goal involves becoming proficient in reading and writing code, cultivating logical thinking through the creation of calculators, number-guessing games, and simple automation scripts.&lt;/p&gt;
+&lt;h3 id="stage-2-modularization-and-structuring-basic-development-phase"&gt;Stage 2: Modularization and Structuring (Basic Development Phase)
+&lt;/h3&gt;&lt;p&gt;Transitioning from single scripts to reusable code requires appropriate function decomposition, namespace separation via modules, implementation of exception handling, and data persistence through file I/O. Engineers build the capacity to independently implement small-scale applications, such as blog pages or user registration interfaces, by effectively utilizing data structures like lists, dictionaries, and arrays.&lt;/p&gt;
+&lt;h3 id="stage-3-core-engineering-and-data-flow-intermediate-development-phase"&gt;Stage 3: Core Engineering and Data Flow (Intermediate Development Phase)
+&lt;/h3&gt;&lt;p&gt;Professional service development necessitates learning data coordination and structural design between systems. The focus includes class design via Object-Oriented Programming (OOP), data management using Relational Databases (RDB) and SQL, and API design based on the HTTP protocol. Mastery of distributed version control using Git is also essential at this stage.&lt;/p&gt;
+&lt;h3 id="stage-4-production-operations-and-quality-management-practical-phase"&gt;Stage 4: Production Operations and Quality Management (Practical Phase)
+&lt;/h3&gt;&lt;p&gt;Shifting perspective from individual development to team development and production deployment involves logic optimization through code reviews, internal quality improvement via refactoring, and regression testing through test automation. Practical capabilities for stable service operation include integration into CI/CD pipelines, security measures such as authentication and vulnerability patching, and performance optimization.&lt;/p&gt;
+&lt;h3 id="stage-5-system-architecture-and-technical-leadership-expert-phase"&gt;Stage 5: System Architecture and Technical Leadership (Expert Phase)
+&lt;/h3&gt;&lt;p&gt;Advanced technical decisions ensure high availability and scalability. This includes scalable configuration design using cloud infrastructure like AWS, GCP, or Azure, introduction of microservices architecture, operational automation via DevOps, and design for high traffic resistance. This stage requires exercising leadership to resolve technical bottlenecks and ensure long-term maintainability.&lt;/p&gt;
+&lt;h2 id="2-tech-stacks-and-responsibilities-by-domain"&gt;2. Tech Stacks and Responsibilities by Domain
+&lt;/h2&gt;&lt;p&gt;As engineering evolves, specialization in specific domains becomes necessary. The primary technical elements define the core responsibilities of each domain.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Backend Development&lt;/b&gt;: Centered on Java (Spring), Python (Django), or Go, responsible for API design, DB schema design, and server-side performance optimization.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;DevOps &amp;amp; Cloud&lt;/b&gt;: Utilizing Linux, Docker, Kubernetes, Jenkins, and Terraform, specializing in CI/CD automation, Infrastructure as Code (IaC), monitoring, and incident response.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Data Engineering&lt;/b&gt;: Using SQL, Python, Spark, and Kafka to build ETL processes, manage data pipelines, and ensure data quality.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;AI &amp;amp; Machine Learning&lt;/b&gt;: Utilizing PyTorch, TensorFlow, and LangChain, covering everything from model training to MLOps including model deployment and monitoring.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-implementation-example-of-a-cicd-pipeline-using-jenkins"&gt;3. Implementation Example of a CI/CD Pipeline using Jenkins
+&lt;/h2&gt;&lt;p&gt;Continuous integration is essential in the practical phase. The Jenkinsfile structure automates builds, tests, and deployments.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-groovy" data-lang="groovy"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pipeline &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; agent &lt;span style="color:#f92672"&gt;{&lt;/span&gt; label &lt;span style="color:#e6db74"&gt;&amp;#39;docker-node&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; environment &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; APP_NAME &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;core-service-api&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; IMAGE_TAG &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;${env.BUILD_ID}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; stages &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; stage&lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;Source Checkout&amp;#39;&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; steps &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; checkout scm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; stage&lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;Static Analysis&amp;#39;&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; steps &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sh &lt;span style="color:#e6db74"&gt;&amp;#39;npm run lint&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; stage&lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;Unit Testing&amp;#39;&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; steps &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sh &lt;span style="color:#e6db74"&gt;&amp;#39;npm test -- --coverage&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; stage&lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;Container Build &amp;amp;amp; Push&amp;#39;&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; steps &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; script &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; docker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;withRegistry&lt;/span&gt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;https://registry.example.com&amp;#39;&lt;/span&gt;&lt;span style="color:#f92672"&gt;,&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;registry-credentials&amp;#39;&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; customImage &lt;span style="color:#f92672"&gt;=&lt;/span&gt; docker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;${APP_NAME}:${IMAGE_TAG}&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; customImage&lt;span style="color:#f92672"&gt;.&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;push&lt;/span&gt;&lt;span style="color:#f92672"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; stage&lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;Staging Deployment&amp;#39;&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; steps &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sh &lt;span style="color:#e6db74"&gt;&amp;#34;kubectl set image deployment/${APP_NAME} ${APP_NAME}=registry.example.com/${APP_NAME}:${IMAGE_TAG} -n staging&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; post &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; failure &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#39;Pipeline failed. Notification sent to engineering team.&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; always &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cleanWs&lt;span style="color:#f92672"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-strategic-growth-roadmap"&gt;4. Strategic Growth Roadmap
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Establishment of a Common Foundation&lt;/b&gt;: Deeply understand one language such as Python or JavaScript and master history management with Git.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Domain Selection&lt;/b&gt;: Choose frontend for visual UIs, or backend and data engineering for logic and data structures.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Portfolio Construction&lt;/b&gt;: Prepare documentation that logically describes the reasons for technology selection, challenges faced, and solutions implemented.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Continuous Learning&lt;/b&gt;: Track transitions in frameworks and cloud-native technology trends while contributing through technical blogs and code reviews.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Engineer growth evolves through five stages, from basic logic to system architecture.&lt;/li&gt;
+&lt;li&gt;From Stage 4 onwards, production operation capabilities such as CI/CD and test automation become indispensable.&lt;/li&gt;
+&lt;li&gt;A balance between deepening the tech stack for a specific domain and cross-domain understanding is critical.&lt;/li&gt;
+&lt;li&gt;In practice, the ability to build automation pipelines using tools like Jenkins determines an engineer&amp;rsquo;s market value.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Security Hardening and Network Infrastructure Implementation Essentials in Linux System Administration</title><link>https://klifehack.com/en/p/linux-system-administration-security-hardening/</link><pubDate>Mon, 25 May 2026 17:49:20 +0900</pubDate><guid>https://klifehack.com/en/p/linux-system-administration-security-hardening/</guid><description>&lt;h1 id="security-hardening-and-network-availability-optimization-in-linux-system-administration"&gt;Security Hardening and Network Availability Optimization in Linux System Administration
+&lt;/h1&gt;&lt;p&gt;In Linux system operation and management, security hardening and ensuring network availability are top priorities for infrastructure engineers. From strengthening authentication mechanisms to network layer redundancy and permission management in task automation, the practical technical specifications are organized below.&lt;/p&gt;
+&lt;h2 id="1-advancing-ssh-authentication-mechanisms-implementation-of-key-based-authentication"&gt;1. Advancing SSH Authentication Mechanisms: Implementation of Key-Based Authentication
+&lt;/h2&gt;&lt;p&gt;Traditional password authentication is vulnerable to brute-force attacks and credential leaks. In contrast, key-based authentication using asymmetric encryption establishes an authentication model based on possession rather than knowledge, providing a high level of security.&lt;/p&gt;
+&lt;h3 id="11-key-pair-structure-and-authentication-workflow"&gt;1.1 Key Pair Structure and Authentication Workflow
+&lt;/h3&gt;&lt;p&gt;The private key generated on the client side must be stored securely, and only the public key is registered in the server&amp;rsquo;s ~/.ssh/authorized_keys. The authentication process is executed via a challenge/response method involving connection requests, authentication challenges, digital signature creation using the private key, and signature verification with the registered public key.&lt;/p&gt;
+&lt;h3 id="12-implementation-command-examples"&gt;1.2 Implementation Command Examples
+&lt;/h3&gt;&lt;p&gt;In Linux environments, ssh-keygen is used to generate key pairs, which are then deployed under appropriate permission settings.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-copy-id user@remote_host
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-server-security-hardening-and-auditing"&gt;2. Server Security Hardening and Auditing
+&lt;/h2&gt;&lt;p&gt;Password complexity and the selection of hashing algorithms are the foundation of system defense. Current standard specifications recommend hashing using SHA-512 ($6$). These settings are controlled through /etc/login.defs or PAM (Pluggable Authentication Modules) modules.&lt;/p&gt;
+&lt;p&gt;As part of security auditing by administrators, detecting weak passwords using tools like John the Ripper and static analysis of suspicious files using VirusTotal are effective. As an operational precaution, anti-phishing measures, such as verifying links hidden by URL shortening services like TinyURL, are also essential.&lt;/p&gt;
+&lt;h2 id="3-communication-tunneling-via-ssh-port-forwarding"&gt;3. Communication Tunneling via SSH Port Forwarding
+&lt;/h2&gt;&lt;p&gt;SSH tunneling is a technique for building another logical communication channel within an encrypted SSH session. This ensures a secure access path to ports restricted by firewalls.&lt;/p&gt;
+&lt;h3 id="31-local-port-forwarding-implementation"&gt;3.1 Local Port Forwarding Implementation
+&lt;/h3&gt;&lt;p&gt;This configuration forwards a specific port on the client side to a target host via a remote server.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh -L 8080:target_host:80 user@remote_host
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-network-infrastructure-redundancy-and-optimization"&gt;4. Network Infrastructure Redundancy and Optimization
+&lt;/h2&gt;&lt;h3 id="41-ip-aliasing-ip-binding"&gt;4.1 IP Aliasing (IP Binding)
+&lt;/h3&gt;&lt;p&gt;Assigning multiple IP addresses to a single physical NIC enables virtual hosting and other functions. In environments like CentOS, temporary assignment is possible using specific interface configuration commands.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ifconfig eth0:0 192.168.1.100 netmask 255.255.255.0 up
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-network-bonding-channel-bonding"&gt;4.2 Network Bonding (Channel Bonding)
+&lt;/h3&gt;&lt;p&gt;Multiple physical NICs are integrated into a single logical interface to ensure bandwidth expansion and fault tolerance. The main modes are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Mode 0 (balance-rr):&lt;/b&gt; Load balancing via round-robin.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mode 1 (active-backup):&lt;/b&gt; Only one NIC is active, with automatic failover to the standby system upon failure.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mode 4 (802.3ad LACP):&lt;/b&gt; Link aggregation in coordination with a switch.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-granular-permission-management-via-facl-file-access-control-lists"&gt;5. Granular Permission Management via FACL (File Access Control Lists)
+&lt;/h2&gt;&lt;p&gt;For complex permission requirements that the standard owner/group/others model cannot handle, FACL is used to grant individual permissions to specific users or groups.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;setfacl -m u:username:rwx /path/to/file
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;getfacl /path/to/file
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-task-automation-and-access-control-cron-and-at"&gt;6. Task Automation and Access Control: Cron and At
+&lt;/h2&gt;&lt;p&gt;Cron is used for periodic backups and log rotations, while at is used for one-time executions. Execution permissions for these must be strictly managed via /etc/cron.allow and /etc/cron.deny.&lt;/p&gt;
+&lt;h3 id="61-cron-configuration-specifications"&gt;6.1 Cron Configuration Specifications
+&lt;/h3&gt;&lt;p&gt;The following configuration describes settings for automatically executing jobs based on a specific schedule.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;# Execute backup script every day at 3:00 AM
+00 03 * * * /usr/local/bin/backup.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="7-log-management-and-system-observability"&gt;7. Log Management and System Observability
+&lt;/h2&gt;&lt;p&gt;Log data accumulated under /var/log/ is a lifeline for fault diagnosis. To prevent disk space exhaustion, proper generation management and compression using logrotate are essential. Additionally, real-time system monitoring using the watch command and measuring process execution time with the time command provide fundamental data for performance tuning.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion
+&lt;/h2&gt;&lt;p&gt;The core of Linux system administration lies in the thorough application of the Principle of Least Privilege through SSH key authentication and FACL, combined with achieving both network flexibility and robustness through bonding and tunneling. By appropriately combining these technical elements, a secure and highly available infrastructure foundation can be realized.&lt;/p&gt;</description></item><item><title>Building Local Kubernetes CI/CD with GitHub Actions and Self-hosted Runners: Overcoming Authentication and Network Boundaries</title><link>https://klifehack.com/en/p/github-actions-self-hosted-k8s-cicd/</link><pubDate>Mon, 25 May 2026 12:26:26 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-self-hosted-k8s-cicd/</guid><description>&lt;h2 id="optimizing-local-kubernetes-deployment-with-github-actions-and-self-hosted-runners"&gt;Optimizing Local Kubernetes Deployment with GitHub Actions and Self-hosted Runners
+&lt;/h2&gt;&lt;h3 id="1-background-deployment-disconnect-in-hybrid-environments"&gt;1. Background: Deployment Disconnect in Hybrid Environments
+&lt;/h3&gt;&lt;p&gt;In modern microservices development, local Kubernetes environments such as Docker Desktop are critical assets that enable validation close to production. However, when attempting to deploy from GitHub Actions managed runners to a local cluster, two major barriers arise. First, the reachability issue from runners on the public cloud to cluster endpoints (kubernetes.docker.internal) within a private network. Second, PEM block parsing errors caused by broken line breaks or indentation when saving YAML-formatted Kubeconfig in GitHub Secrets.&lt;/p&gt;
+&lt;p&gt;This article details the construction process of a CI/CD pipeline that breaks through these boundaries and fully automates synchronization from Git Push to the local cluster.&lt;/p&gt;
+&lt;h3 id="2-technology-selection-and-trade-offs-reasons-for-adopting-self-hosted-runners"&gt;2. Technology Selection and Trade-offs: Reasons for Adopting Self-hosted Runners
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Cloud Runner + VPN/Tunneling (e.g., ngrok)&lt;/b&gt;: A method to build a tunnel from the outside to the local network. While setup is easy, it carries high security risks, and bandwidth limits or latency become bottlenecks.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Self-hosted Runner (Adopted)&lt;/b&gt;: A method where the GitHub Actions agent runs directly on the local machine. Since it operates inside the firewall, there is no need to open external ports, and it can directly access the local Docker daemon and K8s API. It also has the advantage of minimizing network costs when pulling pre-built images from a registry.&lt;/p&gt;
+&lt;h3 id="3-implementation-details-encapsulating-credentials-and-runner-configuration"&gt;3. Implementation Details: Encapsulating Credentials and Runner Configuration
+&lt;/h3&gt;&lt;h4 id="31-ensuring-integrity-via-base64-encoding-of-kubeconfig"&gt;3.1 Ensuring Integrity via Base64 Encoding of Kubeconfig
+&lt;/h4&gt;&lt;p&gt;Saving Kubeconfig directly in GitHub Secrets carries an extremely high probability of encountering the error: &lt;b&gt;error: unable to load root certificates: unable to parse bytes as PEM block&lt;/b&gt;. To avoid this, we perform Base64 encoding at the binary level using PowerShell and inject it as a string.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Convert Kubeconfig to Base64 string and output to file&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$configPath = &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$HOME&lt;span style="color:#e6db74"&gt;\.kube\config&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$base64Config = [&lt;span style="color:#66d9ef"&gt;Convert&lt;/span&gt;]::ToBase64String([&lt;span style="color:#66d9ef"&gt;IO.File&lt;/span&gt;]::ReadAllBytes($configPath))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$base64Config | Out-File -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;encoded_config.txt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="32-workflow-definition-for-windows-self-hosted-runners"&gt;3.2 Workflow Definition for Windows Self-hosted Runners
+&lt;/h4&gt;&lt;p&gt;When running a runner in a Windows environment, the default shell is PowerShell, so Linux-based commands (e.g., mkdir -p) will not work. The following implementation ensures idempotency.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;self-hosted&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Configure Kubeconfig&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;shell&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pwsh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; $kubeDir = &amp;#34;$HOME\.kube&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if (!(Test-Path $kubeDir)) { New-Item -ItemType Directory -Path $kubeDir }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; $decodedConfig = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String(&amp;#34;${{ secrets.KUBE_CONFIG_DATA }}&amp;#34;))
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; $decodedConfig | Out-File -FilePath &amp;#34;$kubeDir\config&amp;#34; -Encoding ascii&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy to Local Kubernetes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; kubectl apply -f ./k8s/deployment.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; kubectl rollout status deployment/api-service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="4-operational-warnings-and-workarounds-operational-reality"&gt;4. Operational Warnings and Workarounds (Operational Reality)
+&lt;/h3&gt;&lt;h4 id="41-optimizing-errimagepull-and-imagepullpolicy"&gt;4.1 Optimizing ErrImagePull and imagePullPolicy
+&lt;/h4&gt;&lt;p&gt;During development in a local environment, if a deployment is performed immediately after pushing an image to a registry, Kubernetes may reference an old cache if the tag is &amp;ldquo;latest,&amp;rdquo; or an &lt;b&gt;ErrImagePull&lt;/b&gt; may occur due to a pull failure. To prevent this, the following settings are recommended in deployment.yaml:&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;imagePullPolicy: Always&lt;/b&gt;: Forces the registry to be checked every time. However, this increases network load.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;imagePullPolicy: IfNotPresent&lt;/b&gt;: Effective when using locally built images as-is. If the Self-hosted Runner is operating on the same node as the cluster, the built image becomes immediately available, making this setting the most efficient.&lt;/p&gt;
+&lt;h4 id="42-precautions-for-persistent-volume-path-specification"&gt;4.2 Precautions for Persistent Volume Path Specification
+&lt;/h4&gt;&lt;p&gt;⚠️ When using Docker Desktop for Windows, the path specified in hostPath must be the mount path within the Docker VM (&lt;b&gt;/run/desktop/mnt/host/c/&amp;hellip;&lt;/b&gt;) rather than the Windows format. If this is incorrect, a mount error will occur during container startup, and the shared directory will not be recognized correctly.&lt;/p&gt;
+&lt;h3 id="5-results-and-evaluation"&gt;5. Results and Evaluation
+&lt;/h3&gt;&lt;p&gt;By implementing this configuration, the following quantitative and qualitative improvements were confirmed:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Reduction in deployment time&lt;/b&gt;: Reduced the lead time from code push to reflection by approximately 70% compared to manual kubectl operations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Improved environmental consistency&lt;/b&gt;: Established a consistent deployment pipeline independent of the developer&amp;rsquo;s local environment through dynamic Kubeconfig generation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Enhanced security&lt;/b&gt;: Achieved bidirectional communication with GitHub Actions without allowing any inbound traffic from the outside.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;This architecture combines the flexibility of GitHub Actions with the network advantages of Self-hosted Runners to eliminate deployment barriers in hybrid cloud environments. It serves as an effective solution to significantly reduce the operational burden (Ops Burden) during the transition from legacy operations centered on static configurations like Nginx to Kubernetes-native GitOps. Moving forward, transitioning to immutable tag management using GITHUB_RUN_NUMBER instead of the &amp;ldquo;latest&amp;rdquo; tag will be key to further improving reliability.&lt;/p&gt;</description></item><item><title>Dynamic Routing Implementation and Architectural Analysis with Traefik in Cloud-Native Environments</title><link>https://klifehack.com/en/p/traefik-dynamic-routing-architecture-analysis/</link><pubDate>Sun, 24 May 2026 17:36:25 +0900</pubDate><guid>https://klifehack.com/en/p/traefik-dynamic-routing-architecture-analysis/</guid><description>&lt;p&gt;In cloud-native microservices architecture, updating routing settings due to frequent service scaling and deployment is a major operational bottleneck. Traditional static reverse proxies require rewriting configuration files and restarting processes for every backend change, causing downtime and human error. This article analyzes dynamic routing construction strategies and internal structures using Traefik.&lt;/p&gt;
+&lt;h2 id="1-separation-of-static-and-dynamic-configuration"&gt;1. Separation of Static and Dynamic Configuration
+&lt;/h2&gt;&lt;p&gt;Traefik&amp;rsquo;s architecture is strictly separated into two planes based on their roles: &amp;ldquo;Static Configuration&amp;rdquo; and &amp;ldquo;Dynamic Configuration.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Static Configuration&lt;/b&gt;: Basic parameters loaded at startup. Includes EntryPoints (port definitions), Providers (sources like Docker or Kubernetes), log levels, etc. Process restart is required to change these.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Dynamic Configuration&lt;/b&gt;: Routing rules retrieved in real-time from providers. Consists of Routers, Middlewares, and Services, supporting hot reloading.&lt;/p&gt;
+&lt;h2 id="2-platform-integration-leveraging-the-docker-provider"&gt;2. Platform Integration: Leveraging the Docker Provider
+&lt;/h2&gt;&lt;p&gt;In Docker environments, Traefik monitors container lifecycle events via the Docker API (/var/run/docker.sock). It parses labels assigned to containers and automatically generates routing tables. Below is an implementation example using standard Docker Compose.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;reverse-proxy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;traefik:v2.10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;command&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;--providers.docker=true&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;--providers.docker.exposedbydefault=false&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;--entrypoints.web.address=:80&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;80:80&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;/var/run/docker.sock:/var/run/docker.sock:ro&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;my-service&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;my-app:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;traefik.enable=true&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;traefik.http.routers.my-service.rule=Host(`app.example.com`)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;traefik.http.services.my-service.loadbalancer.server.port=8080&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-introducing-ingressroute-in-kubernetes-environments"&gt;3. Introducing IngressRoute in Kubernetes Environments
+&lt;/h2&gt;&lt;p&gt;In Kubernetes environments, using Traefik&amp;rsquo;s own Custom Resource Definition (CRD), &lt;b&gt;IngressRoute&lt;/b&gt;, instead of standard Ingress resources allows for more advanced control. This prevents annotation bloat and achieves type-safe configuration.&lt;/p&gt;
+&lt;h2 id="4-automated-service-discovery-loop"&gt;4. Automated Service Discovery Loop
+&lt;/h2&gt;&lt;p&gt;Traefik&amp;rsquo;s automated service discovery operates in a four-stage loop. &lt;b&gt;Real-time updates&lt;/b&gt; minimize traffic loss.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Deployment&lt;/b&gt;: New containers start via CI/CD pipelines, etc.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Event Detection&lt;/b&gt;: Traefik detects events (Start/Stop) via the API.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Metadata Analysis&lt;/b&gt;: Reading container labels or annotations.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Routing Update&lt;/b&gt;: Updates internal routing tables within milliseconds and begins traffic forwarding.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="5-advanced-traffic-management-strategies"&gt;5. Advanced Traffic Management Strategies
+&lt;/h2&gt;&lt;h3 id="weighted-round-robin-wrr"&gt;Weighted Round Robin (WRR)
+&lt;/h3&gt;&lt;p&gt;When backends with different resource capacities coexist, traffic distribution via weighting is effective.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;http&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;weighted-service&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;weighted&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app-v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;weight&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app-v2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;weight&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="sticky-sessions"&gt;Sticky Sessions
+&lt;/h3&gt;&lt;p&gt;Supports cookie-based session persistence for stateful applications.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;http&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;sticky-service&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;loadBalancer&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;sticky&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;cookie&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;_traefik_session&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-fault-tolerance-and-self-healing-mechanisms"&gt;6. Fault Tolerance and Self-Healing Mechanisms
+&lt;/h2&gt;&lt;p&gt;To detect backend failures and maintain overall system availability, active health checks and circuit breakers are implemented. &lt;b&gt;Preventing cascading failures&lt;/b&gt; is extremely important in large-scale systems.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Active Health Checks&lt;/b&gt;: Periodically sends requests to a specified path (/healthz, etc.) and immediately removes instances from the pool upon detecting anomalies.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Circuit Breaker&lt;/b&gt;: Cuts off requests to the backend when the error rate exceeds a threshold, avoiding complete system shutdown.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="7-observability-and-monitoring"&gt;7. Observability and Monitoring
+&lt;/h2&gt;&lt;p&gt;Traefik provides a dashboard feature by default, allowing visual confirmation of current router and service status. It also supports Prometheus-format metrics export, enabling real-time monitoring of request counts, latency (p50, p90, p99), and HTTP status code distribution.&lt;/p&gt;
+&lt;h2 id="8-comparative-analysis-with-existing-solutions"&gt;8. Comparative Analysis with Existing Solutions
+&lt;/h2&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Item&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Traefik&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Nginx&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;HAProxy&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Configuration Model&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Dynamic (Hot Reload)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Primarily Static&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Static (API available)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Service Discovery&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Native Support&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;External tools required&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;External tools required&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Primary Use Case&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Containers/Microservices&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Static Content/API&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;High-throughput Load Balancing&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="9-operational-considerations"&gt;9. Operational Considerations
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Configuration Validation&lt;/b&gt;: Syntax errors in static configuration lead directly to process startup failure, making validation in staging environments essential.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Security Hardening&lt;/b&gt;: Do not expose the dashboard by default; apply authentication (Basic Auth/OAuth) or access restrictions via VPN.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Principle of Least Privilege&lt;/b&gt;: Access permissions to the Docker socket or Kubernetes API should be limited to the minimum necessary for reading routing information.&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Agent Configuration in GitHub Copilot CLI and Introduction of everything-copilot-cli</title><link>https://klifehack.com/en/p/github-copilot-cli-agent-implementation/</link><pubDate>Sun, 24 May 2026 03:10:20 +0900</pubDate><guid>https://klifehack.com/en/p/github-copilot-cli-agent-implementation/</guid><description>&lt;h1 id="building-multi-ai-orchestration-with-github-copilot-cli-and-everything-copilot-cli"&gt;Building Multi-AI Orchestration with GitHub Copilot CLI and everything-copilot-cli
+&lt;/h1&gt;&lt;p&gt;GitHub Copilot CLI provides an agent-oriented workflow that enables autonomous task execution beyond IDE code completion. This article describes the procedures for building professional-grade multi-AI orchestration using everything-copilot-cli, an open-source configuration system.&lt;/p&gt;
+&lt;h2 id="1-environment-setup"&gt;1. Environment Setup
+&lt;/h2&gt;&lt;p&gt;Before implementing an advanced agent system, the following environment must be established. Runtime environment consistency directly impacts agent stability.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Runtime&lt;/b&gt;: Node.js 18 or higher&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Subscription&lt;/b&gt;: GitHub Copilot (Individual, Business, or Enterprise)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Shell&lt;/b&gt;: PowerShell 7+ or Bash&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="cli-installation-and-authentication"&gt;CLI Installation and Authentication
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install -g @github/copilot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After installation, verify the version and run the authentication command to link with your GitHub account.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;copilot --version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Authentication execution&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;copilot /login
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-introduction-of-everything-copilot-cli-framework"&gt;2. Introduction of everything-copilot-cli Framework
+&lt;/h2&gt;&lt;p&gt;everything-copilot-cli provides a reference architecture suitable for team-scale deployment and complex project management. It includes 8 specialized agent definitions and over 30 skill modules.&lt;/p&gt;
+&lt;h3 id="setup-procedures"&gt;Setup Procedures
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/drvoss/everything-copilot-cli.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd everything-copilot-cli
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm run setup
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Execute the following validation to confirm configuration integrity.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm run validate
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm test
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-agent-system-configuration"&gt;3. Agent System Configuration
+&lt;/h2&gt;&lt;p&gt;This framework defines agents using YAML front matter and Markdown. Each agent specializes in a specific role and is assigned an optimal model.&lt;/p&gt;
+&lt;h3 id="predefined-agents-and-models-as-of-may-2026"&gt;Predefined Agents and Models (As of May 2026)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;planner / architect / code-reviewer&lt;/b&gt;: Responsible for complex reasoning and design. (Model: &lt;code&gt;claude-sonnet-4.6&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;tdd-guide / build-error-resolver&lt;/b&gt;: Test-driven development and debugging. (Model: &lt;code&gt;gpt-5-mini&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;doc-updater&lt;/b&gt;: Documentation synchronization. (Model: &lt;code&gt;claude-haiku-4.5&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="model-selection-strategy"&gt;Model Selection Strategy
+&lt;/h3&gt;&lt;p&gt;Use the &lt;code&gt;/model&lt;/code&gt; command during a session to switch models based on task complexity. Optimize resources by assigning the &lt;b&gt;Premium Tier&lt;/b&gt; to architectural design and security audits, and the &lt;b&gt;Economy Tier&lt;/b&gt; to code exploration and repetitive tasks.&lt;/p&gt;
+&lt;h2 id="4-skill-modules-and-custom-workflows"&gt;4. Skill Modules and Custom Workflows
+&lt;/h2&gt;&lt;p&gt;Skills are reusable workflows activated by specific keywords (triggers).&lt;/p&gt;
+&lt;h3 id="convention-check-skill-definition-example"&gt;convention-check Skill Definition Example
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;convention-check&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Verify team conventions before PR&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;category&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;development&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;triggers&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#39;check conventions&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;verify code style&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;requires_tools&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#39;grep&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;powershell&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;glob&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This skill automates checking for residual &lt;code&gt;console.log&lt;/code&gt; statements, function line count limit violations, and extraction of incomplete &lt;code&gt;TODO&lt;/code&gt; comments.&lt;/p&gt;
+&lt;h2 id="5-multi-ai-orchestration-patterns"&gt;5. Multi-AI Orchestration Patterns
+&lt;/h2&gt;&lt;p&gt;Implement patterns to use Copilot CLI as a hub for coordinating with other AI models (Claude Code, Gemini, etc.).&lt;/p&gt;
+&lt;h3 id="powershell-pipeline-implementation-example"&gt;PowerShell Pipeline Implementation Example
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# review-pipeline.ps1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;param&lt;/span&gt;([&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;]$Target = &lt;span style="color:#e6db74"&gt;&amp;#39;src/&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$workdir = &lt;span style="color:#e6db74"&gt;&amp;#34;.pipeline/&lt;/span&gt;$(Get-Date -Format &lt;span style="color:#e6db74"&gt;&amp;#39;yyyyMMdd-HHmmss&amp;#39;&lt;/span&gt;)&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;New-Item -ItemType Directory -Force -Path $workdir
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Stage 1: Analysis via Claude Code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx @anthropic-ai/claude-code --print &lt;span style="color:#e6db74"&gt;&amp;#34;Analyze &lt;/span&gt;$Target&lt;span style="color:#e6db74"&gt; for bugs&amp;#34;&lt;/span&gt; &amp;amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$workdir&lt;span style="color:#e6db74"&gt;/01-analysis.json&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Stage 2: Security Audit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$analysis = Get-Content &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$workdir&lt;span style="color:#e6db74"&gt;/01-analysis.json&amp;#34;&lt;/span&gt; -Raw
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx @anthropic-ai/claude-code --print &lt;span style="color:#e6db74"&gt;&amp;#34;Security audit based on: &lt;/span&gt;$analysis&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$workdir&lt;span style="color:#e6db74"&gt;/02-security.json&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-project-specific-settings-githubcopilot-instructionsmd"&gt;6. Project-Specific Settings: .github/copilot-instructions.md
+&lt;/h2&gt;&lt;p&gt;Define Copilot CLI behavior by placing &lt;code&gt;.github/copilot-instructions.md&lt;/code&gt; in the project root. Specify the technology stack, architectural conventions, and test requirements (e.g., 80%+ coverage) here.&lt;/p&gt;
+&lt;p&gt;This allows the agent to accurately grasp the project context and execute consistent code generation and reviews. Strict definition is recommended, as convention mismatches cause deployment errors.&lt;/p&gt;</description></item><item><title>Implementation of Prompt Compiler Switches and Suppression of Skeleton Collapse in SA-IR v2.0</title><link>https://klifehack.com/en/p/sair-v2-compiler-switch-fix/</link><pubDate>Sat, 23 May 2026 17:49:58 +0900</pubDate><guid>https://klifehack.com/en/p/sair-v2-compiler-switch-fix/</guid><description>&lt;h2 id="latent-space-control-failure-and-optimization-in-sa-ir-v20-flash-framework"&gt;Latent Space Control Failure and Optimization in SA-IR v2.0 Flash Framework
+&lt;/h2&gt;&lt;p&gt;In the production environment on 2026-05-31, severe skeleton collapse and uncanny valley phenomena were confirmed in images generated using the &lt;b&gt;&lt;mark&gt;SA-IR (Sequence AI-Image Recipe)&lt;/mark&gt;&lt;/b&gt; v2.0 Flash framework with DALL-E 3 and Imagen backends. This was caused by the AI model&amp;rsquo;s default text inference logic overriding the modular assembly matrix constraints specified by the framework. Specifically, the skeletal locking function in Level 03 (Body Geometry &amp;amp; Kinetic Alignment) was disabled during the generation of complex dynamic poses, resulting in the failure of Center of Mass (CoM) calculations and anatomically impossible outputs.&lt;/p&gt;
+&lt;h3 id="observed-error-logs-and-anomalies-"&gt;Observed Error Logs and Anomalies ⚠️
+&lt;/h3&gt;&lt;p&gt;Anomalies detected in the prompt validation pipeline executed via GitHub Actions runners indicate the failure of CoM calculations and loss of skeletal integrity.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[2026-05-31 14:22:01] [ERROR] [SA-IR-KERNEL] Latent space conflict detected at Level 03.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[2026-05-31 14:22:01] [DEBUG] Skeletal anchor point shift: 14.2% (Threshold: 5.0%)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[2026-05-31 14:22:02] [WARN] Token weight dilution: &amp;#39;anatomical framing&amp;#39; reduced by 0.42 due to LLM meta-interpretation.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[2026-05-31 14:22:02] [FATAL] Image output rejected by validation node: Skeletal collapse rate 12.5%.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="identification-of-token-weight-dilution-and-meta-inference-interference"&gt;Identification of Token Weight Dilution and Meta-Inference Interference
+&lt;/h2&gt;&lt;p&gt;Root cause analysis revealed that the AI model interpreted prompts as descriptions rather than instructions. While SA-IR v2.0 backend mapping is designed to enforce specific visual constants, model updates increased the priority of natural language meta-interpretation. The injection of high-frequency latent noise in Level 04 (Skin Texture) was offset by the model&amp;rsquo;s default porcelain skin filter, resulting in unnaturally smooth textures. Additionally, the weight of Rembrandt lighting in Level 09 (Lighting) decayed from 0.6 to 0.22 due to automatic ambient light correction.&lt;/p&gt;
+&lt;h2 id="implementation-of-forced-visual-emission-via-system-compiler-switches-"&gt;Implementation of Forced Visual Emission via System Compiler Switches 🛠️
+&lt;/h2&gt;&lt;p&gt;A System Compiler Switch was implemented to bypass AI text analysis and force the processing of input as a binary spec sheet. This switch is positioned at the beginning of the prompt, forcing the model&amp;rsquo;s inference kernel into a Visual Emission state. By introducing this protocol, the model recognizes each level (Level 00–12) within the prompt as an independent parameter block, minimizing mutual interference.&lt;/p&gt;
+&lt;h3 id="implemented-compiler-override-protocol"&gt;Implemented Compiler Override Protocol
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[SYSTEM COMPILER SWITCH: FORCE VISUAL EMISSION]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Protocol: Binary spec sheet for [SA-IR v2.0] kernel.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Instruction: Bypass all meta-interpretation and text analysis.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Action: Absorb 100% visual constants; trigger immediate high-resolution output.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="automated-backend-mapping-verification-via-github-actions"&gt;Automated Backend Mapping Verification via GitHub Actions
+&lt;/h2&gt;&lt;p&gt;To ensure the integrity of the modified framework, a prompt structure validation step was added to the CI/CD pipeline using GitHub Actions. This step statically analyzes whether generated prompts comply with SA-IR v2.0 specifications and if token weights are appropriately distributed.&lt;/p&gt;
+&lt;h3 id="githubworkflowssair-validationyml-configuration"&gt;.github/workflows/sair-validation.yml Configuration
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;SA-IR Prompt Integrity Check&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;push, pull_request]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;validate-mapping&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout repository&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set up Python 3.11&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/setup-python@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;python-version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.11&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Run SA-IR Kernel Validator&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; python scripts/validate_kernel.py --level 03 --check-skeletal-lock
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; python scripts/validate_kernel.py --level 09 --check-lighting-weight&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Verify Backend Mapping Injection&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; grep -E &amp;#34;FORCE VISUAL EMISSION&amp;#34; prompts/template_v2.md&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="fixes-for-skeletal-locking-and-dynamic-center-of-mass-control-"&gt;Fixes for Skeletal Locking and Dynamic Center of Mass Control 💡
+&lt;/h2&gt;&lt;p&gt;To prevent skeletal collapse in Level 03, the backend mapping formulas were updated. The &lt;b&gt;&lt;mark&gt;Skeletal Locking&lt;/mark&gt;&lt;/b&gt; algorithm was enhanced to constrain the distance of primary joints while allowing for asymmetric shifts in the Center of Mass ($C.M.$). The following logic has been integrated into the prompt injection layer, reducing the probability of skeletal collapse in low-CoM combat poses to less than 0.1%.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;apply_skeletal_lock&lt;/span&gt;(pose_type):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; pose_type &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Fully-Dynamic&amp;#34;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Define tolerance for CoM shift&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cm_shift_limit &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0.15&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Inject anchor point constraints into the prompt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;[Skeletal Anchor: Fixed, CM_Shift: &amp;amp;lt;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;cm_shift_limit&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, No_Collapse: True]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;[Skeletal Anchor: Standard]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="verification-of-optical-physical-parameters-and-post-processing"&gt;Verification of Optical Physical Parameters and Post-Processing
+&lt;/h2&gt;&lt;p&gt;Verification was conducted for the synchronization of Level 08 (Spatiotemporal Layer) and Level 09 (Lighting). Combining 6-axis spatial coordinates and synchronizing the light source&amp;rsquo;s angle of incidence with shadow length resolved unnatural shadow overlapping in Indoor Studio settings. Commands were executed during the verification process to check the luminance distribution of the rendering results. In Level 12 (Post-Render Processing), a node was placed to control Chiaroscuro intensity on a scale of 0.0 to 1.0, allowing for film grain overlays and color grading without destroying original textures.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Analysis of luminance distribution and shadow density&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./analyze_optics --input generated_sample_01.png --mode rembrandt-check
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Output results&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# &amp;amp;gt; Shadow Density: 0.82 (Target: 0.80-0.85) - PASS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# &amp;amp;gt; Light Angle: 45.2 deg (Target: 45.0 deg) - PASS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-impact-and-final-confirmation"&gt;Operational Impact and Final Confirmation
+&lt;/h2&gt;&lt;p&gt;Following the application of these fixes, the P99 rendering quality pass rate improved to 98.4%. The unnatural AI smile issue was significantly improved through shading adjustments around the orbicularis oris muscle in Level 02. The verified SA-IR v2.0 Flash kernel has been merged into the main branch of the GitHub repository (Team-Sequence-Thaumaturge/SA-IR). Weekly automated benchmarks will continue to monitor token weight fluctuations caused by model-side updates.&lt;/p&gt;</description></item><item><title>Resolving Ansible Provisioning Failures Caused by Netmiko SSH Timeouts</title><link>https://klifehack.com/en/p/netmiko-ssh-timeout-ansible-fix/</link><pubDate>Fri, 22 May 2026 17:34:53 +0900</pubDate><guid>https://klifehack.com/en/p/netmiko-ssh-timeout-ansible-fix/</guid><description>&lt;img src="https://klifehack.com/" alt="Featured image of post Resolving Ansible Provisioning Failures Caused by Netmiko SSH Timeouts" /&gt;&lt;h1 id="netmiko-timeout-mitigation-and-pyats-verification-automation-for-bulk-acl-application-to-200-cisco-ios-switches"&gt;Netmiko Timeout Mitigation and pyATS Verification Automation for Bulk ACL Application to 200 Cisco IOS Switches
+&lt;/h1&gt;&lt;p&gt;This document records the troubleshooting steps for Netmiko SSH timeout errors (&lt;code&gt;NetmikoTimeoutException&lt;/code&gt;) and subsequent configuration drift that occurred during bulk ACL application to 200 Cisco IOS switches during production deployment on May 31, 2026. The issue was resolved by introducing concurrency semaphore control on the control node, optimizing Netmiko connection parameters (&lt;code&gt;global_delay_factor&lt;/code&gt; and &lt;code&gt;read_timeout_override&lt;/code&gt;), and automating post-verification using &lt;b&gt;&lt;mark&gt;pyATS&lt;/mark&gt;&lt;/b&gt;.&lt;/p&gt;
+&lt;p&gt;The system employs a NetDevOps architecture with Git as the single Source of Truth.&lt;/p&gt;
+&lt;img alt="System operational pipeline topology flow description" fetchpriority="high" height="376" loading="eager" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/31/netmiko-ssh-timeout-ansible-fix/khack_1780194891_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" width="672"/&gt;
+&lt;h2 id="detection-of-ssh-disconnections-and-partial-applications-during-large-scale-deployment"&gt;Detection of SSH Disconnections and Partial Applications During Large-Scale Deployment
+&lt;/h2&gt;&lt;p&gt;When running the Ansible playbook via the GitLab CI/CD pipeline, tasks were interrupted on specific legacy switches, resulting in an SSH timeout error log. This caused settings to be applied only to some devices, leading to configuration inconsistency (configuration drift) across the network.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;netmiko.exceptions.NetmikoTimeoutException: Connection to device timed-out: cisco_ios 192.168.10.15:22
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This error caused the pipeline to terminate abnormally, leaving 15 out of 200 target switches in an intermediate state.&lt;/p&gt;
+&lt;h2 id="synergistic-effect-of-cpu-resource-saturation-and-command-response-delays"&gt;Synergistic Effect of CPU Resource Saturation and Command Response Delays
+&lt;/h2&gt;&lt;p&gt;Post-incident analysis identified two main causes for the timeouts:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Excessive Concurrency on the Control Node&lt;/b&gt;: Because the Ansible &lt;code&gt;forks&lt;/code&gt; parameter was left at its default, the control node attempted to establish too many concurrent SSH sessions, driving CPU utilization to 100%. This caused delays in SSH handshakes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Command Processing Delays on Legacy Hardware&lt;/b&gt;: The target Cisco IOS switches (such as the Catalyst 2960 series) experience high CPU load when compiling large ACLs (100+ lines), requiring more time than usual to respond to commands. This exceeded Netmiko&amp;rsquo;s default read timeout (100 seconds), causing the connection to drop.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="dynamic-timeout-adjustment-and-flow-control-via-semaphores"&gt;Dynamic Timeout Adjustment and Flow Control via Semaphores
+&lt;/h2&gt;&lt;p&gt;To resolve this issue, connection parameters were optimized and semaphore control was introduced to limit concurrency.&lt;/p&gt;
+&lt;h3 id="1-parameter-tuning-in-netmiko-connection-script-"&gt;1. Parameter Tuning in Netmiko Connection Script 🛠️
+&lt;/h3&gt;&lt;p&gt;In the Python concurrent execution script, &lt;code&gt;global_delay_factor&lt;/code&gt; was increased to &lt;code&gt;2.0&lt;/code&gt;, and &lt;code&gt;read_timeout_override&lt;/code&gt; was set to &lt;code&gt;300&lt;/code&gt; seconds. This ensures sufficient wait time for responses from slower devices.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; netmiko &lt;span style="color:#f92672"&gt;import&lt;/span&gt; ConnectHandler
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;device_params &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;device_type&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;cisco_ios&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;host&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;192.168.10.15&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;username&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;admin&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;secure_password&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;global_delay_factor&amp;#39;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;2.0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;read_timeout_override&amp;#39;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; ConnectHandler(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;device_params) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; net_connect:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;output &lt;span style="color:#f92672"&gt;=&lt;/span&gt; net_connect&lt;span style="color:#f92672"&gt;.&lt;/span&gt;send_config_set(config_commands)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(output)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-optimizing-connection-settings-in-ansible-"&gt;2. Optimizing Connection Settings in Ansible 💡
+&lt;/h3&gt;&lt;p&gt;On the Ansible playbook side, variables were added to &lt;code&gt;ansible.cfg&lt;/code&gt; and inventory variables to control SSH keepalives and timeouts.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ansible.cfg&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[defaults]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;forks&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;timeout&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;300&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[ssh_connection]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ssh_args&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;-o ControlMaster=auto -o ControlPersist=60s -o ServerAliveInterval=30 -o ServerAliveCountMax=3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="state-verification-with-pyats-and-deployment-time-measurement"&gt;State Verification with pyATS and Deployment Time Measurement
+&lt;/h2&gt;&lt;p&gt;After applying the fixes, verification steps were performed in the test and production environments.&lt;/p&gt;
+&lt;h3 id="1-pipeline-re-run-and-execution-log-verification-"&gt;1. Pipeline Re-run and Execution Log Verification ⚠️
+&lt;/h3&gt;&lt;p&gt;The script was executed with concurrency limited to 10, and CPU utilization was verified to be stable.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ansible-playbook -i inventory.ini deploy_acl.yml --forks=10
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PLAY [Deploy ACL to Cisco IOS Switches] &amp;lt;b&amp;gt;TASK [Gathering Facts]&amp;lt;/b&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ok: [switch-01]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ok: [switch-02]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;TASK [Apply ACL Configuration] &amp;lt;b&amp;gt;&amp;lt;/b&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;changed: [switch-01]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;changed: [switch-02]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PLAY RECAP &amp;lt;b&amp;gt;&amp;lt;/b&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;switch-01 : ok=2 changed=1 unreachable=0 failed=0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;switch-02 : ok=2 changed=1 unreachable=0 failed=0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-configuration-consistency-verification-using-pyats"&gt;2. Configuration Consistency Verification Using pyATS
+&lt;/h3&gt;&lt;p&gt;Following deployment completion, pyATS was used to parse the ACL application state of all devices, automatically verifying that no unapplied or inconsistent configurations existed.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; genie.testbed &lt;span style="color:#f92672"&gt;import&lt;/span&gt; load
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;testbed &lt;span style="color:#f92672"&gt;=&lt;/span&gt; load(&lt;span style="color:#e6db74"&gt;&amp;#39;testbed.yaml&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;device &lt;span style="color:#f92672"&gt;=&lt;/span&gt; testbed&lt;span style="color:#f92672"&gt;.&lt;/span&gt;devices[&lt;span style="color:#e6db74"&gt;&amp;#39;switch-01&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;device&lt;span style="color:#f92672"&gt;.&lt;/span&gt;connect()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;parsed_output &lt;span style="color:#f92672"&gt;=&lt;/span&gt; device&lt;span style="color:#f92672"&gt;.&lt;/span&gt;parse(&lt;span style="color:#e6db74"&gt;&amp;#39;show ip access-lists&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;assert&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;MY_SECURE_ACL&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;in&lt;/span&gt; parsed_output
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;&amp;#34;ACL verification passed successfully.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As a result of the verification, there were 0 disconnections due to timeouts, and it was confirmed that the intended ACLs were successfully applied to all 200 switches. Total processing time was reduced from the previous 1,200 seconds (which included timeout retry delays) to 45 seconds due to stable concurrent processing.&lt;/p&gt;</description></item><item><title>Troubleshooting Errors in Kubernetes Deployment Automation with GitHub Actions and Windows Self-Hosted Runner</title><link>https://klifehack.com/en/p/github-actions-windows-runner-kubernetes/</link><pubDate>Fri, 22 May 2026 13:53:13 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-windows-runner-kubernetes/</guid><description>&lt;h2 id="-resolving-kubeconfig-pem-block-parsing-error-unable-to-parse-bytes-as-pem-block"&gt;🛠️ Resolving Kubeconfig PEM Block Parsing Error (unable to parse bytes as PEM block)
+&lt;/h2&gt;&lt;p&gt;The following error occurred during authentication with the Kubernetes cluster when running the GitHub Actions workflow:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;error: unable to load root certificates: unable to parse bytes as PEM block
+Error: Process completed with exit code 1.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="cause"&gt;Cause
+&lt;/h3&gt;&lt;p&gt;When copying and pasting the YAML text of the local &lt;b&gt;&lt;mark&gt;kubeconfig&lt;/mark&gt;&lt;/b&gt; file directly into GitHub Secrets, line ending mismatches (\n vs \r\n), indentation issues, or truncation of the Base64-encoded certificate data occurred, causing the certificate data (PEM format) parsing to fail.&lt;/p&gt;
+&lt;h3 id="resolution"&gt;Resolution
+&lt;/h3&gt;&lt;p&gt;To prevent data corruption, encode the Windows environment&amp;rsquo;s kubeconfig file into a Base64 string before registering it in GitHub Secrets.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Open PowerShell on Windows and run the following command to Base64-encode the kubeconfig:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#66d9ef"&gt;Convert&lt;/span&gt;]::ToBase64String([&lt;span style="color:#66d9ef"&gt;IO.File&lt;/span&gt;]::ReadAllBytes(&lt;span style="color:#e6db74"&gt;&amp;#34;C:\Users\Administrator\.kube\config&amp;#34;&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Copy the outputted single-line long Base64 string.&lt;/p&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;
+&lt;p&gt;In the GitHub repository, go to &amp;ldquo;Settings&amp;rdquo; -&amp;gt; &amp;ldquo;Secrets and variables&amp;rdquo; -&amp;gt; &amp;ldquo;Actions&amp;rdquo;, delete the existing &lt;code&gt;KUBE_CONFIG&lt;/code&gt;, and register the copied Base64 string as the new value.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Modify the decoding process in the workflow file (&lt;code&gt;.github/workflows/docker-build.yml&lt;/code&gt;) as follows:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; mkdir -p ~/.kube
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34; | base64 -d &amp;amp;gt; ~/.kube/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="-resolving-dns-resolution-failure-from-cloud-runner-kubernetesdockerinternal6443-no-such-host"&gt;🛠️ Resolving DNS Resolution Failure from Cloud Runner (kubernetes.docker.internal:6443: no such host)
+&lt;/h2&gt;&lt;p&gt;After resolving the certificate error, the following network timeout and DNS resolution error occurred during the deployment step:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;E0528 01:43:09.437587 2260 memcache.go:265] &amp;#34;Unhandled Error&amp;#34; err=&amp;#34;couldn&amp;#39;t get current server API group list: Get \&amp;#34;https://kubernetes.docker.internal:6443/api?timeout=32s\&amp;#34;: dial tcp: lookup kubernetes.docker.internal on 127.0.0.53:53: no such host&amp;#34;
+Unable to connect to the server: dial tcp: lookup kubernetes.docker.internal on 127.0.0.53:53: no such host
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="cause-1"&gt;Cause
+&lt;/h3&gt;&lt;p&gt;The standard GitHub Actions hosted runner (&lt;code&gt;runs-on: ubuntu-latest&lt;/code&gt;) runs on a cloud virtual machine provided by GitHub. Consequently, it cannot resolve &lt;code&gt;kubernetes.docker.internal&lt;/code&gt;, which is the private DNS of the local development environment (Docker Desktop), and cannot route to the local Kubernetes API server.&lt;/p&gt;
+&lt;h3 id="resolution-1"&gt;Resolution
+&lt;/h3&gt;&lt;p&gt;To directly access resources within the local network, set up a &lt;b&gt;&lt;mark&gt;Self-Hosted Runner&lt;/mark&gt;&lt;/b&gt; on the local machine.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;In the GitHub repository, go to &amp;ldquo;Settings&amp;rdquo; -&amp;gt; &amp;ldquo;Actions&amp;rdquo; -&amp;gt; &amp;ldquo;Runners&amp;rdquo;, select &amp;ldquo;New self-hosted runner&amp;rdquo;, and specify &amp;ldquo;Windows&amp;rdquo; as the OS.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Run the following commands in local PowerShell to download and extract the runner package:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir actions-runner
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd actions-runner
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//github.com/actions/runner/releases/download/v2.334.&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;/actions-runner-win-x64-&lt;span style="color:#ae81ff"&gt;2.334&lt;/span&gt;.0.zip -OutFile actions-runner-win-x64-&lt;span style="color:#ae81ff"&gt;2.334&lt;/span&gt;.0.zip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Add-Type -AssemblyName System.IO.Compression.FileSystem
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#66d9ef"&gt;System.IO.Compression.ZipFile&lt;/span&gt;]::ExtractToDirectory(&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PWD&lt;span style="color:#e6db74"&gt;/actions-runner-win-x64-2.334.0.zip&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PWD&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;Register the runner using the token displayed on the screen.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.\config.cmd --url https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//github.com/giturl-id/tomcat-k8s --token &amp;lt;your_token&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="4"&gt;
+&lt;li&gt;Start the runner.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.\run.cmd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="5"&gt;
+&lt;li&gt;Modify the execution environment target in the workflow file.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Before&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# After&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;self-hosted&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="-resolving-mkdir--p-command-execution-error-in-windows-environment"&gt;🛠️ Resolving mkdir -p Command Execution Error in Windows Environment
+&lt;/h2&gt;&lt;p&gt;When switching the execution environment to the Windows Self-Hosted Runner, the following error occurred during the directory creation step:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;mkdir : An item with the specified name C:\Users\Administrator\.kube already exists.
+At C:\study\tomcat\actions-runner\_work\_temp\836d0b14-98fc-4377-a457-faf5123b7885.ps1:2 char:1
++ mkdir -p ~/.kube
++ ~~~~~~~~~~~~~~~
+ + CategoryInfo : ResourceExists: (C:\Users\Administrator\.kube:String) [New-Item], IOException
+ + FullyQualifiedErrorId : DirectoryExist,Microsoft.PowerShell.Commands.NewItemCommand
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="cause-2"&gt;Cause
+&lt;/h3&gt;&lt;p&gt;On a Windows Self-Hosted Runner, GitHub Actions steps run in PowerShell by default. In PowerShell, &lt;code&gt;mkdir&lt;/code&gt; is an alias for &lt;code&gt;New-Item -ItemType Directory&lt;/code&gt;, which does not support the &lt;code&gt;-p&lt;/code&gt; option. Additionally, if the target directory already exists, PowerShell throws an &lt;code&gt;IOException&lt;/code&gt; and terminates with exit code &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id="resolution-2"&gt;Resolution
+&lt;/h3&gt;&lt;p&gt;Change the logic to use native PowerShell syntax to check for directory existence before creation. Also, handle the Base64 decoding entirely within PowerShell using .NET runtime features.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;shell&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;powershell&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if (!(Test-Path &amp;#34;$HOME\.kube&amp;#34;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; New-Item -ItemType Directory -Path &amp;#34;$HOME\.kube&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; [System.Text.Encoding]::UTF8.GetString(
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; [System.Convert]::FromBase64String(&amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ) | Out-File &amp;#34;$HOME\.kube\config&amp;#34; -Encoding utf8&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="-resolving-kubernetes-pod-image-pull-error-errimagepull"&gt;🛠️ Resolving Kubernetes Pod Image Pull Error (ErrImagePull)
+&lt;/h2&gt;&lt;p&gt;After executing the deployment, the pod status became &lt;code&gt;ErrImagePull&lt;/code&gt;, and the container failed to start.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get pods
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Output:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# NAME READY STATUS RESTARTS AGE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# tomcat2-deployment-59d4ff8df8-cwwb2 0/1 ErrImagePull 0 9s&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="cause-3"&gt;Cause
+&lt;/h3&gt;&lt;p&gt;Because &lt;code&gt;imagePullPolicy&lt;/code&gt; in the manifest file (&lt;code&gt;Deployment.yaml&lt;/code&gt;) is set to &lt;code&gt;Always&lt;/code&gt;, Kubernetes forces a query to the external registry (such as DockerHub) for the latest image, even if the image exists in the local Docker cache. If the image has not been pushed to the remote registry or credentials are missing, this pull process fails.&lt;/p&gt;
+&lt;h3 id="resolution-3"&gt;Resolution
+&lt;/h3&gt;&lt;p&gt;When using locally built images directly in a development environment, change &lt;code&gt;imagePullPolicy&lt;/code&gt; to &lt;code&gt;IfNotPresent&lt;/code&gt; to skip querying the external registry.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Modify the container definition in &lt;code&gt;Deployment.yaml&lt;/code&gt; as follows:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;tomcat&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;abungard/my-tomcat:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;imagePullPolicy&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;IfNotPresent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
+&lt;li&gt;Delete the existing deployment and reapply.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl delete deployment tomcat2-deployment
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl apply -f Deployment.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;Verify the pod startup status.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get pods
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Verify that the status transitions to &lt;code&gt;Running&lt;/code&gt;.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;NAME READY STATUS RESTARTS AGE
+tomcat2-deployment-59d4ff8df8-cwwb2 1/1 Running 0 12s
+```&amp;lt;/your_token&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Analysis of LocalStorage Data Loss in PWA and IndexedDB Migration Steps via localForage</title><link>https://klifehack.com/en/p/pwa-localstorage-indexeddb-migration/</link><pubDate>Fri, 22 May 2026 10:42:03 +0900</pubDate><guid>https://klifehack.com/en/p/pwa-localstorage-indexeddb-migration/</guid><description>&lt;h2 id="incident-sudden-localstorage-data-loss-in-pwa-environment"&gt;Incident: Sudden LocalStorage Data Loss in PWA Environment
+&lt;/h2&gt;&lt;p&gt;In &amp;ldquo;Dan-Haru,&amp;rdquo; a routine management application deployed as a PWA (Progressive Web App), a data loss incident occurred approximately one month after production launch, where all user routine records, custom settings, and configuration parameters were completely initialized.&lt;/p&gt;
+&lt;p&gt;The developer tools console log recorded the following exceptions and empty data states:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Console Log
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Uncaught&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DOMException&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Failed&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;to&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;execute&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;setItem&amp;#39;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;on&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;Storage&amp;#39;&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Setting&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;the&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;value&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;of&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;routine_activity_log&amp;#39;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;exceeded&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;the&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;quota&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localStorage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;getItem&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;routine_app_user_data&amp;#39;&lt;/span&gt;) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This state is identical to a fresh application installation, indicating that the client-side data store was completely wiped.&lt;/p&gt;
+&lt;h2 id="-root-causes-of-data-loss-ios-eviction-policy-and-5mb-capacity-limit"&gt;⚠️ Root Causes of Data Loss: iOS Eviction Policy and 5MB Capacity Limit
+&lt;/h2&gt;&lt;p&gt;The technical factors causing this data loss stem from the following three points related to browser LocalStorage specifications and OS storage management algorithms:&lt;/p&gt;
+&lt;h3 id="1-forced-storage-cleanup-by-os-storage-eviction"&gt;1. Forced Storage Cleanup by OS (Storage Eviction)
+&lt;/h3&gt;&lt;p&gt;In iOS/iPadOS (Safari/WebKit Webview) environments, if a PWA is not launched for seven consecutive days, or if device free space becomes extremely low, the OS treats LocalStorage as &amp;ldquo;temporary cache files&amp;rdquo; and deletes them automatically. This is the &lt;b&gt;&lt;mark&gt;Storage Eviction&lt;/mark&gt;&lt;/b&gt; policy. Additionally, when background processes are force-terminated due to memory (RAM) pressure, write operations to LocalStorage are interrupted, leading to data resets due to file corruption.&lt;/p&gt;
+&lt;h3 id="2-write-errors-due-to-exceeding-capacity-limit-5mb"&gt;2. Write Errors Due to Exceeding Capacity Limit (5MB)
+&lt;/h3&gt;&lt;p&gt;The maximum capacity of LocalStorage is limited to 5MB. Data accumulation simulations for high-frequency users (30 groups × 30 routines each = 900 routines total) revealed that daily data accumulation reaches approximately 237KB.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;routine_activity_log&lt;/code&gt; (1440-minute heatmap): Approx. 2.9 KB&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;WakeUpTimeHistory&lt;/code&gt;: Approx. 0.08 KB&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;RoutineGroupHistory&lt;/code&gt; (30 groups): Approx. 7.8 KB&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;TaskHistory&lt;/code&gt; (900 routines): Approx. 180 KB&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;routine_app_user_data&lt;/code&gt; (metadata): Approx. 46.2 KB&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Total daily accumulation&lt;/b&gt;: &lt;b&gt;Approx. 237 KB/day&lt;/b&gt;
+Based on this data density, the 5MB limit is reached in just &lt;b&gt;approx. 21 days&lt;/b&gt;, after which subsequent writes fail by throwing a &lt;code&gt;QuotaExceededError&lt;/code&gt;. If reset logic such as &lt;code&gt;localStorage.clear()&lt;/code&gt; is erroneously executed within exception handling, all data is lost.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="-implementing-data-persistence-via-indexeddb-migration-using-localforage"&gt;💡 Implementing Data Persistence via IndexedDB Migration using localForage
+&lt;/h2&gt;&lt;p&gt;To eliminate the 5MB capacity limit and volatility of LocalStorage, migrate to IndexedDB, which supports asynchronous processing and can utilize up to 50% of available device space. &lt;b&gt;&lt;mark&gt;localForage&lt;/mark&gt;&lt;/b&gt; (v1.10.0) is adopted as a wrapper library, and existing synchronous code is refactored into asynchronous processing.&lt;/p&gt;
+&lt;h3 id="1-initialization-of-localforage-and-implementation-of-migration-script"&gt;1. Initialization of localForage and Implementation of Migration Script
+&lt;/h3&gt;&lt;p&gt;Implement logic to extract data from LocalStorage and safely migrate it to IndexedDB.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;localforage&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;localforage&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localforage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;config&lt;/span&gt;({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;driver&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;localforage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;INDEXEDDB&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;Dan-Haru&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;storeName&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;user_settings&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;migrateFromLocalStorage&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;keys&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;routine_activity_log&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;WakeUpTimeHistory&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;RoutineGroupHistory&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;TaskHistory&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;routine_app_user_data&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; (&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;key&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;of&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;keys&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;localData&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;localStorage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;getItem&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;key&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;localData&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;localforage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;setItem&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;key&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;JSON&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;parse&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;localData&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localStorage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;removeItem&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;key&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;} &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;`Migration failed for key &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;key&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;:`&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-implementation-of-fifo-first-in-first-out-pruning-to-control-data-volume"&gt;2. Implementation of FIFO (First-In-First-Out) Pruning to Control Data Volume
+&lt;/h3&gt;&lt;p&gt;To prevent data bloat, incorporate pruning logic that automatically deletes detailed logs older than 30 days while retaining only statistical data.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;pruneOldLogs&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;thresholdDate&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Date();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;thresholdDate&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;setDate&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;thresholdDate&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;getDate&lt;/span&gt;() &lt;span style="color:#f92672"&gt;-&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;limitTime&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;thresholdDate&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;getTime&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;logs&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;localforage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;getItem&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;routine_activity_log&amp;#39;&lt;/span&gt;) &lt;span style="color:#f92672"&gt;||&lt;/span&gt; [];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;filteredLogs&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;logs&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;filter&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Date(&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;timestamp&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;getTime&lt;/span&gt;() &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;;&lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;limitTime&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;localforage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;setItem&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;routine_activity_log&amp;#39;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;filteredLogs&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;} &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Pruning failed:&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="-verification-procedures-for-data-persistence-and-storage-usage-post-migration"&gt;🛠️ Verification Procedures for Data Persistence and Storage Usage Post-Migration
+&lt;/h2&gt;&lt;p&gt;Verify whether the migration process is functioning correctly and if the OS recognizes it as persistent storage.&lt;/p&gt;
+&lt;h3 id="1-capacity-verification-via-browser-storage-estimate-api"&gt;1. Capacity Verification via Browser Storage Estimate API
+&lt;/h3&gt;&lt;p&gt;Execute &lt;code&gt;navigator.storage.estimate()&lt;/code&gt; from the console to check the allocated quota and current usage.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;navigator&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;storage&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;amp&lt;/span&gt;;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;amp&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;navigator&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;storage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;estimate&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;navigator&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;storage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;estimate&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;then&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;estimate&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;`Quota: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;estimate&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;quota&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; bytes`&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;`Usage: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;estimate&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;usage&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; bytes`&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Example output of execution results:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;#34;quota&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;21474836480&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;#34;usage&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;242688&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This confirms that a quota in the gigabyte range has been secured, exceeding the traditional 5MB limit.&lt;/p&gt;
+&lt;h3 id="2-requesting-and-confirming-persistent-storage"&gt;2. Requesting and Confirming Persistent Storage
+&lt;/h3&gt;&lt;p&gt;Explicitly request the browser to exclude the storage from automatic deletion targets.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;navigator&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;storage&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;amp&lt;/span&gt;;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;amp&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;navigator&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;storage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;persist&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;navigator&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;storage&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;persist&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;then&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;granted&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;`Persistent storage granted: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;granted&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Execution result:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;By returning &lt;code&gt;true&lt;/code&gt;, it is verified that a protected state has been established where IndexedDB data is not subject to forced deletion (Eviction) even when device free space is low.&lt;/p&gt;</description></item></channel></rss>

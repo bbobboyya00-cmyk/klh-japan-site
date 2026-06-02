@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Devsecops on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/devsecops/</link><description>Recent content in Devsecops on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 30 May 2026 10:33:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/devsecops/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Container Image Security Scan Automation in CI/CD Pipelines</title><link>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</link><pubDate>Sat, 30 May 2026 10:33:07 +0900</pubDate><guid>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</guid><description>&lt;h1 id="construction-and-optimization-strategies-for-security-automation-in-container-delivery"&gt;Construction and Optimization Strategies for Security Automation in Container Delivery
+&lt;/h1&gt;&lt;p&gt;In modern software delivery, ensuring container image security should be a priority equivalent to functional implementation. To identify risks lurking within the vast libraries and dependencies contained in images, an automated scanning process integrated into the CI/CD pipeline is essential, rather than manual inspection. This article explains technical approaches for naturally establishing security as part of the development workflow.&lt;/p&gt;
+&lt;h2 id="1-strategic-background-of-automated-scanning"&gt;1. Strategic Background of Automated Scanning
+&lt;/h2&gt;&lt;p&gt;The primary burden facing development teams is not only the functional integrity of the code but also the elimination of potential risk factors included in the deployment. Manual image inspection is prone to human error and tends to be omitted within tight release schedules. Therefore, automation is not merely an option but a prerequisite for achieving secure delivery.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Building an immediate feedback loop&lt;/b&gt;: Embed scanners within the build process to immediately fail the build or notify alerts if vulnerabilities are detected. This prevents vulnerable code from propagating to production environments.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Granular policy application&lt;/b&gt;: Beyond simply introducing tools, formulate blocking policies based on vulnerability severity (Critical, High, Medium, etc.).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Promoting standardization&lt;/b&gt;: By applying unified security benchmarks across the entire team, eliminate variations in judgment based on individual subjectivity and minimize security gaps.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-technical-optimization-in-cicd-integration"&gt;2. Technical Optimization in CI/CD Integration
+&lt;/h2&gt;&lt;p&gt;Pipeline execution speed directly impacts developer productivity. Strategies are needed to ensure security scanning does not excessively increase build times. Optimization at the infrastructure level is required to achieve efficient scanning.&lt;/p&gt;
+&lt;h3 id="performance-improvement-methods"&gt;Performance Improvement Methods
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Leveraging layer caching&lt;/b&gt;: Introduce caching mechanisms that target only changed layers for scanning to reduce redundant processing.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Image weight reduction&lt;/b&gt;: Adopt multi-stage builds and &lt;code&gt;distroless&lt;/code&gt; images to eliminate unnecessary packages, narrowing the scope of the scan and shortening deployment time.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Example of reducing attack surface via multi-stage builds&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;golang:1.22-alpine&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; &lt;span style="color:#e6db74"&gt;builder&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WORKDIR&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/app&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; . .&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; go build -o main .&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Minimal binary placement in execution environment&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;gcr.io/distroless/static-debian12&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; --from&lt;span style="color:#f92672"&gt;=&lt;/span&gt;builder /app/main /main&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CMD&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;/main&amp;#34;&lt;/span&gt;]&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="vulnerability-database-management"&gt;Vulnerability Database Management
+&lt;/h3&gt;&lt;p&gt;The effectiveness of a scanner depends on the freshness of the database it references. Update policies must be strictly managed to ensure the latest vulnerability definitions are reflected in real-time, reducing the risk of false negatives.&lt;/p&gt;
+&lt;h2 id="3-layering-automated-security-inspection-frameworks"&gt;3. Layering Automated Security Inspection Frameworks
+&lt;/h2&gt;&lt;p&gt;To increase system reliability and accelerate root cause analysis during failures, the inspection process is structured. It is important to select tools appropriate for each phase.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Phase&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Main Inspection Items&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Examples of Automation Tools&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Implementation Timing&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Build Phase&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Vulnerabilities in source code&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;SAST tools&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Immediately after commit&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Image Creation&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;OS package/dependency vulnerabilities&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Trivy, Clair&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Upon build completion&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Deployment Verification&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Config file permissions/compliance&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;OPA, Kyverno&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Immediately before deployment&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="4-advanced-security-controls-and-scaling"&gt;4. Advanced Security Controls and Scaling
+&lt;/h2&gt;&lt;p&gt;As the scale of the organization grows, manual verification reaches its limits. Introduce the concept of Policy as Code (PaC) and aim for a scalable design.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Image signing and integrity verification&lt;/b&gt;: Use tools such as &lt;code&gt;Cosign&lt;/code&gt; or &lt;code&gt;Notary&lt;/code&gt; to restrict execution in production environments to only signed and verified images. This mitigates the risk of supply chain attacks.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Admission controller integration&lt;/b&gt;: In Kubernetes environments, use Admission Controllers to enforce policies that reject the deployment of containers that do not meet security standards at the cluster level.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Example of running a scan in a CI pipeline using Trivy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;trivy image --severity CRITICAL,HIGH --exit-code &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; my-repository/my-app:latest
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-developer-experience-and-alert-fatigue-management"&gt;5. Developer Experience and Alert Fatigue Management
+&lt;/h2&gt;&lt;p&gt;Excessive warning messages cause &amp;ldquo;alert fatigue,&amp;rdquo; leading to the erosion of security protocols. Adjustments are necessary to ensure operational sustainability.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Priority-based notifications&lt;/b&gt;: Limit low-priority warnings to log entries, and set &amp;ldquo;Fail&amp;rdquo; thresholds that stop the pipeline only for vulnerabilities directly linked to actual business risks.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Thorough secret management&lt;/b&gt;: To prevent sensitive information from being hardcoded in environment variables or configuration files during the build process, integrate with secret management tools within virtualized environments.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Rethinking cache strategies&lt;/b&gt;: 💡 If increased build time is an issue, consider moving to an incremental scanning method triggered only when image layers or dependencies change, rather than performing a full scan daily.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Ensuring visibility&lt;/b&gt;: 🛠️ By building a dashboard to track vulnerability trends in running images, it becomes possible to make data-driven decisions on the direction of future security improvements.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Log integration&lt;/b&gt;: ⚠️ It is recommended to integrate logging environments so that when a deployment error occurs, it can be quickly determined whether it is due to a functional defect or a security policy violation.&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python-Type-Hints on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/python-type-hints/</link><description>Recent content in Python-Type-Hints on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 28 May 2026 10:04:17 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/python-type-hints/index.xml" rel="self" type="application/rss+xml"/><item><title>Technical Considerations in FastAPI Architecture Design and Implementation</title><link>https://klifehack.com/en/p/fastapi-architecture-implementation-deep-dive/</link><pubDate>Thu, 28 May 2026 10:04:17 +0900</pubDate><guid>https://klifehack.com/en/p/fastapi-architecture-implementation-deep-dive/</guid><description>&lt;h1 id="technical-analysis-of-fastapi-internal-architecture-and-runtime-behavior"&gt;Technical Analysis of FastAPI Internal Architecture and Runtime Behavior
+&lt;/h1&gt;&lt;p&gt;FastAPI is a modern, high-performance web framework for building APIs based on standard Python type hints. This article provides a technical analysis of FastAPI&amp;rsquo;s internal architecture, data validation mechanisms, and asynchronous processing behavior at runtime.&lt;/p&gt;
+&lt;h2 id="1-architectural-components-and-design-philosophy"&gt;1. Architectural Components and Design Philosophy
+&lt;/h2&gt;&lt;p&gt;FastAPI achieves its functionality by integrating two independent primary libraries.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Starlette:&lt;/b&gt; Manages the foundation of the web ecosystem, including routing, middleware, and compliance with the ASGI specification.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Pydantic:&lt;/b&gt; Handles data validation, serialization, and OpenAPI schema generation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="runtime-control-via-type-hints"&gt;Runtime Control via Type Hints
+&lt;/h3&gt;&lt;p&gt;The most significant feature of FastAPI is its utilization of Python type hints not just as static analysis tools, but as runtime logic. The framework references type hints to automate the following processes:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Data Extraction:&lt;/b&gt; Determines where to retrieve values from (Path, Query, Body, or Header).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Validation:&lt;/b&gt; Applies strict verification rules based on the defined types.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Data Conversion:&lt;/b&gt; Automatically converts strings from URLs into types like &lt;b&gt;int&lt;/b&gt;, &lt;b&gt;float&lt;/b&gt;, or complex Pydantic models.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Documentation Generation:&lt;/b&gt; Reflects accurate data types and constraints in the OpenAPI schema.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For example, if a parameter is declared as an &lt;b&gt;int&lt;/b&gt; and conversion fails, FastAPI automatically returns a &lt;b&gt;422 Unprocessable Entity&lt;/b&gt;. This eliminates the need for developers to manually write validation logic.&lt;/p&gt;
+&lt;h2 id="2-execution-environment-and-lifecycle-management"&gt;2. Execution Environment and Lifecycle Management
+&lt;/h2&gt;&lt;p&gt;FastAPI provides a CLI to control different behaviors between development and production environments.&lt;/p&gt;
+&lt;h3 id="differences-in-execution-modes"&gt;Differences in Execution Modes
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Development Mode (fastapi dev):&lt;/b&gt; Auto-reload is enabled, and it binds to 127.0.0.1 by default for security reasons.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Production Mode (fastapi run):&lt;/b&gt; Auto-reload is disabled for stability, and it binds to 0.0.0.0 assuming containerization.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="considerations-in-multi-worker-environments"&gt;Considerations in Multi-worker Environments
+&lt;/h3&gt;&lt;p&gt;⚠️ When starting multiple worker processes using the &amp;ndash;workers option, each worker has an independent memory space. Therefore, in-memory global variables (such as lists or counters) are not shared between workers. If state management is required, a design utilizing an external store like Redis or a database is mandatory.&lt;/p&gt;
+&lt;h2 id="3-parameter-handling-and-the-annotated-pattern"&gt;3. Parameter Handling and the Annotated Pattern
+&lt;/h2&gt;&lt;p&gt;In FastAPI, it is recommended to use &lt;b&gt;typing.Annotated&lt;/b&gt; to separate and integrate type information and metadata.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Annotated
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI, Query
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_items&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; q: Annotated[str &lt;span style="color:#f92672"&gt;|&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, Query(max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;)] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; size: Annotated[int, Query(ge&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;q&amp;#34;&lt;/span&gt;: q, &lt;span style="color:#e6db74"&gt;&amp;#34;size&amp;#34;&lt;/span&gt;: size}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 By using &lt;b&gt;Annotated&lt;/b&gt;, you can maintain compatibility with standard Python tools while adding framework-specific constraints such as &lt;b&gt;ge=1&lt;/b&gt; (greater than or equal to 1) or &lt;b&gt;max_length&lt;/b&gt;.&lt;/p&gt;
+&lt;h2 id="4-data-modeling-with-pydantic"&gt;4. Data Modeling with Pydantic
+&lt;/h2&gt;&lt;p&gt;Pydantic models are used for processing request bodies. This allows complex JSON structures to be handled safely as Python objects.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel, ConfigDict
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ItemModel&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; id: int
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; description: str &lt;span style="color:#f92672"&gt;|&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model_config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ConfigDict(from_attributes&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;🛠️ When integrating with ORMs (such as SQLAlchemy), setting &lt;b&gt;model_config = ConfigDict(from_attributes=True)&lt;/b&gt; allows data to be read from object attributes in addition to dictionary formats.&lt;/p&gt;
+&lt;h2 id="5-asynchronous-execution-model-distinguishing-between-async-def-and-def"&gt;5. Asynchronous Execution Model: Distinguishing between async def and def
+&lt;/h2&gt;&lt;p&gt;FastAPI switches the execution thread based on how the function is defined. Understanding this behavior is critical for performance optimization.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;async def:&lt;/b&gt; Executed directly on the event loop. Only non-blocking code (processes involving await) should be written within the function.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;def:&lt;/b&gt; Executed in an external thread pool. This mechanism prevents the event loop from being blocked when synchronous blocking processes (such as time.sleep() or synchronous DB drivers) are included.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Warning:&lt;/b&gt; Calling a blocking function like time.sleep() within an &lt;b&gt;async def&lt;/b&gt; will stop the entire event loop, preventing the server from processing other requests. If blocking processes are necessary, use a standard &lt;b&gt;def&lt;/b&gt; or consider &lt;b&gt;await asyncio.sleep()&lt;/b&gt;.&lt;/p&gt;
+&lt;h2 id="6-dependency-injection"&gt;6. Dependency Injection
+&lt;/h2&gt;&lt;p&gt;FastAPI&amp;rsquo;s DI system is designed to modularize authentication, database session management, and common parameter processing.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Generator
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Depends
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_db_session&lt;/span&gt;() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; Generator:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; db &lt;span style="color:#f92672"&gt;=&lt;/span&gt; SessionLocal()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;yield&lt;/span&gt; db
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 In dependencies using &lt;b&gt;yield&lt;/b&gt;, the code up to the &lt;b&gt;yield&lt;/b&gt; is executed before request processing, and the &lt;b&gt;finally&lt;/b&gt; block is executed after the response is sent, ensuring reliable resource cleanup.&lt;/p&gt;
+&lt;h2 id="7-middleware-and-cors-configuration"&gt;7. Middleware and CORS Configuration
+&lt;/h2&gt;&lt;p&gt;Middleware, which intercepts all requests and responses, plays a vital role in security settings. In particular, CORS configuration to allow access from different domains is essential for integration with frontends.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi.middleware.cors &lt;span style="color:#f92672"&gt;import&lt;/span&gt; CORSMiddleware
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;origins &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:3000&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;add_middleware(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CORSMiddleware,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; allow_origins&lt;span style="color:#f92672"&gt;=&lt;/span&gt;origins,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; allow_credentials&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; allow_methods&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;*&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; allow_headers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;*&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="8-application-structuring-and-life-events"&gt;8. Application Structuring and Life Events
+&lt;/h2&gt;&lt;p&gt;In large-scale applications, &lt;b&gt;APIRouter&lt;/b&gt; is used to split routes and improve maintainability. Additionally, using the &lt;b&gt;lifespan&lt;/b&gt; context manager allows for defining logic that runs only once at application startup and shutdown (such as loading machine learning models or establishing DB connections).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; contextlib &lt;span style="color:#f92672"&gt;import&lt;/span&gt; asynccontextmanager
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI, APIRouter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@asynccontextmanager&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;lifespan&lt;/span&gt;(app: FastAPI):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Startup logic (e.g., connection pool initialization)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;yield&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Shutdown logic (e.g., connection pool cleanup)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI(lifespan&lt;span style="color:#f92672"&gt;=&lt;/span&gt;lifespan)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;router &lt;span style="color:#f92672"&gt;=&lt;/span&gt; APIRouter()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@router.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_users&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; [{&lt;span style="color:#e6db74"&gt;&amp;#34;username&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;user1&amp;#34;&lt;/span&gt;}]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;include_router(router)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;FastAPI integrates a robust ASGI foundation via Starlette with strict data validation via Pydantic through the intuitive interface of Python type hints. By understanding the proper use of &lt;b&gt;async def&lt;/b&gt; versus &lt;b&gt;def&lt;/b&gt;, metadata management with &lt;b&gt;Annotated&lt;/b&gt;, and resource control via &lt;b&gt;lifespan&lt;/b&gt;, it is possible to build scalable and highly maintainable API architectures.&lt;/p&gt;</description></item></channel></rss>

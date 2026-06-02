@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Npm-Security on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/npm-security/</link><description>Recent content in Npm-Security on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 30 May 2026 12:33:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/npm-security/index.xml" rel="self" type="application/rss+xml"/><item><title>npmエコシステムにおけるサプライチェーン攻撃「Mini Shai-Hulud」の技術解析</title><link>https://klifehack.com/p/npm-typosquatting-mini-shai-hulud-analysis/</link><pubDate>Sat, 30 May 2026 12:33:07 +0900</pubDate><guid>https://klifehack.com/p/npm-typosquatting-mini-shai-hulud-analysis/</guid><description>&lt;h1 id="npmサプライチェーン攻撃mini-shai-huludの解析レポートbunランタイムを悪用した高度な認証情報窃取手法"&gt;npmサプライチェーン攻撃「Mini Shai-Hulud」の解析レポート：Bunランタイムを悪用した高度な認証情報窃取手法
+&lt;/h1&gt;&lt;p&gt;2026年5月28日、npmエコシステムにおいて「Mini Shai-Hulud」と命名された高度なサプライチェーン攻撃キャンペーンが確認されました。この攻撃は、わずか4時間の間に14個の悪意のあるパッケージを配布し、クラウド環境およびCI/CDパイプラインから高価値な認証情報を即座に抽出することを目的としています。本稿では、この攻撃の技術的な実行フロー、ステルス性を高めるための進化、およびインフラエンジニアが講じるべき防御策について解析します。&lt;/p&gt;
+&lt;h2 id="1-攻撃の起点タイポスクワッティングとメタデータ偽装"&gt;1. 攻撃の起点：タイポスクワッティングとメタデータ偽装
+&lt;/h2&gt;&lt;p&gt;攻撃者は、企業環境で広く利用されているOpenSearchやElasticSearchに関連するエコシステムを標的にしました。&lt;b&gt;vpmdhaj&lt;/b&gt;という識別子の新規メンテナアカウントにより、以下の巧妙な手法が用いられました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;タイポスクワッティング&lt;/b&gt;: &lt;code&gt;opensearch-setup&lt;/code&gt;や&lt;code&gt;env-config-manager&lt;/code&gt;といった、公式のユーティリティパッケージと誤認しやすい名称を採用。開発者の入力ミスや、公式ツールであるという先入観を悪用します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;メタデータの操作&lt;/b&gt;: パッケージの&lt;code&gt;package.json&lt;/code&gt;内のリポジトリURLを、実際のOpenSearch公式GitHubリポジトリに書き換えることで、自動監査ツールや開発者の目視確認を欺く工作がなされていました。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-実行メカニズムnpmライフサイクルホックの悪用"&gt;2. 実行メカニズム：npmライフサイクルホックの悪用
+&lt;/h2&gt;&lt;p&gt;この攻撃の極めて危険な点は、開発者がパッケージを&lt;code&gt;require()&lt;/code&gt;や&lt;code&gt;import&lt;/code&gt;で明示的に呼び出す必要がないことです。攻撃コードは、npmの標準機能である&lt;code&gt;preinstall&lt;/code&gt;ホックを利用して実行されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;opensearch-setup&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;version&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;1.0.0&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;preinstall&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;node ./scripts/setup.js&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;開発者がターミナルで&lt;code&gt;npm install &amp;lt;package-name&amp;gt;&lt;/code&gt;を実行した瞬間、npmクライアントは自動的に&lt;code&gt;preinstall&lt;/code&gt;スクリプトをトリガーします。これにより、静的解析やコードレビューが行われる前に、悪意のあるペイロードがローカル環境やビルドサーバー上で即座に実行されます。&lt;/p&gt;
+&lt;h2 id="3-ステルス性の進化第2世代gen-2ステージャーの分析"&gt;3. ステルス性の進化：第2世代（Gen-2）ステージャーの分析
+&lt;/h2&gt;&lt;p&gt;「Mini Shai-Hulud」キャンペーンでは、短期間のうちに検知回避技術が進化しました。特に第2世代における「Living off the Land (LotL)」への移行は注目すべき点です。&lt;/p&gt;
+&lt;h4 id="第1世代-gen-1"&gt;第1世代 (Gen-1)
+&lt;/h4&gt;&lt;p&gt;初期のペイロードは、攻撃者のC2（Command and Control）サーバーに直接接続し、二次的なバイナリをダウンロードする形式でした。これはネットワークの外部接続監視（Egress Monitoring）によって比較的容易に検知可能です。&lt;/p&gt;
+&lt;h4 id="第2世代-gen-2-living-off-the-land-lotl"&gt;第2世代 (Gen-2): Living off the Land (LotL)
+&lt;/h4&gt;&lt;p&gt;検知を回避するため、攻撃者は正規のバイナリを悪用する手法へと移行しました。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;正規ランタイムの取得&lt;/b&gt;: スクリプトは、公式のGitHubリリースページ（&lt;code&gt;github.com/oven-sh/bun/releases/download&lt;/code&gt;）から、署名済みの正規&lt;b&gt;Bunランタイム (v1.3.13)&lt;/b&gt;を直接ダウンロードします。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ペイロードの実行&lt;/b&gt;: パッケージ内に隠蔽された約195KBの悪意のあるスクリプトを、ダウンロードした正規のBunランタイムを使用して実行します。これにより、EDR（Endpoint Detection and Response）システム上では、信頼されたバイナリによる標準的なプロセスとして処理され、異常検知をすり抜けます。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="4-標的資産とポストエクスプロイトの影響"&gt;4. 標的資産とポストエクスプロイトの影響
+&lt;/h2&gt;&lt;p&gt;実行されたペイロードは、クラウドネイティブ環境の「心臓部」を標的にスキャンを開始します。特にAWS環境とCI/CDパイプラインが主要なターゲットとなります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;AWSインフラの認証情報窃取&lt;/b&gt;:&lt;/li&gt;
+&lt;li&gt;EC2インスタンスメタデータサービス (IMDSv2) およびECSタスクメタデータへのアクセスを試行し、一時的なIAMロール情報を取得します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;16以上のAWSリージョン&lt;/b&gt;にわたり、AWS Secrets Managerを自動スキャンし、APIキー、データベース認証情報、暗号化キーを抽出します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;CI/CDパイプラインの乗っ取り&lt;/b&gt;:&lt;/li&gt;
+&lt;li&gt;実行環境がGitHub Actionsであるかを識別し、環境変数に格納された&lt;code&gt;GITHUB_TOKEN&lt;/code&gt;やその他のシークレットを標的にします。これにより、リポジトリの操作や、正規のビルド成果物へのバックドア注入が可能になります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;サプライチェーンの連鎖的侵害&lt;/b&gt;:&lt;/li&gt;
+&lt;li&gt;盗み出したnpmデプロイトークンを使用して、被害者が管理する他の正規オープンソースパッケージに不正なアップデートを公開し、被害を拡大させます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-推奨される防御策と緩和策"&gt;5. 推奨される防御策と緩和策
+&lt;/h2&gt;&lt;p&gt;このような高流動的なサプライチェーン攻撃から環境を保護するために、以下の技術的統制を推奨します。&lt;/p&gt;
+&lt;h4 id="i-スクリプトの自動実行無効化"&gt;I. スクリプトの自動実行無効化
+&lt;/h4&gt;&lt;p&gt;ライフサイクルホックの悪用を防ぐ最も効果的な手段は、インストール時のスクリプト実行を明示的に禁止することです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; npm install --ignore-scripts
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;```&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;```&lt;/span&gt;bash
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; npm config set ignore-scripts true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;```&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#### II. 認証情報の即時ローテーション&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026年5月28日以降にアクティブだったビルド環境や、不審なパッケージをインストールした形跡がある場合は、以下の情報を直ちに更新してください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* AWS IAMユーザーおよびSTS一時認証情報
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* HashiCorp Vaultアクセストークン
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* GitHub ActionsのPersonal Access Tokens &lt;span style="color:#f92672"&gt;(&lt;/span&gt;PAT&lt;span style="color:#f92672"&gt;)&lt;/span&gt; およびリポジトリシークレット
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* npmレジストリのパブリッシングトークン
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#### III. ネットワークおよびプロセスの監視強化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* &amp;lt;b&amp;gt;外部接続フィルタリング&amp;lt;/b&amp;gt;: Node.jsやpnpmプロセスから、&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;github.com&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;のリリースセクションへの予期しないバイナリダウンロードが発生していないか監視してください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* &amp;lt;b&amp;gt;プロセス監査&amp;lt;/b&amp;gt;: 環境変数 &lt;span style="color:#e6db74"&gt;`&lt;/span&gt;__DAEMONIZED&lt;span style="color:#f92672"&gt;=&lt;/span&gt;1&lt;span style="color:#e6db74"&gt;`&lt;/span&gt; を伴って初期化されたプロセスの有無を確認してください。これは「Mini Shai-Hulud」がバックグラウンドで永続化を試みる際のシグネチャの一つです。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 6. 結論&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;「Mini Shai-Hulud」は、正規のランタイムを悪用してセキュリティ製品を回避する、現代的なサプライチェーン攻撃の典型例です。サードパーティの依存関係を「デフォルトで信頼しない」ゼロトラストの原則に基づき、依存関係のロック（&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;package-lock.json&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;等の厳格な運用）とスクリプト実行の制限を徹底することが不可欠です。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## Summary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* &amp;lt;b&amp;gt;攻撃手法&amp;lt;/b&amp;gt;: タイポスクワッティング、&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;preinstall&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;ホックによる即時実行、Bunランタイムを用いたLotL攻撃。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* &amp;lt;b&amp;gt;主な標的&amp;lt;/b&amp;gt;: AWS Secrets Manager、GitHub Actionsトークン、npmデプロイトークン。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* &amp;lt;b&amp;gt;対策&amp;lt;/b&amp;gt;: &lt;span style="color:#e6db74"&gt;`&lt;/span&gt;--ignore-scripts&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;の徹底、不審なバイナリダウンロードの監視、および侵害が疑われる場合の迅速なトークンローテーション。&amp;lt;/package-name&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item></channel></rss>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux-Security on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/linux-security/</link><description>Recent content in Linux-Security on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 29 May 2026 09:40:32 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/linux-security/index.xml" rel="self" type="application/rss+xml"/><item><title>Architectural Design of Linux Process Security and System Log Analysis</title><link>https://klifehack.com/en/p/linux-process-security-log-analysis/</link><pubDate>Fri, 29 May 2026 09:40:32 +0900</pubDate><guid>https://klifehack.com/en/p/linux-process-security-log-analysis/</guid><description>&lt;h1 id="technical-considerations-for-linux-process-security-and-log-analysis-architecture"&gt;Technical Considerations for Linux Process Security and Log Analysis Architecture
+&lt;/h1&gt;&lt;p&gt;Linux security architecture extends beyond static file permissions to the control and monitoring of active process behaviors. This analysis examines process identity, isolation mechanisms, and log analysis structures required for forensic integrity.&lt;/p&gt;
+&lt;h2 id="1-definition-and-boundaries-of-process-security"&gt;1. Definition and Boundaries of Process Security
+&lt;/h2&gt;&lt;p&gt;Processes are dynamic entities residing in RAM, unlike static disk data. Conventional file permissions are insufficient against specific modern threats.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Fileless Malware&lt;/b&gt;: Memory-resident attack code that operates without leaving a disk footprint.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Remote Code Execution (RCE)&lt;/b&gt;: Exploitation of vulnerabilities in authorized programs to execute unauthorized commands.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Process security relies on three fundamental pillars: Isolation, Monitoring, and Detection.&lt;/p&gt;
+&lt;h2 id="2-process-identifiers-and-privilege-models"&gt;2. Process Identifiers and Privilege Models
+&lt;/h2&gt;&lt;p&gt;The Linux kernel utilizes specific identifiers to regulate resource access and track process lineage.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;PID (Process ID)&lt;/b&gt;: A unique system-wide identifier. The process hierarchy originates from &lt;code&gt;systemd&lt;/code&gt; (PID 1) at boot.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;PPID (Parent PID)&lt;/b&gt;: The identifier of the spawning process. Anomalous PPID relationships, such as a web server spawning a shell, serve as critical indicators of potential RCE.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;UID/GID (User/Group ID)&lt;/b&gt;: Defines the execution privileges. Adherence to the principle of least privilege requires minimizing execution under &lt;code&gt;root&lt;/code&gt; accounts.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="ruid-and-euid-separation-mechanism"&gt;RUID and EUID Separation Mechanism
+&lt;/h3&gt;&lt;p&gt;Distinguishing between RUID and EUID is critical for analyzing SUID (Set-user-ID) binaries. RUID (Real UID) identifies the process initiator, while EUID (Effective UID) determines the actual operational privileges. Attackers target this mechanism for privilege escalation, necessitating regular audits of SUID binaries.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Search for SUID binaries to identify privilege escalation risks&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -4000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-kernel-level-isolation-techniques-namespaces-and-cgroups"&gt;3. Kernel-Level Isolation Techniques: Namespaces and cgroups
+&lt;/h2&gt;&lt;p&gt;These features provide the foundation for containerization by physically isolating process environments and resource consumption.&lt;/p&gt;
+&lt;h3 id="namespaces"&gt;Namespaces
+&lt;/h3&gt;&lt;p&gt;Namespaces logically partition kernel resources, presenting isolated environments to specific processes.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Network Namespace&lt;/b&gt;: Provides independent network interfaces, IP addresses, and routing tables.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mount Namespace&lt;/b&gt;: Segregates the file system hierarchy.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;PID Namespace&lt;/b&gt;: Enables independent PID numbering, allowing a process to act as PID 1 within its isolated environment.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;User Namespace&lt;/b&gt;: Maps host-side regular users to &lt;code&gt;root&lt;/code&gt; privileges within a specific container context.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="cgroups-control-groups"&gt;cgroups (Control Groups)
+&lt;/h3&gt;&lt;p&gt;While Namespaces restrict visibility, cgroups manage resource allocation. By limiting CPU cycles, memory usage, and network bandwidth, cgroups prevent Denial of Service (DoS) conditions caused by resource exhaustion.&lt;/p&gt;
+&lt;h2 id="4-detection-methods-for-suspicious-processes"&gt;4. Detection Methods for Suspicious Processes
+&lt;/h2&gt;&lt;p&gt;Identifying abnormal behavior requires monitoring for specific indicators of compromise.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Masquerading&lt;/b&gt;: Malicious binaries using legitimate process names such as &lt;code&gt;kworker&lt;/code&gt; or &lt;code&gt;syslogd&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Abnormal Execution Paths&lt;/b&gt;: Processes executed from world-writable directories like &lt;code&gt;/tmp&lt;/code&gt;, &lt;code&gt;/dev/shm&lt;/code&gt;, or &lt;code&gt;/var/tmp&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Execution of Deleted Binaries&lt;/b&gt;: Processes persisting in memory after the source binary has been removed from the disk.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Identify suspicious binaries that have been deleted during execution&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ls -al /proc/*/exe | grep deleted
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Suspicious Network Connections&lt;/b&gt;: Identification of unknown external IP communications using tools like &lt;code&gt;ss -tulnp&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-design-of-log-analysis-architecture"&gt;5. Design of Log Analysis Architecture
+&lt;/h2&gt;&lt;p&gt;Logs must be comprehensive and immutable to ensure forensic viability during incident response.&lt;/p&gt;
+&lt;h3 id="journald-systemd-journald"&gt;journald (systemd-journald)
+&lt;/h3&gt;&lt;p&gt;The standard systemd logger stores logs in a binary format. This architecture enables high-speed indexed searches and metadata preservation compared to traditional text-based logs.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Extract error logs for a specific service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;journalctl -u sshd.service -p err
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="auditd-linux-audit-framework"&gt;auditd (Linux Audit Framework)
+&lt;/h3&gt;&lt;p&gt;The Linux Audit Framework intercepts system calls at the kernel level. This creates an audit trail that is difficult to bypass, providing high visibility into executable access and system call invocations.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Verify rules for auditing executed commands (execve system calls)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;auditctl -l
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-critical-ids-in-windows-event-logs"&gt;6. Critical IDs in Windows Event Logs
+&lt;/h2&gt;&lt;p&gt;Security monitoring in multi-platform environments requires understanding Windows event structures alongside Linux logs.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;4624&lt;/b&gt;: Successful Logon (Type 3: Network, Type 10: RDP).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;4688&lt;/b&gt;: New Process Creation (Requires activation via Group Policy).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;4732&lt;/b&gt;: Addition of a member to a security-enabled local group (Administrative changes).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="operational-notes-"&gt;Operational Notes 🛠️
+&lt;/h2&gt;&lt;p&gt;Considerations for maintaining log effectiveness and system stability in production environments.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;External Log Forwarding&lt;/b&gt;: Local logs are vulnerable to tampering if &lt;code&gt;root&lt;/code&gt; privileges are compromised. Implement TCP forwarding via &lt;code&gt;rsyslog&lt;/code&gt; or real-time SIEM integration to ensure immutability.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Time Synchronization (NTP)&lt;/b&gt;: Correlation analysis across multiple nodes requires precise timelines. Use UTC and strict NTP synchronization to prevent timeline discrepancies.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;auditd Rule Design&lt;/b&gt;: Monitoring rules must be explicitly defined for critical configuration files such as &lt;code&gt;/etc/passwd&lt;/code&gt; and &lt;code&gt;/etc/sudoers&lt;/code&gt; to provide security value.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Disk Capacity Monitoring&lt;/b&gt;: ⚠️ Misconfigured &lt;code&gt;auditd&lt;/code&gt; policies may halt the system if the disk becomes full. Implement robust log rotation and disk quota policies during the design phase.&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Security Hardening and Network Infrastructure Implementation Essentials in Linux System Administration</title><link>https://klifehack.com/en/p/linux-system-administration-security-hardening/</link><pubDate>Mon, 25 May 2026 17:49:20 +0900</pubDate><guid>https://klifehack.com/en/p/linux-system-administration-security-hardening/</guid><description>&lt;h1 id="security-hardening-and-network-availability-optimization-in-linux-system-administration"&gt;Security Hardening and Network Availability Optimization in Linux System Administration
+&lt;/h1&gt;&lt;p&gt;In Linux system operation and management, security hardening and ensuring network availability are top priorities for infrastructure engineers. From strengthening authentication mechanisms to network layer redundancy and permission management in task automation, the practical technical specifications are organized below.&lt;/p&gt;
+&lt;h2 id="1-advancing-ssh-authentication-mechanisms-implementation-of-key-based-authentication"&gt;1. Advancing SSH Authentication Mechanisms: Implementation of Key-Based Authentication
+&lt;/h2&gt;&lt;p&gt;Traditional password authentication is vulnerable to brute-force attacks and credential leaks. In contrast, key-based authentication using asymmetric encryption establishes an authentication model based on possession rather than knowledge, providing a high level of security.&lt;/p&gt;
+&lt;h3 id="11-key-pair-structure-and-authentication-workflow"&gt;1.1 Key Pair Structure and Authentication Workflow
+&lt;/h3&gt;&lt;p&gt;The private key generated on the client side must be stored securely, and only the public key is registered in the server&amp;rsquo;s ~/.ssh/authorized_keys. The authentication process is executed via a challenge/response method involving connection requests, authentication challenges, digital signature creation using the private key, and signature verification with the registered public key.&lt;/p&gt;
+&lt;h3 id="12-implementation-command-examples"&gt;1.2 Implementation Command Examples
+&lt;/h3&gt;&lt;p&gt;In Linux environments, ssh-keygen is used to generate key pairs, which are then deployed under appropriate permission settings.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-copy-id user@remote_host
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-server-security-hardening-and-auditing"&gt;2. Server Security Hardening and Auditing
+&lt;/h2&gt;&lt;p&gt;Password complexity and the selection of hashing algorithms are the foundation of system defense. Current standard specifications recommend hashing using SHA-512 ($6$). These settings are controlled through /etc/login.defs or PAM (Pluggable Authentication Modules) modules.&lt;/p&gt;
+&lt;p&gt;As part of security auditing by administrators, detecting weak passwords using tools like John the Ripper and static analysis of suspicious files using VirusTotal are effective. As an operational precaution, anti-phishing measures, such as verifying links hidden by URL shortening services like TinyURL, are also essential.&lt;/p&gt;
+&lt;h2 id="3-communication-tunneling-via-ssh-port-forwarding"&gt;3. Communication Tunneling via SSH Port Forwarding
+&lt;/h2&gt;&lt;p&gt;SSH tunneling is a technique for building another logical communication channel within an encrypted SSH session. This ensures a secure access path to ports restricted by firewalls.&lt;/p&gt;
+&lt;h3 id="31-local-port-forwarding-implementation"&gt;3.1 Local Port Forwarding Implementation
+&lt;/h3&gt;&lt;p&gt;This configuration forwards a specific port on the client side to a target host via a remote server.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh -L 8080:target_host:80 user@remote_host
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-network-infrastructure-redundancy-and-optimization"&gt;4. Network Infrastructure Redundancy and Optimization
+&lt;/h2&gt;&lt;h3 id="41-ip-aliasing-ip-binding"&gt;4.1 IP Aliasing (IP Binding)
+&lt;/h3&gt;&lt;p&gt;Assigning multiple IP addresses to a single physical NIC enables virtual hosting and other functions. In environments like CentOS, temporary assignment is possible using specific interface configuration commands.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ifconfig eth0:0 192.168.1.100 netmask 255.255.255.0 up
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-network-bonding-channel-bonding"&gt;4.2 Network Bonding (Channel Bonding)
+&lt;/h3&gt;&lt;p&gt;Multiple physical NICs are integrated into a single logical interface to ensure bandwidth expansion and fault tolerance. The main modes are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Mode 0 (balance-rr):&lt;/b&gt; Load balancing via round-robin.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mode 1 (active-backup):&lt;/b&gt; Only one NIC is active, with automatic failover to the standby system upon failure.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mode 4 (802.3ad LACP):&lt;/b&gt; Link aggregation in coordination with a switch.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-granular-permission-management-via-facl-file-access-control-lists"&gt;5. Granular Permission Management via FACL (File Access Control Lists)
+&lt;/h2&gt;&lt;p&gt;For complex permission requirements that the standard owner/group/others model cannot handle, FACL is used to grant individual permissions to specific users or groups.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;setfacl -m u:username:rwx /path/to/file
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;getfacl /path/to/file
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-task-automation-and-access-control-cron-and-at"&gt;6. Task Automation and Access Control: Cron and At
+&lt;/h2&gt;&lt;p&gt;Cron is used for periodic backups and log rotations, while at is used for one-time executions. Execution permissions for these must be strictly managed via /etc/cron.allow and /etc/cron.deny.&lt;/p&gt;
+&lt;h3 id="61-cron-configuration-specifications"&gt;6.1 Cron Configuration Specifications
+&lt;/h3&gt;&lt;p&gt;The following configuration describes settings for automatically executing jobs based on a specific schedule.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;# Execute backup script every day at 3:00 AM
+00 03 * * * /usr/local/bin/backup.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="7-log-management-and-system-observability"&gt;7. Log Management and System Observability
+&lt;/h2&gt;&lt;p&gt;Log data accumulated under /var/log/ is a lifeline for fault diagnosis. To prevent disk space exhaustion, proper generation management and compression using logrotate are essential. Additionally, real-time system monitoring using the watch command and measuring process execution time with the time command provide fundamental data for performance tuning.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion
+&lt;/h2&gt;&lt;p&gt;The core of Linux system administration lies in the thorough application of the Principle of Least Privilege through SSH key authentication and FACL, combined with achieving both network flexibility and robustness through bonding and tunneling. By appropriately combining these technical elements, a secure and highly available infrastructure foundation can be realized.&lt;/p&gt;</description></item><item><title>Implementing Process Auditing and Log Forwarding Using auditd and rsyslog</title><link>https://klifehack.com/en/p/linux-process-audit-rsyslog-implementation/</link><pubDate>Sun, 24 May 2026 10:21:24 +0900</pubDate><guid>https://klifehack.com/en/p/linux-process-audit-rsyslog-implementation/</guid><description>&lt;h1 id="building-an-audit-log-management-infrastructure-in-linux-systems-secure-system-call-monitoring-and-external-forwarding-with-auditd-and-rsyslog"&gt;Building an Audit Log Management Infrastructure in Linux Systems: Secure System Call Monitoring and External Forwarding with auditd and rsyslog
+&lt;/h1&gt;&lt;h2 id="1-challenges-and-background-in-auditing-and-log-management"&gt;1. Challenges and Background in Auditing and Log Management
+&lt;/h2&gt;&lt;p&gt;In Linux systems, monitoring process execution states and system calls is fundamental to ensuring security. However, relying solely on standard application-level log output (such as syslog) introduces several serious challenges.&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Risk of Log Tampering:&lt;/b&gt; If an attacker gains root privileges, locally stored plaintext log files (such as /var/log/auth.log) can be easily cleared or tampered with.&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Lack of System Call-Level Visibility:&lt;/b&gt; Standard syslog relies on logs self-reported by applications, making it impossible to forcibly capture system calls (such as file modification or privilege escalation) executed directly by unauthorized binaries.&lt;/p&gt;
+&lt;p&gt;To address these challenges, we define the implementation steps for an auditing infrastructure that combines auditd, which intercepts system calls at the kernel level, and rsyslog, which forwards logs externally over a highly reliable TCP connection.&lt;/p&gt;
+&lt;h2 id="2-technology-selection-and-trade-offs"&gt;2. Technology Selection and Trade-offs
+&lt;/h2&gt;&lt;p&gt;In the design of system auditing and log management, the following trade-offs were considered.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Comparison of syslog and auditd:&lt;/b&gt; syslog is suitable for recording application-layer events but cannot forcibly track process behavior. On the other hand, auditd captures system calls at the kernel boundary, preventing processes from taking evasive actions. However, depending on the rule configuration, a large volume of logs may be generated, creating a trade-off that strains disk I/O and storage capacity.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Comparison of UDP Forwarding and TCP Forwarding:&lt;/b&gt; In remote forwarding via rsyslog, UDP (@) is fast but carries a risk of packet loss. TCP (@@) is connection-oriented and performs retransmission control even during temporary network disconnections, so TCP is adopted for forwarding security audit logs.&lt;/p&gt;
+&lt;h2 id="3-implementation-steps"&gt;3. Implementation Steps
+&lt;/h2&gt;&lt;h3 id="31-installing-and-enabling-auditd"&gt;3.1 Installing and Enabling auditd
+&lt;/h3&gt;&lt;p&gt;In a Debian/Ubuntu environment, run the following commands to install auditd and enable the service.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y auditd audispd-plugins
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl enable --now auditd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-defining-audit-rules"&gt;3.2 Defining Audit Rules
+&lt;/h3&gt;&lt;p&gt;Add custom rules to /etc/audit/rules.d/audit.rules to monitor access to critical files and directories.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-w /etc/shadow -p wa -k shadow_watch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-w /etc/sudoers -p wa -k sudoers_watch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Reload the audit rules to apply the configuration.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo auigenrules --load
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="33-remote-tcp-forwarding-configuration-via-rsyslog"&gt;3.3 Remote TCP Forwarding Configuration via rsyslog
+&lt;/h3&gt;&lt;p&gt;To prevent local log tampering, add a remote forwarding rule to /etc/rsyslog.conf (or a configuration file under /etc/rsyslog.d/).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;*.* @@remote-log-server:514
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After modifying the configuration, restart the rsyslog service.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl restart rsyslog
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-operational-verification-and-log-analysis-pipeline"&gt;4. Operational Verification and Log Analysis Pipeline
+&lt;/h2&gt;&lt;h3 id="41-searching-audit-logs-ausearch"&gt;4.1 Searching Audit Logs (ausearch)
+&lt;/h3&gt;&lt;p&gt;Search for events matching the defined key (shadow_watch) and display them with numeric values converted to a human-readable format.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ausearch -k shadow_watch -i
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-detecting-deleted-executable-binaries"&gt;4.2 Detecting Deleted Executable Binaries
+&lt;/h3&gt;&lt;p&gt;💡 Identify suspicious processes that are running in memory but have been deleted from the disk.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ls -l /proc/*/exe | grep &lt;span style="color:#e6db74"&gt;&amp;#34;deleted&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="43-aggregating-ssh-brute-force-attacks"&gt;4.3 Aggregating SSH Brute-Force Attacks
+&lt;/h3&gt;&lt;p&gt;Extract IP addresses with a high number of failed login attempts from /var/log/auth.log and sort them in descending order.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;grep &lt;span style="color:#e6db74"&gt;&amp;#34;Failed password&amp;#34;&lt;/span&gt; /var/log/auth.log | awk &lt;span style="color:#e6db74"&gt;&amp;#39;{print $(NF-3)}&amp;#39;&lt;/span&gt; | sort | uniq -c | sort -nr
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-deployment-benefits"&gt;5. Deployment Benefits
+&lt;/h2&gt;&lt;p&gt;With the deployment of this configuration, the following benefits have been verified.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Improved Audit Comprehensiveness:&lt;/b&gt; Modifications to /etc/shadow and /etc/sudoers are now reliably recorded at the kernel level along with the executing user ID (auid).&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Ensured Log Integrity:&lt;/b&gt; Thanks to rsyslog&amp;rsquo;s TCP forwarding configuration, even if local logs are cleared, the event history remains traceable on the remote log server.&lt;/p&gt;</description></item></channel></rss>

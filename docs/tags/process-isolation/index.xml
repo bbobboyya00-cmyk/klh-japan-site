@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Process-Isolation on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/process-isolation/</link><description>Recent content in Process-Isolation on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 29 May 2026 09:40:32 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/process-isolation/index.xml" rel="self" type="application/rss+xml"/><item><title>Linuxプロセスセキュリティとシステムログ解析のアーキテクチャ設計</title><link>https://klifehack.com/p/linux-process-security-log-analysis/</link><pubDate>Fri, 29 May 2026 09:40:32 +0900</pubDate><guid>https://klifehack.com/p/linux-process-security-log-analysis/</guid><description>&lt;h1 id="linuxプロセスセキュリティとログ解析アーキテクチャの技術的考察"&gt;Linuxプロセスセキュリティとログ解析アーキテクチャの技術的考察
+&lt;/h1&gt;&lt;p&gt;Linuxシステムにおけるセキュリティの核心は、静的なファイル権限の管理を超え、実行中のプロセスの振る舞いをいかに制御し、監視するかにあります。本稿では、プロセスのアイデンティティ、隔離技術、およびフォレンジックに不可欠なログ解析アーキテクチャについて、実務的な観点から技術分析を行います。&lt;/p&gt;
+&lt;h2 id="1-プロセスセキュリティの定義と境界"&gt;1. プロセスセキュリティの定義と境界
+&lt;/h2&gt;&lt;p&gt;プロセスは、ディスク上の静止したデータであるファイルとは異なり、RAM上で実行されている動的な実体です。従来のファイルパーミッションだけでは、以下の脅威を防ぐことは困難です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ファイルレスマルウェア&lt;/b&gt;: ディスクに痕跡を残さず、メモリ内でのみ動作する攻撃コード。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;リモートコード実行 (RCE)&lt;/b&gt;: 認可されたプログラムの脆弱性を突き、攻撃者が意図しないコマンドを実行させる手法。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらに対抗するため、プロセスセキュリティは隔離（Isolation）、監視（Monitoring）、検知（Detection）の3つの柱で構成されます。&lt;/p&gt;
+&lt;h2 id="2-プロセスの識別子と権限モデル"&gt;2. プロセスの識別子と権限モデル
+&lt;/h2&gt;&lt;p&gt;Linuxカーネルは、各プロセスに特定の識別子を付与し、リソースへのアクセスを制御します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;PID (Process ID)&lt;/b&gt;: システム全体で一意の番号。ブート時に最初に実行される &lt;code&gt;systemd&lt;/code&gt; (PID 1) を頂点としたツリー構造を形成します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;PPID (Parent PID)&lt;/b&gt;: 親プロセスのID。例えば、Webサーバー (&lt;code&gt;nginx&lt;/code&gt;) が &lt;code&gt;/bin/bash&lt;/code&gt; を生成した場合、不自然なPPIDの関係からRCEの可能性を疑う重要な指標となります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;UID/GID (User/Group ID)&lt;/b&gt;: プロセスがどのユーザー権限で動作しているかを示します。最小権限の原則に基づき、&lt;code&gt;root&lt;/code&gt; 権限での実行を最小限に抑えることが基本です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="ruidとeuidの分離メカニズム"&gt;RUIDとEUIDの分離メカニズム
+&lt;/h3&gt;&lt;p&gt;SUID (Set-user-ID) ビットが設定されたバイナリの動作を理解するには、RUIDとEUIDの区別が不可欠です。RUID (Real UID) はプロセスを開始した実際のユーザーIDであり、EUID (Effective UID) はプロセスが実行中に実際に行使する権限を決定するIDです。攻撃者はこの仕組みを悪用して権限昇格を狙うため、システム内のSUIDバイナリの監査は必須です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# システム内のSUIDバイナリを検索し、権限昇格のリスクを特定する&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -4000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-カーネルレベルの隔離技術namespacesとcgroups"&gt;3. カーネルレベルの隔離技術：Namespacesとcgroups
+&lt;/h2&gt;&lt;p&gt;コンテナ技術の基盤でもあるこれらの機能は、プロセス間の干渉を物理的に遮断します。&lt;/p&gt;
+&lt;h3 id="namespaces-名前空間"&gt;Namespaces (名前空間)
+&lt;/h3&gt;&lt;p&gt;カーネルリソースを論理的に分割し、プロセスごとに異なるリソースセットを見せます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Network Namespace&lt;/b&gt;: 独立したネットワークインターフェース、IP、ルーティングテーブルを提供。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mount Namespace&lt;/b&gt;: ファイルシステム階層を隔離。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;PID Namespace&lt;/b&gt;: コンテナ内のプロセスに独自のPID 1を割り当て。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;User Namespace&lt;/b&gt;: ホスト側の一般ユーザーを、コンテナ内でのみ &lt;code&gt;root&lt;/code&gt; として扱うことが可能。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="cgroups-control-groups"&gt;cgroups (Control Groups)
+&lt;/h3&gt;&lt;p&gt;Namespacesが「何が見えるか」を制御するのに対し、cgroupsは「どれだけ使えるか」を制御します。CPU使用率、メモリ量、ネットワーク帯域を制限することで、特定のプロセスによるリソース枯渇（DoS状態）を防止します。&lt;/p&gt;
+&lt;h2 id="4-不審なプロセスの検知手法"&gt;4. 不審なプロセスの検知手法
+&lt;/h2&gt;&lt;p&gt;異常な挙動を示すプロセスを特定するためのチェックリストを以下に示します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;マスカレード&lt;/b&gt;: &lt;code&gt;kworker&lt;/code&gt; や &lt;code&gt;syslogd&lt;/code&gt; といった正規のプロセス名に偽装したバイナリ。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;異常な実行パス&lt;/b&gt;: &lt;code&gt;/tmp&lt;/code&gt;, &lt;code&gt;/dev/shm&lt;/code&gt;, &lt;code&gt;/var/tmp&lt;/code&gt; といった書き込み権限の広いディレクトリから実行されているプロセス。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;削除済みバイナリの実行&lt;/b&gt;: ディスク上から削除された後もメモリ上で動作し続けているプロセス。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 実行中に削除された不審なバイナリを特定する&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ls -al /proc/*/exe | grep deleted
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;不審なネットワーク接続&lt;/b&gt;: &lt;code&gt;ss -tulnp&lt;/code&gt; を使用し、未知の外部IPアドレスと通信しているプロセスを特定します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-ログ解析アーキテクチャの設計"&gt;5. ログ解析アーキテクチャの設計
+&lt;/h2&gt;&lt;p&gt;インシデント発生時のブラックボックス化を防ぐため、ログには網羅性と不変性が求められます。&lt;/p&gt;
+&lt;h3 id="journald-systemd-journald"&gt;journald (systemd-journald)
+&lt;/h3&gt;&lt;p&gt;モダンなLinuxの標準ロガーであり、バイナリ形式でログを保存します。テキストベースのログよりも高速なインデックス検索が可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のサービスにおけるエラーログを抽出&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;journalctl -u sshd.service -p err
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="auditd-linux-audit-framework"&gt;auditd (Linux Audit Framework)
+&lt;/h3&gt;&lt;p&gt;auditdはカーネルレベルでシステムコールをインターセプトします。これにより、攻撃者がログ出力を抑制しようとしても回避困難な記録を残せます。💡 実行ファイルへのアクセスやシステムコールの監視に極めて有効です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 実行されたすべてのコマンド（execveシステムコール）を監査するルールの確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;auditctl -l
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-windowsイベントログの重要id"&gt;6. Windowsイベントログの重要ID
+&lt;/h2&gt;&lt;p&gt;マルチプラットフォーム環境では、Windowsのイベントログ構造の理解も不可欠です。特に以下のEvent IDはセキュリティ監視の要となります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;4624&lt;/b&gt;: ログオン成功（Logon Type 3はネットワーク、10はRDPを指す）。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;4688&lt;/b&gt;: 新しいプロセスの作成（デフォルトでは無効なため、グループポリシーでの有効化が必要）。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;4732&lt;/b&gt;: 管理者グループへのメンバー追加。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="operational-notes-"&gt;Operational Notes 🛠️
+&lt;/h2&gt;&lt;p&gt;実務運用において、ログの有効性を担保するための留意事項をまとめます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;ログの外部転送&lt;/b&gt;: 攻撃者が &lt;code&gt;root&lt;/code&gt; 権限を奪取した場合、ローカルログは即座に改ざん・消去されます。&lt;code&gt;rsyslog&lt;/code&gt; のTCP転送やSIEMへのリアルタイム転送を構成し、ログの不変性を確保してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;時刻同期 (NTP)&lt;/b&gt;: 複数サーバー間のログを相関分析する際、1秒のズレがタイムラインの再構築を不可能にします。全ノードでUTC設定と厳密な時刻同期を行ってください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;auditdのルール設計&lt;/b&gt;: ルールを定義しない &lt;code&gt;auditd&lt;/code&gt; は、セキュリティ上の価値がほとんどありません。重要な設定ファイル（&lt;code&gt;/etc/passwd&lt;/code&gt;, &lt;code&gt;/etc/sudoers&lt;/code&gt;）や実行バイナリに対する監視ルールを明示的に設定してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ディスク容量の監視&lt;/b&gt;: ⚠️ &lt;code&gt;auditd&lt;/code&gt; はディスクが満杯になった際、設定によってはシステムを停止（Halt）させることがあります。ログローテーションポリシーとディスククォータの設計を事前に行う必要があります。&lt;/li&gt;
+&lt;/ol&gt;</description></item></channel></rss>

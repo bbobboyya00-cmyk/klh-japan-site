@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Github-Copilot-Cli on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/github-copilot-cli/</link><description>Recent content in Github-Copilot-Cli on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 24 May 2026 03:10:20 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/github-copilot-cli/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub Copilot CLIにおけるエージェント構成とeverything-copilot-cliの導入</title><link>https://klifehack.com/p/github-copilot-cli-agent-implementation/</link><pubDate>Sun, 24 May 2026 03:10:20 +0900</pubDate><guid>https://klifehack.com/p/github-copilot-cli-agent-implementation/</guid><description>&lt;h1 id="github-copilot-cliとeverything-copilot-cliによるマルチaiオーケストレーションの構築"&gt;GitHub Copilot CLIとeverything-copilot-cliによるマルチAIオーケストレーションの構築
+&lt;/h1&gt;&lt;p&gt;GitHub Copilot CLIは、IDE上のコード補完を超え、自律的なタスク実行を可能にするエージェント指向のワークフローを提供します。本稿では、オープンソースの構成システムであるeverything-copilot-cliを用いた、プロフェッショナルグレードのマルチAIオーケストレーションの構築手順について記述します。&lt;/p&gt;
+&lt;h2 id="1-動作環境の整備"&gt;1. 動作環境の整備
+&lt;/h2&gt;&lt;p&gt;高度なエージェントシステムを実装する前に、以下の環境を構築する必要があります。🛠️ 実行環境の整合性は、エージェントの動作安定性に直結します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Runtime&lt;/b&gt;: Node.js 18以上&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Subscription&lt;/b&gt;: GitHub Copilot (Individual, Business, または Enterprise)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Shell&lt;/b&gt;: PowerShell 7+ または Bash&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="cliのインストールと認証"&gt;CLIのインストールと認証
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install -g @github/copilot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;インストール後、バージョンを確認し、認証コマンドを実行してGitHubアカウントと連携します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;copilot --version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 認証の実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;copilot /login
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-everything-copilot-cli-フレームワークの導入"&gt;2. everything-copilot-cli フレームワークの導入
+&lt;/h2&gt;&lt;p&gt;everything-copilot-cliは、チーム規模でのデプロイメントや複雑なプロジェクト管理に適したリファレンスアーキテクチャを提供します。これには、8つの専門エージェント定義と30以上のスキルモジュールが含まれます。&lt;/p&gt;
+&lt;h3 id="セットアップ手順"&gt;セットアップ手順
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/drvoss/everything-copilot-cli.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd everything-copilot-cli
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm run setup
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;構成の整合性を確認するために、以下のバリデーションを実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm run validate
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm test
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-エージェントシステムの構成"&gt;3. エージェントシステムの構成
+&lt;/h2&gt;&lt;p&gt;本フレームワークでは、YAMLフロントマターとMarkdownを使用してエージェントを定義します。各エージェントは特定の役割に特化し、最適なモデルが割り当てられます。&lt;/p&gt;
+&lt;h3 id="定義済みエージェントと使用モデル2026年5月時点"&gt;定義済みエージェントと使用モデル（2026年5月時点）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;planner / architect / code-reviewer&lt;/b&gt;: 複雑な推論と設計を担う。 (Model: &lt;code&gt;claude-sonnet-4.6&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;tdd-guide / build-error-resolver&lt;/b&gt;: テスト駆動開発およびデバッグ。 (Model: &lt;code&gt;gpt-5-mini&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;doc-updater&lt;/b&gt;: ドキュメントの同期。 (Model: &lt;code&gt;claude-haiku-4.5&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="モデル選択戦略"&gt;モデル選択戦略
+&lt;/h3&gt;&lt;p&gt;セッション中に &lt;code&gt;/model&lt;/code&gt; コマンドを使用して、タスクの複雑度に応じたモデルの切り替えが可能です。💡 &lt;b&gt;Premium Tier&lt;/b&gt;はアーキテクチャ設計やセキュリティ監査に、&lt;b&gt;Economy Tier&lt;/b&gt;はコード探索や反復的なタスクに割り当てることで、リソースを最適化します。&lt;/p&gt;
+&lt;h2 id="4-スキルモジュールとカスタムワークフロー"&gt;4. スキルモジュールとカスタムワークフロー
+&lt;/h2&gt;&lt;p&gt;スキルは、特定のキーワード（triggers）によってアクティブ化される再利用可能なワークフローです。&lt;/p&gt;
+&lt;h3 id="convention-check-スキルの定義例"&gt;convention-check スキルの定義例
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;convention-check&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PR前にチームの規約を確認する&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;category&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;development&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;triggers&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#39;check conventions&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;verify code style&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;requires_tools&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#39;grep&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;powershell&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;glob&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;このスキルは、&lt;code&gt;console.log&lt;/code&gt;の残存確認、関数行数の制限超過、未完了の&lt;code&gt;TODO&lt;/code&gt;コメントの抽出を自動化します。&lt;/p&gt;
+&lt;h2 id="5-マルチaiオーケストレーションのパターン"&gt;5. マルチAIオーケストレーションのパターン
+&lt;/h2&gt;&lt;p&gt;Copilot CLIをハブとして、他のAIモデル（Claude Code, Gemini等）と連携させるためのパターンを実装します。&lt;/p&gt;
+&lt;h3 id="powershellによるパイプライン実装例"&gt;PowerShellによるパイプライン実装例
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# review-pipeline.ps1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;param&lt;/span&gt;([&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;]$Target = &lt;span style="color:#e6db74"&gt;&amp;#39;src/&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$workdir = &lt;span style="color:#e6db74"&gt;&amp;#34;.pipeline/&lt;/span&gt;$(Get-Date -Format &lt;span style="color:#e6db74"&gt;&amp;#39;yyyyMMdd-HHmmss&amp;#39;&lt;/span&gt;)&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;New-Item -ItemType Directory -Force -Path $workdir
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Stage 1: Claude Codeによる解析&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx @anthropic-ai/claude-code --print &lt;span style="color:#e6db74"&gt;&amp;#34;Analyze &lt;/span&gt;$Target&lt;span style="color:#e6db74"&gt; for bugs&amp;#34;&lt;/span&gt; &amp;amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$workdir&lt;span style="color:#e6db74"&gt;/01-analysis.json&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Stage 2: セキュリティ監査&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$analysis = Get-Content &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$workdir&lt;span style="color:#e6db74"&gt;/01-analysis.json&amp;#34;&lt;/span&gt; -Raw
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx @anthropic-ai/claude-code --print &lt;span style="color:#e6db74"&gt;&amp;#34;Security audit based on: &lt;/span&gt;$analysis&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &amp;amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$workdir&lt;span style="color:#e6db74"&gt;/02-security.json&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-プロジェクト固有の設定githubcopilot-instructionsmd"&gt;6. プロジェクト固有の設定：.github/copilot-instructions.md
+&lt;/h2&gt;&lt;p&gt;プロジェクトルートに &lt;code&gt;.github/copilot-instructions.md&lt;/code&gt; を配置することで、Copilot CLIの振る舞いを規定します。ここには、使用する技術スタック、アーキテクチャの規約、テスト要件（例：カバレッジ80%以上）を明記します。&lt;/p&gt;
+&lt;p&gt;これにより、エージェントはプロジェクトのコンテキストを正確に把握し、一貫性のあるコード生成とレビューを実行可能になります。⚠️ 規約の不一致はデプロイメントエラーの原因となるため、厳格な定義が推奨されます。&lt;/p&gt;</description></item></channel></rss>

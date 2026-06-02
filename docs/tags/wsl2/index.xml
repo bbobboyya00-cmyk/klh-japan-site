@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Wsl2 on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/wsl2/</link><description>Recent content in Wsl2 on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 21 May 2026 17:44:15 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/wsl2/index.xml" rel="self" type="application/rss+xml"/><item><title>Windows 11 ProとWSL2環境におけるImmichサーバー構築とTailscaleによるセキュアな外部アクセス実装</title><link>https://klifehack.com/p/immich-windows-tailscale-upload-optimization/</link><pubDate>Thu, 21 May 2026 17:44:15 +0900</pubDate><guid>https://klifehack.com/p/immich-windows-tailscale-upload-optimization/</guid><description>&lt;h1 id="wsl2およびdocker-desktop環境におけるimmichの構築とtailscaleによるセキュアな外部アクセスの確立"&gt;WSL2およびDocker Desktop環境におけるImmichの構築とTailscaleによるセキュアな外部アクセスの確立
+&lt;/h1&gt;&lt;p&gt;Windows 11 Pro環境でImmichを運用するためには、Linuxネイティブなバイナリを実行するための&lt;b&gt;&lt;mark&gt;WSL2&lt;/mark&gt;&lt;/b&gt;バックエンドが必須となります。まず、Windowsの機能の有効化から「Linux用Windowsサブシステム」および「仮想マシンプラットフォーム」を有効にします。再起動後、Docker Desktopをインストールしますが、この際「Use WSL 2 instead of Hyper-V」のオプションを必ず選択してください。&lt;/p&gt;
+&lt;p&gt;WSLのバージョンが古い場合、Dockerエンジンの起動に失敗するケースがあります。その際は、管理者権限のコマンドプロンプトから以下のコマンドを実行し、サブシステムを最新の状態に同期させます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wsl --update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wsl --shutdown
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;これにより、2026年現在の最新カーネルが適用され、Immichのマイクロサービス群が要求するシステムコールとの互換性が確保されます。&lt;/p&gt;
+&lt;h2 id="tailscaleを用いたメッシュvpnによる外部アクセス経路の確立"&gt;Tailscaleを用いたメッシュVPNによる外部アクセス経路の確立
+&lt;/h2&gt;&lt;p&gt;ポート開放や動的DNSの設定を回避し、セキュアなリモートアクセスを実現するために&lt;b&gt;&lt;mark&gt;Tailscale&lt;/mark&gt;&lt;/b&gt;を導入します。TailscaleはWireGuardプロトコルをベースとしたメッシュVPNであり、キャリアグレードNAT（CGNAT）環境下でも安定した通信を可能にします。&lt;/p&gt;
+&lt;p&gt;🛠️ 構築手順：まずMini PC（サーバー側）にTailscaleをインストールし、認証を完了させます。次にTailscale管理コンソールから、当該デバイスに割り当てられた固定IP（例: 100.x.x.x）を確認します。モバイルデバイス（iOS/Android）にもTailscaleを導入し、同一アカウントでログインすることで、物理的なネットワーク構成に依存しないプライベートな通信路が確立されます。&lt;/p&gt;
+&lt;p&gt;この構成により、外出先からでもサーバーのローカルIPを指定するだけで、写真のバックアップと閲覧が可能になります。&lt;/p&gt;
+&lt;h2 id="docker-composeによるimmichスタックのデプロイと環境変数定義"&gt;Docker ComposeによるImmichスタックのデプロイと環境変数定義
+&lt;/h2&gt;&lt;p&gt;Immichのデプロイには、保守性と再現性を担保するためにDocker Composeを利用します。まず、&lt;code&gt;C:\immich-server&lt;/code&gt;ディレクトリを作成し、その配下にメディア保存用の&lt;code&gt;library&lt;/code&gt;フォルダを配置します。設定ファイルである&lt;code&gt;.env&lt;/code&gt;および&lt;code&gt;docker-compose.yml&lt;/code&gt;の構成を定義します。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;.env&lt;/code&gt;ファイル内でのパス指定は、Dockerのボリュームマウント仕様に基づき、Windows形式ではなくスラッシュを用いた形式で記述する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;UPLOAD_LOCATION=C:/immich-server/library
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DB_PASSWORD=your_secure_password
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;TZ=Asia/Tokyo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;次に、&lt;code&gt;docker compose up -d&lt;/code&gt;を実行してコンテナ群を起動します。初期起動時にはPostgreSQLの拡張機能である&lt;code&gt;pgvecto-rs&lt;/code&gt;の初期化が行われるため、CPU負荷が一時的に上昇しますが、N100プロセッサの4コア環境であれば数分で安定状態に移行します。&lt;/p&gt;
+&lt;h2 id="immich-upload-optimizerによるストレージ容量の動的制御"&gt;Immich Upload Optimizerによるストレージ容量の動的制御
+&lt;/h2&gt;&lt;p&gt;1TBのNVMe SSDを効率的に運用するため、アップロードされるメディアのファイルサイズを制限する&lt;b&gt;&lt;mark&gt;Immich Upload Optimizer&lt;/mark&gt;&lt;/b&gt;をプロキシとして導入します。このサービスは、クライアントからのリクエストをインターセプトし、指定された閾値を超えるファイルを圧縮してからImmichサーバーへ転送します。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt;に以下のサービス定義を追加し、ポート2283をこのプロキシが占有するように構成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;immich-upload-optimizer&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ghcr.io/miguelangel-nubla/immich-upload-optimizer:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;2283:2283&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;IUO_UPSTREAM=http://immich-server:2283&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;IUO_TASKS_IMAGE_MAX_SIZE=4MB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;IUO_TASKS_VIDEO_MAX_SIZE=40MB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;depends_on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;immich-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;restart&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;always&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 この設定により、画像は4MB、動画は40MBを超える場合に自動的に最適化処理が実行され、ストレージの枯渇を遅延させることが可能です。&lt;/p&gt;
+&lt;h2 id="envファイルの構文エラーおよびdockerイメージ取得失敗のトラブルシューティング"&gt;.envファイルの構文エラーおよびDockerイメージ取得失敗のトラブルシューティング
+&lt;/h2&gt;&lt;p&gt;⚠️ 構築過程で発生しやすいエラーとして、&lt;code&gt;.env&lt;/code&gt;ファイル内の構文不備があります。特に「key cannot contain a space」というエラーは、変数名の前後に不可視のスペースや全角スペースが混入している場合に発生します。すべての行が&lt;code&gt;KEY=VALUE&lt;/code&gt;の形式であり、コメントアウトが同一行に存在しないことを確認してください。&lt;/p&gt;
+&lt;p&gt;また、RedisやPostgreSQLのイメージ取得に失敗する場合は、ネットワークのDNS設定を確認するか、特定のタグを明示的に指定、あるいは以下のコマンドでイメージの強制再取得を試行してください。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose pull
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="モバイルクライアントの統合とバックグラウンド同期の最適化"&gt;モバイルクライアントの統合とバックグラウンド同期の最適化
+&lt;/h2&gt;&lt;p&gt;サーバー側の準備が整った後、各スマートフォンのImmichアプリを設定します。サーバーURLにはTailscaleで割り当てられたIPアドレス（例: &lt;code&gt;http://100.64.0.5:2283&lt;/code&gt;）を入力します。この際、Upload Optimizerのポートを指定することが重要です。&lt;/p&gt;
+&lt;p&gt;バックグラウンド同期を安定させるため、アプリの設定から「Background Backup」を有効にし、OS側のバッテリー最適化設定からImmichを除外します。これにより、Wi-Fi接続時に自動的に写真がサーバーへ転送される「セット・アンド・フォーゲット」の環境が完成します。&lt;/p&gt;
+&lt;h2 id="システムの可搬性とディザスタリカバリの検証"&gt;システムの可搬性とディザスタリカバリの検証
+&lt;/h2&gt;&lt;p&gt;本構成の最大の利点は、&lt;code&gt;C:\immich-server&lt;/code&gt;ディレクトリを丸ごとバックアップするだけで、システム全体の移行が可能である点です。新しいハードウェアに移行する場合、Docker DesktopとTailscaleをインストールした後、当該ディレクトリをコピーして&lt;code&gt;docker compose up -d&lt;/code&gt;を実行するだけで、ユーザーアカウント、メタデータ、既存の写真データがすべて復元されます。このポータビリティにより、ハードウェアの故障やアップグレード時にも最小限のダウンタイムで運用を継続できます。&lt;/p&gt;</description></item></channel></rss>

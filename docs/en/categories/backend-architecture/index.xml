@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 29 May 2026 12:40:32 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Design of Asynchronous Task Processing Infrastructure in AI Studio: Scalable Educational Content Generation Architecture with Celery and Redis</title><link>https://klifehack.com/en/p/classkit-ai-studio-celery-redis-architecture/</link><pubDate>Fri, 29 May 2026 12:40:32 +0900</pubDate><guid>https://klifehack.com/en/p/classkit-ai-studio-celery-redis-architecture/</guid><description>&lt;h2 id="1-design-philosophy-and-technical-background-of-ai-studio"&gt;1. Design Philosophy and Technical Background of AI Studio
+&lt;/h2&gt;&lt;p&gt;ClassKit AI Studio is an integrated environment that generates slides, AI voices, and interactive learning content based on text and lecture outlines provided by instructors. While the initial roadmap aimed for &amp;ldquo;100% full automation,&amp;rdquo; prototype validation revealed two major constraints: exponential increases in external API costs and a decrease in immersion due to a lack of educational context.&lt;/p&gt;
+&lt;p&gt;To address these challenges, the architecture was pivoted to a &amp;ldquo;Smart Assembly&amp;rdquo; model, defining AI not as a sole creator but as an assistant responsible for advanced scaffolding. This simultaneously achieves infrastructure cost optimization and improved educational quality.&lt;/p&gt;
+&lt;h2 id="2-overview-of-asynchronous-processing-architecture"&gt;2. Overview of Asynchronous Processing Architecture
+&lt;/h2&gt;&lt;p&gt;Processes such as AI-based speech synthesis and image generation require computation times ranging from several seconds to about a minute per request. Processing these heavy tasks synchronously on the main FastAPI server would degrade overall system latency and fatally impact availability. To eliminate this risk, the following distributed asynchronous processing stack is employed:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;API Layer (FastAPI)&lt;/b&gt;: Receives user requests and immediately returns a Task ID (receipt number).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Message Broker (Redis)&lt;/b&gt;: Manages the task queue and decouples communication between the API server and workers.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Worker Pool (Celery)&lt;/b&gt;: Fetches tasks from Redis and executes the actual AI processing in the background.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# tasks.py (Celery Worker Implementation)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; celery &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Celery
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; time &lt;span style="color:#f92672"&gt;import&lt;/span&gt; sleep
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Celery(&lt;span style="color:#e6db74"&gt;&amp;#39;ai_studio&amp;#39;&lt;/span&gt;, broker&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;redis://localhost:6379/0&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.task&lt;/span&gt;(bind&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, max_retries&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;generate_ai_narration&lt;/span&gt;(self, text, voice_id):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Simulation of request to external API&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; call_external_tts_api(text, voice_id)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; result
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Exception&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; exc:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Retry logic with exponential backoff&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 2^retry_count * delay&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;retry(exc&lt;span style="color:#f92672"&gt;=&lt;/span&gt;exc, countdown&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; &lt;span style="color:#f92672"&gt;**&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;request&lt;span style="color:#f92672"&gt;.&lt;/span&gt;retries)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-ensuring-fault-tolerance-with-exponential-backoff"&gt;3. Ensuring Fault Tolerance with Exponential Backoff
+&lt;/h2&gt;&lt;p&gt;To handle external API instability and network timeouts, an exponential backoff algorithm is implemented instead of simple retries. This prevents requests from concentrating in a short period during external server congestion, ensuring opportunities for recovery.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Retry Strategy&lt;/b&gt;: Doubles the wait time after each failure (e.g., 2s, 4s, 8s).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Benefits&lt;/b&gt;: Resolves errors caused by temporary bottlenecks without the user being aware, maintaining overall infrastructure stability.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-component-management-utilizing-postgresql-jsonb"&gt;4. Component Management Utilizing PostgreSQL jsonb
+&lt;/h2&gt;&lt;p&gt;AI Studio provides 11 types of interactive learning components. To avoid frequent schema changes, these are stored in a single table using the PostgreSQL &lt;b&gt;jsonb&lt;/b&gt; type. This allows for expansion without database downtime when adding new learning formats.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Component Name&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Technical Role&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;REVIEW&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Summary card generation for the previous section&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;QUIZ&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Multiple-choice/short-answer quizzes with auto-grading&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;ROLEPLAY&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Virtual conversation simulation of business scenarios by AI&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;SHADOWING&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Pronunciation training via voice waveform analysis&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;PRONUNCIATION&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;AI analysis and feedback on user-recorded data&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; learning_components (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; id UUID &lt;span style="color:#66d9ef"&gt;PRIMARY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; slide_id UUID &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; slides(id),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; component_type VARCHAR(&lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; payload JSONB, &lt;span style="color:#75715e"&gt;-- Stores configuration values unique to each component
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; created_at &lt;span style="color:#66d9ef"&gt;TIMESTAMP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;WITH&lt;/span&gt; TIME &lt;span style="color:#66d9ef"&gt;ZONE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CURRENT_TIMESTAMP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-cost-performance-optimization-strategy"&gt;5. Cost-Performance Optimization Strategy
+&lt;/h2&gt;&lt;p&gt;To maintain a sustainable fee structure for instructors, the following optimizations were implemented on the infrastructure side.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Engine Selection&lt;/b&gt;: Instead of using the most expensive API by default, comparative analysis was conducted to identify the &amp;ldquo;sweet spot&amp;rdquo; balancing quality and unit price.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Simulation&lt;/b&gt;: Final decisions on API integration were made based on virtual billing simulations and traffic forecasts. This minimizes overhead while maximizing the quality of generated assets.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="6-future-challenges-and-roadmap"&gt;6. Future Challenges and Roadmap
+&lt;/h2&gt;&lt;p&gt;While the current AI Studio ensures backend robustness, the frontend logic has become bloated as the UI grows more complex. Specifically, modules exceeding 700 lines of script exist, making refactoring for improved maintainability an urgent task.&lt;/p&gt;
+&lt;p&gt;Additionally, solving issues stemming from browser security protocols, such as the authentication cookie loss bug (logout failure) that occurred during custom domain implementation, is a goal for the next phase.&lt;/p&gt;
+&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Asynchronous Decoupling&lt;/b&gt;: Separation of FastAPI and Celery/Redis maintains low latency of under 0.1 seconds even during heavy AI processing.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Smart Assembly&lt;/b&gt;: Transition from full automation to an AI-guided assembly method balances educational quality and cost efficiency.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Flexible Data Design&lt;/b&gt;: Adoption of &lt;b&gt;jsonb&lt;/b&gt; allows for the expansion of 11 diverse learning components without schema changes.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Resilience&lt;/b&gt;: Implementation of exponential backoff improves system robustness against unstable external API behavior.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Technical Considerations in FastAPI Architecture Design and Implementation</title><link>https://klifehack.com/en/p/fastapi-architecture-implementation-deep-dive/</link><pubDate>Thu, 28 May 2026 10:04:17 +0900</pubDate><guid>https://klifehack.com/en/p/fastapi-architecture-implementation-deep-dive/</guid><description>&lt;h1 id="technical-analysis-of-fastapi-internal-architecture-and-runtime-behavior"&gt;Technical Analysis of FastAPI Internal Architecture and Runtime Behavior
+&lt;/h1&gt;&lt;p&gt;FastAPI is a modern, high-performance web framework for building APIs based on standard Python type hints. This article provides a technical analysis of FastAPI&amp;rsquo;s internal architecture, data validation mechanisms, and asynchronous processing behavior at runtime.&lt;/p&gt;
+&lt;h2 id="1-architectural-components-and-design-philosophy"&gt;1. Architectural Components and Design Philosophy
+&lt;/h2&gt;&lt;p&gt;FastAPI achieves its functionality by integrating two independent primary libraries.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Starlette:&lt;/b&gt; Manages the foundation of the web ecosystem, including routing, middleware, and compliance with the ASGI specification.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Pydantic:&lt;/b&gt; Handles data validation, serialization, and OpenAPI schema generation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="runtime-control-via-type-hints"&gt;Runtime Control via Type Hints
+&lt;/h3&gt;&lt;p&gt;The most significant feature of FastAPI is its utilization of Python type hints not just as static analysis tools, but as runtime logic. The framework references type hints to automate the following processes:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Data Extraction:&lt;/b&gt; Determines where to retrieve values from (Path, Query, Body, or Header).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Validation:&lt;/b&gt; Applies strict verification rules based on the defined types.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Data Conversion:&lt;/b&gt; Automatically converts strings from URLs into types like &lt;b&gt;int&lt;/b&gt;, &lt;b&gt;float&lt;/b&gt;, or complex Pydantic models.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Documentation Generation:&lt;/b&gt; Reflects accurate data types and constraints in the OpenAPI schema.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For example, if a parameter is declared as an &lt;b&gt;int&lt;/b&gt; and conversion fails, FastAPI automatically returns a &lt;b&gt;422 Unprocessable Entity&lt;/b&gt;. This eliminates the need for developers to manually write validation logic.&lt;/p&gt;
+&lt;h2 id="2-execution-environment-and-lifecycle-management"&gt;2. Execution Environment and Lifecycle Management
+&lt;/h2&gt;&lt;p&gt;FastAPI provides a CLI to control different behaviors between development and production environments.&lt;/p&gt;
+&lt;h3 id="differences-in-execution-modes"&gt;Differences in Execution Modes
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Development Mode (fastapi dev):&lt;/b&gt; Auto-reload is enabled, and it binds to 127.0.0.1 by default for security reasons.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Production Mode (fastapi run):&lt;/b&gt; Auto-reload is disabled for stability, and it binds to 0.0.0.0 assuming containerization.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="considerations-in-multi-worker-environments"&gt;Considerations in Multi-worker Environments
+&lt;/h3&gt;&lt;p&gt;⚠️ When starting multiple worker processes using the &amp;ndash;workers option, each worker has an independent memory space. Therefore, in-memory global variables (such as lists or counters) are not shared between workers. If state management is required, a design utilizing an external store like Redis or a database is mandatory.&lt;/p&gt;
+&lt;h2 id="3-parameter-handling-and-the-annotated-pattern"&gt;3. Parameter Handling and the Annotated Pattern
+&lt;/h2&gt;&lt;p&gt;In FastAPI, it is recommended to use &lt;b&gt;typing.Annotated&lt;/b&gt; to separate and integrate type information and metadata.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Annotated
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI, Query
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_items&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; q: Annotated[str &lt;span style="color:#f92672"&gt;|&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, Query(max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;)] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; size: Annotated[int, Query(ge&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;q&amp;#34;&lt;/span&gt;: q, &lt;span style="color:#e6db74"&gt;&amp;#34;size&amp;#34;&lt;/span&gt;: size}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 By using &lt;b&gt;Annotated&lt;/b&gt;, you can maintain compatibility with standard Python tools while adding framework-specific constraints such as &lt;b&gt;ge=1&lt;/b&gt; (greater than or equal to 1) or &lt;b&gt;max_length&lt;/b&gt;.&lt;/p&gt;
+&lt;h2 id="4-data-modeling-with-pydantic"&gt;4. Data Modeling with Pydantic
+&lt;/h2&gt;&lt;p&gt;Pydantic models are used for processing request bodies. This allows complex JSON structures to be handled safely as Python objects.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel, ConfigDict
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ItemModel&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; id: int
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; description: str &lt;span style="color:#f92672"&gt;|&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model_config &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ConfigDict(from_attributes&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;🛠️ When integrating with ORMs (such as SQLAlchemy), setting &lt;b&gt;model_config = ConfigDict(from_attributes=True)&lt;/b&gt; allows data to be read from object attributes in addition to dictionary formats.&lt;/p&gt;
+&lt;h2 id="5-asynchronous-execution-model-distinguishing-between-async-def-and-def"&gt;5. Asynchronous Execution Model: Distinguishing between async def and def
+&lt;/h2&gt;&lt;p&gt;FastAPI switches the execution thread based on how the function is defined. Understanding this behavior is critical for performance optimization.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;async def:&lt;/b&gt; Executed directly on the event loop. Only non-blocking code (processes involving await) should be written within the function.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;def:&lt;/b&gt; Executed in an external thread pool. This mechanism prevents the event loop from being blocked when synchronous blocking processes (such as time.sleep() or synchronous DB drivers) are included.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Warning:&lt;/b&gt; Calling a blocking function like time.sleep() within an &lt;b&gt;async def&lt;/b&gt; will stop the entire event loop, preventing the server from processing other requests. If blocking processes are necessary, use a standard &lt;b&gt;def&lt;/b&gt; or consider &lt;b&gt;await asyncio.sleep()&lt;/b&gt;.&lt;/p&gt;
+&lt;h2 id="6-dependency-injection"&gt;6. Dependency Injection
+&lt;/h2&gt;&lt;p&gt;FastAPI&amp;rsquo;s DI system is designed to modularize authentication, database session management, and common parameter processing.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Generator
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Depends
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_db_session&lt;/span&gt;() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; Generator:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; db &lt;span style="color:#f92672"&gt;=&lt;/span&gt; SessionLocal()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;yield&lt;/span&gt; db
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 In dependencies using &lt;b&gt;yield&lt;/b&gt;, the code up to the &lt;b&gt;yield&lt;/b&gt; is executed before request processing, and the &lt;b&gt;finally&lt;/b&gt; block is executed after the response is sent, ensuring reliable resource cleanup.&lt;/p&gt;
+&lt;h2 id="7-middleware-and-cors-configuration"&gt;7. Middleware and CORS Configuration
+&lt;/h2&gt;&lt;p&gt;Middleware, which intercepts all requests and responses, plays a vital role in security settings. In particular, CORS configuration to allow access from different domains is essential for integration with frontends.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi.middleware.cors &lt;span style="color:#f92672"&gt;import&lt;/span&gt; CORSMiddleware
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;origins &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:3000&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;add_middleware(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CORSMiddleware,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; allow_origins&lt;span style="color:#f92672"&gt;=&lt;/span&gt;origins,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; allow_credentials&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; allow_methods&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;*&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; allow_headers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;*&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="8-application-structuring-and-life-events"&gt;8. Application Structuring and Life Events
+&lt;/h2&gt;&lt;p&gt;In large-scale applications, &lt;b&gt;APIRouter&lt;/b&gt; is used to split routes and improve maintainability. Additionally, using the &lt;b&gt;lifespan&lt;/b&gt; context manager allows for defining logic that runs only once at application startup and shutdown (such as loading machine learning models or establishing DB connections).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; contextlib &lt;span style="color:#f92672"&gt;import&lt;/span&gt; asynccontextmanager
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI, APIRouter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@asynccontextmanager&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;lifespan&lt;/span&gt;(app: FastAPI):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Startup logic (e.g., connection pool initialization)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;yield&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Shutdown logic (e.g., connection pool cleanup)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI(lifespan&lt;span style="color:#f92672"&gt;=&lt;/span&gt;lifespan)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;router &lt;span style="color:#f92672"&gt;=&lt;/span&gt; APIRouter()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@router.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_users&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; [{&lt;span style="color:#e6db74"&gt;&amp;#34;username&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;user1&amp;#34;&lt;/span&gt;}]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;include_router(router)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;FastAPI integrates a robust ASGI foundation via Starlette with strict data validation via Pydantic through the intuitive interface of Python type hints. By understanding the proper use of &lt;b&gt;async def&lt;/b&gt; versus &lt;b&gt;def&lt;/b&gt;, metadata management with &lt;b&gt;Annotated&lt;/b&gt;, and resource control via &lt;b&gt;lifespan&lt;/b&gt;, it is possible to build scalable and highly maintainable API architectures.&lt;/p&gt;</description></item><item><title>Construction of a Stateless Authentication Infrastructure Using OAuth2 and JWT in Spring Boot 3.x</title><link>https://klifehack.com/en/p/spring-boot-oauth2-jwt-stateless-auth/</link><pubDate>Wed, 27 May 2026 12:04:17 +0900</pubDate><guid>https://klifehack.com/en/p/spring-boot-oauth2-jwt-stateless-auth/</guid><description>&lt;h2 id="1-evolution-of-authentication-architecture-and-background-of-statelessness"&gt;1. Evolution of Authentication Architecture and Background of Statelessness
+&lt;/h2&gt;&lt;p&gt;In modern microservices architectures and scalable web applications, the design of the authentication infrastructure directly impacts system availability and security. Traditional session-based authentication (Stateful) involves managing session IDs on the server side and maintaining user information in memory or a database. This model causes session synchronization issues (Session Clustering) during horizontal scaling of servers, increasing infrastructure overhead.&lt;/p&gt;
+&lt;p&gt;In contrast, JWT (JSON Web Token) based authentication (Stateless), recommended under Spring Boot 3.x and Spring Security 6.x environments, eliminates the need for server-side state maintenance by including user information within the token itself. Technical analysis of implementing a robust authentication pipeline combining OAuth2 social login with JWT:&lt;/p&gt;
+&lt;h2 id="2-structural-analysis-and-signing-mechanism-of-jwt-rfc-7519"&gt;2. Structural Analysis and Signing Mechanism of JWT (RFC 7519)
+&lt;/h2&gt;&lt;p&gt;JWT is a standard consisting of three segments separated by dots (.): Header.Payload.Signature.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Header&lt;/b&gt;: Defines the token type (JWT) and the signing algorithm (e.g., HS256).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Payload&lt;/b&gt;: Contains data in key-value format called Claims. In addition to standard claims such as iss (Issuer), sub (Subject), and exp (Expiration), custom claims such as user permissions (Role) are placed here. Since the payload is only Base64URL encoded and not encrypted, sensitive information such as passwords must not be included.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Signature&lt;/b&gt;: Hashes the header and payload using a server-side secret key to detect tampering.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Conceptual formula for signature generation using HMAC SHA256&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HMACSHA256(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; base64UrlEncode(header) &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;.&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; base64UrlEncode(payload),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secret_key
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-countermeasures-against-security-vulnerabilities-and-implementation-guardrails"&gt;3. Countermeasures Against Security Vulnerabilities and Implementation Guardrails
+&lt;/h2&gt;&lt;p&gt;JWT implementation requires defensive measures against vulnerabilities identified from technical logs.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;&amp;lsquo;none&amp;rsquo; algorithm attack&lt;/b&gt;: To counter attempts to bypass signature verification by changing the header&amp;rsquo;s alg to none, implement logic that explicitly fixes the algorithm on the backend side and rejects none.&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Secret Key Management&lt;/b&gt;: If the key used for signing is short or leaked, token forgery becomes possible. Keys must be managed via environment variables (e.g., application.properties) and must be of sufficient length.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Token Invalidation Issue&lt;/b&gt;: Due to its stateless nature, it is difficult to immediately revoke an issued JWT on the server side. This is addressed by using a blacklist method with Redis or the refresh token strategy.&lt;/p&gt;
+&lt;h2 id="4-implementation-stack-in-spring-boot-321"&gt;4. Implementation Stack in Spring Boot 3.2.1
+&lt;/h2&gt;&lt;p&gt;Implementation stack for dependency consistency:&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Framework&lt;/b&gt;: Spring Boot 3.2.1&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Security&lt;/b&gt;: Spring Security 6.2.1&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;JWT Library&lt;/b&gt;: jjwt 0.12.3 (Note: API changed significantly from versions prior to 0.11.5)&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Database&lt;/b&gt;: MySQL 8.0 / Spring Data JPA&lt;/p&gt;
+&lt;h3 id="41-configuration-of-securityconfig"&gt;4.1 Configuration of SecurityConfig
+&lt;/h3&gt;&lt;p&gt;SecurityFilterChain configuration for stateless environment and session management deactivation:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@EnableWebSecurity&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;SecurityConfig&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Bean&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; SecurityFilterChain &lt;span style="color:#a6e22e"&gt;filterChain&lt;/span&gt;(HttpSecurity http) &lt;span style="color:#66d9ef"&gt;throws&lt;/span&gt; Exception {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;csrf&lt;/span&gt;(AbstractHttpConfigurer::disable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;formLogin&lt;/span&gt;(AbstractHttpConfigurer::disable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;httpBasic&lt;/span&gt;(AbstractHttpConfigurer::disable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;authorizeHttpRequests&lt;/span&gt;(auth &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; auth
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;requestMatchers&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/login&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;/join&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;permitAll&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;requestMatchers&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/admin&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;hasRole&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;ADMIN&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;anyRequest&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;authenticated&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;sessionManagement&lt;/span&gt;(session &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; session
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;sessionCreationPolicy&lt;/span&gt;(SessionCreationPolicy.&lt;span style="color:#a6e22e"&gt;STATELESS&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; http.&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-filter-architecture-separation-of-authentication-and-authorization"&gt;5. Filter Architecture: Separation of Authentication and Authorization
+&lt;/h2&gt;&lt;h3 id="51-loginfilter-issuance-phase"&gt;5.1 LoginFilter (Issuance Phase)
+&lt;/h3&gt;&lt;p&gt;LoginFilter intercepts login attempts and issues a JWT upon successful authentication. On success, the token is attached to the Authorization header in the format Bearer &lt;token&gt; and returned to the client.&lt;/token&gt;&lt;/p&gt;
+&lt;h3 id="52-jwtfilter-verification-phase"&gt;5.2 JWTFilter (Verification Phase)
+&lt;/h3&gt;&lt;p&gt;JWTFilter inherits from OncePerRequestFilter to verify token validity for each request. The token is extracted from the request header, and its expiration and signature are checked using JWTUtil. Valid tokens result in authentication information being set in the SecurityContextHolder for the duration of the request.&lt;/p&gt;
+&lt;h2 id="6-token-strategy-access-token-and-refresh-token-rtr"&gt;6. Token Strategy: Access Token and Refresh Token (RTR)
+&lt;/h2&gt;&lt;p&gt;&lt;b&gt;Access Token&lt;/b&gt; is short-lived (15 minutes to 1 hour) and used for API request authorization. &lt;b&gt;Refresh Token&lt;/b&gt; is long-lived (1 week to 2 weeks) and used for reissuing the Access Token. This is managed on the server side (e.g., Redis) and client side (HttpOnly Cookie).&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Refresh Token Rotation (RTR)&lt;/b&gt; ensures a new refresh token is reissued and the old one is invalidated upon every use. This minimizes the risk of replay attacks due to token theft.&lt;/p&gt;
+&lt;h2 id="7-integration-of-oauth2-social-login"&gt;7. Integration of OAuth2 Social Login
+&lt;/h2&gt;&lt;p&gt;Integration with providers such as Google and Kakao is automated via spring-boot-starter-oauth2-client. Authorization Code Grant flow processing sequence:&lt;/p&gt;
+&lt;p&gt;The user is redirected to the provider&amp;rsquo;s authorization server. After consent, an authorization code is obtained via the redirect URI. The authorization code is exchanged for an access token via a back-channel, and user information is retrieved. Saving or updating to the local DB is performed via CustomOAuth2UserService, and a JWT is issued to complete the login.&lt;/p&gt;
+&lt;h2 id="8-operational-notes"&gt;8. Operational Notes
+&lt;/h2&gt;&lt;p&gt;Operational considerations and implementation details:&lt;/p&gt;
+&lt;p&gt;jjwt 0.12.3 introduces a fluent interface where Jwts.parserBuilder() is integrated into Jwts.parser(). Appropriate CORS policy must be set within SecurityConfig to allow exposure of the Authorization header if frontend and backend domains differ. Implementation of an AuthenticationEntryPoint to return 401 Unauthorized upon JWT verification failure is required.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;Building an authentication infrastructure in Spring Boot 3.x centers on the migration to the functional configuration of Spring Security 6.x and stateless design using JWT. Combining external authentication via OAuth2 with JWT management applying RTR realizes a modern authentication system balancing scalability and security.&lt;/p&gt;</description></item><item><title>Optimizing I/O Performance and Improving Stability through Linux System Call Analysis in Node.js</title><link>https://klifehack.com/en/p/nodejs-linux-syscall-libuv-analysis/</link><pubDate>Mon, 25 May 2026 10:03:53 +0900</pubDate><guid>https://klifehack.com/en/p/nodejs-linux-syscall-libuv-analysis/</guid><description>&lt;h1 id="optimizing-the-kernel-boundary-in-nodejs-redefining-performance-via-system-calls"&gt;Optimizing the Kernel Boundary in Node.js: Redefining Performance via System Calls
+&lt;/h1&gt;&lt;p&gt;Many instances of performance degradation and instability in Node.js applications stem not from JavaScript syntax errors, but from a lack of understanding regarding Linux system calls (syscalls). For engineers to design resilient systems and respond rapidly to failures, it is necessary to grasp the detailed behavior of the boundary where the application interfaces with the Linux kernel—specifically calls such as &lt;b&gt;read&lt;/b&gt;, &lt;b&gt;write&lt;/b&gt;, &lt;b&gt;epoll&lt;/b&gt;, and &lt;b&gt;open&lt;/b&gt;.&lt;/p&gt;
+&lt;p&gt;This article analyzes how system calls involve themselves in the Node.js event loop, file I/O, networking, and operational decision-making. We will detail Node.js not merely as an abstraction layer, but as a runtime that controls OS resources, incorporating practical code and monitoring methods.&lt;/p&gt;
+&lt;h2 id="system-calls-as-diagnostic-instruments"&gt;System Calls as Diagnostic Instruments
+&lt;/h2&gt;&lt;p&gt;In practice, system calls function not as implementation details, but as diagnostic tools for interpreting failures. While developers design logical structures using Promises or async/await, the OS processes them as a series of polling operations such as &lt;b&gt;read&lt;/b&gt;, &lt;b&gt;write&lt;/b&gt;, &lt;b&gt;epoll_wait&lt;/b&gt;, &lt;b&gt;openat&lt;/b&gt;, &lt;b&gt;connect&lt;/b&gt;, and &lt;b&gt;accept&lt;/b&gt;.&lt;/p&gt;
+&lt;p&gt;For example, when executing 22 asynchronous monitoring checks in the monitoring bot &amp;ldquo;Dexter,&amp;rdquo; the phenomenon of &amp;ldquo;slow Promise resolution&amp;rdquo; was observed at the JavaScript layer. However, lowering the analysis to the system call level revealed that the bottleneck was a combination of connect latency for specific external sockets and file access delays. By redefining the abstract concept of &amp;ldquo;slow code&amp;rdquo; as &amp;ldquo;kernel wait states,&amp;rdquo; it is possible to identify that the root cause is not CPU execution time, but rather kernel wake-up timing and external resource response speeds. 💡&lt;/p&gt;
+&lt;h2 id="libuv-architecture-and-kernel-interaction"&gt;libuv Architecture and Kernel Interaction
+&lt;/h2&gt;&lt;p&gt;Node.js does not call the kernel directly; instead, it abstracts the OS I/O model via &lt;b&gt;libuv&lt;/b&gt;. In a Linux environment, this is structured around epoll, file descriptors (FDs), sockets, and pipes.&lt;/p&gt;
+&lt;p&gt;System calls are the official entry points for user-space programs to request functionality from kernel space. JavaScript cannot directly control disks or network cards. Instead, it uses libuv to make the following requests:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;File I/O&lt;/b&gt;: Uses the open, read, and write families. Often processed in the thread pool.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Network I/O&lt;/b&gt;: Uses socket, bind, listen, accept, connect, recv, and send.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Event Monitoring&lt;/b&gt;: Utilizes epoll, the core mechanism in Linux.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Traditional server models allocated a thread per connection, which increases context switching costs and memory overhead. Node.js leverages non-blocking I/O and epoll, employing a mechanism where it only receives notifications when events occur on monitored file descriptors. This achieves large-scale concurrency with minimal overhead.&lt;/p&gt;
+&lt;h2 id="design-criteria-and-code-patterns-in-implementation"&gt;Design Criteria and Code Patterns in Implementation
+&lt;/h2&gt;&lt;h3 id="a-optimizing-file-io-via-streaming"&gt;A. Optimizing File I/O via Streaming
+&lt;/h3&gt;&lt;p&gt;Using fs.readFile on massive files causes memory spikes and increases Garbage Collection (GC) load. To control data flow at the kernel level, the use of streams is recommended.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;fs&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;require&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Efficient file processing via streams
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;reader&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;fs&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;createReadStream&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;./large.log&amp;#39;&lt;/span&gt;, {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;highWaterMark&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;64&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt; &lt;span style="color:#75715e"&gt;// Buffering in 64KB units
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;reader&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;on&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;data&amp;#39;&lt;/span&gt;, (&lt;span style="color:#a6e22e"&gt;chunk&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Process per chunk to suppress memory consumption
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;Verification command:&lt;/em&gt; &lt;code&gt;strace -f -e trace=openat,read,close node app.js ./large.log&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="b-managing-network-io-and-backpressure"&gt;B. Managing Network I/O and Backpressure
+&lt;/h3&gt;&lt;p&gt;Ignoring the return value of socket.write() is a major cause of memory leaks and instability. When the write buffer is full, control logic is required to wait for the drain event. ⚠️&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;safeWrite&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;socket&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;canWrite&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;socket&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;write&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#f92672"&gt;!&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;canWrite&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// If buffer is saturated, wait for drain to control backpressure
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;socket&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;once&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;drain&amp;#39;&lt;/span&gt;, () &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;Buffer drained, resuming writes...&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="security-and-visualization-of-supply-chain-attacks"&gt;Security and Visualization of Supply Chain Attacks
+&lt;/h2&gt;&lt;p&gt;In supply chain attacks, malicious scripts attempt to connect to external networks or read sensitive files during postinstall or at runtime. These always leave traces as system calls such as &lt;b&gt;execve&lt;/b&gt;, &lt;b&gt;open&lt;/b&gt;, and &lt;b&gt;connect&lt;/b&gt;. 🛠️&lt;/p&gt;
+&lt;p&gt;By introducing system-call-level monitoring, it is possible to detect suspicious process generation and network activity that do not appear in application logs. This is essential for secure infrastructure operations compliant with OWASP standards.&lt;/p&gt;
+&lt;h2 id="operational-comparison-table-conventional-methods-vs-recommended-practices"&gt;Operational Comparison Table: Conventional Methods vs. Recommended Practices
+&lt;/h2&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Category&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Common Implementation (Deprecated)&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Recommended Engineering Practice&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Reason&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;File Reading&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Heavy use of &lt;code&gt;fs.readFile&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;fs.createReadStream&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Optimization of memory management and flow control&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Socket Writing&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Ignoring &lt;code&gt;write()&lt;/code&gt; return value&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Control via &lt;code&gt;drain&lt;/code&gt; event&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Prevention of buffer saturation and OOM&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;External Command Execution&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;exec&lt;/code&gt; (string concatenation)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;spawn&lt;/code&gt; (argument array)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Prevention of shell injection and resource efficiency&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Observability&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Application logs only&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Logs + &lt;code&gt;/proc&lt;/code&gt; + &lt;code&gt;strace&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Identification of system-level latency causes&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;The ultimate goal of understanding system calls is not optimization, but ensuring &lt;b&gt;predictability&lt;/b&gt;. By grasping how the Node.js event loop interacts with the kernel and identifying when waits occur, &amp;ldquo;unexplained latency&amp;rdquo; in production environments can be logically resolved. Engineers must elevate their perspective from mere syntax writers to architects who efficiently allocate OS resources. One should recognize that errors are not isolated points within code, but lines drawn by the interaction between the system and its environment.&lt;/p&gt;</description></item><item><title>Improving Cache Throughput and Eliminating Latency Spikes by Migrating to Valkey 8.0</title><link>https://klifehack.com/en/p/valkey-migration-performance-tuning/</link><pubDate>Sat, 23 May 2026 09:55:55 +0900</pubDate><guid>https://klifehack.com/en/p/valkey-migration-performance-tuning/</guid><description>&lt;h1 id="redis-limitations-and-latency-occurrences-due-to-ai-agent-burst-traffic"&gt;Redis Limitations and Latency Occurrences Due to AI Agent Burst Traffic
+&lt;/h1&gt;&lt;p&gt;As of May 2026, concurrent requests from Claude Code and Cursor are surging in the AI agent infrastructure, leading to confirmed performance degradation in the Redis 7.2 cluster operated as the backend cache layer. Specifically, in vector search metadata caching and session management, P99 latency frequently spiked from a normal 2ms to over 150ms.&lt;/p&gt;
+&lt;p&gt;Analysis via monitoring tools such as Prometheus and Grafana revealed CPU saturation caused by the single-threaded model of Redis. While I/O thread separation is available in Redis 7.x, it reached throughput limits for the advanced parallel processing requirements of 2026 workloads. Consequently, the decision was made to migrate to &lt;b&gt;&lt;mark&gt;Valkey 8.0&lt;/mark&gt;&lt;/b&gt;, developed under the Linux Foundation.&lt;/p&gt;
+&lt;h2 id="technical-details-of-the-occurring-failures"&gt;Technical Details of the Occurring Failures
+&lt;/h2&gt;&lt;p&gt;The following log is an excerpt from the slow query log on a Redis 7.2 node. Complex pipeline requests generated by AI agents occupied the main thread for extended periods. This delay caused cascading timeouts in upstream gRPC services, dropping overall system availability to 98.2%.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Redis Slow Log Excerpt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1) (integer) 1024
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2) (integer) 1717143615 # 2026-05-31 14:20:15
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3) (integer) 45000 # Execution time: 45ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;4) 1) &amp;#34;MGET&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2) &amp;#34;session:ai_agent:user_992834...&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 3) &amp;#34;metadata:vector:index_442...&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="valkey-80-migration-procedures-and-multi-thread-optimization-settings"&gt;Valkey 8.0 Migration Procedures and Multi-thread Optimization Settings
+&lt;/h2&gt;&lt;p&gt;For the migration, Valkey-specific multi-threading extensions were enabled while maintaining full protocol compatibility with Redis. In Valkey 8.0, parallelization of command execution has been enhanced, with significant performance improvements expected in large-scale MGET and SCAN operations.&lt;/p&gt;
+&lt;h3 id="installation-and-build-process"&gt;Installation and Build Process
+&lt;/h3&gt;&lt;p&gt;Dependencies were organized via &lt;code&gt;uv&lt;/code&gt;, the standard package manager for the 2026 environment, and build/deployment was executed using the following steps.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Valkey 8.0.1 source acquisition and build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone --branch 8.0.1 https://github.com/valkey-io/valkey.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd valkey
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;make -j&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;nproc&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo make install
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Migration and optimization from existing Redis configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp /etc/redis/redis.conf /etc/valkey/valkey.conf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sed -i &lt;span style="color:#e6db74"&gt;&amp;#39;s/redis/valkey/g&amp;#39;&lt;/span&gt; /etc/valkey/valkey.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="configuration-changes-for-throughput-improvement"&gt;Configuration Changes for Throughput Improvement
+&lt;/h3&gt;&lt;p&gt;To maximize Valkey performance, the following parameters were adjusted in &lt;code&gt;valkey.conf&lt;/code&gt;. Optimization of &lt;code&gt;io-threads&lt;/code&gt; and &lt;code&gt;server-threads&lt;/code&gt; is key to handling the 2026 infrastructure load.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;# valkey.conf optimization for 2026 infrastructure
+maxmemory 32gb
+maxmemory-policy allkeys-lru
+io-threads 8
+io-threads-do-reads yes
+# Valkey 8.0 specific: Enhanced multi-threading for command execution
+server-threads 4
+cluster-enabled yes
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="post-migration-performance-verification-and-throughput-measurement"&gt;Post-Migration Performance Verification and Throughput Measurement
+&lt;/h2&gt;&lt;p&gt;After completing the migration, comparative verification with the legacy Redis environment was conducted using &lt;code&gt;valkey-benchmark&lt;/code&gt;. The verification environment utilized AWS r7g.2xlarge instances (Graviton 4).&lt;/p&gt;
+&lt;h3 id="executing-benchmark-commands"&gt;Executing Benchmark Commands
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Load test execution for Valkey 8.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;valkey-benchmark -h 10.0.4.12 -p &lt;span style="color:#ae81ff"&gt;6379&lt;/span&gt; -c &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt; -n &lt;span style="color:#ae81ff"&gt;2000000&lt;/span&gt; -t set,get,mget -P &lt;span style="color:#ae81ff"&gt;16&lt;/span&gt; --threads &lt;span style="color:#ae81ff"&gt;8&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="comparison-data-of-verification-results"&gt;Comparison Data of Verification Results
+&lt;/h3&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Metric&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Redis 7.2 (Legacy)&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Valkey 8.0 (New)&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Improvement Rate&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;GET Throughput (RPS)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;420,000&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;1,350,000&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;+221%&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;MGET (10 keys) RPS&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;85,000&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;290,000&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;+241%&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;P99 Latency (ms)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;12.4ms&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;1.8ms&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;-85%&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;CPU Usage (Peak)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;98% (1 core)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;45% (Distributed)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Load balancing successful&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="metric-changes-and-log-evidence-in-operational-monitoring"&gt;Metric Changes and Log Evidence in Operational Monitoring
+&lt;/h2&gt;&lt;p&gt;After introducing Valkey, checking the node operation status confirmed that contention between threads was minimized. Below is the statistical information output from the &lt;code&gt;valkey-cli info&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Valkey Stats Excerpt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;valkey_version:8.0.1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;multiplexing_api:epoll
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;io_threads_active:1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;server_threads_active:4
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;instantaneous_ops_per_sec:1284902
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total_net_input_bytes:15829304822
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total_net_output_bytes:89230492833
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rejected_connections:0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Notably, &lt;code&gt;rejected_connections&lt;/code&gt; remains at 0. In the legacy environment, an average of 150 connection rejections per hour occurred due to TCP backlog overflow.&lt;/p&gt;
+&lt;h2 id="issues-encountered-and-troubleshooting"&gt;Issues Encountered and Troubleshooting
+&lt;/h2&gt;&lt;p&gt;In the early stages of migration, an issue occurred where some client libraries (legacy &lt;code&gt;redis-py&lt;/code&gt; 4.x series) failed to recognize nodes in Valkey&amp;rsquo;s cluster bus communication.&lt;/p&gt;
+&lt;h3 id="root-cause"&gt;Root Cause
+&lt;/h3&gt;&lt;p&gt;The metadata format included in the Valkey 8.0 &lt;code&gt;CLUSTER NODES&lt;/code&gt; response conflicted with some old regex-based parsers.&lt;/p&gt;
+&lt;h3 id="solution"&gt;Solution
+&lt;/h3&gt;&lt;p&gt;Resolved by updating client-side libraries to the 2026 standard &lt;code&gt;valkey-py&lt;/code&gt; or the latest &lt;code&gt;redis-py&lt;/code&gt; 5.5.0 or higher. Additionally, project-wide dependencies were forcibly synchronized using &lt;code&gt;uv&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Dependency update&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv add valkey&amp;amp;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;8.0.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv lock
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="final-confirmation-and-system-impact-assessment"&gt;Final Confirmation and System Impact Assessment
+&lt;/h2&gt;&lt;p&gt;Through this migration, the cache layer now provides stable responses without becoming a bottleneck, even against bursty requests from AI agents. As of May 31, 2026, the error rate in the production environment is suppressed to less than 0.01%.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Throughput&lt;/b&gt;: Secured approximately 3x the previous processing capacity.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Latency&lt;/b&gt;: Spikes eliminated, P99 stable at 2ms or less.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Resource Efficiency&lt;/b&gt;: Multi-threading allows for efficient utilization of multi-core CPU computing resources.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Moving forward, the plan is to verify native support for vector indices, a new feature of Valkey 8.0, to contribute to faster inference for AI agents.&lt;/p&gt;</description></item><item><title>Implementing Snort IPS Inline Mode and PCRE Rules for SQL Injection Prevention</title><link>https://klifehack.com/en/p/snort-ips-inline-sqli-detection/</link><pubDate>Thu, 21 May 2026 01:32:15 +0900</pubDate><guid>https://klifehack.com/en/p/snort-ips-inline-sqli-detection/</guid><description>&lt;h2 id="transitioning-from-passive-ids-to-active-ips-inline-mode"&gt;Transitioning from Passive IDS to Active IPS Inline Mode
+&lt;/h2&gt;&lt;p&gt;Modern network security architectures require a transition from passive monitoring to active mitigation to prevent malicious traffic from saturating backend connection pools. While an Intrusion Detection System provides visibility by monitoring traffic via TAP or SPAN ports, it lacks the capability to terminate malicious sessions in real-time. Consequently, an Intrusion Prevention System must be deployed in an inline configuration, where every packet passes through the inspection engine before reaching its destination. This architectural shift allows the system to execute a drop action instead of a mere alert, effectively neutralizing threats at the perimeter. Furthermore, the Snort engine must be invoked with specific flags to enable the Data Acquisition inline module, as changing an action to drop in a standard Host-based IDS environment results in no operational change.&lt;/p&gt;
+&lt;h2 id="implementing-icmp-drop-rules-and-validating-inline-blocking"&gt;Implementing ICMP Drop Rules and Validating Inline Blocking
+&lt;/h2&gt;&lt;p&gt;By modifying the local rules configuration file, administrators can replace legacy alert rules with drop directives to secure the &lt;b&gt;&lt;mark&gt;10.10.11.10&lt;/mark&gt;&lt;/b&gt; internal node. In addition, the execution of the Snort binary requires the &lt;b&gt;&lt;mark&gt;-Q&lt;/mark&gt;&lt;/b&gt; parameter to facilitate inline packet processing. When a client attempts to reach the target via ICMP, the inline IPS intercepts the request and returns a destination port unreachable message. Consequently, this mechanism ensures that unauthorized reconnaissance traffic never reaches the backend infrastructure, which is verified by the Snort console logging the drop events with high precision.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Configuration in /etc/snort/rules/local.rules&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Deactivating the passive alert rule&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# alert icmp any any -&amp;amp;gt; 10.10.11.10 any (msg: &amp;#34;ICMP ping Request Inline mode&amp;#34;; sid: 1000001;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Activating the active drop rule for IPS mode&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drop icmp any any -&amp;amp;gt; 10.10.11.10 any &lt;span style="color:#f92672"&gt;(&lt;/span&gt;msg: &lt;span style="color:#e6db74"&gt;&amp;#34;ICMP ping Request Inline mode&amp;#34;&lt;/span&gt;; sid: 1000001;&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Starting Snort in Inline Mode with DAQ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;snort -A console -q -u snort -g snort -c /etc/snort/snort.conf -Q
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="analyzing-nat-packet-transformations-in-multi-tiered-architectures"&gt;Analyzing NAT Packet Transformations in Multi-Tiered Architectures
+&lt;/h2&gt;&lt;p&gt;In complex backend environments, Network Address Translation introduces layers of complexity to packet inspection. When a client at 192.168.100.1 accesses a web server, the packet undergoes Destination Network Address Translation to map the public-facing IP to the internal 10.10.11.10 address. Consequently, understanding the L2, L3, and L4 headers at each stage is vital for writing accurate Snort rules. Furthermore, the IPS must be aware of these transformations to correctly apply filters to the post-NAT traffic, ensuring that security policies are enforced on the actual internal endpoints rather than the gateway aliases.&lt;/p&gt;
+&lt;h2 id="engineering-robust-snort-rules-for-union-based-sql-injection"&gt;Engineering Robust Snort Rules for UNION-Based SQL Injection
+&lt;/h2&gt;&lt;p&gt;Protecting web applications from SQL injection requires deep packet inspection beyond simple string matching. The implementation of &lt;b&gt;&lt;mark&gt;sid:1000002&lt;/mark&gt;&lt;/b&gt; demonstrates the use of Perl Compatible Regular Expressions to identify complex attack patterns like UNION SELECT. By leveraging the http_uri modifier and established flow state tracking, the engine reduces false positives by only inspecting traffic that has completed the TCP three-way handshake. In addition, the use of ungreedy matching in regex patterns optimizes the inspection latency, preventing the security layer from becoming a bottleneck during high-traffic periods.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Advanced SQL Injection Detection Rule&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;alert tcp any any -&amp;amp;gt; $HOME_NET &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt; &lt;span style="color:#f92672"&gt;(&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;msg: &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;amp;gt;&amp;amp;gt;&amp;amp;gt; WEB-Attack SQL injection attempt using UNION SELECT &amp;amp;lt;&amp;amp;lt;&amp;amp;lt;&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;flow:to_server,established;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;content:&lt;span style="color:#e6db74"&gt;&amp;#34;UNION&amp;#34;&lt;/span&gt;; nocase; http_uri;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;content:&lt;span style="color:#e6db74"&gt;&amp;#34;SELECT&amp;#34;&lt;/span&gt;; nocase; http_uri;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pcre:&lt;span style="color:#e6db74"&gt;&amp;#34;/UNION.+SELECT/Ui&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sid:1000002;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rev:1;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The integration of these rules into the production pipeline provides a robust defense-in-depth strategy. By combining inline blocking for protocol-level attacks with regular expression-based inspection for application-layer threats, engineers can ensure the integrity of the backend ecosystem against evolving cyber threats. Furthermore, this proactive security posture mitigates the risk of resource exhaustion within backend connection pools. Consequently, maintaining optimized rule definitions allows the system to sustain high throughput while actively neutralizing malicious payloads at the perimeter.&lt;/p&gt;</description></item></channel></rss>

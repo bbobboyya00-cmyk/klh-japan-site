@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Proxy-Pass on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/proxy-pass/</link><description>Recent content in Proxy-Pass on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 28 May 2026 17:04:17 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/proxy-pass/index.xml" rel="self" type="application/rss+xml"/><item><title>NGINXリバースプロキシ構築におけるNginx Proxy Managerと手動構成の実装手法</title><link>https://klifehack.com/p/nginx-reverse-proxy-implementation-guide/</link><pubDate>Thu, 28 May 2026 17:04:17 +0900</pubDate><guid>https://klifehack.com/p/nginx-reverse-proxy-implementation-guide/</guid><description>&lt;p&gt;パブリックIPアドレスからの外部トラフィックを、プライベートネットワーク上のバックエンドアプリケーション（Apache Tomcat）へルーティングするためのNGINXリバースプロキシ環境の構築手順について詳述します。実装アプローチとして、Dockerを利用したGUIベースの管理ツールである「Nginx Proxy Manager (NPM)」の導入と、コマンドラインによる「手動構成」の2つの手法を解説します。&lt;/p&gt;
+&lt;h2 id="1-nginx-proxy-manager-npm-による実装"&gt;1. Nginx Proxy Manager (NPM) による実装
+&lt;/h2&gt;&lt;p&gt;Nginx Proxy Managerは、リバースプロキシ、SSL証明書管理、アクセスリストの制御をWebインターフェースから一元管理できるソリューションです。&lt;/p&gt;
+&lt;h3 id="11-既存サービスの競合回避"&gt;1.1 既存サービスの競合回避
+&lt;/h3&gt;&lt;p&gt;NPMはポート80および443を占有するため、ホストOS上でネイティブに動作しているNGINXサービスが存在する場合、これを停止および無効化する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスの停止&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop nginx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 自動起動の無効化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="12-docker環境の整備"&gt;1.2 Docker環境の整備
+&lt;/h3&gt;&lt;p&gt;NPMはコンテナとして動作するため、Docker EngineおよびDocker Composeの導入が必須となります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;リポジトリの構成&lt;/b&gt;: &lt;code&gt;yum-utils&lt;/code&gt;をインストールし、公式のDockerリポジトリを追加します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dnf install -y yum-utils
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
+&lt;li&gt;&lt;b&gt;サービスの有効化&lt;/b&gt;: Dockerデーモンを起動し、システム再起動時にも自動実行されるよう設定します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; systemctl start docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; systemctl enable docker
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="13-コンテナのオーケストレーション"&gt;1.3 コンテナのオーケストレーション
+&lt;/h3&gt;&lt;p&gt;NPMの構成ファイルを管理するための専用ディレクトリを作成し、&lt;code&gt;docker-compose.yml&lt;/code&gt;を定義します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir ~/npm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd ~/npm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vi docker-compose.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt;には、公式のイメージ指定、データベースパラメータ、および永続化のためのボリュームマッピングを記述します。定義完了後、以下のコマンドでコンテナをバックグラウンドで起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose up -d
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="14-web-uiによるプロキシ設定"&gt;1.4 Web UIによるプロキシ設定
+&lt;/h3&gt;&lt;p&gt;コンテナ起動後、管理ダッシュボード（デフォルトポート: 81）にアクセスして設定を行います。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;初期認証&lt;/b&gt;: &lt;code&gt;http://[Public_IP]:81&lt;/code&gt;にアクセスし、初期クレデンシャル（&lt;code&gt;admin@example.com&lt;/code&gt; / &lt;code&gt;changeme&lt;/code&gt;）でログインします。初回ログイン時にメールアドレスとパスワードの変更が強制されます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Proxy Hostの追加&lt;/b&gt;: 「Add Proxy Host」を選択し、以下のパラメータを入力します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;・&lt;b&gt;Domain Names&lt;/b&gt;: 公開するドメインまたはIPアドレス&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Scheme&lt;/b&gt;: http&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Forward Hostname / IP&lt;/b&gt;: 10.101.0.28（バックエンドTomcatのプライベートIP）&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;Forward Port&lt;/b&gt;: 8080
+3. &lt;b&gt;疎通確認&lt;/b&gt;: ブラウザからパブリックIPにアクセスし、Tomcatのレスポンスが返ることを確認します。&lt;/p&gt;
+&lt;h2 id="2-nginx手動構成によるリバースプロキシの実装"&gt;2. NGINX手動構成によるリバースプロキシの実装
+&lt;/h2&gt;&lt;p&gt;GUIを必要としない環境や、より軽量な構成を求める場合には、NGINXパッケージを直接操作してパススルー設定を行います。&lt;/p&gt;
+&lt;h3 id="21-nginxのインストールと初期化"&gt;2.1 NGINXのインストールと初期化
+&lt;/h3&gt;&lt;p&gt;DNFパッケージマネージャを使用してNGINXを導入します。インストール後、&lt;code&gt;curl -I http://localhost&lt;/code&gt;を実行し、Webサーバーが正常に応答することを確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dnf install nginx -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl start nginx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-ネットワークセキュリティ設定"&gt;2.2 ネットワークセキュリティ設定
+&lt;/h3&gt;&lt;p&gt;外部トラフィックを許可するため、OSのファイアウォール（iptables）でポート80を開放します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -I INPUT &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; -p tcp --dport &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt; -j ACCEPT
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="23-proxy_passディレクティブの構成"&gt;2.3 proxy_passディレクティブの構成
+&lt;/h3&gt;&lt;p&gt;リバースプロキシの中核となるロジックを&lt;code&gt;nginx.conf&lt;/code&gt;に定義します。&lt;code&gt;/etc/nginx/nginx.conf&lt;/code&gt;を開き、&lt;code&gt;server&lt;/code&gt;コンテキスト内の&lt;code&gt;location /&lt;/code&gt;ブロックを修正します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nginx" data-lang="nginx"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# バックエンドのTomcatサーバー（ポート8080）へトラフィックを転送
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_pass&lt;/span&gt; &lt;span style="color:#e6db74"&gt;http://127.0.0.1:8080&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 必要に応じてヘッダー情報を付与（オプション）
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Host&lt;/span&gt; $host;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Real-IP&lt;/span&gt; $remote_addr;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-For&lt;/span&gt; $proxy_add_x_forwarded_for;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="24-設定の検証と反映"&gt;2.4 設定の検証と反映
+&lt;/h3&gt;&lt;p&gt;設定ファイルの構文チェックを行い、エラーがないことを確認した上でサービスをリロードします。&lt;code&gt;reload&lt;/code&gt;を使用することで、既存の接続を維持したまま設定を適用可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 構文チェック&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nginx -t
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定の再読み込み&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl reload nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-運用上の留意事項"&gt;3. 運用上の留意事項
+&lt;/h2&gt;&lt;p&gt;💡 &lt;b&gt;ポート競合の管理&lt;/b&gt;: 同一ホスト内で複数のWebサービスを稼働させる場合、ポート80/443のバインド権限をどのプロセスに割り当てるかを明確にする必要があります。
+⚠️ &lt;b&gt;セキュリティ&lt;/b&gt;: NPMを使用する場合、管理ポート（81）へのアクセスは特定のIPアドレスからのみ許可するよう、ネットワーク層での制限を推奨します。
+🛠️ &lt;b&gt;永続性&lt;/b&gt;: Docker構成時は、ボリュームマッピングが正しく設定されているか確認し、コンテナの破棄によって設定データが消失しないよう担保してください。&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;本ドキュメントでは、NGINXを用いたリバースプロキシ構築の2つの手法を提示しました。Nginx Proxy Managerは直感的な運用を可能にし、手動構成はシステムの透明性とカスタマイズ性を提供します。要件に応じて適切な手法を選択し、バックエンドサーバーへの安全かつ効率的なトラフィックルーティングを実現してください。&lt;/p&gt;</description></item></channel></rss>

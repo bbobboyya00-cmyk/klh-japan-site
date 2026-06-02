@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Self-Hosted-Runner on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/self-hosted-runner/</link><description>Recent content in Self-Hosted-Runner on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 25 May 2026 12:26:26 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/self-hosted-runner/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub ActionsとSelf-hosted RunnerによるローカルKubernetes CI/CDの構築と認証・ネットワーク境界の突破</title><link>https://klifehack.com/p/github-actions-self-hosted-k8s-cicd/</link><pubDate>Mon, 25 May 2026 12:26:26 +0900</pubDate><guid>https://klifehack.com/p/github-actions-self-hosted-k8s-cicd/</guid><description>&lt;h2 id="github-actionsとself-hosted-runnerによるローカルkubernetesデプロイの最適化"&gt;GitHub ActionsとSelf-hosted RunnerによるローカルKubernetesデプロイの最適化
+&lt;/h2&gt;&lt;h3 id="1-課題の背景ハイブリッド環境におけるデプロイメントの断絶"&gt;1. 課題の背景：ハイブリッド環境におけるデプロイメントの断絶
+&lt;/h3&gt;&lt;p&gt;モダンなマイクロサービス開発において、Docker Desktop等のローカルKubernetes環境は、本番環境に近い検証を可能にする重要なアセットです。しかし、GitHub Actionsのマネージドランナー（ubuntu-latest等）からローカルクラスターへデプロイを試みる際、二つの大きな障壁に直面します。第一に、パブリッククラウド上のランナーからプライベートネットワーク内のクラスターエンドポイント（kubernetes.docker.internal）への到達不能性。第二に、YAML形式のKubeconfigをGitHub Secretsに保存する際に発生する、改行コードやインデントの崩れによるPEMブロック解析エラーです。&lt;/p&gt;
+&lt;p&gt;本稿では、これらの境界を突破し、Git Pushからローカルクラスターへの同期を完全自動化するCI/CDパイプラインの構築プロセスを詳解します。&lt;/p&gt;
+&lt;h3 id="2-技術選定とトレードオフself-hosted-runnerの採用理由"&gt;2. 技術選定とトレードオフ：Self-hosted Runnerの採用理由
+&lt;/h3&gt;&lt;p&gt;GitHub Actionsからプライベートクラスターへアクセスする手法として、以下の比較検討を行いました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Cloud Runner + VPN/Tunneling (ngrok等)&lt;/b&gt;: 外部からローカルネットワークへのトンネルを構築する手法。セットアップは容易ですが、セキュリティリスクが高く、帯域制限やレイテンシがボトルネックとなります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Self-hosted Runner (採用)&lt;/b&gt;: ローカルマシン上でGitHub Actionsのエージェントを直接稼働させる手法。ファイアウォールの内側で動作するため、外部へのポート開放が不要であり、ローカルのDockerデーモンやK8s APIに直接アクセスできます。また、ビルド済みイメージをレジストリからプルする際のネットワークコストを最小化できる利点があります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-実装詳細認証情報のカプセル化とランナーの構成"&gt;3. 実装詳細：認証情報のカプセル化とランナーの構成
+&lt;/h3&gt;&lt;h4 id="31-kubeconfigのbase64エンコードによる整合性確保"&gt;3.1 KubeconfigのBase64エンコードによる整合性確保
+&lt;/h4&gt;&lt;p&gt;GitHub SecretsにKubeconfigをそのまま保存すると、&lt;b&gt;error: unable to load root certificates: unable to parse bytes as PEM block&lt;/b&gt;というエラーに遭遇する確率が極めて高いです。これを回避するため、PowerShellを用いてバイナリレベルでBase64エンコードを行い、文字列として注入します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# KubeconfigをBase64文字列に変換し、ファイルに出力&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$configPath = &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$HOME&lt;span style="color:#e6db74"&gt;\.kube\config&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$base64Config = [&lt;span style="color:#66d9ef"&gt;Convert&lt;/span&gt;]::ToBase64String([&lt;span style="color:#66d9ef"&gt;IO.File&lt;/span&gt;]::ReadAllBytes($configPath))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$base64Config | Out-File -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;encoded_config.txt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="32-windows-self-hosted-runnerのワークフロー定義"&gt;3.2 Windows Self-hosted Runnerのワークフロー定義
+&lt;/h4&gt;&lt;p&gt;Windows環境でランナーを動作させる場合、デフォルトシェルがPowerShellになるため、Linuxベースのコマンド（mkdir -p等）は動作しません。以下に、冪等性を担保したワークフローの実装例を示します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;self-hosted&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Configure Kubeconfig&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;shell&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pwsh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;|&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;$kubeDir = &amp;#34;$HOME\.kube&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;if (!(Test-Path $kubeDir)) { New-Item -ItemType Directory -Path $kubeDir }&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;$decodedConfig = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String(&amp;#34;${{ secrets.KUBE_CONFIG_DATA }}&amp;#34;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;$decodedConfig | Out-File -FilePath &amp;#34;$kubeDir\config&amp;#34; -Encoding ascii&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy to Local Kubernetes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;|&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;kubectl apply -f ./k8s/deployment.yaml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;kubectl rollout status deployment/api-service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="4-実務における警告と回避策-operational-reality"&gt;4. 実務における警告と回避策 (Operational Reality)
+&lt;/h3&gt;&lt;h4 id="41-errimagepullとimagepullpolicyの最適化"&gt;4.1 ErrImagePullとimagePullPolicyの最適化
+&lt;/h4&gt;&lt;p&gt;ローカル環境での開発時、イメージをレジストリにプッシュした直後にデプロイを行うと、タグがlatestの場合にKubernetesが古いキャッシュを参照したり、プルに失敗して&lt;b&gt;ErrImagePull&lt;/b&gt;を発生させることがあります。これを防ぐため、deployment.yamlでは以下の設定を推奨します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;imagePullPolicy: Always&lt;/b&gt;: 常にレジストリを確認させます。ただし、ネットワーク負荷が増大します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;imagePullPolicy: IfNotPresent&lt;/b&gt;: ローカルビルドしたイメージをそのまま使う場合に有効です。Self-hosted Runnerがクラスターと同じノードで動作している場合、ビルドしたイメージが即座に利用可能になるため、この設定が最も効率的です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="42-永続ボリュームのパス指定における注意点"&gt;4.2 永続ボリュームのパス指定における注意点
+&lt;/h4&gt;&lt;p&gt;⚠️ Docker Desktop for Windowsを使用する場合、hostPathに指定するパスはWindows形式ではなく、Docker VM内のマウントパス（&lt;b&gt;/run/desktop/mnt/host/c/&amp;hellip;&lt;/b&gt;）を指定する必要があります。ここを誤ると、コンテナ起動時にマウントエラーが発生し、共有ディレクトリが正しく認識されません。&lt;/p&gt;
+&lt;h3 id="5-結果と評価"&gt;5. 結果と評価
+&lt;/h3&gt;&lt;p&gt;本構成の導入により、以下の定量的・定性的改善を確認しました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;デプロイ時間の短縮&lt;/b&gt;: 手動でのkubectl操作と比較し、コードプッシュから反映までのリードタイムを約70%削減。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;環境整合性の向上&lt;/b&gt;: Kubeconfigの動的生成により、開発者のローカル環境に依存しない一貫したデプロイパイプラインを確立。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;セキュリティの強化&lt;/b&gt;: 外部からのインバウンド通信を一切許可することなく、GitHub Actionsとの双方向通信を実現。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;本アーキテクチャは、GitHub Actionsの柔軟性とSelf-hosted Runnerのネットワーク的優位性を組み合わせることで、ハイブリッドクラウド環境におけるデプロイの障壁を解消するものです。従来のNginx等の静的設定中心のレガシーな運用から、KubernetesネイティブなGitOpsへの移行期において、運用負荷（Ops Burden）を大幅に軽減する実効的なソリューションとなります。今後は、latestタグ運用を廃止し、GITHUB_RUN_NUMBERを用いたイミュータブルなタグ管理への移行が、さらなる信頼性向上の鍵となります。&lt;/p&gt;</description></item><item><title>GitHub ActionsとWindows Self-Hosted RunnerによるKubernetesデプロイ自動化時のエラー解決</title><link>https://klifehack.com/p/github-actions-windows-runner-kubernetes/</link><pubDate>Fri, 22 May 2026 13:53:12 +0900</pubDate><guid>https://klifehack.com/p/github-actions-windows-runner-kubernetes/</guid><description>&lt;h2 id="-kubeconfigのpemブロック解析エラーunable-to-parse-bytes-as-pem-blockの解決"&gt;🛠️ KubeconfigのPEMブロック解析エラー（unable to parse bytes as PEM block）の解決
+&lt;/h2&gt;&lt;p&gt;GitHub Actionsのワークフロー実行時に、Kubernetesクラスターへの認証処理で以下のエラーが発生しました。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;error: unable to load root certificates: unable to parse bytes as PEM block
+Error: Process completed with exit code 1.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="発生原因"&gt;発生原因
+&lt;/h3&gt;&lt;p&gt;GitHub Secretsにローカルの &lt;b&gt;&lt;mark&gt;kubeconfig&lt;/mark&gt;&lt;/b&gt; ファイルのYAMLテキストを直接コピー＆ペーストして保存した際、改行コード（\n と \r\n）の不整合やインデントの崩れ、Base64エンコードされた証明書データの末尾欠損が発生し、証明書データ（PEM形式）のパースに失敗しました。&lt;/p&gt;
+&lt;h3 id="修正手順"&gt;修正手順
+&lt;/h3&gt;&lt;p&gt;データの破損を防ぐため、Windows環境の kubeconfig ファイルをBase64文字列にエンコードしてからGitHub Secretsに登録します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;WindowsのPowerShellを開き、以下のコマンドを実行して kubeconfig をBase64エンコードします。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#66d9ef"&gt;Convert&lt;/span&gt;]::ToBase64String([&lt;span style="color:#66d9ef"&gt;IO.File&lt;/span&gt;]::ReadAllBytes(\&lt;span style="color:#e6db74"&gt;&amp;#34;C:\\Users\\Administrator\\.kube\\config\&amp;#34;&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;出力された1行の長いBase64文字列をコピーします。&lt;/p&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;
+&lt;p&gt;GitHubリポジトリの「Settings」→「Secrets and variables」→「Actions」から、既存の &lt;code&gt;KUBE_CONFIG&lt;/code&gt; を削除し、コピーしたBase64文字列を新しい値として再登録します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ワークフローファイル（&lt;code&gt;.github/workflows/docker-build.yml&lt;/code&gt;）のデコード処理を以下のように修正します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; mkdir -p ~/.kube
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo \&amp;#34;${{ secrets.KUBE_CONFIG }}\&amp;#34; | base64 -d &amp;amp;gt; ~/.kube/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="-クラウドラナーからのdns解決失敗kubernetesdockerinternal6443-no-such-hostの解決"&gt;🛠️ クラウドラナーからのDNS解決失敗（kubernetes.docker.internal:6443: no such host）の解決
+&lt;/h2&gt;&lt;p&gt;証明書エラーの解決後、デプロイステップで以下のネットワークタイムアウトおよびDNS解決エラーが発生しました。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;E0528 01:43:09.437587 2260 memcache.go:265] \&amp;#34;Unhandled Error\&amp;#34; err=\&amp;#34;couldn&amp;#39;t get current server API group list: Get \\\&amp;#34;https://kubernetes.docker.internal:6443/api?timeout=32s\\\&amp;#34;: dial tcp: lookup kubernetes.docker.internal on 127.0.0.53:53: no such host\&amp;#34;
+Unable to connect to the server: dial tcp: lookup kubernetes.docker.internal on 127.0.0.53:53: no such host
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="発生原因-1"&gt;発生原因
+&lt;/h3&gt;&lt;p&gt;GitHub Actionsの標準ホストランナー（&lt;code&gt;runs-on: ubuntu-latest&lt;/code&gt;）は、GitHubが提供するクラウド上の仮想マシンで実行されます。そのため、ローカル開発環境（Docker Desktop）のプライベートDNSである &lt;code&gt;kubernetes.docker.internal&lt;/code&gt; を解決できず、ローカルのKubernetes APIサーバーにルーティングできません。&lt;/p&gt;
+&lt;h3 id="修正手順-1"&gt;修正手順
+&lt;/h3&gt;&lt;p&gt;ローカルネットワーク内のリソースに直接アクセスするため、ローカルマシン上に &lt;b&gt;&lt;mark&gt;Self-Hosted Runner&lt;/mark&gt;&lt;/b&gt; を構築します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;GitHubリポジトリの「Settings」→「Actions」→「Runners」から「New self-hosted runner」を選択し、OSに「Windows」を指定します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ローカルのPowerShellで以下のコマンドを実行し、ランナーパッケージをダウンロードして展開します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir actions-runner
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd actions-runner
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//github.com/actions/runner/releases/download/v2.334.&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;/actions-runner-win-x64-&lt;span style="color:#ae81ff"&gt;2.334&lt;/span&gt;.0.zip -OutFile actions-runner-win-x64-&lt;span style="color:#ae81ff"&gt;2.334&lt;/span&gt;.0.zip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Add-Type -AssemblyName System.IO.Compression.FileSystem
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#66d9ef"&gt;System.IO.Compression.ZipFile&lt;/span&gt;]::ExtractToDirectory(\&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PWD&lt;span style="color:#e6db74"&gt;/actions-runner-win-x64-2.334.0.zip\&amp;#34;&lt;/span&gt;, \&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PWD&lt;span style="color:#e6db74"&gt;\&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;画面に表示されたトークンを使用してランナーを登録します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.\\config.cmd --url https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//github.com/giturl-id/tomcat-k8s --token &amp;lt;your_token&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="4"&gt;
+&lt;li&gt;ランナーを起動します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.\\run.cmd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="5"&gt;
+&lt;li&gt;ワークフローファイルの実行環境ターゲットを修正します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 変更前&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 変更後&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;self-hosted&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="-windows環境でのmkdir--pコマンド実行エラーの解決"&gt;🛠️ Windows環境でのmkdir -pコマンド実行エラーの解決
+&lt;/h2&gt;&lt;p&gt;実行環境をWindowsのSelf-Hosted Runnerに切り替えた際、ディレクトリ作成ステップで以下のエラーが発生しました。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;mkdir : An item with the specified name C:\\Users\\Administrator\\.kube already exists.
+At C:\\study\\tomcat\\actions-runner\\_work\\_temp\\836d0b14-98fc-4377-a457-faf5123b7885.ps1:2 char:1
++ mkdir -p ~/.kube
++ ~~~~~~~~~~~~~~~
+ + CategoryInfo : ResourceExists: (C:\\Users\\Administrator\\.kube:String) [New-Item], IOException
+ + FullyQualifiedErrorId : DirectoryExist,Microsoft.PowerShell.Commands.NewItemCommand
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="発生原因-2"&gt;発生原因
+&lt;/h3&gt;&lt;p&gt;WindowsのSelf-Hosted Runnerでは、GitHub ActionsのステップがデフォルトでPowerShell上で実行されます。PowerShellにおいて &lt;code&gt;mkdir&lt;/code&gt; は &lt;code&gt;New-Item -ItemType Directory&lt;/code&gt; のエイリアスであり、&lt;code&gt;-p&lt;/code&gt; オプションが存在しません。また、作成対象のディレクトリが既に存在する場合、PowerShellは &lt;code&gt;IOException&lt;/code&gt; をスローして終了コード &lt;code&gt;1&lt;/code&gt; で異常終了します。&lt;/p&gt;
+&lt;h3 id="修正手順-2"&gt;修正手順
+&lt;/h3&gt;&lt;p&gt;PowerShellのネイティブ構文を使用し、ディレクトリの存在確認を行ってから作成するロジックに変更します。また、Base64のデコード処理も.NETのランタイム機能を使用してPowerShell内で完結させます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;shell&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;powershell&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if (!(Test-Path \&amp;#34;$HOME\\.kube\&amp;#34;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; New-Item -ItemType Directory -Path \&amp;#34;$HOME\\.kube\&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; [System.Text.Encoding]::UTF8.GetString(
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; [System.Convert]::FromBase64String(\&amp;#34;${{ secrets.KUBE_CONFIG }}\&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ) | Out-File \&amp;#34;$HOME\\.kube\\config\&amp;#34; -Encoding utf8&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="-kubernetesポッドのイメージプルエラーerrimagepullの解決"&gt;🛠️ Kubernetesポッドのイメージプルエラー（ErrImagePull）の解決
+&lt;/h2&gt;&lt;p&gt;デプロイ実行後、ポッドのステータスが &lt;code&gt;ErrImagePull&lt;/code&gt; となり、コンテナが起動しない現象が発生しました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get pods
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 出力結果:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# NAME READY STATUS RESTARTS AGE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# tomcat2-deployment-59d4ff8df8-cwwb2 0/1 ErrImagePull 0 9s&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="発生原因-3"&gt;発生原因
+&lt;/h3&gt;&lt;p&gt;マニフェストファイル（&lt;code&gt;Deployment.yaml&lt;/code&gt;）内の &lt;code&gt;imagePullPolicy&lt;/code&gt; が &lt;code&gt;Always&lt;/code&gt; に設定されているため、ローカルのDockerキャッシュにイメージが存在する場合でも、Kubernetesは外部レジストリ（DockerHubなど）へ最新イメージの問い合わせを強制します。イメージがリモートレジストリにプッシュされていない、または認証情報が不足している場合、このプル処理が失敗します。&lt;/p&gt;
+&lt;h3 id="修正手順-3"&gt;修正手順
+&lt;/h3&gt;&lt;p&gt;開発環境においてローカルビルドしたイメージを直接使用する場合、&lt;code&gt;imagePullPolicy&lt;/code&gt; を &lt;code&gt;IfNotPresent&lt;/code&gt; に変更して外部レジストリへの問い合わせをスキップさせます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;Deployment.yaml&lt;/code&gt; のコンテナ定義を以下のように修正します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;tomcat&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;abungard/my-tomcat:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;imagePullPolicy&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;IfNotPresent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
+&lt;li&gt;既存のデプロイを削除し、再適用します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl delete deployment tomcat2-deployment
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl apply -f Deployment.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;ポッドの起動状態を確認します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get pods
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ステータスが &lt;code&gt;Running&lt;/code&gt; に遷移していることを確認します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;NAME READY STATUS RESTARTS AGE
+tomcat2-deployment-59d4ff8df8-cwwb2 1/1 Running 0 12s
+```&amp;lt;/your_token&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>

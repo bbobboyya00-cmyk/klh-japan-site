@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Auditd on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/auditd/</link><description>Recent content in Auditd on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 29 May 2026 09:40:32 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/auditd/index.xml" rel="self" type="application/rss+xml"/><item><title>Linuxプロセスセキュリティとシステムログ解析のアーキテクチャ設計</title><link>https://klifehack.com/p/linux-process-security-log-analysis/</link><pubDate>Fri, 29 May 2026 09:40:32 +0900</pubDate><guid>https://klifehack.com/p/linux-process-security-log-analysis/</guid><description>&lt;h1 id="linuxプロセスセキュリティとログ解析アーキテクチャの技術的考察"&gt;Linuxプロセスセキュリティとログ解析アーキテクチャの技術的考察
+&lt;/h1&gt;&lt;p&gt;Linuxシステムにおけるセキュリティの核心は、静的なファイル権限の管理を超え、実行中のプロセスの振る舞いをいかに制御し、監視するかにあります。本稿では、プロセスのアイデンティティ、隔離技術、およびフォレンジックに不可欠なログ解析アーキテクチャについて、実務的な観点から技術分析を行います。&lt;/p&gt;
+&lt;h2 id="1-プロセスセキュリティの定義と境界"&gt;1. プロセスセキュリティの定義と境界
+&lt;/h2&gt;&lt;p&gt;プロセスは、ディスク上の静止したデータであるファイルとは異なり、RAM上で実行されている動的な実体です。従来のファイルパーミッションだけでは、以下の脅威を防ぐことは困難です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ファイルレスマルウェア&lt;/b&gt;: ディスクに痕跡を残さず、メモリ内でのみ動作する攻撃コード。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;リモートコード実行 (RCE)&lt;/b&gt;: 認可されたプログラムの脆弱性を突き、攻撃者が意図しないコマンドを実行させる手法。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらに対抗するため、プロセスセキュリティは隔離（Isolation）、監視（Monitoring）、検知（Detection）の3つの柱で構成されます。&lt;/p&gt;
+&lt;h2 id="2-プロセスの識別子と権限モデル"&gt;2. プロセスの識別子と権限モデル
+&lt;/h2&gt;&lt;p&gt;Linuxカーネルは、各プロセスに特定の識別子を付与し、リソースへのアクセスを制御します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;PID (Process ID)&lt;/b&gt;: システム全体で一意の番号。ブート時に最初に実行される &lt;code&gt;systemd&lt;/code&gt; (PID 1) を頂点としたツリー構造を形成します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;PPID (Parent PID)&lt;/b&gt;: 親プロセスのID。例えば、Webサーバー (&lt;code&gt;nginx&lt;/code&gt;) が &lt;code&gt;/bin/bash&lt;/code&gt; を生成した場合、不自然なPPIDの関係からRCEの可能性を疑う重要な指標となります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;UID/GID (User/Group ID)&lt;/b&gt;: プロセスがどのユーザー権限で動作しているかを示します。最小権限の原則に基づき、&lt;code&gt;root&lt;/code&gt; 権限での実行を最小限に抑えることが基本です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="ruidとeuidの分離メカニズム"&gt;RUIDとEUIDの分離メカニズム
+&lt;/h3&gt;&lt;p&gt;SUID (Set-user-ID) ビットが設定されたバイナリの動作を理解するには、RUIDとEUIDの区別が不可欠です。RUID (Real UID) はプロセスを開始した実際のユーザーIDであり、EUID (Effective UID) はプロセスが実行中に実際に行使する権限を決定するIDです。攻撃者はこの仕組みを悪用して権限昇格を狙うため、システム内のSUIDバイナリの監査は必須です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# システム内のSUIDバイナリを検索し、権限昇格のリスクを特定する&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -4000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-カーネルレベルの隔離技術namespacesとcgroups"&gt;3. カーネルレベルの隔離技術：Namespacesとcgroups
+&lt;/h2&gt;&lt;p&gt;コンテナ技術の基盤でもあるこれらの機能は、プロセス間の干渉を物理的に遮断します。&lt;/p&gt;
+&lt;h3 id="namespaces-名前空間"&gt;Namespaces (名前空間)
+&lt;/h3&gt;&lt;p&gt;カーネルリソースを論理的に分割し、プロセスごとに異なるリソースセットを見せます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Network Namespace&lt;/b&gt;: 独立したネットワークインターフェース、IP、ルーティングテーブルを提供。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mount Namespace&lt;/b&gt;: ファイルシステム階層を隔離。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;PID Namespace&lt;/b&gt;: コンテナ内のプロセスに独自のPID 1を割り当て。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;User Namespace&lt;/b&gt;: ホスト側の一般ユーザーを、コンテナ内でのみ &lt;code&gt;root&lt;/code&gt; として扱うことが可能。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="cgroups-control-groups"&gt;cgroups (Control Groups)
+&lt;/h3&gt;&lt;p&gt;Namespacesが「何が見えるか」を制御するのに対し、cgroupsは「どれだけ使えるか」を制御します。CPU使用率、メモリ量、ネットワーク帯域を制限することで、特定のプロセスによるリソース枯渇（DoS状態）を防止します。&lt;/p&gt;
+&lt;h2 id="4-不審なプロセスの検知手法"&gt;4. 不審なプロセスの検知手法
+&lt;/h2&gt;&lt;p&gt;異常な挙動を示すプロセスを特定するためのチェックリストを以下に示します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;マスカレード&lt;/b&gt;: &lt;code&gt;kworker&lt;/code&gt; や &lt;code&gt;syslogd&lt;/code&gt; といった正規のプロセス名に偽装したバイナリ。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;異常な実行パス&lt;/b&gt;: &lt;code&gt;/tmp&lt;/code&gt;, &lt;code&gt;/dev/shm&lt;/code&gt;, &lt;code&gt;/var/tmp&lt;/code&gt; といった書き込み権限の広いディレクトリから実行されているプロセス。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;削除済みバイナリの実行&lt;/b&gt;: ディスク上から削除された後もメモリ上で動作し続けているプロセス。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 実行中に削除された不審なバイナリを特定する&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ls -al /proc/*/exe | grep deleted
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;不審なネットワーク接続&lt;/b&gt;: &lt;code&gt;ss -tulnp&lt;/code&gt; を使用し、未知の外部IPアドレスと通信しているプロセスを特定します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-ログ解析アーキテクチャの設計"&gt;5. ログ解析アーキテクチャの設計
+&lt;/h2&gt;&lt;p&gt;インシデント発生時のブラックボックス化を防ぐため、ログには網羅性と不変性が求められます。&lt;/p&gt;
+&lt;h3 id="journald-systemd-journald"&gt;journald (systemd-journald)
+&lt;/h3&gt;&lt;p&gt;モダンなLinuxの標準ロガーであり、バイナリ形式でログを保存します。テキストベースのログよりも高速なインデックス検索が可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のサービスにおけるエラーログを抽出&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;journalctl -u sshd.service -p err
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="auditd-linux-audit-framework"&gt;auditd (Linux Audit Framework)
+&lt;/h3&gt;&lt;p&gt;auditdはカーネルレベルでシステムコールをインターセプトします。これにより、攻撃者がログ出力を抑制しようとしても回避困難な記録を残せます。💡 実行ファイルへのアクセスやシステムコールの監視に極めて有効です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 実行されたすべてのコマンド（execveシステムコール）を監査するルールの確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;auditctl -l
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-windowsイベントログの重要id"&gt;6. Windowsイベントログの重要ID
+&lt;/h2&gt;&lt;p&gt;マルチプラットフォーム環境では、Windowsのイベントログ構造の理解も不可欠です。特に以下のEvent IDはセキュリティ監視の要となります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;4624&lt;/b&gt;: ログオン成功（Logon Type 3はネットワーク、10はRDPを指す）。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;4688&lt;/b&gt;: 新しいプロセスの作成（デフォルトでは無効なため、グループポリシーでの有効化が必要）。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;4732&lt;/b&gt;: 管理者グループへのメンバー追加。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="operational-notes-"&gt;Operational Notes 🛠️
+&lt;/h2&gt;&lt;p&gt;実務運用において、ログの有効性を担保するための留意事項をまとめます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;ログの外部転送&lt;/b&gt;: 攻撃者が &lt;code&gt;root&lt;/code&gt; 権限を奪取した場合、ローカルログは即座に改ざん・消去されます。&lt;code&gt;rsyslog&lt;/code&gt; のTCP転送やSIEMへのリアルタイム転送を構成し、ログの不変性を確保してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;時刻同期 (NTP)&lt;/b&gt;: 複数サーバー間のログを相関分析する際、1秒のズレがタイムラインの再構築を不可能にします。全ノードでUTC設定と厳密な時刻同期を行ってください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;auditdのルール設計&lt;/b&gt;: ルールを定義しない &lt;code&gt;auditd&lt;/code&gt; は、セキュリティ上の価値がほとんどありません。重要な設定ファイル（&lt;code&gt;/etc/passwd&lt;/code&gt;, &lt;code&gt;/etc/sudoers&lt;/code&gt;）や実行バイナリに対する監視ルールを明示的に設定してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ディスク容量の監視&lt;/b&gt;: ⚠️ &lt;code&gt;auditd&lt;/code&gt; はディスクが満杯になった際、設定によってはシステムを停止（Halt）させることがあります。ログローテーションポリシーとディスククォータの設計を事前に行う必要があります。&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>auditdとrsyslogを用いたプロセス監査およびログ転送の実装</title><link>https://klifehack.com/p/linux-process-audit-rsyslog-implementation/</link><pubDate>Sun, 24 May 2026 10:21:24 +0900</pubDate><guid>https://klifehack.com/p/linux-process-audit-rsyslog-implementation/</guid><description>&lt;h1 id="linuxシステムにおける監査ログ管理基盤の構築auditdとrsyslogによるセキュアなシステムコール監視と外部転送"&gt;Linuxシステムにおける監査ログ管理基盤の構築：auditdとrsyslogによるセキュアなシステムコール監視と外部転送
+&lt;/h1&gt;&lt;h2 id="1-監査およびログ管理における課題と背景"&gt;1. 監査およびログ管理における課題と背景
+&lt;/h2&gt;&lt;p&gt;Linuxシステムにおいて、プロセスの実行状態やシステムコールの監視はセキュリティ確保の基本です。しかし、標準的なアプリケーションレベルのログ出力（syslogなど）のみに依存する場合、いくつかの深刻な課題が生じます。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;ログの改ざんリスク:&lt;/b&gt; 攻撃者がroot権限を奪取した場合、ローカルに保存されたプレーンテキストのログファイル（/var/log/auth.logなど）は容易に消去または改ざんされます。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;システムコールレベルの可視性不足:&lt;/b&gt; 標準のsyslogはアプリケーションが自己申告的に出力するログに依存するため、不正なバイナリが直接実行するシステムコール（ファイル書き換え、権限昇格など）を強制的に捕捉することができません。&lt;/p&gt;
+&lt;p&gt;これらの課題に対処するため、カーネルレベルでシステムコールをインターセプトするauditdと、信頼性の高いTCP接続でログを外部転送するrsyslogを組み合わせた監査基盤の実装手順を定義します。&lt;/p&gt;
+&lt;h2 id="2-技術選定とトレードオフ"&gt;2. 技術選定とトレードオフ
+&lt;/h2&gt;&lt;p&gt;システム監査およびログ管理の設計において、以下のトレードオフを考慮しました。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;syslog と auditd の比較:&lt;/b&gt; syslogはアプリケーション層のイベント記録に適していますが、プロセスの挙動を強制的に追跡することはできません。一方、auditdはカーネル境界でシステムコールを捕捉するため、プロセスの回避行動を防ぐことができます。ただし、ルール設定によっては大量のログが生成され、ディスクI/Oおよびストレージ容量を圧迫するトレードオフがあります。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;UDP転送 と TCP転送 の比較:&lt;/b&gt; rsyslogによるリモート転送において、UDP（@）は高速ですがパケットロスのリスクがあります。TCP（@@）は接続指向であり、ネットワーク一時切断時にも再送制御が行われるため、セキュリティ監査ログの転送にはTCPを採用します。&lt;/p&gt;
+&lt;h2 id="3-実装手順"&gt;3. 実装手順
+&lt;/h2&gt;&lt;h3 id="31-auditdのインストールと有効化"&gt;3.1 auditdのインストールと有効化
+&lt;/h3&gt;&lt;p&gt;Debian/Ubuntu環境において、以下のコマンドを実行してauditdを導入し、サービスを有効化します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y auditd audispd-plugins
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl enable --now auditd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-監査ルールの定義"&gt;3.2 監査ルールの定義
+&lt;/h3&gt;&lt;p&gt;/etc/audit/rules.d/audit.rulesにカスタムルールを追加し、重要なファイルやディレクトリへのアクセスを監視します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-w /etc/shadow -p wa -k shadow_watch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-w /etc/sudoers -p wa -k sudoers_watch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;設定を反映させるため、監査ルールを再読み込みします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo auigenrules --load
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="33-rsyslogによるリモートtcp転送設定"&gt;3.3 rsyslogによるリモートTCP転送設定
+&lt;/h3&gt;&lt;p&gt;ローカルログの改ざんを防ぐため、/etc/rsyslog.conf（または/etc/rsyslog.d/配下の設定ファイル）にリモート転送ルールを追加します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;*.* @@remote-log-server:514
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;設定変更後、rsyslogサービスを再起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl restart rsyslog
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-運用検証とログ解析パイプライン"&gt;4. 運用検証とログ解析パイプライン
+&lt;/h2&gt;&lt;h3 id="41-監査ログの検索-ausearch"&gt;4.1 監査ログの検索 (ausearch)
+&lt;/h3&gt;&lt;p&gt;定義したキー（shadow_watch）に一致するイベントを検索し、数値を人間が読める形式に変換して表示します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ausearch -k shadow_watch -i
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-削除された実行バイナリの検知"&gt;4.2 削除された実行バイナリの検知
+&lt;/h3&gt;&lt;p&gt;💡 メモリ上で実行中でありながら、ディスク上から削除された不審なプロセスを特定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ls -l /proc/*/exe | grep &lt;span style="color:#e6db74"&gt;&amp;#34;deleted&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="43-sshブルートフォース攻撃の集計"&gt;4.3 SSHブルートフォース攻撃の集計
+&lt;/h3&gt;&lt;p&gt;/var/log/auth.logからログイン失敗回数の多いIPアドレスを抽出し、降順でソートします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;grep &lt;span style="color:#e6db74"&gt;&amp;#34;Failed password&amp;#34;&lt;/span&gt; /var/log/auth.log | awk &lt;span style="color:#e6db74"&gt;&amp;#39;{print $(NF-3)}&amp;#39;&lt;/span&gt; | sort | uniq -c | sort -nr
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-導入効果"&gt;5. 導入効果
+&lt;/h2&gt;&lt;p&gt;本構成の導入により、以下の効果が確認されました。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;監査の網羅性向上:&lt;/b&gt; /etc/shadowや/etc/sudoersに対する変更操作が、実行したユーザーID（auid）とともにカーネルレベルで確実に記録されるようになりました。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;ログの保全性確保:&lt;/b&gt; rsyslogのTCP転送設定により、ローカルログが消去された場合でも、リモートのログサーバー側でイベント履歴を追跡可能な状態が維持されます。&lt;/p&gt;</description></item></channel></rss>

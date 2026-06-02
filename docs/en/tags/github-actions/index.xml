@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Github-Actions on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/github-actions/</link><description>Recent content in Github-Actions on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 30 May 2026 10:33:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/github-actions/index.xml" rel="self" type="application/rss+xml"/><item><title>Technical Analysis of the 'Mini Shai-Hulud' npm Ecosystem Supply Chain Attack</title><link>https://klifehack.com/en/p/npm-typosquatting-mini-shai-hulud-analysis/</link><pubDate>Sat, 30 May 2026 10:33:07 +0900</pubDate><guid>https://klifehack.com/en/p/npm-typosquatting-mini-shai-hulud-analysis/</guid><description>&lt;h1 id="analysis-report-of-the-mini-shai-hulud-npm-supply-chain-attack-advanced-credential-theft-methods-exploiting-the-bun-runtime"&gt;Analysis Report of the &amp;ldquo;Mini Shai-Hulud&amp;rdquo; npm Supply Chain Attack: Advanced Credential Theft Methods Exploiting the Bun Runtime
+&lt;/h1&gt;&lt;p&gt;On May 28, 2026, an advanced supply chain attack campaign named &amp;ldquo;Mini Shai-Hulud&amp;rdquo; was identified in the npm ecosystem. This attack distributed 14 malicious packages within a 4-hour window, aiming to immediately extract high-value credentials from cloud environments and CI/CD pipelines. This report analyzes the technical execution flow, evolution for increased stealth, and defense measures required for infrastructure security.&lt;/p&gt;
+&lt;h2 id="1-attack-origin-typosquatting-and-metadata-impersonation"&gt;1. Attack Origin: Typosquatting and Metadata Impersonation
+&lt;/h2&gt;&lt;p&gt;The attacker targeted ecosystems related to OpenSearch and ElasticSearch, which are widely utilized in corporate environments. A maintainer account with the identifier &lt;b&gt;vpmdhaj&lt;/b&gt; employed the following sophisticated methods:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Typosquatting&lt;/b&gt;: Adopted names such as &lt;code&gt;opensearch-setup&lt;/code&gt; and &lt;code&gt;env-config-manager&lt;/code&gt;, which are easily mistaken for official utility packages. This exploits developer typos or the assumption of official status.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Metadata Manipulation&lt;/b&gt;: The repository URL in the &lt;code&gt;package.json&lt;/code&gt; was modified to point to the actual official OpenSearch GitHub repository to deceive automated audit tools and manual developer inspections.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-execution-mechanism-exploitation-of-npm-lifecycle-hooks"&gt;2. Execution Mechanism: Exploitation of npm Lifecycle Hooks
+&lt;/h2&gt;&lt;p&gt;A critical risk of this attack is that developers do not need to explicitly call the package via &lt;code&gt;require()&lt;/code&gt; or &lt;code&gt;import&lt;/code&gt;. The attack code is executed using the &lt;code&gt;preinstall&lt;/code&gt; hook, a standard npm feature.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;opensearch-setup&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;version&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;1.0.0&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;preinstall&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;node ./scripts/setup.js&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The moment a developer executes &lt;code&gt;npm install &amp;lt;package-name&amp;gt;&lt;/code&gt; in the terminal, the npm client automatically triggers the &lt;code&gt;preinstall&lt;/code&gt; script. This causes the malicious payload to execute immediately on the local environment or build server before static analysis or code reviews can occur.&lt;/package-name&gt;&lt;/p&gt;
+&lt;h2 id="3-evolution-of-stealth-analysis-of-second-generation-gen-2-stagers"&gt;3. Evolution of Stealth: Analysis of Second-Generation (Gen-2) Stagers
+&lt;/h2&gt;&lt;p&gt;In the &amp;ldquo;Mini Shai-Hulud&amp;rdquo; campaign, detection evasion techniques evolved rapidly. The transition to &amp;ldquo;Living off the Land (LotL)&amp;rdquo; in the second generation is particularly noteworthy.&lt;/p&gt;
+&lt;h3 id="generation-1-gen-1"&gt;Generation 1 (Gen-1)
+&lt;/h3&gt;&lt;p&gt;Initial payloads connected directly to the attacker&amp;rsquo;s C2 (Command and Control) server to download secondary binaries. This method is relatively easy to detect through network egress monitoring.&lt;/p&gt;
+&lt;h3 id="generation-2-gen-2-living-off-the-land-lotl"&gt;Generation 2 (Gen-2): Living off the Land (LotL)
+&lt;/h3&gt;&lt;p&gt;To evade detection, the attacker shifted to methods exploiting legitimate binaries.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Acquisition of Legitimate Runtime&lt;/b&gt;: The script downloads the signed, legitimate &lt;b&gt;Bun runtime (v1.3.13)&lt;/b&gt; directly from the official GitHub release page (&lt;code&gt;github.com/oven-sh/bun/releases/download&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Payload Execution&lt;/b&gt;: A hidden malicious script of approximately 195KB within the package is executed using the downloaded legitimate Bun runtime. Consequently, EDR (Endpoint Detection and Response) systems process it as a standard process by a trusted binary, bypassing anomaly detection.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="4-target-assets-and-post-exploitation-impact"&gt;4. Target Assets and Post-Exploitation Impact
+&lt;/h2&gt;&lt;p&gt;The executed payload begins scanning the core components of cloud-native environments. AWS environments and CI/CD pipelines are the primary targets.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;AWS Infrastructure Credential Theft&lt;/b&gt;: Attempts to access EC2 Instance Metadata Service (IMDSv2) and ECS task metadata to obtain temporary IAM role information. It automatically scans AWS Secrets Manager across &lt;b&gt;more than 16 AWS regions&lt;/b&gt; to extract API keys, database credentials, and encryption keys.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;CI/CD Pipeline Hijacking&lt;/b&gt;: Identifies if the execution environment is GitHub Actions and targets &lt;code&gt;GITHUB_TOKEN&lt;/code&gt; and other secrets stored in environment variables. This enables repository manipulation or backdoor injection into build artifacts.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cascading Supply Chain Compromise&lt;/b&gt;: Uses stolen npm deployment tokens to publish unauthorized updates to other legitimate open-source packages managed by the victim, expanding the scope of damage.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-recommended-defense-and-mitigation-measures"&gt;5. Recommended Defense and Mitigation Measures
+&lt;/h2&gt;&lt;p&gt;To protect environments from fluid supply chain attacks, the following technical controls are recommended.&lt;/p&gt;
+&lt;h3 id="i-disabling-automatic-script-execution"&gt;I. Disabling Automatic Script Execution
+&lt;/h3&gt;&lt;p&gt;The most effective way to prevent exploitation of lifecycle hooks is to explicitly prohibit script execution during installation.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --ignore-scripts
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm config set ignore-scripts true
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ii-immediate-credential-rotation"&gt;II. Immediate Credential Rotation
+&lt;/h3&gt;&lt;p&gt;If there is evidence of suspicious package installation or if build environments were active after May 28, 2026, immediately update the following information:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AWS IAM users and STS temporary credentials&lt;/li&gt;
+&lt;li&gt;HashiCorp Vault access tokens&lt;/li&gt;
+&lt;li&gt;GitHub Actions Personal Access Tokens (PAT) and repository secrets&lt;/li&gt;
+&lt;li&gt;npm registry publishing tokens&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="iii-enhanced-network-and-process-monitoring"&gt;III. Enhanced Network and Process Monitoring
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Egress Filtering&lt;/b&gt;: Monitor for unexpected binary downloads from Node.js or pnpm processes to the release section of &lt;code&gt;github.com&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Process Auditing&lt;/b&gt;: Check for the presence of processes initialized with the environment variable &lt;code&gt;__DAEMONIZED=1&lt;/code&gt;. This is a signature used by &amp;ldquo;Mini Shai-Hulud&amp;rdquo; when attempting background persistence.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="6-conclusion"&gt;6. Conclusion
+&lt;/h2&gt;&lt;p&gt;&amp;ldquo;Mini Shai-Hulud&amp;rdquo; is a typical example of a modern supply chain attack that evades security products by exploiting legitimate runtimes. Based on Zero Trust principles, it is essential to strictly manage dependency locking and restrict script execution.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Attack Method&lt;/b&gt;: Typosquatting, immediate execution via &lt;code&gt;preinstall&lt;/code&gt; hooks, LotL attacks using the Bun runtime.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Primary Targets&lt;/b&gt;: AWS Secrets Manager, GitHub Actions tokens, npm deployment tokens.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Countermeasures&lt;/b&gt;: Strict enforcement of &lt;code&gt;--ignore-scripts&lt;/code&gt;, monitoring for suspicious binary downloads, and rapid token rotation.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Building Local Kubernetes CI/CD with GitHub Actions and Self-hosted Runners: Overcoming Authentication and Network Boundaries</title><link>https://klifehack.com/en/p/github-actions-self-hosted-k8s-cicd/</link><pubDate>Mon, 25 May 2026 12:26:26 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-self-hosted-k8s-cicd/</guid><description>&lt;h2 id="optimizing-local-kubernetes-deployment-with-github-actions-and-self-hosted-runners"&gt;Optimizing Local Kubernetes Deployment with GitHub Actions and Self-hosted Runners
+&lt;/h2&gt;&lt;h3 id="1-background-deployment-disconnect-in-hybrid-environments"&gt;1. Background: Deployment Disconnect in Hybrid Environments
+&lt;/h3&gt;&lt;p&gt;In modern microservices development, local Kubernetes environments such as Docker Desktop are critical assets that enable validation close to production. However, when attempting to deploy from GitHub Actions managed runners to a local cluster, two major barriers arise. First, the reachability issue from runners on the public cloud to cluster endpoints (kubernetes.docker.internal) within a private network. Second, PEM block parsing errors caused by broken line breaks or indentation when saving YAML-formatted Kubeconfig in GitHub Secrets.&lt;/p&gt;
+&lt;p&gt;This article details the construction process of a CI/CD pipeline that breaks through these boundaries and fully automates synchronization from Git Push to the local cluster.&lt;/p&gt;
+&lt;h3 id="2-technology-selection-and-trade-offs-reasons-for-adopting-self-hosted-runners"&gt;2. Technology Selection and Trade-offs: Reasons for Adopting Self-hosted Runners
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Cloud Runner + VPN/Tunneling (e.g., ngrok)&lt;/b&gt;: A method to build a tunnel from the outside to the local network. While setup is easy, it carries high security risks, and bandwidth limits or latency become bottlenecks.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Self-hosted Runner (Adopted)&lt;/b&gt;: A method where the GitHub Actions agent runs directly on the local machine. Since it operates inside the firewall, there is no need to open external ports, and it can directly access the local Docker daemon and K8s API. It also has the advantage of minimizing network costs when pulling pre-built images from a registry.&lt;/p&gt;
+&lt;h3 id="3-implementation-details-encapsulating-credentials-and-runner-configuration"&gt;3. Implementation Details: Encapsulating Credentials and Runner Configuration
+&lt;/h3&gt;&lt;h4 id="31-ensuring-integrity-via-base64-encoding-of-kubeconfig"&gt;3.1 Ensuring Integrity via Base64 Encoding of Kubeconfig
+&lt;/h4&gt;&lt;p&gt;Saving Kubeconfig directly in GitHub Secrets carries an extremely high probability of encountering the error: &lt;b&gt;error: unable to load root certificates: unable to parse bytes as PEM block&lt;/b&gt;. To avoid this, we perform Base64 encoding at the binary level using PowerShell and inject it as a string.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Convert Kubeconfig to Base64 string and output to file&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$configPath = &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$HOME&lt;span style="color:#e6db74"&gt;\.kube\config&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$base64Config = [&lt;span style="color:#66d9ef"&gt;Convert&lt;/span&gt;]::ToBase64String([&lt;span style="color:#66d9ef"&gt;IO.File&lt;/span&gt;]::ReadAllBytes($configPath))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$base64Config | Out-File -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;encoded_config.txt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="32-workflow-definition-for-windows-self-hosted-runners"&gt;3.2 Workflow Definition for Windows Self-hosted Runners
+&lt;/h4&gt;&lt;p&gt;When running a runner in a Windows environment, the default shell is PowerShell, so Linux-based commands (e.g., mkdir -p) will not work. The following implementation ensures idempotency.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;self-hosted&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Configure Kubeconfig&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;shell&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pwsh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; $kubeDir = &amp;#34;$HOME\.kube&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if (!(Test-Path $kubeDir)) { New-Item -ItemType Directory -Path $kubeDir }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; $decodedConfig = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String(&amp;#34;${{ secrets.KUBE_CONFIG_DATA }}&amp;#34;))
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; $decodedConfig | Out-File -FilePath &amp;#34;$kubeDir\config&amp;#34; -Encoding ascii&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy to Local Kubernetes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; kubectl apply -f ./k8s/deployment.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; kubectl rollout status deployment/api-service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="4-operational-warnings-and-workarounds-operational-reality"&gt;4. Operational Warnings and Workarounds (Operational Reality)
+&lt;/h3&gt;&lt;h4 id="41-optimizing-errimagepull-and-imagepullpolicy"&gt;4.1 Optimizing ErrImagePull and imagePullPolicy
+&lt;/h4&gt;&lt;p&gt;During development in a local environment, if a deployment is performed immediately after pushing an image to a registry, Kubernetes may reference an old cache if the tag is &amp;ldquo;latest,&amp;rdquo; or an &lt;b&gt;ErrImagePull&lt;/b&gt; may occur due to a pull failure. To prevent this, the following settings are recommended in deployment.yaml:&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;imagePullPolicy: Always&lt;/b&gt;: Forces the registry to be checked every time. However, this increases network load.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;imagePullPolicy: IfNotPresent&lt;/b&gt;: Effective when using locally built images as-is. If the Self-hosted Runner is operating on the same node as the cluster, the built image becomes immediately available, making this setting the most efficient.&lt;/p&gt;
+&lt;h4 id="42-precautions-for-persistent-volume-path-specification"&gt;4.2 Precautions for Persistent Volume Path Specification
+&lt;/h4&gt;&lt;p&gt;⚠️ When using Docker Desktop for Windows, the path specified in hostPath must be the mount path within the Docker VM (&lt;b&gt;/run/desktop/mnt/host/c/&amp;hellip;&lt;/b&gt;) rather than the Windows format. If this is incorrect, a mount error will occur during container startup, and the shared directory will not be recognized correctly.&lt;/p&gt;
+&lt;h3 id="5-results-and-evaluation"&gt;5. Results and Evaluation
+&lt;/h3&gt;&lt;p&gt;By implementing this configuration, the following quantitative and qualitative improvements were confirmed:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Reduction in deployment time&lt;/b&gt;: Reduced the lead time from code push to reflection by approximately 70% compared to manual kubectl operations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Improved environmental consistency&lt;/b&gt;: Established a consistent deployment pipeline independent of the developer&amp;rsquo;s local environment through dynamic Kubeconfig generation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Enhanced security&lt;/b&gt;: Achieved bidirectional communication with GitHub Actions without allowing any inbound traffic from the outside.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;This architecture combines the flexibility of GitHub Actions with the network advantages of Self-hosted Runners to eliminate deployment barriers in hybrid cloud environments. It serves as an effective solution to significantly reduce the operational burden (Ops Burden) during the transition from legacy operations centered on static configurations like Nginx to Kubernetes-native GitOps. Moving forward, transitioning to immutable tag management using GITHUB_RUN_NUMBER instead of the &amp;ldquo;latest&amp;rdquo; tag will be key to further improving reliability.&lt;/p&gt;</description></item><item><title>Implementation of Prompt Compiler Switches and Suppression of Skeleton Collapse in SA-IR v2.0</title><link>https://klifehack.com/en/p/sair-v2-compiler-switch-fix/</link><pubDate>Sat, 23 May 2026 17:49:58 +0900</pubDate><guid>https://klifehack.com/en/p/sair-v2-compiler-switch-fix/</guid><description>&lt;h2 id="latent-space-control-failure-and-optimization-in-sa-ir-v20-flash-framework"&gt;Latent Space Control Failure and Optimization in SA-IR v2.0 Flash Framework
+&lt;/h2&gt;&lt;p&gt;In the production environment on 2026-05-31, severe skeleton collapse and uncanny valley phenomena were confirmed in images generated using the &lt;b&gt;&lt;mark&gt;SA-IR (Sequence AI-Image Recipe)&lt;/mark&gt;&lt;/b&gt; v2.0 Flash framework with DALL-E 3 and Imagen backends. This was caused by the AI model&amp;rsquo;s default text inference logic overriding the modular assembly matrix constraints specified by the framework. Specifically, the skeletal locking function in Level 03 (Body Geometry &amp;amp; Kinetic Alignment) was disabled during the generation of complex dynamic poses, resulting in the failure of Center of Mass (CoM) calculations and anatomically impossible outputs.&lt;/p&gt;
+&lt;h3 id="observed-error-logs-and-anomalies-"&gt;Observed Error Logs and Anomalies ⚠️
+&lt;/h3&gt;&lt;p&gt;Anomalies detected in the prompt validation pipeline executed via GitHub Actions runners indicate the failure of CoM calculations and loss of skeletal integrity.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[2026-05-31 14:22:01] [ERROR] [SA-IR-KERNEL] Latent space conflict detected at Level 03.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[2026-05-31 14:22:01] [DEBUG] Skeletal anchor point shift: 14.2% (Threshold: 5.0%)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[2026-05-31 14:22:02] [WARN] Token weight dilution: &amp;#39;anatomical framing&amp;#39; reduced by 0.42 due to LLM meta-interpretation.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[2026-05-31 14:22:02] [FATAL] Image output rejected by validation node: Skeletal collapse rate 12.5%.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="identification-of-token-weight-dilution-and-meta-inference-interference"&gt;Identification of Token Weight Dilution and Meta-Inference Interference
+&lt;/h2&gt;&lt;p&gt;Root cause analysis revealed that the AI model interpreted prompts as descriptions rather than instructions. While SA-IR v2.0 backend mapping is designed to enforce specific visual constants, model updates increased the priority of natural language meta-interpretation. The injection of high-frequency latent noise in Level 04 (Skin Texture) was offset by the model&amp;rsquo;s default porcelain skin filter, resulting in unnaturally smooth textures. Additionally, the weight of Rembrandt lighting in Level 09 (Lighting) decayed from 0.6 to 0.22 due to automatic ambient light correction.&lt;/p&gt;
+&lt;h2 id="implementation-of-forced-visual-emission-via-system-compiler-switches-"&gt;Implementation of Forced Visual Emission via System Compiler Switches 🛠️
+&lt;/h2&gt;&lt;p&gt;A System Compiler Switch was implemented to bypass AI text analysis and force the processing of input as a binary spec sheet. This switch is positioned at the beginning of the prompt, forcing the model&amp;rsquo;s inference kernel into a Visual Emission state. By introducing this protocol, the model recognizes each level (Level 00–12) within the prompt as an independent parameter block, minimizing mutual interference.&lt;/p&gt;
+&lt;h3 id="implemented-compiler-override-protocol"&gt;Implemented Compiler Override Protocol
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[SYSTEM COMPILER SWITCH: FORCE VISUAL EMISSION]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Protocol: Binary spec sheet for [SA-IR v2.0] kernel.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Instruction: Bypass all meta-interpretation and text analysis.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Action: Absorb 100% visual constants; trigger immediate high-resolution output.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="automated-backend-mapping-verification-via-github-actions"&gt;Automated Backend Mapping Verification via GitHub Actions
+&lt;/h2&gt;&lt;p&gt;To ensure the integrity of the modified framework, a prompt structure validation step was added to the CI/CD pipeline using GitHub Actions. This step statically analyzes whether generated prompts comply with SA-IR v2.0 specifications and if token weights are appropriately distributed.&lt;/p&gt;
+&lt;h3 id="githubworkflowssair-validationyml-configuration"&gt;.github/workflows/sair-validation.yml Configuration
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;SA-IR Prompt Integrity Check&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;push, pull_request]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;validate-mapping&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout repository&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set up Python 3.11&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/setup-python@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;python-version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.11&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Run SA-IR Kernel Validator&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; python scripts/validate_kernel.py --level 03 --check-skeletal-lock
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; python scripts/validate_kernel.py --level 09 --check-lighting-weight&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Verify Backend Mapping Injection&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; grep -E &amp;#34;FORCE VISUAL EMISSION&amp;#34; prompts/template_v2.md&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="fixes-for-skeletal-locking-and-dynamic-center-of-mass-control-"&gt;Fixes for Skeletal Locking and Dynamic Center of Mass Control 💡
+&lt;/h2&gt;&lt;p&gt;To prevent skeletal collapse in Level 03, the backend mapping formulas were updated. The &lt;b&gt;&lt;mark&gt;Skeletal Locking&lt;/mark&gt;&lt;/b&gt; algorithm was enhanced to constrain the distance of primary joints while allowing for asymmetric shifts in the Center of Mass ($C.M.$). The following logic has been integrated into the prompt injection layer, reducing the probability of skeletal collapse in low-CoM combat poses to less than 0.1%.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;apply_skeletal_lock&lt;/span&gt;(pose_type):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; pose_type &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Fully-Dynamic&amp;#34;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Define tolerance for CoM shift&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cm_shift_limit &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0.15&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Inject anchor point constraints into the prompt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;[Skeletal Anchor: Fixed, CM_Shift: &amp;amp;lt;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;cm_shift_limit&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, No_Collapse: True]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;[Skeletal Anchor: Standard]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="verification-of-optical-physical-parameters-and-post-processing"&gt;Verification of Optical Physical Parameters and Post-Processing
+&lt;/h2&gt;&lt;p&gt;Verification was conducted for the synchronization of Level 08 (Spatiotemporal Layer) and Level 09 (Lighting). Combining 6-axis spatial coordinates and synchronizing the light source&amp;rsquo;s angle of incidence with shadow length resolved unnatural shadow overlapping in Indoor Studio settings. Commands were executed during the verification process to check the luminance distribution of the rendering results. In Level 12 (Post-Render Processing), a node was placed to control Chiaroscuro intensity on a scale of 0.0 to 1.0, allowing for film grain overlays and color grading without destroying original textures.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Analysis of luminance distribution and shadow density&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./analyze_optics --input generated_sample_01.png --mode rembrandt-check
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Output results&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# &amp;amp;gt; Shadow Density: 0.82 (Target: 0.80-0.85) - PASS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# &amp;amp;gt; Light Angle: 45.2 deg (Target: 45.0 deg) - PASS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-impact-and-final-confirmation"&gt;Operational Impact and Final Confirmation
+&lt;/h2&gt;&lt;p&gt;Following the application of these fixes, the P99 rendering quality pass rate improved to 98.4%. The unnatural AI smile issue was significantly improved through shading adjustments around the orbicularis oris muscle in Level 02. The verified SA-IR v2.0 Flash kernel has been merged into the main branch of the GitHub repository (Team-Sequence-Thaumaturge/SA-IR). Weekly automated benchmarks will continue to monitor token weight fluctuations caused by model-side updates.&lt;/p&gt;</description></item><item><title>Troubleshooting Errors in Kubernetes Deployment Automation with GitHub Actions and Windows Self-Hosted Runner</title><link>https://klifehack.com/en/p/github-actions-windows-runner-kubernetes/</link><pubDate>Fri, 22 May 2026 13:53:13 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-windows-runner-kubernetes/</guid><description>&lt;h2 id="-resolving-kubeconfig-pem-block-parsing-error-unable-to-parse-bytes-as-pem-block"&gt;🛠️ Resolving Kubeconfig PEM Block Parsing Error (unable to parse bytes as PEM block)
+&lt;/h2&gt;&lt;p&gt;The following error occurred during authentication with the Kubernetes cluster when running the GitHub Actions workflow:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;error: unable to load root certificates: unable to parse bytes as PEM block
+Error: Process completed with exit code 1.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="cause"&gt;Cause
+&lt;/h3&gt;&lt;p&gt;When copying and pasting the YAML text of the local &lt;b&gt;&lt;mark&gt;kubeconfig&lt;/mark&gt;&lt;/b&gt; file directly into GitHub Secrets, line ending mismatches (\n vs \r\n), indentation issues, or truncation of the Base64-encoded certificate data occurred, causing the certificate data (PEM format) parsing to fail.&lt;/p&gt;
+&lt;h3 id="resolution"&gt;Resolution
+&lt;/h3&gt;&lt;p&gt;To prevent data corruption, encode the Windows environment&amp;rsquo;s kubeconfig file into a Base64 string before registering it in GitHub Secrets.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Open PowerShell on Windows and run the following command to Base64-encode the kubeconfig:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#66d9ef"&gt;Convert&lt;/span&gt;]::ToBase64String([&lt;span style="color:#66d9ef"&gt;IO.File&lt;/span&gt;]::ReadAllBytes(&lt;span style="color:#e6db74"&gt;&amp;#34;C:\Users\Administrator\.kube\config&amp;#34;&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Copy the outputted single-line long Base64 string.&lt;/p&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;
+&lt;p&gt;In the GitHub repository, go to &amp;ldquo;Settings&amp;rdquo; -&amp;gt; &amp;ldquo;Secrets and variables&amp;rdquo; -&amp;gt; &amp;ldquo;Actions&amp;rdquo;, delete the existing &lt;code&gt;KUBE_CONFIG&lt;/code&gt;, and register the copied Base64 string as the new value.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Modify the decoding process in the workflow file (&lt;code&gt;.github/workflows/docker-build.yml&lt;/code&gt;) as follows:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; mkdir -p ~/.kube
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34; | base64 -d &amp;amp;gt; ~/.kube/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="-resolving-dns-resolution-failure-from-cloud-runner-kubernetesdockerinternal6443-no-such-host"&gt;🛠️ Resolving DNS Resolution Failure from Cloud Runner (kubernetes.docker.internal:6443: no such host)
+&lt;/h2&gt;&lt;p&gt;After resolving the certificate error, the following network timeout and DNS resolution error occurred during the deployment step:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;E0528 01:43:09.437587 2260 memcache.go:265] &amp;#34;Unhandled Error&amp;#34; err=&amp;#34;couldn&amp;#39;t get current server API group list: Get \&amp;#34;https://kubernetes.docker.internal:6443/api?timeout=32s\&amp;#34;: dial tcp: lookup kubernetes.docker.internal on 127.0.0.53:53: no such host&amp;#34;
+Unable to connect to the server: dial tcp: lookup kubernetes.docker.internal on 127.0.0.53:53: no such host
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="cause-1"&gt;Cause
+&lt;/h3&gt;&lt;p&gt;The standard GitHub Actions hosted runner (&lt;code&gt;runs-on: ubuntu-latest&lt;/code&gt;) runs on a cloud virtual machine provided by GitHub. Consequently, it cannot resolve &lt;code&gt;kubernetes.docker.internal&lt;/code&gt;, which is the private DNS of the local development environment (Docker Desktop), and cannot route to the local Kubernetes API server.&lt;/p&gt;
+&lt;h3 id="resolution-1"&gt;Resolution
+&lt;/h3&gt;&lt;p&gt;To directly access resources within the local network, set up a &lt;b&gt;&lt;mark&gt;Self-Hosted Runner&lt;/mark&gt;&lt;/b&gt; on the local machine.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;In the GitHub repository, go to &amp;ldquo;Settings&amp;rdquo; -&amp;gt; &amp;ldquo;Actions&amp;rdquo; -&amp;gt; &amp;ldquo;Runners&amp;rdquo;, select &amp;ldquo;New self-hosted runner&amp;rdquo;, and specify &amp;ldquo;Windows&amp;rdquo; as the OS.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Run the following commands in local PowerShell to download and extract the runner package:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir actions-runner
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd actions-runner
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//github.com/actions/runner/releases/download/v2.334.&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;/actions-runner-win-x64-&lt;span style="color:#ae81ff"&gt;2.334&lt;/span&gt;.0.zip -OutFile actions-runner-win-x64-&lt;span style="color:#ae81ff"&gt;2.334&lt;/span&gt;.0.zip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Add-Type -AssemblyName System.IO.Compression.FileSystem
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#66d9ef"&gt;System.IO.Compression.ZipFile&lt;/span&gt;]::ExtractToDirectory(&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PWD&lt;span style="color:#e6db74"&gt;/actions-runner-win-x64-2.334.0.zip&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$PWD&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;Register the runner using the token displayed on the screen.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.\config.cmd --url https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//github.com/giturl-id/tomcat-k8s --token &amp;lt;your_token&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="4"&gt;
+&lt;li&gt;Start the runner.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.\run.cmd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="5"&gt;
+&lt;li&gt;Modify the execution environment target in the workflow file.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Before&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# After&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;self-hosted&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="-resolving-mkdir--p-command-execution-error-in-windows-environment"&gt;🛠️ Resolving mkdir -p Command Execution Error in Windows Environment
+&lt;/h2&gt;&lt;p&gt;When switching the execution environment to the Windows Self-Hosted Runner, the following error occurred during the directory creation step:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;mkdir : An item with the specified name C:\Users\Administrator\.kube already exists.
+At C:\study\tomcat\actions-runner\_work\_temp\836d0b14-98fc-4377-a457-faf5123b7885.ps1:2 char:1
++ mkdir -p ~/.kube
++ ~~~~~~~~~~~~~~~
+ + CategoryInfo : ResourceExists: (C:\Users\Administrator\.kube:String) [New-Item], IOException
+ + FullyQualifiedErrorId : DirectoryExist,Microsoft.PowerShell.Commands.NewItemCommand
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="cause-2"&gt;Cause
+&lt;/h3&gt;&lt;p&gt;On a Windows Self-Hosted Runner, GitHub Actions steps run in PowerShell by default. In PowerShell, &lt;code&gt;mkdir&lt;/code&gt; is an alias for &lt;code&gt;New-Item -ItemType Directory&lt;/code&gt;, which does not support the &lt;code&gt;-p&lt;/code&gt; option. Additionally, if the target directory already exists, PowerShell throws an &lt;code&gt;IOException&lt;/code&gt; and terminates with exit code &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id="resolution-2"&gt;Resolution
+&lt;/h3&gt;&lt;p&gt;Change the logic to use native PowerShell syntax to check for directory existence before creation. Also, handle the Base64 decoding entirely within PowerShell using .NET runtime features.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;shell&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;powershell&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if (!(Test-Path &amp;#34;$HOME\.kube&amp;#34;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; New-Item -ItemType Directory -Path &amp;#34;$HOME\.kube&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; [System.Text.Encoding]::UTF8.GetString(
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; [System.Convert]::FromBase64String(&amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ) | Out-File &amp;#34;$HOME\.kube\config&amp;#34; -Encoding utf8&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="-resolving-kubernetes-pod-image-pull-error-errimagepull"&gt;🛠️ Resolving Kubernetes Pod Image Pull Error (ErrImagePull)
+&lt;/h2&gt;&lt;p&gt;After executing the deployment, the pod status became &lt;code&gt;ErrImagePull&lt;/code&gt;, and the container failed to start.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get pods
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Output:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# NAME READY STATUS RESTARTS AGE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# tomcat2-deployment-59d4ff8df8-cwwb2 0/1 ErrImagePull 0 9s&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="cause-3"&gt;Cause
+&lt;/h3&gt;&lt;p&gt;Because &lt;code&gt;imagePullPolicy&lt;/code&gt; in the manifest file (&lt;code&gt;Deployment.yaml&lt;/code&gt;) is set to &lt;code&gt;Always&lt;/code&gt;, Kubernetes forces a query to the external registry (such as DockerHub) for the latest image, even if the image exists in the local Docker cache. If the image has not been pushed to the remote registry or credentials are missing, this pull process fails.&lt;/p&gt;
+&lt;h3 id="resolution-3"&gt;Resolution
+&lt;/h3&gt;&lt;p&gt;When using locally built images directly in a development environment, change &lt;code&gt;imagePullPolicy&lt;/code&gt; to &lt;code&gt;IfNotPresent&lt;/code&gt; to skip querying the external registry.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Modify the container definition in &lt;code&gt;Deployment.yaml&lt;/code&gt; as follows:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;tomcat&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;abungard/my-tomcat:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;imagePullPolicy&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;IfNotPresent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
+&lt;li&gt;Delete the existing deployment and reapply.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl delete deployment tomcat2-deployment
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl apply -f Deployment.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;Verify the pod startup status.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get pods
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Verify that the status transitions to &lt;code&gt;Running&lt;/code&gt;.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;NAME READY STATUS RESTARTS AGE
+tomcat2-deployment-59d4ff8df8-cwwb2 1/1 Running 0 12s
+```&amp;lt;/your_token&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>
