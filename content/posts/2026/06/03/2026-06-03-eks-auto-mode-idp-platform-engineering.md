@@ -1,7 +1,7 @@
 ---
 title: "EKS Auto ModeとIDPによるKubernetes運用の抽象化とプラットフォームエンジニアリングの展望"
 slug: "eks-auto-mode-idp-platform-engineering"
-date: 2026-06-03T08:28:52+09:00
+date: 2026-06-01T12:28:52+09:00
 draft: false
 image: ""
 description: "EKS Auto ModeとKarpenterを活用したノード管理の自動化、およびInternal Developer Platform (IDP) による開発者体験の向上とインフラ運用の分離について解説します。"

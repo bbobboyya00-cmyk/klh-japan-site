@@ -1,7 +1,7 @@
 {{ define "main" }}
 <main class="main full-width">
 
-<form action="/search/" class="search-form" data-json="/index.json">
+<form action="{{ "search/" | relLangURL }}" class="search-form" data-json="{{ "index.json" | relLangURL }}">
     <p>
         <label>Search</label>
         <input name="keyword" placeholder="Type something...">
