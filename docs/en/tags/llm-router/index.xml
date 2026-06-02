@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Llm-Router on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/llm-router/</link><description>Recent content in Llm-Router on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 02 Jun 2026 12:37:01 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/llm-router/index.xml" rel="self" type="application/rss+xml"/><item><title>Technical Stack Analysis of AI Routers and Agent Gateways (2026 Edition)</title><link>https://klifehack.com/en/p/ai-orchestration-gateway-2026-analysis/</link><pubDate>Tue, 02 Jun 2026 12:37:01 +0900</pubDate><guid>https://klifehack.com/en/p/ai-orchestration-gateway-2026-analysis/</guid><description>&lt;h1 id="technical-outlook-for-ai-routers-and-agent-gateways-in-2026"&gt;Technical Outlook for AI Routers and Agent Gateways in 2026
+&lt;/h1&gt;&lt;p&gt;In the 2026 AI ecosystem, the most rapidly evolving areas are &amp;ldquo;AI Routers&amp;rdquo; and &amp;ldquo;Agent Gateways.&amp;rdquo; These solutions provide unified APIs to hundreds of models such as Claude, GPT, Gemini, and DeepSeek, enabling automatic model selection based on cost, latency, and quality. This article analyzes the technical architectures and operational characteristics of major platforms such as OpenClaw, Hermes Agent, OpenRouter, and LiteLLM.&lt;/p&gt;
+&lt;h2 id="1-category-definitions-routers-gateways-and-agent-frameworks"&gt;1. Category Definitions: Routers, Gateways, and Agent Frameworks
+&lt;/h2&gt;&lt;p&gt;In the current market, the following three technical categories are complementing each other while eventually converging into &amp;ldquo;AI Orchestration Platforms.&amp;rdquo;&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Category&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Core Functions&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Representative Solutions&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;LLM Router / Gateway&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Unified API, automatic routing, fallback, cost tracking&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;OpenRouter, LiteLLM, Portkey&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Conversational AI Agent&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Multi-model support, autonomous task execution, memory, skill learning&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;OpenClaw, Hermes Agent&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Coding Agent Router&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Request distribution for coding tools (Claude Code, etc.)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Claude Code Router, claude-code-proxy&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="2-openclaw-ecosystem-leader-and-its-structure"&gt;2. OpenClaw: Ecosystem Leader and Its Structure
+&lt;/h2&gt;&lt;p&gt;As of April 2026, OpenClaw is one of the most popular repositories with over 370,000 GitHub stars.&lt;/p&gt;
+&lt;h3 id="21-architecture-specifications"&gt;2.1 Architecture Specifications
+&lt;/h3&gt;&lt;p&gt;OpenClaw adopts a &amp;ldquo;Hub-and-Spoke&amp;rdquo; model. A central gateway daemon loads messaging adapters directly into a single process and validates frames against a JSON schema. Communication occurs via a Typed WebSocket API on &lt;b&gt;port 18789&lt;/b&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// OpenClaw WebSocket Frame Validation Example
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;interface&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ClawFrame&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;version&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;4.1&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;type&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;AGENT_SKILL_EXEC&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;payload&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;skillId&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;parameters&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;Record&lt;/span&gt;&amp;lt;&lt;span style="color:#f92672"&gt;string&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;any&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;&amp;gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;signature&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;; &lt;span style="color:#75715e"&gt;// Cryptographic signing for integrity
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-security-risks-and-vulnerabilities"&gt;2.2 Security Risks and Vulnerabilities
+&lt;/h3&gt;&lt;p&gt;Despite its popularity, OpenClaw faces significant security challenges. Six CVEs (Common Vulnerabilities and Exposures) have been reported, with CVSS scores in the high-risk range of 7.5 to 9.1. Notably, the &amp;ldquo;ClawHavoc&amp;rdquo; campaign in February 2026 detected 1,184 malicious packages. Major vendors such as Microsoft and CrowdStrike have issued warnings regarding excessive permission granting in default configurations.&lt;/p&gt;
+&lt;h2 id="3-hermes-agent-self-improving-framework"&gt;3. Hermes Agent: Self-Improving Framework
+&lt;/h2&gt;&lt;p&gt;Developed by Nous Research, Hermes Agent is a next-generation agent framework with a built-in learning loop.&lt;/p&gt;
+&lt;h3 id="31-dual-model--8-auxiliary-slot-configuration"&gt;3.1 Dual Model + 8 Auxiliary Slot Configuration
+&lt;/h3&gt;&lt;p&gt;Hermes Agent&amp;rsquo;s architecture consists of a core reasoning model and eight auxiliary slots for processing specific tasks. This structure allows for the dynamic allocation of the optimal model (DeepSeek, Gemini, etc.) for each task.&lt;/p&gt;
+&lt;h3 id="32-learning-loop-and-skillmd"&gt;3.2 Learning Loop and SKILL.md
+&lt;/h3&gt;&lt;p&gt;The most significant feature of Hermes Agent is its ability to analyze completed tasks and convert reusable patterns into Markdown files called &lt;code&gt;SKILL.md&lt;/code&gt;. This allows the agent to &amp;ldquo;grow&amp;rdquo; across sessions and improve accuracy for similar future tasks.&lt;/p&gt;
+&lt;h2 id="4-infrastructure-grade-gateways-litellm-and-openrouter"&gt;4. Infrastructure-Grade Gateways: LiteLLM and OpenRouter
+&lt;/h2&gt;&lt;h3 id="41-litellm-operational-implementation"&gt;4.1 LiteLLM Operational Implementation
+&lt;/h3&gt;&lt;p&gt;LiteLLM is the choice for infrastructure teams to maintain full control. It provides a Python SDK and proxy server, allowing for the implementation of budget limits and load balancing per team.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# LiteLLM Proxy Configuration Example&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model_list:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;-&lt;/span&gt; model_name: claude&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;&lt;span style="color:#f92672"&gt;-&lt;/span&gt;sonnet
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; litellm_params:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model: anthropic&lt;span style="color:#f92672"&gt;/&lt;/span&gt;claude&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;&lt;span style="color:#f92672"&gt;-&lt;/span&gt;sonnet&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;20240620&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; api_key: os&lt;span style="color:#f92672"&gt;.&lt;/span&gt;environ&lt;span style="color:#f92672"&gt;/&lt;/span&gt;ANTHROPIC_API_KEY
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;-&lt;/span&gt; model_name: gemini&lt;span style="color:#f92672"&gt;-&lt;/span&gt;pro
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; litellm_params:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model: gemini&lt;span style="color:#f92672"&gt;/&lt;/span&gt;gemini&lt;span style="color:#f92672"&gt;-&lt;/span&gt;pro
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; api_key: os&lt;span style="color:#f92672"&gt;.&lt;/span&gt;environ&lt;span style="color:#f92672"&gt;/&lt;/span&gt;GEMINI_API_KEY
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;router_settings:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; routing_strategy: simple&lt;span style="color:#f92672"&gt;-&lt;/span&gt;shuffle
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; set_verbose: &lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-integration-with-claude-code"&gt;4.2 Integration with Claude Code
+&lt;/h3&gt;&lt;p&gt;When using OpenRouter, changing the &lt;code&gt;ANTHROPIC_BASE_URL&lt;/code&gt; to &lt;code&gt;https://openrouter.ai/api&lt;/code&gt; enables access to over 500 models from Claude Code via OpenRouter. This achieves automatic failover when a specific provider reaches rate limits.&lt;/p&gt;
+&lt;h2 id="5-performance-benchmarks-and-economic-analysis"&gt;5. Performance Benchmarks and Economic Analysis
+&lt;/h2&gt;&lt;p&gt;According to TECHSY data, gateway overhead is kept extremely low compared to LLM inference time.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Solution&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Language&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;P50 Overhead&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Throughput&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Bifrost&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Go&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;~8μs&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;5,000+ RPS&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;TensorZero&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Rust&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;~0.3ms&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;10,000+ QPS&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;LiteLLM&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Python&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;~4ms&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;~1,000 RPS&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;OpenRouter&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Managed&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;~15-30ms&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;N/A&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The introduction of intelligent routing has shown that monthly LLM spending can be reduced by 30% to 85% by routing simple tasks to low-cost models and complex tasks to high-performance models.&lt;/p&gt;
+&lt;h2 id="summary"&gt;Summary
+&lt;/h2&gt;&lt;p&gt;AI infrastructure in 2026 has evolved from simple API aggregation to an orchestration layer involving autonomous task execution and self-improvement. Whether to choose a broad ecosystem like OpenClaw or a highly controllable self-hosted option like LiteLLM depends on an organization&amp;rsquo;s security requirements and operational cost tolerance. In particular, package verification considering supply chain attack risks and the implementation of dynamic routing for cost optimization will be key to future operations.&lt;/p&gt;
+&lt;p&gt;&amp;lt;/string,&amp;gt;&lt;/p&gt;</description></item></channel></rss>
