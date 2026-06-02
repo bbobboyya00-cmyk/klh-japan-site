@@ -1,7 +1,7 @@
 ---
 title: "Node.js Integration and Verification of WASM-Based PostgreSQL PGlite"
 slug: "pglite-wasm-nodejs-integration"
-date: 2026-06-03T08:12:27+09:00
+date: 2026-06-01T08:12:26+09:00
 draft: false
 image: ""
 description: "An implementation note verifying the initialization of PGlite (a WASM-based Postgres) in a Node.js environment"

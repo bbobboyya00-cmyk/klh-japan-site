@@ -1,7 +1,7 @@
 ---
 title: "WASMベースPostgreSQL PGliteのNodejs組み込みと検証"
 slug: "pglite-wasm-nodejs-integration"
-date: 2026-06-03T08:12:26+09:00
+date: 2026-06-01T08:12:26+09:00
 draft: false
 image: ""
 description: "Node.js環境でWASMベースのPostgresであるPGliteを初期化し、トランザクションを用いたバッチ挿入のベンチマークや同期処理を検証した実装ノート。"
