@@ -1,5 +1,5 @@
 ---
-title: "Technical Analysis of the "Mini Shai-Hulud" npm Ecosystem Supply Chain Attack"
+title: "Technical Analysis of the 'Mini Shai-Hulud' npm Ecosystem Supply Chain Attack"
 slug: "npm-typosquatting-mini-shai-hulud-analysis"
 date: 2026-05-30T10:33:07+09:00
 draft: false
