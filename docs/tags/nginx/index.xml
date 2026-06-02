@@ -1,4 +1,70 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nginx on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/nginx/</link><description>Recent content in Nginx on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 28 May 2026 17:04:17 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/nginx/index.xml" rel="self" type="application/rss+xml"/><item><title>NGINXリバースプロキシ構築におけるNginx Proxy Managerと手動構成の実装手法</title><link>https://klifehack.com/p/nginx-reverse-proxy-implementation-guide/</link><pubDate>Thu, 28 May 2026 17:04:17 +0900</pubDate><guid>https://klifehack.com/p/nginx-reverse-proxy-implementation-guide/</guid><description>&lt;p&gt;パブリックIPアドレスからの外部トラフィックを、プライベートネットワーク上のバックエンドアプリケーション（Apache Tomcat）へルーティングするためのNGINXリバースプロキシ環境の構築手順について詳述します。実装アプローチとして、Dockerを利用したGUIベースの管理ツールである「Nginx Proxy Manager (NPM)」の導入と、コマンドラインによる「手動構成」の2つの手法を解説します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nginx on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/nginx/</link><description>Recent content in Nginx on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 08:47:43 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/nginx/index.xml" rel="self" type="application/rss+xml"/><item><title>DjangoとNginxを用いたDocker Composeによるサービスオーケストレーションの実装</title><link>https://klifehack.com/p/docker-compose-django-nginx-setup/</link><pubDate>Wed, 03 Jun 2026 08:47:43 +0900</pubDate><guid>https://klifehack.com/p/docker-compose-django-nginx-setup/</guid><description>&lt;h1 id="docker-composeを活用したマルチコンテナオーケストレーションの構築と管理"&gt;Docker Composeを活用したマルチコンテナ・オーケストレーションの構築と管理
+&lt;/h1&gt;&lt;p&gt;Docker Composeは、複数のコンテナで構成されるアプリケーションを定義・実行するためのオーケストレーションツールです。個別のコンテナを単体で管理するのではなく、サービス間の依存関係、ネットワーク、ボリュームの設定を一元化し、スタック全体を一つのユニットとして制御することを目的としています。&lt;/p&gt;
+&lt;h2 id="1-手動コンテナ管理における課題"&gt;1. 手動コンテナ管理における課題
+&lt;/h2&gt;&lt;p&gt;Docker Composeを導入しない場合、マルチコンテナ構成の運用には複数の技術的負債が発生します。各コンテナに対して個別に &lt;b&gt;docker run&lt;/b&gt; コマンドを実行するプロセスの煩雑化、ネットワーク（&amp;ndash;network）やポートマッピング（-p）などのパラメータをコマンドライン引数として正確に維持しなければならない管理コスト、そしてデータベース起動後にアプリケーションを起動させるといった依存関係の手動制御に伴うヒューマンエラーのリスクです。Docker Composeは、これらの設定を &lt;b&gt;docker-compose.yml&lt;/b&gt; という宣言的なファイルに集約することで、環境の再現性と運用の安定性を確保します。&lt;/p&gt;
+&lt;h2 id="2-実装環境の定義"&gt;2. 実装環境の定義
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% docker compose version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Docker Compose version v5.1.3
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-構成解析-docker-composeyml"&gt;3. 構成解析: docker-compose.yml
+&lt;/h2&gt;&lt;p&gt;DjangoバックエンドとNginxフロントエンドを統合し、効率的なリバースプロキシ構成を実現するための定義を実装しました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;djangotest&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./myDjango02&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;composenet01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;restart&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;always&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;nginxtest&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./myNginx02&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;composenet01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;80:80&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;depends_on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;djangotest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;restart&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;always&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;composenet01&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="主要パラメータの技術仕様"&gt;主要パラメータの技術仕様
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;build&lt;/b&gt;: 指定されたディレクトリにあるDockerfileを参照し、イメージのビルドプロセスを自動化します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;networks&lt;/b&gt;: カスタムネットワーク &lt;b&gt;composenet01&lt;/b&gt; を定義し、コンテナ間のサービスディスカバリを有効にします。これにより、Nginxはサービス名 &lt;b&gt;djangotest&lt;/b&gt; を解決してバックエンドにアクセス可能となります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;depends_on&lt;/b&gt;: コンテナの起動順序を制御します。本構成では &lt;b&gt;djangotest&lt;/b&gt; が先に開始され、その後に &lt;b&gt;nginxtest&lt;/b&gt; が起動するフローを強制します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;restart: always&lt;/b&gt;: コンテナのクラッシュ時やデーモンの再起動時に、自動的にプロセスを復旧させる再起動ポリシーです。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-デプロイメントおよびビルドの実行"&gt;4. デプロイメントおよびビルドの実行
+&lt;/h2&gt;&lt;p&gt;&lt;b&gt;docker compose up&lt;/b&gt; コマンドを使用して、スタック全体の構築と起動を実行します。&lt;b&gt;-d&lt;/b&gt; フラグによるバックグラウンド実行と &lt;b&gt;&amp;ndash;build&lt;/b&gt; フラグによる最新のソースコード反映を同時に行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% docker compose up -d --build
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;[&lt;/span&gt;+&lt;span style="color:#f92672"&gt;]&lt;/span&gt; Building 1.2s &lt;span style="color:#f92672"&gt;(&lt;/span&gt;22/22&lt;span style="color:#f92672"&gt;)&lt;/span&gt; FINISHED
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt;&amp;amp;gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;djangotest internal&lt;span style="color:#f92672"&gt;]&lt;/span&gt; load build definition from Dockerfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt;&amp;amp;gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;nginxtest internal&lt;span style="color:#f92672"&gt;]&lt;/span&gt; load build definition from Dockerfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt;&amp;amp;gt; CACHED &lt;span style="color:#f92672"&gt;[&lt;/span&gt;djangotest 2/6&lt;span style="color:#f92672"&gt;]&lt;/span&gt; WORKDIR /usr/src/app
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt;&amp;amp;gt; CACHED &lt;span style="color:#f92672"&gt;[&lt;/span&gt;djangotest 5/6&lt;span style="color:#f92672"&gt;]&lt;/span&gt; RUN pip install -r requirements.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt;&amp;amp;gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;nginxtest&lt;span style="color:#f92672"&gt;]&lt;/span&gt; exporting to image
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;[&lt;/span&gt;+&lt;span style="color:#f92672"&gt;]&lt;/span&gt; up 4/4
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ✔ Image docker4-nginxtest Built
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ✔ Image docker4-djangotest Built
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ✔ Container docker4-djangotest-1 Started
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ✔ Container docker4-nginxtest-1 Started
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ビルドログの解析により、レイヤーキャッシュ（CACHED）が最適に機能し、デプロイ時間が短縮されていることが確認できます。また、定義された依存関係に従い、Djangoコンテナが先行してプロビジョニングされます。&lt;/p&gt;
+&lt;h2 id="5-稼働状況の検証"&gt;5. 稼働状況の検証
+&lt;/h2&gt;&lt;p&gt;デプロイ完了後、各サービスのステータスおよびネットワークの疎通確認を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% docker container ls
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CONTAINER ID IMAGE COMMAND STATUS PORTS NAMES
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;c349c6fd0c7e docker4-nginxtest &lt;span style="color:#e6db74"&gt;&amp;#34;/docker-entrypoint.…&amp;#34;&lt;/span&gt; Up &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; minutes 0.0.0.0:80-&amp;amp;gt;80/tcp, &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:80-&amp;amp;gt;80/tcp docker4-nginxtest-1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;14c38ae2f5e0 docker4-djangotest &lt;span style="color:#e6db74"&gt;&amp;#34;gunicorn --bind 0.0…&amp;#34;&lt;/span&gt; Up &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; minutes 8000/tcp docker4-djangotest-1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nginxがポート80でリッスンし、内部ネットワークを通じてDjangoアプリケーション（Gunicorn）へトラフィックを正常にプロキシしていることが確認されました。🛠️&lt;/p&gt;
+&lt;h2 id="6-運用管理コマンドリファレンス"&gt;6. 運用管理コマンドリファレンス
+&lt;/h2&gt;&lt;p&gt;Compose環境のライフサイクル管理において、エンジニアが頻繁に使用する主要コマンド群です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;docker compose up -d&lt;/b&gt;: サービスをバックグラウンドで起動。構成変更を検知した場合は対象コンテナのみを再作成します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;docker compose down&lt;/b&gt;: コンテナの停止・削除、および定義されたネットワークリソースの破棄を実行します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;docker compose ps&lt;/b&gt;: 現在のサービス稼働状況、終了コード、およびポートマッピングを表示します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;docker compose logs&lt;/b&gt;: 全サービスの標準出力を集約して表示し、ランタイムエラーのデバッグを容易にします。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;p&gt;Docker Composeによるオーケストレーションにおいて、&lt;b&gt;depends_on&lt;/b&gt; はコンテナの「起動」のみを保証し、アプリケーション内部の「準備完了（Ready）」状態までは保証しません。より厳密な依存関係制御が必要な場合は、&lt;b&gt;healthcheck&lt;/b&gt; セクションを導入し、ヘルスチェックに合格するまで依存コンテナの起動を待機させる構成を検討する必要があります。⚠️ また、カスタムネットワークを利用することで、外部に公開する必要のないバックエンドサービスをホストのポートから隔離し、セキュリティ境界を明確にすることが可能です。💡&lt;/p&gt;</description></item><item><title>NGINXリバースプロキシ構築におけるNginx Proxy Managerと手動構成の実装手法</title><link>https://klifehack.com/p/nginx-reverse-proxy-implementation-guide/</link><pubDate>Thu, 28 May 2026 17:04:17 +0900</pubDate><guid>https://klifehack.com/p/nginx-reverse-proxy-implementation-guide/</guid><description>&lt;p&gt;パブリックIPアドレスからの外部トラフィックを、プライベートネットワーク上のバックエンドアプリケーション（Apache Tomcat）へルーティングするためのNGINXリバースプロキシ環境の構築手順について詳述します。実装アプローチとして、Dockerを利用したGUIベースの管理ツールである「Nginx Proxy Manager (NPM)」の導入と、コマンドラインによる「手動構成」の2つの手法を解説します。&lt;/p&gt;
 &lt;h2 id="1-nginx-proxy-manager-npm-による実装"&gt;1. Nginx Proxy Manager (NPM) による実装
 &lt;/h2&gt;&lt;p&gt;Nginx Proxy Managerは、リバースプロキシ、SSL証明書管理、アクセスリストの制御をWebインターフェースから一元管理できるソリューションです。&lt;/p&gt;
 &lt;h3 id="11-既存サービスの競合回避"&gt;1.1 既存サービスの競合回避
