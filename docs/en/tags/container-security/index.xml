@@ -1,4 +1,62 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Container-Security on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/container-security/</link><description>Recent content in Container-Security on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 30 May 2026 10:33:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/container-security/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Container Image Security Scan Automation in CI/CD Pipelines</title><link>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</link><pubDate>Sat, 30 May 2026 10:33:07 +0900</pubDate><guid>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</guid><description>&lt;h1 id="construction-and-optimization-strategies-for-security-automation-in-container-delivery"&gt;Construction and Optimization Strategies for Security Automation in Container Delivery
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Container-Security on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/container-security/</link><description>Recent content in Container-Security on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 23:55:47 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/container-security/index.xml" rel="self" type="application/rss+xml"/><item><title>Architecture Comparison and Implementation Conflict Analysis of DinD and DooD in GitLab CI</title><link>https://klifehack.com/en/p/gitlab-ci-dind-dood-architecture-conflict/</link><pubDate>Wed, 03 Jun 2026 23:55:47 +0900</pubDate><guid>https://klifehack.com/en/p/gitlab-ci-dind-dood-architecture-conflict/</guid><description>&lt;p&gt;title: Docker Build Strategies in GitLab CI/CD: Technical Comparison and Selection Criteria for DinD and DooD
+meta_description: Explains the architecture, security, and implementation constraints of DinD (Docker-in-Docker) and DooD (Docker-out-of-Docker) for building Docker containers in GitLab CI/CD pipelines from a technical perspective.&lt;/p&gt;
+&lt;p&gt;In GitLab CI/CD pipelines, the requirement to execute docker build or docker push within a containerized runner is common. Two main architectural patterns exist for achieving this &amp;ldquo;container-in-container&amp;rdquo; approach: Docker-in-Docker (DinD) and Docker-out-of-Docker (DooD). This article analyzes their respective technical structures, security implications, and fatal conflict issues that occur during implementation.&lt;/p&gt;
+&lt;h2 id="reconfirming-dockers-client-server-model"&gt;Reconfirming Docker&amp;rsquo;s Client-Server Model
+&lt;/h2&gt;&lt;p&gt;To understand the differences between DinD and DooD, it is necessary to recognize that Docker is a client-server architecture. Docker commands are separated into the following two components:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Docker CLI (Client):&lt;/b&gt; The interface that receives user commands and sends them to the server.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;dockerd (Daemon/Server):&lt;/b&gt; The background process that actually executes image builds, volume management, and container orchestration.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When running Docker inside a container, &amp;ldquo;where the Docker Daemon exists&amp;rdquo; is the core of the architecture.&lt;/p&gt;
+&lt;h2 id="structure-and-characteristics-of-docker-in-docker-dind"&gt;Structure and Characteristics of Docker-in-Docker (DinD)
+&lt;/h2&gt;&lt;p&gt;DinD is a method of running a completely independent Docker Daemon inside a container.&lt;/p&gt;
+&lt;h3 id="mechanism"&gt;Mechanism
+&lt;/h3&gt;&lt;p&gt;A dedicated &amp;ldquo;service&amp;rdquo; container runs the DinD image and initializes its own isolated Docker Daemon. The build container&amp;rsquo;s CLI typically connects to this internal daemon via a network socket such as &lt;b&gt;tcp://docker:2375&lt;/b&gt;.&lt;/p&gt;
+&lt;h3 id="necessity-of-privileged-mode"&gt;Necessity of Privileged Mode
+&lt;/h3&gt;&lt;p&gt;To operate DinD, &lt;b&gt;privileged = true&lt;/b&gt; must be enabled in the GitLab Runner configuration. This is because the internal daemon requires high-level access to kernel features, such as creating cgroups and managing network namespaces.&lt;/p&gt;
+&lt;h3 id="pros-and-cons"&gt;Pros and Cons
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Pros:&lt;/b&gt; Suitable for multi-tenant environments as it is completely isolated from the host environment and other build jobs.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cons:&lt;/b&gt; High overhead and a tendency for performance degradation because a new daemon is started for each job. It also carries security risks associated with the use of privileged mode.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="structure-and-characteristics-of-docker-out-of-docker-dood"&gt;Structure and Characteristics of Docker-out-of-Docker (DooD)
+&lt;/h2&gt;&lt;p&gt;DooD is a method where the CLI inside the container communicates directly with the host machine&amp;rsquo;s Docker Daemon.&lt;/p&gt;
+&lt;h3 id="mechanism-1"&gt;Mechanism
+&lt;/h3&gt;&lt;p&gt;Achieved by mounting the host&amp;rsquo;s Docker socket file (/var/run/docker.sock) into the container.&lt;/p&gt;
+&lt;h3 id="configuration-example"&gt;Configuration Example
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#a6e22e"&gt;runners&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;docker&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;volumes&lt;/span&gt; = [&lt;span style="color:#e6db74"&gt;&amp;#34;/var/run/docker.sock:/var/run/docker.sock&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;/cache&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Also, specify environment variables in .gitlab-ci.yml.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;variables&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;DOCKER_HOST&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;unix:///var/run/docker.sock&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="pros-and-cons-1"&gt;Pros and Cons
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Pros:&lt;/b&gt; Faster and simpler to implement than DinD because no additional daemon startup is required.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cons:&lt;/b&gt; Zero isolation. Since the container shares the host&amp;rsquo;s daemon, it can manipulate all images and containers on the host. Mounting docker.sock is essentially synonymous with granting host root privileges to the container, making the risk of container escape extremely high.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="comparison-of-security-hierarchies"&gt;Comparison of Security Hierarchies
+&lt;/h2&gt;&lt;p&gt;The security strength of each method is as follows (higher security toward the bottom).&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;DooD:&lt;/b&gt; Lowest. Allows host-level root access via socket mounting.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;DinD:&lt;/b&gt; Moderate. Isolated from the host, but requires privileged mode, which could become an attack vector to the host if the container is compromised.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;BuildKit (rootless):&lt;/b&gt; Highest. A modern standard approach that operates daemonless without requiring privileged access or socket mounting.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="technical-constraint-mutual-exclusivity-of-dind-and-dood"&gt;Technical Constraint: Mutual Exclusivity of DinD and DooD
+&lt;/h2&gt;&lt;p&gt;As an important engineering note, DinD and DooD cannot be used together within a single GitLab Runner configuration. Attempting to mix them will cause jobs to fail due to the following logical breakdown:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;If a volume mount for /var/run/docker.sock is described in the GitLab Runner&amp;rsquo;s config.toml, this mount is applied to all containers (including service containers) generated by that runner.&lt;/li&gt;
+&lt;li&gt;When the DinD service container starts, it attempts to initialize a Docker Daemon inside itself.&lt;/li&gt;
+&lt;li&gt;The DinD daemon attempts to create its own socket at /var/run/docker.sock, but a socket mounted from the host already exists at that location.&lt;/li&gt;
+&lt;li&gt;The system returns a &lt;mark&gt;&amp;ldquo;device or resource busy&amp;rdquo;&lt;/mark&gt; error, and the DinD daemon fails to start.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Therefore, when using DinD, the /var/run/docker.sock mount must be explicitly excluded from config.toml. The design principle is to have a runner dedicated to a single method.&lt;/p&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;Criteria for selecting an implementation strategy are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Multi-tenant / High Security Requirements:&lt;/b&gt; Select DinD to ensure isolation between jobs.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Single User / Speed Priority:&lt;/b&gt; Select DooD to minimize overhead.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Modern CI/CD Environments:&lt;/b&gt; Consider adopting 🛠️ &lt;b&gt;BuildKit (rootless)&lt;/b&gt;. BuildKit supports multi-architecture builds and native secret management without requiring privileged mode, achieving both performance and security.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Implementation of Container Image Security Scan Automation in CI/CD Pipelines</title><link>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</link><pubDate>Sat, 30 May 2026 10:33:07 +0900</pubDate><guid>https://klifehack.com/en/p/container-security-scanning-cicd-automation/</guid><description>&lt;h1 id="construction-and-optimization-strategies-for-security-automation-in-container-delivery"&gt;Construction and Optimization Strategies for Security Automation in Container Delivery
 &lt;/h1&gt;&lt;p&gt;In modern software delivery, ensuring container image security should be a priority equivalent to functional implementation. To identify risks lurking within the vast libraries and dependencies contained in images, an automated scanning process integrated into the CI/CD pipeline is essential, rather than manual inspection. This article explains technical approaches for naturally establishing security as part of the development workflow.&lt;/p&gt;
 &lt;h2 id="1-strategic-background-of-automated-scanning"&gt;1. Strategic Background of Automated Scanning
 &lt;/h2&gt;&lt;p&gt;The primary burden facing development teams is not only the functional integrity of the code but also the elimination of potential risk factors included in the deployment. Manual image inspection is prone to human error and tends to be omitted within tight release schedules. Therefore, automation is not merely an option but a prerequisite for achieving secure delivery.&lt;/p&gt;

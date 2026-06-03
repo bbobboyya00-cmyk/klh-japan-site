@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Buildkit on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/buildkit/</link><description>Recent content in Buildkit on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 23:55:46 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/buildkit/index.xml" rel="self" type="application/rss+xml"/><item><title>GitLab CIにおけるDinDとDooDのアーキテクチャ比較と実装上の競合分析</title><link>https://klifehack.com/p/gitlab-ci-dind-dood-architecture-conflict/</link><pubDate>Wed, 03 Jun 2026 23:55:46 +0900</pubDate><guid>https://klifehack.com/p/gitlab-ci-dind-dood-architecture-conflict/</guid><description>&lt;p&gt;title: GitLab CI/CDにおけるDockerビルド戦略：DinDとDooDの技術的比較と選定基準
+meta_description: GitLab CI/CDパイプラインでDockerコンテナをビルドするためのDinD（Docker-in-Docker）とDooD（Docker-out-of-Docker）のアーキテクチャ、セキュリティ、および実装上の制約を技術的視点から解説します。&lt;/p&gt;
+&lt;p&gt;GitLab CI/CDパイプラインにおいて、コンテナ化されたランナー内でdocker buildやdocker pushを実行する要件は一般的です。この「コンテナ内コンテナ」を実現する手法として、主にDocker-in-Docker (DinD) と Docker-out-of-Docker (DooD) の2つのアーキテクチャパターンが存在します。本稿では、それぞれの技術的構造、セキュリティ上のインプリケーション、および実装時に発生する致命的な競合問題について分析します。&lt;/p&gt;
+&lt;h2 id="dockerのクライアントサーバーモデルの再確認"&gt;Dockerのクライアント・サーバーモデルの再確認
+&lt;/h2&gt;&lt;p&gt;DinDとDooDの差異を理解するためには、Dockerがクライアント・サーバーアーキテクチャであることを認識する必要があります。Dockerコマンドは以下の2つのコンポーネントに分離されています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Docker CLI (Client):&lt;/b&gt; ユーザーのコマンドを受け取り、サーバーに送信するインターフェース。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;dockerd (Daemon/Server):&lt;/b&gt; イメージのビルド、ボリューム管理、コンテナのオーケストレーションを実際に実行するバックグラウンドプロセス。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;コンテナ内でDockerを実行する場合、この「Docker Daemonがどこに存在するか」がアーキテクチャの核心となります。&lt;/p&gt;
+&lt;h2 id="docker-in-docker-dind-の構造と特性"&gt;Docker-in-Docker (DinD) の構造と特性
+&lt;/h2&gt;&lt;p&gt;DinDは、コンテナの内部で完全に独立したDocker Daemonを実行する手法です。&lt;/p&gt;
+&lt;h3 id="メカニズム"&gt;メカニズム
+&lt;/h3&gt;&lt;p&gt;専用の「サービス」コンテナがDinDイメージを実行し、独自の隔離されたDocker Daemonを初期化します。ビルドコンテナのCLIは、通常 &lt;b&gt;tcp://docker:2375&lt;/b&gt; などのネットワークソケットを介して、この内部デーモンに接続します。&lt;/p&gt;
+&lt;h3 id="特権モード-privileged-mode-の必要性"&gt;特権モード (Privileged Mode) の必要性
+&lt;/h3&gt;&lt;p&gt;DinDを動作させるには、GitLab Runnerの設定で &lt;b&gt;privileged = true&lt;/b&gt; を有効にする必要があります。これは、内部デーモンがcgroupsの作成やネットワークネームスペースの管理など、カーネル機能への高度なアクセス権限を必要とするためです。&lt;/p&gt;
+&lt;h3 id="メリットとデメリット"&gt;メリットとデメリット
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;メリット:&lt;/b&gt; ホスト環境や他のビルドジョブから完全に隔離されるため、マルチテナント環境に適しています。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;デメリット:&lt;/b&gt; ジョブごとに新しいデーモンを起動するためオーバーヘッドが大きく、パフォーマンスが低下する傾向があります。また、特権モードの使用に伴うセキュリティリスクを伴います。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="docker-out-of-docker-dood-の構造と特性"&gt;Docker-out-of-Docker (DooD) の構造と特性
+&lt;/h2&gt;&lt;p&gt;DooDは、コンテナ内のCLIがホストマシンのDocker Daemonと直接通信する手法です。&lt;/p&gt;
+&lt;h3 id="メカニズム-1"&gt;メカニズム
+&lt;/h3&gt;&lt;p&gt;ホストのDockerソケットファイル（/var/run/docker.sock）をコンテナ内にマウントすることで実現します。&lt;/p&gt;
+&lt;h3 id="設定例"&gt;設定例
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#a6e22e"&gt;runners&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;docker&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;volumes&lt;/span&gt; = [&lt;span style="color:#e6db74"&gt;&amp;#34;/var/run/docker.sock:/var/run/docker.sock&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;/cache&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;また、.gitlab-ci.yml で環境変数を指定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;variables&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;DOCKER_HOST&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;unix:///var/run/docker.sock&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="メリットとデメリット-1"&gt;メリットとデメリット
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;メリット:&lt;/b&gt; 追加のデーモン起動が不要なため、DinDよりも高速かつシンプルに実装可能です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;デメリット:&lt;/b&gt; 隔離性が皆無です。コンテナがホストのデーモンを共有するため、ホスト上の全イメージやコンテナを操作可能になります。docker.sock のマウントは、実質的にコンテナへホストのroot権限を付与することと同義であり、コンテナエスケープのリスクが極めて高い構成です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="セキュリティ階層の比較"&gt;セキュリティ階層の比較
+&lt;/h2&gt;&lt;p&gt;手法ごとのセキュリティ強度は以下の通りです（下に行くほど高セキュリティ）。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;DooD:&lt;/b&gt; 最も低い。ソケットマウントによりホストレベルのrootアクセスを許可する。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;DinD:&lt;/b&gt; 中程度。ホストからは隔離されるが、privileged モードが必要であり、コンテナが侵害された場合にホストへの攻撃ベクトルとなる可能性がある。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;BuildKit (rootless):&lt;/b&gt; 最も高い。特権アクセスやソケットマウントを必要とせず、デーモンレスで動作する現代的な標準アプローチ。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="技術的制約dindとdoodの共存不可問題"&gt;技術的制約：DinDとDooDの共存不可問題
+&lt;/h2&gt;&lt;p&gt;エンジニアリング上の重要な注意点として、単一のGitLab Runner構成においてDinDとDooDを併用することはできません。これらを混在させようとすると、以下の論理的破綻によりジョブが失敗します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;GitLab Runnerの config.toml に /var/run/docker.sock のボリュームマウントが記述されている場合、そのランナーが生成するすべてのコンテナ（サービスコンテナを含む）にこのマウントが適用されます。&lt;/li&gt;
+&lt;li&gt;DinDサービスコンテナが起動する際、自身の内部でDocker Daemonを初期化しようとします。&lt;/li&gt;
+&lt;li&gt;DinDデーモンは /var/run/docker.sock に自身のソケットを作成しようとしますが、その場所には既にホストからマウントされたソケットが存在します。&lt;/li&gt;
+&lt;li&gt;システムは &lt;mark&gt;&amp;ldquo;device or resource busy&amp;rdquo;&lt;/mark&gt; エラーを返し、DinDデーモンの起動に失敗します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;このため、DinDを使用する場合は、config.toml から /var/run/docker.sock のマウントを明示的に除外する必要があります。ランナーは一つの手法に専念させるのが設計上の原則です。&lt;/p&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;実装戦略を選択する際の基準は以下の通りです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;マルチテナント / 高セキュリティ要件:&lt;/b&gt; DinDを選択し、ジョブ間の隔離を確保します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;単一ユーザー / 速度優先:&lt;/b&gt; DooDを選択し、オーバーヘッドを最小化します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;モダンなCI/CD環境:&lt;/b&gt; 🛠️ &lt;b&gt;BuildKit (rootless)&lt;/b&gt; の採用を検討してください。BuildKitは、特権モードを必要とせず、マルチアーキテクチャビルドやネイティブなシークレット管理をサポートしており、パフォーマンスとセキュリティの両立が可能です。&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
