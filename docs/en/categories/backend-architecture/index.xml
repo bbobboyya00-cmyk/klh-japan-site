@@ -1,4 +1,90 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 15:08:46 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Technical Considerations on the Evolution of Python Web Interfaces from CGI to ASGI and Modern WAS Configurations</title><link>https://klifehack.com/en/p/python-web-interface-cgi-wsgi-asgi/</link><pubDate>Wed, 03 Jun 2026 15:08:46 +0900</pubDate><guid>https://klifehack.com/en/p/python-web-interface-cgi-wsgi-asgi/</guid><description>&lt;p&gt;Web application interface standards in Python have evolved from the early CGI to WSGI, and now to modern ASGI. This article provides a technical analysis of the operating principles, performance characteristics of each protocol, and the role of the WAS (Web Application Server) in modern infrastructure.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 15:24:34 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Internal Structure of B-Tree Indexes and Design Strategies for Query Optimization</title><link>https://klifehack.com/en/p/b-tree-index-architecture-optimization/</link><pubDate>Wed, 03 Jun 2026 15:24:34 +0900</pubDate><guid>https://klifehack.com/en/p/b-tree-index-architecture-optimization/</guid><description>&lt;h1 id="b-tree-index-structure-and-optimization-mechanisms-for-improving-search-performance-in-rdbms"&gt;B-Tree Index Structure and Optimization: Mechanisms for Improving Search Performance in RDBMS
+&lt;/h1&gt;&lt;h2 id="1-basic-structure-and-operating-principles"&gt;1. Basic Structure and Operating Principles
+&lt;/h2&gt;&lt;p&gt;B-Tree (Balanced Tree) is a fundamental data structure for accelerating data retrieval in database management systems (DBMS). It provides consistent performance even for large datasets and is adopted as the most common indexing mechanism in relational databases (RDBMS).&lt;/p&gt;
+&lt;p&gt;B-Tree is a self-balancing tree structure that maintains sorted data and performs searches, sequential access, insertions, and deletions efficiently. Since all leaf nodes are maintained at the same depth, a uniform path length is guaranteed for any data. The time complexity of major operations is $O(\log n)$, demonstrating extremely stable response performance even as data volume increases.&lt;/p&gt;
+&lt;h3 id="structural-characteristics"&gt;Structural Characteristics
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Node Configuration&lt;/b&gt;: Each node holds multiple keys and pointers to child nodes.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Ordering&lt;/b&gt;: Key values are strictly managed in ascending order, achieving efficiency close to binary search.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Node Capacity (Degree m)&lt;/b&gt;: Each node except the root holds a minimum of $m/2 - 1$ and a maximum of $m - 1$ keys.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Fill Factor&lt;/b&gt;: To optimize space and maintain balance, nodes other than the root are always kept at least half-full.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-architectural-differences-between-b-tree-and-btree"&gt;2. Architectural Differences Between B-Tree and B+Tree
+&lt;/h2&gt;&lt;p&gt;Many modern RDBMS implementations adopt &lt;b&gt;B+Tree&lt;/b&gt;, a variant of the standard B-Tree. This is an evolution designed to further enhance disk I/O efficiency and range search performance.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Data Storage Location&lt;/b&gt;: While B-Tree stores data in internal nodes as well, B+Tree stores actual data records (or pointers) only in leaf nodes.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Sequential Access Efficiency&lt;/b&gt;: Leaf nodes in a B+Tree are interconnected via mechanisms like doubly linked lists, making range scans and sequential processing extremely fast.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Role of Internal Nodes&lt;/b&gt;: Internal nodes function only as navigation indexes (keys and child pointers). Since a single node can accommodate more keys, the depth of the tree can be minimized.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-search-algorithm-mechanisms"&gt;3. Search Algorithm Mechanisms
+&lt;/h2&gt;&lt;p&gt;B-Tree indexes retrieve data through the following recursive process. This process allows reaching the target record from millions of data entries with only a few node accesses.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Start from the Root Node&lt;/b&gt;: Compare the target key with the keys within the current node.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Comparison and Transition&lt;/b&gt;: Determine which range the target key belongs to and follow the appropriate child pointer to move to the lower level.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Reaching the Leaf Node&lt;/b&gt;: Repeat this process until the target key is identified in a leaf node, or it is confirmed that the data does not exist.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="4-disk-io-optimization-and-performance"&gt;4. Disk I/O Optimization and Performance
+&lt;/h2&gt;&lt;p&gt;B-Tree is designed to minimize physical disk access. This is a critical strategy for overcoming the speed gap between memory and storage.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Block Size Alignment&lt;/b&gt;: Node size is typically adjusted to match the OS disk block size (e.g., 8KB or 16KB). This allows loading multiple keys into memory in a single I/O operation.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Shallow Hierarchical Structure&lt;/b&gt;: By minimizing the depth of the tree, the number of physical disk seeks is minimized.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Space Efficiency&lt;/b&gt;: Guarantees a utilization rate of 50% or more for nodes, balancing storage density with insertion flexibility.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-advanced-index-design-strategies"&gt;5. Advanced Index Design Strategies
+&lt;/h2&gt;&lt;p&gt;To maximize the utility of indexes, a strategic approach based on data characteristics and query patterns is required.&lt;/p&gt;
+&lt;h3 id="optimization-of-selectivity-cardinality"&gt;Optimization of Selectivity (Cardinality)
+&lt;/h3&gt;&lt;p&gt;Applying indexes to columns with low duplication and high uniqueness (e.g., email addresses, identifiers) can dramatically narrow down the search range.&lt;/p&gt;
+&lt;h3 id="composite-index"&gt;Composite Index
+&lt;/h3&gt;&lt;p&gt;When designing indexes spanning multiple columns, the &amp;ldquo;Left-to-Right Prefix&amp;rdquo; rule must be followed to match the conditions in the &lt;code&gt;WHERE&lt;/code&gt; clause. If the order is incorrect, the index will not function.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Example of creating an appropriate composite index
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INDEX&lt;/span&gt; idx_emp_dept_sal &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; employees(department_id, salary);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="covering-index"&gt;Covering Index
+&lt;/h3&gt;&lt;p&gt;By including all columns required by a query in the index, access to the table itself (table full scans or bookmark lookups) can be avoided, allowing the query to be completed using only the index. This significantly reduces I/O costs.&lt;/p&gt;
+&lt;h3 id="partial-index"&gt;Partial Index
+&lt;/h3&gt;&lt;p&gt;Create indexes only for subsets that meet specific conditions to reduce index size and maintenance costs. 💡 Effective for specific statuses frequently used in &lt;b&gt;WHERE&lt;/b&gt; clauses.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Index targeting only active users
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INDEX&lt;/span&gt; idx_active_users &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; users(user_id) &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; status &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;active&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-technical-constraints-and-considerations"&gt;6. Technical Constraints and Considerations
+&lt;/h2&gt;&lt;p&gt;The introduction of indexes involves the following trade-offs and constraints. Unplanned index creation can impair overall system performance.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Write Load&lt;/b&gt;: Index updates are required for every &lt;code&gt;INSERT&lt;/code&gt;, &lt;code&gt;UPDATE&lt;/code&gt;, and &lt;code&gt;DELETE&lt;/code&gt;, which degrades write performance.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Index Bypassing&lt;/b&gt;: If column selectivity is low or if a large portion of the table (generally 20% or more) needs to be scanned, the optimizer may choose not to use the index.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Prohibition of Function Application&lt;/b&gt;: Applying functions or operations to a column makes the index unusable. ⚠️ Search conditions must be written without processing the column.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Inefficient example (index not used)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; employees &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;YEAR&lt;/span&gt;(hire_date) &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2022&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Optimized example
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; employees &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; hire_date &lt;span style="color:#66d9ef"&gt;BETWEEN&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;2022-01-01&amp;#39;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;2022-12-31&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Fragmentation&lt;/b&gt;: Frequent data updates cause the physical order to deviate from the logical order, necessitating periodic maintenance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="7-implementation-characteristics-by-dbms"&gt;7. Implementation Characteristics by DBMS
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;MySQL (InnoDB)&lt;/b&gt;: Uses B+Tree as a &lt;b&gt;clustered index&lt;/b&gt;, storing actual data rows directly in the leaf nodes of the primary key.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;PostgreSQL&lt;/b&gt;: Uses B-Tree by default but supports various types such as GiST and GIN. Reduces index update overhead during updates via HOT (Heap-Only Tuples).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Oracle&lt;/b&gt;: Employs a B+Tree structure with bidirectional links. Features advanced extensions such as bitmap indexes and function-based indexes.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;SQL Server&lt;/b&gt;: Manages 8KB pages and supports partial indexes and indexed views.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="8-operational-management-protocols"&gt;8. Operational Management Protocols
+&lt;/h2&gt;&lt;p&gt;To maintain continuous performance, maintenance using the following commands is recommended. Monitor fragmentation rates and perform rebuilds as necessary.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Update and optimize statistics in each DBMS
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- MySQL
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ANALYZE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; employees;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;OPTIMIZE &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; employees;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- PostgreSQL
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ANALYZE&lt;/span&gt; employees;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- SQL Server
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;UPDATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;STATISTICS&lt;/span&gt; employees;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INDEX&lt;/span&gt; employee_idx &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; employees REORGANIZE;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Oracle
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ANALYZE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; employees COMPUTE &lt;span style="color:#66d9ef"&gt;STATISTICS&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INDEX&lt;/span&gt; employee_idx REBUILD;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;B-Tree indexes are the cornerstone of optimization in relational databases. The efficiency of $O(\log n)$ and adaptability to various query patterns are indispensable elements in large-scale data processing. However, excessive index creation leads to degradation in write performance. Therefore, periodic analysis of execution plans, strategic design based on cardinality, and appropriate maintenance against fragmentation are key to ensuring long-term scalability. 🛠️&lt;/p&gt;</description></item><item><title>Technical Considerations on the Evolution of Python Web Interfaces from CGI to ASGI and Modern WAS Configurations</title><link>https://klifehack.com/en/p/python-web-interface-cgi-wsgi-asgi/</link><pubDate>Wed, 03 Jun 2026 09:08:46 +0900</pubDate><guid>https://klifehack.com/en/p/python-web-interface-cgi-wsgi-asgi/</guid><description>&lt;p&gt;Web application interface standards in Python have evolved from the early CGI to WSGI, and now to modern ASGI. This article provides a technical analysis of the operating principles, performance characteristics of each protocol, and the role of the WAS (Web Application Server) in modern infrastructure.&lt;/p&gt;
 &lt;h2 id="1-structure-and-limitations-of-cgi-common-gateway-interface"&gt;1. Structure and Limitations of CGI (Common Gateway Interface)
 &lt;/h2&gt;&lt;p&gt;CGI is the earliest standard protocol for web servers to interact with external programs. Its core lies in the &amp;ldquo;process-per-request&amp;rdquo; model.&lt;/p&gt;
 &lt;h3 id="-operating-logic"&gt;💡 Operating Logic
