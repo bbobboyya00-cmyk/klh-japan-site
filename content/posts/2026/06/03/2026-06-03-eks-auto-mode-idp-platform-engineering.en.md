@@ -1,7 +1,7 @@
 ---
 title: "Abstraction of Kubernetes Operations with EKS Auto Mode and IDP, and the Outlook for Platform Engineering"
 slug: "eks-auto-mode-idp-platform-engineering"
-date: 2026-06-01T17:28:52+09:00
+date: 2026-06-01T12:28:52+09:00
 draft: false
 image: ""
 description: "Explains node management automation utilizing EKS Auto Mode and Karpenter, as well as improving developer experience and separating infrastructure operations through an Internal Developer Platform (IDP)."
