@@ -1,7 +1,7 @@
 ---
 title: "Technical Considerations on the Evolution of Python Web Interfaces from CGI to ASGI and Modern WAS Configurations"
 slug: "python-web-interface-cgi-wsgi-asgi"
-date: 2026-06-03T15:08:46+09:00
+date: 2026-06-03T09:08:46+09:00
 draft: false
 image: ""
 description: "A technical explanation of the evolutionary process of Python web interfaces (CGI, WSGI, ASGI), modern WAS configurations using Gunicorn and Uvicorn, and architectural differences between Django and FastAPI."

@@ -1,7 +1,7 @@
 ---
 title: "Python Web InterfaceにおけるCGIからASGIへの変遷とモダンWAS構成の技術的考察"
 slug: "python-web-interface-cgi-wsgi-asgi"
-date: 2026-06-03T15:08:46+09:00
+date: 2026-06-03T09:08:46+09:00
 draft: false
 image: ""
 description: "Pythonウェブインターフェースの進化過程（CGI, WSGI, ASGI）と、GunicornやUvicornを用いたモダンなWAS構成、DjangoとFastAPIのアーキテクチャ的差異について技術的に解説します。"
