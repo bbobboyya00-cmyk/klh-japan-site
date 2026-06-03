@@ -1,7 +1,7 @@
 ---
 title: "Real-Time Aggregation Pipeline Design for High-Traffic Activity Logs"
 slug: "realtime-data-aggregation-redis-pipeline"
-date: 2026-06-03T09:11:10+09:00
+date: 2026-06-02T09:11:09+09:00
 draft: false
 image: ""
 description: "This article explains pre-aggregation table design and Redis caching strategies for aggregating large-scale user activity logs in real time and rendering dashboards with low latency."

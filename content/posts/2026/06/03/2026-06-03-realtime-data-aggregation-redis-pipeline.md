@@ -1,7 +1,7 @@
 ---
 title: "高トラフィックなアクティビティログのリアルタイム集計パイプライン設計"
 slug: "realtime-data-aggregation-redis-pipeline"
-date: 2026-06-03T09:11:09+09:00
+date: 2026-06-02T09:11:09+09:00
 draft: false
 image: ""
 description: "大規模なユーザーアクティビティログをリアルタイムに集計し、低レイテンシでダッシュボードに描画するための事前集計テーブル設計とRedisキャッシュ戦略について解説します。"
