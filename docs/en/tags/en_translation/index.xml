@@ -1,4 +1,96 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>En_translation on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/en_translation/</link><description>Recent content in En_translation on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 01 Jun 2026 08:12:26 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/en_translation/index.xml" rel="self" type="application/rss+xml"/><item><title>Node.js Integration and Verification of WASM-Based PostgreSQL PGlite</title><link>https://klifehack.com/en/p/pglite-wasm-nodejs-integration/</link><pubDate>Mon, 01 Jun 2026 08:12:26 +0900</pubDate><guid>https://klifehack.com/en/p/pglite-wasm-nodejs-integration/</guid><description>&lt;h2 id="overview-and-architectural-features"&gt;Overview and Architectural Features
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>En_translation on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/en_translation/</link><description>Recent content in En_translation on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 15:02:38 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/en_translation/index.xml" rel="self" type="application/rss+xml"/><item><title>Detection of Unassociated GIDs and Security Hardening Procedures in Linux Systems</title><link>https://klifehack.com/en/p/linux-security-orphaned-gid-audit/</link><pubDate>Wed, 03 Jun 2026 15:02:38 +0900</pubDate><guid>https://klifehack.com/en/p/linux-security-orphaned-gid-audit/</guid><description>&lt;h1 id="guidelines-for-identifying-and-removing-unnecessary-groups-orphaned-gids-in-linux-systems"&gt;Guidelines for Identifying and Removing Unnecessary Groups (Orphaned GIDs) in Linux Systems
+&lt;/h1&gt;&lt;p&gt;In Linux system operations, the existence of groups defined in the /etc/group file that are not linked to any active user in /etc/passwd (orphaned GIDs) is considered a security management deficiency. Based on item [U-09] of the Technical Vulnerability Analysis and Evaluation Guidelines for Critical Information Infrastructure (2026 Revision), this article details the technical approach to identifying and properly handling these unnecessary GIDs.&lt;/p&gt;
+&lt;h2 id="1-overview-of-vulnerability-and-risk-analysis"&gt;1. Overview of Vulnerability and Risk Analysis
+&lt;/h2&gt;&lt;h3 id="11-objective-of-the-assessment"&gt;1.1 Objective of the Assessment
+&lt;/h3&gt;&lt;p&gt;By reviewing system configuration files and identifying/removing unnecessary or unassociated groups, the attack surface is minimized. The objective is to prevent unauthorized access to leftover files of deleted users and to ensure transparency in privilege management.&lt;/p&gt;
+&lt;h3 id="12-potential-security-threats"&gt;1.2 Potential Security Threats
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Abuse of Privileges and Unintended Access&lt;/b&gt;: If files owned by a deleted user retain ownership by an orphaned GID, an attacker who compromises a low-privilege account might attempt to join that group to gain access to confidential files.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Social Engineering&lt;/b&gt;: If an insider threat discovers high-value files owned by a specific orphaned GID, there is a risk they might request an administrator to add their account to that GID under the guise of operational necessity.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Audit and Management Overhead&lt;/b&gt;: Leaving unnecessary GIDs unaddressed complicates security audits and configuration management, making it difficult to clearly track resource ownership.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-assessment-criteria-and-system-architecture"&gt;2. Assessment Criteria and System Architecture
+&lt;/h2&gt;&lt;h3 id="21-target-environment-and-gid-range-classification"&gt;2.1 Target Environment and GID Range Classification
+&lt;/h3&gt;&lt;p&gt;Linux distributions manage GID ranges separately for system services and regular users. During assessment, the focus is on GIDs within the user account range, excluding system GIDs managed by the package manager.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;OS Family&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;System Account GID Range&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;User Account GID Range&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Debian/Ubuntu&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;0 to 999&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;1000 or above&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;RHEL 7 and later&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;0 to 999&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;1000 or above&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;RHEL 6 and earlier&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;0 to 499&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;500 or above&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="22-evaluation-criteria"&gt;2.2 Evaluation Criteria
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Pass&lt;/b&gt;: All unnecessary groups or GIDs that do not correspond to active user accounts have been identified and removed.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Vulnerable&lt;/b&gt;: Unnecessary groups or GIDs without active user accounts exist within the system configuration files.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-implementation-of-the-assessment-script"&gt;3. Implementation of the Assessment Script
+&lt;/h2&gt;&lt;p&gt;The following Bash script automatically detects the OS type, applies the appropriate GID threshold, and identifies orphaned GIDs.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# GID threshold determination based on OS distribution&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -f /etc/os-release &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; . /etc/os-release
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$ID&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;rhel&amp;#34;&lt;/span&gt; &amp;amp;amp;&amp;amp;amp; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;VERSION_ID%%.*&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; -le &lt;span style="color:#ae81ff"&gt;6&lt;/span&gt; &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GID_MIN&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GID_MIN&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GID_MIN&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;[Scanning for orphaned GIDs (Threshold: &amp;amp;gt;= &lt;/span&gt;$GID_MIN&lt;span style="color:#e6db74"&gt;)]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Identify GIDs in /etc/group not present as primary GID in /etc/passwd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# and having no members listed in /etc/group&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;awk -F: -v min&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$GID_MIN &lt;span style="color:#e6db74"&gt;&amp;#39;$3 &amp;amp;gt;= min {print $3}&amp;#39;&lt;/span&gt; /etc/group | &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; read gid; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; group_info&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;grep &lt;span style="color:#e6db74"&gt;&amp;#34;:&lt;/span&gt;$gid&lt;span style="color:#e6db74"&gt;:&amp;#34;&lt;/span&gt; /etc/group&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; group_name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$group_info&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; | cut -d: -f1&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; group_members&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$group_info&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; | cut -d: -f4&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Check if any user uses this GID as primary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; user_exists&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;awk -F: -v gid&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$gid &lt;span style="color:#e6db74"&gt;&amp;#39;$4 == gid {print $1}&amp;#39;&lt;/span&gt; /etc/passwd&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$user_exists&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &amp;amp;amp;&amp;amp;amp; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$group_members&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Vulnerable: Orphaned GID detected -&amp;amp;gt; Group: &lt;/span&gt;$group_name&lt;span style="color:#e6db74"&gt; (GID: &lt;/span&gt;$gid&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-remediation-guidelines"&gt;4. Remediation Guidelines
+&lt;/h2&gt;&lt;p&gt;If the assessment result is &amp;ldquo;Vulnerable&amp;rdquo;, perform the remediation safely using the following steps.&lt;/p&gt;
+&lt;h3 id="step-1-identifying-files-associated-with-orphaned-gids"&gt;Step 1: Identifying Files Associated with Orphaned GIDs
+&lt;/h3&gt;&lt;p&gt;Before deleting a group, you must verify whether any files owning that GID exist on the filesystem. Failure to do so may result in unintended privilege assignment if the same GID is reused in the future.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Replace [GID] with the identified orphaned GID value&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -gid &lt;span style="color:#f92672"&gt;[&lt;/span&gt;GID&lt;span style="color:#f92672"&gt;]&lt;/span&gt; 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-2-reassigning-file-ownership"&gt;Step 2: Reassigning File Ownership
+&lt;/h3&gt;&lt;p&gt;If files are found, change their ownership to an appropriate active group (e.g., root or a specific service group).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Reassign group ownership to a secure administrative group&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -gid &lt;span style="color:#f92672"&gt;[&lt;/span&gt;GID&lt;span style="color:#f92672"&gt;]&lt;/span&gt; -exec chgrp root &lt;span style="color:#f92672"&gt;{}&lt;/span&gt; + 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-3-removing-unnecessary-groups"&gt;Step 3: Removing Unnecessary Groups
+&lt;/h3&gt;&lt;p&gt;After confirming that no associated files exist, remove the group using the groupdel command.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Remove the group entry from /etc/group&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;groupdel &lt;span style="color:#f92672"&gt;[&lt;/span&gt;GROUP_NAME&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;While removing orphaned GIDs typically does not affect system services, there are rare cases where legacy applications hardcode and utilize specific GIDs. Therefore, before executing deletions in a production environment, always scan the entire filesystem using the find command to verify the absence of dependencies based on empirical data. Additionally, optimizing the base image configuration in the container image build process (Dockerfile) to prevent the creation of unnecessary groups is effective for maintaining mid-to-long-term security.&lt;/p&gt;</description></item><item><title>Node.js Integration and Verification of WASM-Based PostgreSQL PGlite</title><link>https://klifehack.com/en/p/pglite-wasm-nodejs-integration/</link><pubDate>Mon, 01 Jun 2026 08:12:26 +0900</pubDate><guid>https://klifehack.com/en/p/pglite-wasm-nodejs-integration/</guid><description>&lt;h2 id="overview-and-architectural-features"&gt;Overview and Architectural Features
 &lt;/h2&gt;&lt;p&gt;PGlite is a fully functional, lightweight PostgreSQL engine compiled to WebAssembly (WASM) and packaged as a client-side JavaScript library. Developed by ElectricSQL, PGlite allows developers to run a PostgreSQL database directly within a Node.js runtime, web browser, or mobile environment (via React Native/Capacitor) without requiring a separate PostgreSQL server, Docker container, or external daemon.&lt;/p&gt;
 &lt;p&gt;This article describes the steps for initializing, operating, benchmarking, and simulating a hybrid synchronization workflow with PGlite in a Node.js environment.&lt;/p&gt;
 &lt;h3 id="key-architectural-features"&gt;Key Architectural Features

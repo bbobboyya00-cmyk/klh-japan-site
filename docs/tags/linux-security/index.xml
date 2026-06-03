@@ -1,4 +1,96 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux-Security on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/linux-security/</link><description>Recent content in Linux-Security on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 29 May 2026 09:40:32 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/linux-security/index.xml" rel="self" type="application/rss+xml"/><item><title>Linuxプロセスセキュリティとシステムログ解析のアーキテクチャ設計</title><link>https://klifehack.com/p/linux-process-security-log-analysis/</link><pubDate>Fri, 29 May 2026 09:40:32 +0900</pubDate><guid>https://klifehack.com/p/linux-process-security-log-analysis/</guid><description>&lt;h1 id="linuxプロセスセキュリティとログ解析アーキテクチャの技術的考察"&gt;Linuxプロセスセキュリティとログ解析アーキテクチャの技術的考察
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux-Security on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/linux-security/</link><description>Recent content in Linux-Security on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 15:02:37 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/linux-security/index.xml" rel="self" type="application/rss+xml"/><item><title>Linuxシステムにおける実体のないGIDの検出とセキュリティ硬化手順</title><link>https://klifehack.com/p/linux-security-orphaned-gid-audit/</link><pubDate>Wed, 03 Jun 2026 15:02:37 +0900</pubDate><guid>https://klifehack.com/p/linux-security-orphaned-gid-audit/</guid><description>&lt;h1 id="linuxシステムにおける不要なグループ孤立したgidの識別および除去ガイドライン"&gt;Linuxシステムにおける不要なグループ（孤立したGID）の識別および除去ガイドライン
+&lt;/h1&gt;&lt;p&gt;Linuxシステムの運用において、/etc/groupファイル内に定義されているものの、/etc/passwd内のどのアクティブなユーザーにも紐付いていないグループ（孤立したGID）が存在することは、セキュリティ管理上の不備と見なされます。本稿では、主要情報通信基盤施設の技術的脆弱性分析・評価ガイドライン（2026年改訂版）の[U-09]項目に基づき、これらの不要なGIDを特定し、適切に処理するための技術的アプローチを詳述します。&lt;/p&gt;
+&lt;h2 id="1-脆弱性の概要とリスク分析"&gt;1. 脆弱性の概要とリスク分析
+&lt;/h2&gt;&lt;h3 id="11-診断の目的"&gt;1.1 診断の目的
+&lt;/h3&gt;&lt;p&gt;システム構成ファイルを確認し、不要になった、あるいは実体のないグループを特定・削除することで、攻撃対象領域（Attack Surface）を最小化します。これは、削除されたユーザーの遺留ファイルに対する不正アクセスの防止、および権限管理の透明性確保を目的としています。&lt;/p&gt;
+&lt;h3 id="12-想定されるセキュリティ脅威"&gt;1.2 想定されるセキュリティ脅威
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;権限の悪用と意図しないアクセス&lt;/b&gt;: 削除されたユーザーが所有していたファイルが、孤立したGIDの所有権を維持している場合、攻撃者が低権限アカウントを奪取した後にそのグループへの所属を試みることで、機密ファイルへのアクセス権を得る可能性があります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ソーシャルエンジニアリング&lt;/b&gt;: 内部不正者が、特定の孤立したGIDが所有する高価値なファイルを発見した場合、運用の必要性を装って管理者に対し、自身のアカウントをそのGIDに追加するよう申請するリスクが存在します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;監査および管理のオーバーヘッド&lt;/b&gt;: 不要なGIDの放置は、セキュリティ監査や構成管理の複雑化を招き、リソースの所有権に関する明確な追跡を困難にします。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-診断基準とシステムアーキテクチャ"&gt;2. 診断基準とシステムアーキテクチャ
+&lt;/h2&gt;&lt;h3 id="21-ターゲット環境とgid範囲の分類"&gt;2.1 ターゲット環境とGID範囲の分類
+&lt;/h3&gt;&lt;p&gt;Linuxディストリビューションでは、システムサービス用と一般ユーザー用でGIDの範囲を分けて管理しています。診断時には、パッケージマネージャーによって管理されるシステムGIDを除外した、ユーザーアカウント範囲のGIDに焦点を当てます。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;OSファミリー&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;システムアカウントGID範囲&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;ユーザーアカウントGID範囲&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Debian/Ubuntu&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;0 ～ 999&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;1000 以上&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;RHEL 7以降&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;0 ～ 999&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;1000 以上&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;RHEL 6以前&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;0 ～ 499&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;500 以上&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="22-判定基準"&gt;2.2 判定基準
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;良好 (Pass)&lt;/b&gt;: 不要なグループ、またはアクティブなユーザーアカウントに対応しないGIDがすべて確認され、削除されている状態。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;脆弱 (Vulnerable)&lt;/b&gt;: システム構成ファイル内に、アクティブなユーザーアカウントを持たない不要なグループまたはGIDが存在する状態。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-診断スクリプトの実装"&gt;3. 診断スクリプトの実装
+&lt;/h2&gt;&lt;p&gt;以下のBashスクリプトは、OSの種類を自動判別し、適切なGIDしきい値を適用した上で、孤立したGIDを検出します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# GID threshold determination based on OS distribution&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -f /etc/os-release &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; . /etc/os-release
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$ID&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;rhel&amp;#34;&lt;/span&gt; &amp;amp;amp;&amp;amp;amp; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;VERSION_ID%%.*&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; -le &lt;span style="color:#ae81ff"&gt;6&lt;/span&gt; &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GID_MIN&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GID_MIN&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GID_MIN&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;[Scanning for orphaned GIDs (Threshold: &amp;amp;gt;= &lt;/span&gt;$GID_MIN&lt;span style="color:#e6db74"&gt;)]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Identify GIDs in /etc/group not present as primary GID in /etc/passwd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# and having no members listed in /etc/group&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;awk -F: -v min&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$GID_MIN &lt;span style="color:#e6db74"&gt;&amp;#39;$3 &amp;amp;gt;= min {print $3}&amp;#39;&lt;/span&gt; /etc/group | &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; read gid; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; group_info&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;grep &lt;span style="color:#e6db74"&gt;&amp;#34;:&lt;/span&gt;$gid&lt;span style="color:#e6db74"&gt;:&amp;#34;&lt;/span&gt; /etc/group&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; group_name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$group_info&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; | cut -d: -f1&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; group_members&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$group_info&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; | cut -d: -f4&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Check if any user uses this GID as primary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; user_exists&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;awk -F: -v gid&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$gid &lt;span style="color:#e6db74"&gt;&amp;#39;$4 == gid {print $1}&amp;#39;&lt;/span&gt; /etc/passwd&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$user_exists&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &amp;amp;amp;&amp;amp;amp; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$group_members&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Vulnerable: Orphaned GID detected -&amp;amp;gt; Group: &lt;/span&gt;$group_name&lt;span style="color:#e6db74"&gt; (GID: &lt;/span&gt;$gid&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-修正ガイドライン"&gt;4. 修正ガイドライン
+&lt;/h2&gt;&lt;p&gt;診断結果が「脆弱 (Vulnerable)」であった場合、以下の手順で安全に修正を実施します。&lt;/p&gt;
+&lt;h3 id="step-1-孤立したgidに関連付けられたファイルの特定"&gt;Step 1: 孤立したGIDに関連付けられたファイルの特定
+&lt;/h3&gt;&lt;p&gt;グループを削除する前に、そのGIDを所有しているファイルがファイルシステム上に存在するか確認する必要があります。これを怠ると、将来的に同じGIDが再利用された際に、意図しない権限付与が発生する可能性があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Replace [GID] with the identified orphaned GID value&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -gid &lt;span style="color:#f92672"&gt;[&lt;/span&gt;GID&lt;span style="color:#f92672"&gt;]&lt;/span&gt; 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-2-ファイル所有権の再割り当て"&gt;Step 2: ファイル所有権の再割り当て
+&lt;/h3&gt;&lt;p&gt;ファイルが見つかった場合は、適切なアクティブなグループ（例: root または特定のサービスグループ）に所有権を変更します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Reassign group ownership to a secure administrative group&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -gid &lt;span style="color:#f92672"&gt;[&lt;/span&gt;GID&lt;span style="color:#f92672"&gt;]&lt;/span&gt; -exec chgrp root &lt;span style="color:#f92672"&gt;{}&lt;/span&gt; + 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-3-不要なグループの削除"&gt;Step 3: 不要なグループの削除
+&lt;/h3&gt;&lt;p&gt;関連ファイルが存在しないことを確認した後、groupdelコマンドを使用してグループを削除します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Remove the group entry from /etc/group&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;groupdel &lt;span style="color:#f92672"&gt;[&lt;/span&gt;GROUP_NAME&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;孤立したGIDの削除は、通常システムサービスに影響を与えませんが、レガシーなアプリケーションが特定のGIDをハードコードして利用しているケースが稀に存在します。そのため、本番環境での削除実施前には、必ずfindコマンドによる全ファイルシステムの走査を行い、依存関係がないことを実証データに基づいて確認してください。また、コンテナイメージのビルドプロセス（Dockerfile）において、不要なグループが作成されないようベースイメージの構成を最適化することも、中長期的なセキュリティ維持に有効です。&lt;/p&gt;</description></item><item><title>Linuxプロセスセキュリティとシステムログ解析のアーキテクチャ設計</title><link>https://klifehack.com/p/linux-process-security-log-analysis/</link><pubDate>Fri, 29 May 2026 09:40:32 +0900</pubDate><guid>https://klifehack.com/p/linux-process-security-log-analysis/</guid><description>&lt;h1 id="linuxプロセスセキュリティとログ解析アーキテクチャの技術的考察"&gt;Linuxプロセスセキュリティとログ解析アーキテクチャの技術的考察
 &lt;/h1&gt;&lt;p&gt;Linuxシステムにおけるセキュリティの核心は、静的なファイル権限の管理を超え、実行中のプロセスの振る舞いをいかに制御し、監視するかにあります。本稿では、プロセスのアイデンティティ、隔離技術、およびフォレンジックに不可欠なログ解析アーキテクチャについて、実務的な観点から技術分析を行います。&lt;/p&gt;
 &lt;h2 id="1-プロセスセキュリティの定義と境界"&gt;1. プロセスセキュリティの定義と境界
 &lt;/h2&gt;&lt;p&gt;プロセスは、ディスク上の静止したデータであるファイルとは異なり、RAM上で実行されている動的な実体です。従来のファイルパーミッションだけでは、以下の脅威を防ぐことは困難です。&lt;/p&gt;
