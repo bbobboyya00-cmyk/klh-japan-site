@@ -1,7 +1,7 @@
 ---
 title: "Linuxシステムにおける実体のないGIDの検出とセキュリティ硬化手順"
 slug: "linux-security-orphaned-gid-audit"
-date: 2026-06-03T15:02:37+09:00
+date: 2026-06-02T17:02:37+09:00
 draft: false
 image: ""
 description: "Linuxの/etc/group内に存在する、対応するユーザーアカウントを持たない孤立したGIDの特定と削除手順を解説します。セキュリティ監査における脆弱性診断項目[U-09]に基づいた、実務的な診断スクリプトと修正ワークフローを提供します。"

@@ -1,7 +1,7 @@
 ---
 title: "Detection of Unassociated GIDs and Security Hardening Procedures in Linux Systems"
 slug: "linux-security-orphaned-gid-audit"
-date: 2026-06-03T15:02:38+09:00
+date: 2026-06-02T17:02:38+09:00
 draft: false
 image: ""
 description: "Explains the procedures for identifying and removing orphaned GIDs in Linux /etc/group that do not have corresponding user accounts. Provides a practical diagnostic script and remediation workflow based on security audit vulnerability assessment item [U-09]."
