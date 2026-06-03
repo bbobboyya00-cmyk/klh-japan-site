@@ -1,12 +1,12 @@
 ---
 title: "Internal Structure of B-Tree Indexes and Design Strategies for Query Optimization"
 slug: "b-tree-index-architecture-optimization"
-date: 2026-06-03T15:24:34+09:00
+date: 2026-06-03T12:24:34+09:00
 draft: false
 image: ""
-description: "Explains the internal structure"
+description: "Technical analysis of B-Tree index internals, storage node layout, and query performance optimization strategies for enterprise infrastructure."
 categories: ["Backend Architecture"]
-tags: ["en_translation"]
+tags: ["b-tree", "index-optimization", "rdbms", "query-performance", "database-internals"]
 author: "K-Life Hack"
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "B-Treeインデックスの内部構造とクエリ最適化における設計戦略"
 slug: "b-tree-index-architecture-optimization"
-date: 2026-06-03T15:24:33+09:00
+date: 2026-06-03T12:24:33+09:00
 draft: false
 image: ""
 description: "RDBMSのパフォーマンスを支えるB-TreeおよびB+Treeインデックスの内部構造、検索アルゴリズム、および実務的な最適化戦略について解説します。"
