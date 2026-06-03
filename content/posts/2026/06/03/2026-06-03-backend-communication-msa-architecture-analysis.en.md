@@ -1,7 +1,7 @@
 ---
 title: "Protocol Selection in Backend Communication Design and Structural Analysis of MSA Architecture"
 slug: "backend-communication-msa-architecture-analysis"
-date: 2026-06-03T09:17:37+09:00
+date: 2026-06-02T15:11:09+09:00
 draft: false
 image: ""
 description: "Provides a comparative analysis of REST, GraphQL, gRPC, and WebSocket, along with explanations of Saga patterns in MSA, API gateway design, and HTTPS implementation procedures in Spring Boot."

@@ -1,7 +1,7 @@
 ---
 title: "バックエンド通信設計におけるプロトコル選定とMSAアーキテクチャの構造分析"
 slug: "backend-communication-msa-architecture-analysis"
-date: 2026-06-03T09:17:36+09:00
+date: 2026-06-02T15:11:09+09:00
 draft: false
 image: ""
 description: "REST, GraphQL, gRPC, WebSocketの比較分析、MSAにおけるSagaパターン、APIゲートウェイの設計、およびSpring BootでのHTTPS実装手順を解説します。"
@@ -93,14 +93,15 @@ mkcert -pkcs12 localhost
 
 ```yaml
 server:
-port: 8443
-ssl:
-enabled: true
-key-store: classpath:keystore.p12
-key-store-password: changeit
-key-store-type: PKCS12
-key-alias: localhost
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    key-alias: localhost
 ```
+
 
 起動ログに「Tomcat initialized with port(s): 8443 (https)」が表示されることを確認してください。⚠️ セキュリティ上の理由から、.p12ファイルは必ず.gitignoreに追加し、リポジトリへの混入を厳格に避ける必要があります。
 
