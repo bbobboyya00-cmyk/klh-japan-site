@@ -1,4 +1,110 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jwt-Authentication on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/jwt-authentication/</link><description>Recent content in Jwt-Authentication on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 27 May 2026 12:04:17 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/jwt-authentication/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring Boot 3.xにおけるOAuth2およびJWTを用いたステートレス認証基盤の構築</title><link>https://klifehack.com/p/spring-boot-oauth2-jwt-stateless-auth/</link><pubDate>Wed, 27 May 2026 12:04:17 +0900</pubDate><guid>https://klifehack.com/p/spring-boot-oauth2-jwt-stateless-auth/</guid><description>&lt;h2 id="1-認証アーキテクチャの変遷とステートレス化の背景"&gt;1. 認証アーキテクチャの変遷とステートレス化の背景
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jwt-Authentication on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/jwt-authentication/</link><description>Recent content in Jwt-Authentication on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 18:03:03 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/jwt-authentication/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring Boot 3.3とReact 18を用いた画像共有SNSのMVP実装設計</title><link>https://klifehack.com/p/spring-react-sns-mvp-design/</link><pubDate>Wed, 03 Jun 2026 18:03:03 +0900</pubDate><guid>https://klifehack.com/p/spring-react-sns-mvp-design/</guid><description>&lt;h1 id="instagramクローン開発におけるシステムアーキテクチャと実装ロードマップ"&gt;Instagramクローン開発におけるシステムアーキテクチャと実装ロードマップ
+&lt;/h1&gt;&lt;p&gt;画像共有、ソーシャルグラフ、およびリアルタイムのインタラクションを核としたSNSの開発における、アーキテクチャ設計と実装ロードマップを定義します。本ドキュメントでは、Spring Boot 3.3およびReact 18を基盤としたMVP（Minimum Viable Product）の構築に焦点を当てます。&lt;/p&gt;
+&lt;h2 id="1-プロジェクトの定義とmvpスコープ"&gt;1. プロジェクトの定義とMVPスコープ
+&lt;/h2&gt;&lt;p&gt;本プロジェクトの目的は、ユーザーが写真をアップロードし、フォローしているユーザーの投稿を時系列で閲覧し、「いいね」や「コメント」を通じて交流できるWebサービスを構築することです。開発の複雑性を制御するため、フェーズ1（MVP）では以下の機能にスコープを限定します。&lt;/p&gt;
+&lt;h3 id="mvp機能マトリクス"&gt;MVP機能マトリクス
+&lt;/h3&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;カテゴリ&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;MVP実装範囲&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;フェーズ2以降の検討事項&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;アカウント&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;サインアップ、ログイン、プロフィール管理&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;OAuth2.0、2要素認証（2FA）&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;関係性&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;フォロー / アンフォロー&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ブロック機能、非公開アカウント&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;投稿&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;単一画像アップロード、キャプション、削除&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;動画、複数画像（カルーセル）、フィルタ&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;フィード&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;フォロー中ユーザーの時系列リスト&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;AIレコメンデーション、無限スクロール最適化&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;インタラクション&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;いいね、コメント（作成・一覧）&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;返信（スレッド）、ブックマーク&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="2-技術スタックの選定理由decoupled-architecture"&gt;2. 技術スタックの選定理由：Decoupled Architecture
+&lt;/h2&gt;&lt;p&gt;SNS特有の動的なUX（ページ遷移なしのインタラクション）を実現するため、Spring Boot + Thymeleafのモノリス構成ではなく、Spring Boot + Reactの分離構成を採用します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;UXの向上&lt;/b&gt;: ReactによるSPA（Single Page Application）構成により、無限スクロールや非同期の「いいね」処理など、アプリライクな操作感を提供します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;拡張性&lt;/b&gt;: 将来的なモバイルアプリ（React Native等）への展開を見据え、バックエンドをREST APIとして独立させます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;開発コスト&lt;/b&gt;: 初期設定（CORS、JWT、DTO設計）のコストは増加しますが、長期的なメンテナンス性とスケーラビリティにおいて優位性があります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-データモデリングとerd設計"&gt;3. データモデリングとERD設計
+&lt;/h2&gt;&lt;p&gt;リレーショナルデータベース（PostgreSQL）を用いた、コアエンティティの設計仕様です。&lt;/p&gt;
+&lt;h3 id="主要テーブル構造"&gt;主要テーブル構造
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;users&lt;/b&gt;: &lt;code&gt;id&lt;/code&gt;, &lt;code&gt;email&lt;/code&gt;, &lt;code&gt;password_hash&lt;/code&gt;, &lt;code&gt;username&lt;/code&gt;, &lt;code&gt;avatar_url&lt;/code&gt;, &lt;code&gt;bio&lt;/code&gt;, &lt;code&gt;created_at&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;follows&lt;/b&gt;: &lt;code&gt;follower_id&lt;/code&gt;, &lt;code&gt;following_id&lt;/code&gt;, &lt;code&gt;created_at&lt;/code&gt; (複合主キー)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;posts&lt;/b&gt;: &lt;code&gt;id&lt;/code&gt;, &lt;code&gt;user_id&lt;/code&gt;, &lt;code&gt;image_url&lt;/code&gt;, &lt;code&gt;caption&lt;/code&gt;, &lt;code&gt;created_at&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;likes&lt;/b&gt;: &lt;code&gt;user_id&lt;/code&gt;, &lt;code&gt;post_id&lt;/code&gt;, &lt;code&gt;created_at&lt;/code&gt; (複合主キー)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;comments&lt;/b&gt;: &lt;code&gt;id&lt;/code&gt;, &lt;code&gt;post_id&lt;/code&gt;, &lt;code&gt;user_id&lt;/code&gt;, &lt;code&gt;body&lt;/code&gt;, &lt;code&gt;created_at&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="フィード生成ロジックmvp版"&gt;フィード生成ロジック（MVP版）
+&lt;/h3&gt;&lt;p&gt;初期段階では、以下のクエリロジックによりフィードを生成します。ユーザー規模が拡大した場合は、Redisを用いたタイムラインキャッシュへの移行を検討します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; p.&lt;span style="color:#f92672"&gt;*&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; posts p
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;JOIN&lt;/span&gt; follows f &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; p.user_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; f.following_id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; f.follower_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; :currentUserId
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ORDER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; p.created_at &lt;span style="color:#66d9ef"&gt;DESC&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;LIMIT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;20&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;OFFSET&lt;/span&gt; :&lt;span style="color:#66d9ef"&gt;offset&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-バックエンド実装仕様-spring-boot-33"&gt;4. バックエンド実装仕様 (Spring Boot 3.3)
+&lt;/h2&gt;&lt;h3 id="プロジェクト構造"&gt;プロジェクト構造
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;src/main/java/com/example/instagram
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── config // SecurityConfig, WebMvcConfig, CloudConfig
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── controller // AuthController, PostController, UserController
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── dto // Request/Response DTOs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── entity // JPA Entities (User, Post, Follow, etc.)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── repository // JpaRepository Interfaces
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── service // Business Logic (AuthService, PostService)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="セキュリティと認証-jwt"&gt;セキュリティと認証 (JWT)
+&lt;/h3&gt;&lt;p&gt;ステートレスな認証を実現するため、JWT（JSON Web Token）を採用します。パスワードはBCryptでハッシュ化し、トークンは以下のライフサイクルで運用します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Access Token&lt;/b&gt;: &lt;code&gt;Authorization: Bearer&lt;/code&gt; ヘッダーで送信。有効期限は15分〜1時間。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Refresh Token&lt;/b&gt;: &lt;code&gt;HttpOnly&lt;/code&gt; クッキーに保存。有効期限は7日〜14日。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;generateAccessToken&lt;/span&gt;(UserDetails userDetails) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; Jwts.&lt;span style="color:#a6e22e"&gt;builder&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setSubject&lt;/span&gt;(userDetails.&lt;span style="color:#a6e22e"&gt;getUsername&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setIssuedAt&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Date())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setExpiration&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Date(System.&lt;span style="color:#a6e22e"&gt;currentTimeMillis&lt;/span&gt;() &lt;span style="color:#f92672"&gt;+&lt;/span&gt; ACCESS_TOKEN_EXPIRY))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;signWith&lt;/span&gt;(SignatureAlgorithm.&lt;span style="color:#a6e22e"&gt;HS512&lt;/span&gt;, secretKey)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;compact&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-パフォーマンスと運用の最適化"&gt;5. パフォーマンスと運用の最適化
+&lt;/h2&gt;&lt;h3 id="jpa-n1問題の回避"&gt;JPA N+1問題の回避
+&lt;/h3&gt;&lt;p&gt;フィード取得時、投稿ごとにユーザー情報を取得するN+1問題を回避するため、&lt;code&gt;fetch join&lt;/code&gt;または&lt;code&gt;EntityGraph&lt;/code&gt;を適用します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Query&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;SELECT p FROM Post p JOIN FETCH p.user WHERE p.user.id IN :followingIds&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;List&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;post&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;findAllByUserIdInOrderByCreatedAtDesc&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;@Param&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;followingIds&amp;#34;&lt;/span&gt;) List&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;long&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; followingIds);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="画像ストレージの管理"&gt;画像ストレージの管理
+&lt;/h3&gt;&lt;p&gt;画像ファイルはDBに直接保存せず、AWS S3またはローカルストレージに保存し、DBにはそのURLのみを格納します。アップロード時には、最大5MBの制限と、jpg/png/webpの拡張子バリデーションを実装します。&lt;/p&gt;
+&lt;h2 id="6-開発ロードマップ-6週間"&gt;6. 開発ロードマップ (6週間)
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Week 1: Foundation&lt;/b&gt;: 🛠️ Docker環境構築、Flywayによるスキーマ設計、JWT認証の実装。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Week 2: Profile &amp;amp; Posts&lt;/b&gt;: 🛠️ 画像アップロードロジック、プロフィールCRUD、投稿APIの実装。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Week 3: Social Graph&lt;/b&gt;: 🛠️ フォロー/アンフォロー機能、フィード生成サービスの構築。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Week 4: Interaction&lt;/b&gt;: 🛠️ いいね・コメントAPI、カウントロジックの実装。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Week 5: Integration&lt;/b&gt;: 🛠️ Reactフロントエンドとの結合、Optimistic UI（楽観的更新）の適用。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Week 6: Deployment&lt;/b&gt;: 🚀 HTTPS設定、ロギング、バックアップ体制の整備とデプロイ。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;💡 MVP開発において最も避けるべきは「オーバーエンジニアリング」です。初期段階でマイクロサービス化や複雑なAIアルゴリズムを導入せず、まずはモノリスなバックエンドとSPAの疎結合構成を安定させることに注力します。フィードのパフォーマンスがボトルネックとなった時点で、インデックスの最適化やキャッシュ戦略を段階的に導入するのが現実的なアプローチです。&lt;/long&gt;&lt;/post&gt;&lt;/p&gt;</description></item><item><title>Spring Boot 3.xにおけるOAuth2およびJWTを用いたステートレス認証基盤の構築</title><link>https://klifehack.com/p/spring-boot-oauth2-jwt-stateless-auth/</link><pubDate>Wed, 27 May 2026 12:04:17 +0900</pubDate><guid>https://klifehack.com/p/spring-boot-oauth2-jwt-stateless-auth/</guid><description>&lt;h2 id="1-認証アーキテクチャの変遷とステートレス化の背景"&gt;1. 認証アーキテクチャの変遷とステートレス化の背景
 &lt;/h2&gt;&lt;p&gt;現代のマイクロサービスアーキテクチャおよびスケーラブルなWebアプリケーションにおいて、認証基盤の設計はシステムの可用性とセキュリティに直結します。従来のセッションベース認証（Stateful）は、サーバー側でセッションIDを管理し、メモリやデータベースにユーザー情報を保持する形態をとります。しかし、このモデルはサーバーの水平スケーリング時にセッション同期の問題（Session Clustering）を引き起こし、インフラストラクチャのオーバーヘッドを増大させる要因となります。&lt;/p&gt;
 &lt;p&gt;これに対し、Spring Boot 3.xおよびSpring Security 6.x環境下で推奨されるJWT（JSON Web Token）ベースの認証（Stateless）は、トークン自体にユーザー情報を内包させることで、サーバー側の状態保持を不要にします。本稿では、OAuth2によるソーシャルログインとJWTを組み合わせた、堅牢な認証パイプラインの実装について技術的な分析を行います。&lt;/p&gt;
 &lt;h2 id="2-jwtrfc-7519の構造的分析と署名メカニズム"&gt;2. JWT（RFC 7519）の構造的分析と署名メカニズム

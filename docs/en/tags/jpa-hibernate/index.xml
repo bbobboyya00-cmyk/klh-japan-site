@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jpa-Hibernate on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/jpa-hibernate/</link><description>Recent content in Jpa-Hibernate on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 18:03:04 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/jpa-hibernate/index.xml" rel="self" type="application/rss+xml"/><item><title>MVP Implementation Design for an Image-Sharing SNS Using Spring Boot 3.3 and React 18</title><link>https://klifehack.com/en/p/spring-react-sns-mvp-design/</link><pubDate>Wed, 03 Jun 2026 18:03:04 +0900</pubDate><guid>https://klifehack.com/en/p/spring-react-sns-mvp-design/</guid><description>&lt;h1 id="system-architecture-and-implementation-roadmap-for-instagram-clone-development"&gt;System Architecture and Implementation Roadmap for Instagram Clone Development
+&lt;/h1&gt;&lt;p&gt;This document defines the architectural design and implementation roadmap for an SNS platform centered on image sharing, social graphs, and real-time interactions. The development focuses on a Minimum Viable Product (MVP) utilizing Spring Boot 3.3 and React 18.&lt;/p&gt;
+&lt;h2 id="1-project-definition-and-mvp-scope"&gt;1. Project Definition and MVP Scope
+&lt;/h2&gt;&lt;p&gt;The project objective is to construct a web service enabling photo uploads, chronological feed viewing of followed users, and interaction via likes and comments. Phase 1 scope is restricted to core features to manage development complexity.&lt;/p&gt;
+&lt;h3 id="mvp-feature-matrix"&gt;MVP Feature Matrix
+&lt;/h3&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Category&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;MVP Implementation Scope&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Post-Phase 2 Considerations&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Account&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Sign-up, login, profile management&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;OAuth 2.0, Two-Factor Authentication (2FA)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Relationships&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Follow / Unfollow&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Block function, private accounts&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Posts&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Single image upload, caption, deletion&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Video, multiple images (carousel), filters&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Feed&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Chronological list of followed users&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;AI recommendations, infinite scroll optimization&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Interaction&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Likes, comments (creation/list)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Replies (threads), bookmarks&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="2-rationale-for-tech-stack-selection-decoupled-architecture"&gt;2. Rationale for Tech Stack Selection: Decoupled Architecture
+&lt;/h2&gt;&lt;p&gt;A decoupled architecture using Spring Boot and React is selected over a monolithic Spring Boot and Thymeleaf configuration to ensure a dynamic UX. This Single Page Application (SPA) structure supports infinite scrolling and asynchronous processing.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;UX Improvement&lt;/b&gt;: The SPA configuration using React provides an app-like user experience, including infinite scrolling and asynchronous &amp;ldquo;like&amp;rdquo; processing.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Scalability&lt;/b&gt;: The backend is independent as a REST API, anticipating future expansion to mobile apps.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Development Cost&lt;/b&gt;: While initial setup costs for CORS, JWT, and DTO design increase, it offers advantages in long-term maintainability and scalability.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-data-modeling-and-erd-design"&gt;3. Data Modeling and ERD Design
+&lt;/h2&gt;&lt;p&gt;Core entities are designed for a relational database environment using PostgreSQL.&lt;/p&gt;
+&lt;h3 id="primary-table-structure"&gt;Primary Table Structure
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;users&lt;/b&gt;: &lt;code&gt;id&lt;/code&gt;, &lt;code&gt;email&lt;/code&gt;, &lt;code&gt;password_hash&lt;/code&gt;, &lt;code&gt;username&lt;/code&gt;, &lt;code&gt;avatar_url&lt;/code&gt;, &lt;code&gt;bio&lt;/code&gt;, &lt;code&gt;created_at&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;follows&lt;/b&gt;: &lt;code&gt;follower_id&lt;/code&gt;, &lt;code&gt;following_id&lt;/code&gt;, &lt;code&gt;created_at&lt;/code&gt; (Composite Primary Key)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;posts&lt;/b&gt;: &lt;code&gt;id&lt;/code&gt;, &lt;code&gt;user_id&lt;/code&gt;, &lt;code&gt;image_url&lt;/code&gt;, &lt;code&gt;caption&lt;/code&gt;, &lt;code&gt;created_at&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;likes&lt;/b&gt;: &lt;code&gt;user_id&lt;/code&gt;, &lt;code&gt;post_id&lt;/code&gt;, &lt;code&gt;created_at&lt;/code&gt; (Composite Primary Key)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;comments&lt;/b&gt;: &lt;code&gt;id&lt;/code&gt;, &lt;code&gt;post_id&lt;/code&gt;, &lt;code&gt;user_id&lt;/code&gt;, &lt;code&gt;body&lt;/code&gt;, &lt;code&gt;created_at&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="feed-generation-logic-mvp-version"&gt;Feed Generation Logic (MVP Version)
+&lt;/h3&gt;&lt;p&gt;Feed generation utilizes specific query logic. Migration to a timeline cache using Redis is planned for future scaling.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; p.&lt;span style="color:#f92672"&gt;*&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; posts p
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;JOIN&lt;/span&gt; follows f &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; p.user_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; f.following_id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; f.follower_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; :currentUserId
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ORDER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; p.created_at &lt;span style="color:#66d9ef"&gt;DESC&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;LIMIT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;20&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;OFFSET&lt;/span&gt; :&lt;span style="color:#66d9ef"&gt;offset&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-backend-implementation-specifications-spring-boot-33"&gt;4. Backend Implementation Specifications (Spring Boot 3.3)
+&lt;/h2&gt;&lt;h3 id="project-structure"&gt;Project Structure
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;src/main/java/com/example/instagram
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── config // SecurityConfig, WebMvcConfig, CloudConfig
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── controller // AuthController, PostController, UserController
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── dto // Request/Response DTOs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── entity // JPA Entities (User, Post, Follow, etc.)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── repository // JpaRepository Interfaces
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── service // Business Logic (AuthService, PostService)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="security-and-authentication-jwt"&gt;Security and Authentication (JWT)
+&lt;/h3&gt;&lt;p&gt;JWT (JSON Web Token) is utilized for stateless authentication. Passwords undergo BCrypt hashing. The token lifecycle includes short-term Access Tokens and long-term Refresh Tokens stored in HttpOnly cookies.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;generateAccessToken&lt;/span&gt;(UserDetails userDetails) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; Jwts.&lt;span style="color:#a6e22e"&gt;builder&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setSubject&lt;/span&gt;(userDetails.&lt;span style="color:#a6e22e"&gt;getUsername&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setIssuedAt&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Date())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setExpiration&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Date(System.&lt;span style="color:#a6e22e"&gt;currentTimeMillis&lt;/span&gt;() &lt;span style="color:#f92672"&gt;+&lt;/span&gt; ACCESS_TOKEN_EXPIRY))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;signWith&lt;/span&gt;(SignatureAlgorithm.&lt;span style="color:#a6e22e"&gt;HS512&lt;/span&gt;, secretKey)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;compact&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-performance-and-operational-optimization"&gt;5. Performance and Operational Optimization
+&lt;/h2&gt;&lt;h3 id="avoiding-jpa-n1-problems"&gt;Avoiding JPA N+1 Problems
+&lt;/h3&gt;&lt;p&gt;To prevent JPA N+1 issues during feed retrieval, fetch join or EntityGraph is implemented.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Query&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;SELECT p FROM Post p JOIN FETCH p.user WHERE p.user.id IN :followingIds&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;List&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;post&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;findAllByUserIdInOrderByCreatedAtDesc&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;@Param&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;followingIds&amp;#34;&lt;/span&gt;) List&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;long&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; followingIds);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="image-storage-management"&gt;Image Storage Management
+&lt;/h3&gt;&lt;p&gt;Image assets are stored in AWS S3 or local storage, with only the corresponding URLs persisted in the database. Upload constraints include a 5MB size limit and extension validation for jpg, png, and webp.&lt;/p&gt;
+&lt;h2 id="6-development-roadmap-6-weeks"&gt;6. Development Roadmap (6 Weeks)
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Week 1: Foundation&lt;/b&gt;: 🛠️ Docker environment setup, schema design with Flyway, implementation of JWT authentication.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Week 2: Profile &amp;amp; Posts&lt;/b&gt;: 🛠️ Image upload logic, profile CRUD, implementation of post APIs.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Week 3: Social Graph&lt;/b&gt;: 🛠️ Follow/unfollow functionality, construction of feed generation service.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Week 4: Interaction&lt;/b&gt;: 🛠️ Like/comment APIs, implementation of count logic.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Week 5: Integration&lt;/b&gt;: 🛠️ Integration with React frontend, application of Optimistic UI.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Week 6: Deployment&lt;/b&gt;: 🚀 HTTPS configuration, logging, establishment of backup systems, and deployment.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;MVP development must prioritize architectural stability over complex features. Initial focus remains on the decoupled configuration of the backend and SPA. Optimization strategies such as indexing and caching are deferred until performance bottlenecks are identified.&lt;/p&gt;
+&lt;p&gt;&lt;/long&gt;&lt;/post&gt;&lt;/p&gt;</description></item></channel></rss>
