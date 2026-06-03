@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/python/</link><description>Recent content in Python on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 09:11:10 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Real-Time Aggregation Pipeline Design for High-Traffic Activity Logs</title><link>https://klifehack.com/en/p/realtime-data-aggregation-redis-pipeline/</link><pubDate>Wed, 03 Jun 2026 09:11:10 +0900</pubDate><guid>https://klifehack.com/en/p/realtime-data-aggregation-redis-pipeline/</guid><description>&lt;h2 id="overview"&gt;Overview
+&lt;/h2&gt;&lt;p&gt;On-demand query execution patterns against relational databases face severe performance limits under real-time, large-scale data aggregation requirements. To achieve high-performance, low-latency metrics rendering, it is necessary to move away from designs that aggregate raw log data on every request and instead build an asynchronous processing pipeline that combines &lt;b&gt;dedicated pre-aggregation tables&lt;/b&gt; and an &lt;b&gt;in-memory caching layer&lt;/b&gt;.&lt;/p&gt;
+&lt;p&gt;This article explains concrete implementation specifications and architectural designs in practice, including ensuring data consistency, selecting efficient in-memory data structures, and designing reprocessing and recovery logic during system failures.&lt;/p&gt;
+&lt;h2 id="background-and-context"&gt;Background and Context
+&lt;/h2&gt;&lt;p&gt;In the fields of data processing and analytical reporting, it is not uncommon to face system requirements that exceed the limits of traditional relational databases.&lt;/p&gt;
+&lt;p&gt;Previously, during a technical consultation with a client at an office in the Gangnam district of Seoul, the following requirement was presented:&lt;/p&gt;
+&lt;blockquote&gt;"Currently, rendering the monthly report takes about 2 minutes and 30 seconds. Please reduce this response time to less than 5 seconds by next week."&lt;/blockquote&gt;
+This requirement highlighted a common architectural bottleneck. Based on this high-throughput requirement, this article outlines a technical approach to aggregate massive volumes of user activity data generated per second and serve it with sub-second latency.
+&lt;h2 id="1-system-requirements"&gt;1. System Requirements
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Data Source&lt;/b&gt;: User activity logs across the entire service over the past 3 months.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Target Metrics&lt;/b&gt;: Real-time aggregation of Daily Active Users (DAU), average session duration, and bounce rate.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Visualization&lt;/b&gt;: Dynamic graph and table report display on a web dashboard.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Data Scale&lt;/b&gt;: Raw activity logs reaching the scale of hundreds of millions of records.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Query Flexibility&lt;/b&gt;: Results must update within a few seconds when multi-dimensional filters such as specific marketing campaigns or age groups are applied.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-technical-challenges-and-bottlenecks"&gt;2. Technical Challenges and Bottlenecks
+&lt;/h2&gt;&lt;p&gt;In the existing system, raw activity logs were stored in a standard relational database such as MySQL. Logs accumulated at a rate of millions of records per day, and the reporting engine executed heavy SQL queries containing &lt;code&gt;GROUP BY&lt;/code&gt; and &lt;code&gt;JOIN&lt;/code&gt; on every request.&lt;/p&gt;
+&lt;p&gt;There are three main limitations to this approach.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Example of heavy on-demand aggregation query
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DATE(created_at) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; event_date,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;campaign_id,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;DISTINCT&lt;/span&gt; user_id) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; dau,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;AVG&lt;/span&gt;(session_duration) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; avg_session_duration,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SUM&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;CASE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;WHEN&lt;/span&gt; is_bounce &lt;span style="color:#66d9ef"&gt;THEN&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ELSE&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;END&lt;/span&gt;) &lt;span style="color:#f92672"&gt;/&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; bounce_rate
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;user_activity_logs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;created_at &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt; DATE_SUB(NOW(), INTERVAL &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;MONTH&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;GROUP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DATE(created_at), campaign_id;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="a-performance-bottleneck"&gt;A. Performance Bottleneck
+&lt;/h3&gt;&lt;p&gt;Scanning and aggregating hundreds of millions of rows on the fly causes severe CPU and I/O bottlenecks. Even a simple DAU calculation query takes more than 10 seconds, and when complex multi-dimensional filters are applied, the response time degrades to tens of seconds or even minutes.&lt;/p&gt;
+&lt;h3 id="b-database-resource-exhaustion"&gt;B. Database Resource Exhaustion
+&lt;/h3&gt;&lt;p&gt;When multiple administrators request reports simultaneously, analytical queries occupy the database connection pool and CPU capacity. This degrades the performance of the main database processing transactions, threatening the stability of user-facing services.&lt;/p&gt;
+&lt;h3 id="c-lack-of-schema-flexibility"&gt;C. Lack of Schema Flexibility
+&lt;/h3&gt;&lt;p&gt;Every time a new filtering dimension or analytical metric is added, it requires rewriting complex SQL queries, redesigning indexes, and performing optimization work, which delays the feature development cycle.&lt;/p&gt;
+&lt;h2 id="3-architectural-design"&gt;3. Architectural Design
+&lt;/h2&gt;&lt;p&gt;To solve these challenges, we shift the design policy from &amp;ldquo;on-demand calculation at request time&amp;rdquo; to &amp;ldquo;&lt;b&gt;prior asynchronous calculation and cache storage&lt;/b&gt;.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;The ingestion, aggregation, and serving layers are separated as follows:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[Event Source] ──&amp;amp;gt; [Message Queue] ──&amp;amp;gt; [Consumer Service]
+│
+▼ (Async Update)
+[User Request] ──&amp;amp;gt; [API Gateway / FastAPI] ──&amp;amp;gt; [Redis Cache]
+│ (Cache Miss) ▲
+└───────────────────┘ (Write Back)
+│
+▼
+[MySQL (Pre-aggregation Table)]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="a-asynchronous-data-collection"&gt;A. Asynchronous Data Collection
+&lt;/h3&gt;&lt;p&gt;When an event occurs, the application writes the raw log to the main DB and simultaneously publishes the event to a lightweight message queue (such as Apache Kafka or Redis Pub/Sub). This prevents the data collection process for analysis from blocking user transactions.&lt;/p&gt;
+&lt;h3 id="b-dedicated-aggregation-service"&gt;B. Dedicated Aggregation Service
+&lt;/h3&gt;&lt;p&gt;An independent consumer service subscribes to the message queue, processes logs in real time, and updates the dedicated pre-aggregation tables. This table pre-calculates and holds metrics at hourly or daily granularities for each filter dimension, such as campaign ID or age group.&lt;/p&gt;
+&lt;h3 id="c-caching-layer"&gt;C. Caching Layer
+&lt;/h3&gt;&lt;p&gt;Frequently accessed report queries for specific periods are cached in an in-memory data store (Redis). The application returns these requests directly from memory, eliminating database access.&lt;/p&gt;
+&lt;h3 id="d-api-endpoints"&gt;D. API Endpoints
+&lt;/h3&gt;&lt;p&gt;A dedicated API gateway is deployed to handle queries from the dashboard. Upon receiving a request, it first checks the Redis cache and immediately returns a response if there is a hit. In the case of a cache miss, it queries the pre-aggregation table, caches the result in Redis, and then returns it.&lt;/p&gt;
+&lt;h3 id="trade-off-analysis"&gt;Trade-off Analysis
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Pros&lt;/b&gt;:
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Reduced DB Load&lt;/b&gt;: Dramatically reduces CPU and read I/O load on the main DB.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Low Latency&lt;/b&gt;: Achieves sub-second fast responses even for hundreds of millions of records using pre-aggregated data and in-memory cache.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Scalability&lt;/b&gt;: Adding new filter dimensions can be handled simply by extending the schema of the pre-aggregation table, keeping the query logic simple.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cons&lt;/b&gt;:
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Increased Infrastructure Cost&lt;/b&gt;: Requires operational management of additional components such as message queues, cache clusters, and consumer daemons.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Consistency Management&lt;/b&gt;: Introducing asynchronous processing requires ensuring eventual consistency. It is necessary to incorporate reprocessing and consistency verification logic to handle event out-of-order delivery and system failures.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-lifecycle-dynamics-and-container-deployment"&gt;4. Lifecycle Dynamics and Container Deployment
+&lt;/h2&gt;&lt;p&gt;When operating the aggregation consumer service in a production environment, traffic control and prevention of duplicate processing during container rolling updates and zero-downtime scaling are extremely critical.&lt;/p&gt;
+&lt;h3 id="a-deduplication-during-rolling-updates"&gt;A. Deduplication During Rolling Updates
+&lt;/h3&gt;&lt;p&gt;⚠️ When consumer containers are replaced, there is a temporary period where both old and new containers subscribe to the message queue (such as Kafka) simultaneously. To prevent the risk of duplicate processing of the same message during this time, the following measures are taken:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Enforcing Idempotent UPSERTs&lt;/b&gt;: Use &lt;code&gt;ON DUPLICATE KEY UPDATE&lt;/code&gt; (described later) to ensure that the state remains consistent even if the same data is written multiple times.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Proper Consumer Group Management&lt;/b&gt;: To prevent duplicate processing during Kafka partition rebalancing, execute offset commits synchronously immediately after batch processing completes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="b-zero-downtime-scaling"&gt;B. Zero-Downtime Scaling
+&lt;/h3&gt;&lt;p&gt;When horizontally scaling consumer containers (e.g., via HPA: Horizontal Pod Autoscaler) in response to traffic spikes, there is a risk that concurrent connections to the database will surge, exhausting the connection pool. To prevent this, set appropriate connection pooling limits on the consumer side and utilize distributed locks using Redis (such as the Redlock algorithm) to suppress concurrent write conflicts on the same key.&lt;/p&gt;
+&lt;h2 id="5-implementation-details"&gt;5. Implementation Details
+&lt;/h2&gt;&lt;p&gt;We use &lt;b&gt;Python&lt;/b&gt; and &lt;b&gt;FastAPI&lt;/b&gt; for the backend API, &lt;b&gt;Redis&lt;/b&gt; for the caching layer, and &lt;b&gt;MySQL&lt;/b&gt; to store pre-aggregated data.&lt;/p&gt;
+&lt;h3 id="51-pre-aggregation-table-schema-design"&gt;5.1. Pre-aggregation Table Schema Design
+&lt;/h3&gt;&lt;p&gt;The &lt;code&gt;aggregated_daily_metrics&lt;/code&gt; table stores pre-calculated metrics. Setting a composite unique key ensures data consistency and enables high-speed UPSERT processing.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; aggregated_daily_metrics (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;event_date DATE &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;campaign_id VARCHAR(&lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;age_group VARCHAR(&lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dau INT UNSIGNED &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total_session_duration INT UNSIGNED &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total_sessions INT UNSIGNED &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bounce_count INT UNSIGNED &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total_events INT UNSIGNED &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;updated_at &lt;span style="color:#66d9ef"&gt;TIMESTAMP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CURRENT_TIMESTAMP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;UPDATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CURRENT_TIMESTAMP&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;PRIMARY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (event_date, campaign_id, age_group),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;INDEX&lt;/span&gt; idx_campaign_age (campaign_id, age_group)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;) ENGINE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;InnoDB &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; CHARSET&lt;span style="color:#f92672"&gt;=&lt;/span&gt;utf8mb4;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;UNIQUE KEY (event_date, campaign_id, age_group)&lt;/code&gt;: Guarantees the uniqueness of dimensions and enables atomic updates using &lt;code&gt;ON DUPLICATE KEY UPDATE&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id="52-implementation-of-asynchronous-aggregation-service-python"&gt;5.2. Implementation of Asynchronous Aggregation Service (Python)
+&lt;/h3&gt;&lt;p&gt;The consumer service retrieves events in batches from a message queue and updates the pre-aggregation table.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; mysql.connector
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;process_message_batch&lt;/span&gt;(messages, db_connection):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cursor &lt;span style="color:#f92672"&gt;=&lt;/span&gt; db_connection&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cursor()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; query &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; INSERT INTO aggregated_daily_metrics 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; (event_date, campaign_id, age_group, dau, total_session_duration, total_sessions, bounce_count, total_events)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; VALUES 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; (&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ON DUPLICATE KEY UPDATE
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; dau = dau + VALUES(dau),
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; total_session_duration = total_session_duration + VALUES(total_session_duration),
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; total_sessions = total_sessions + VALUES(total_sessions),
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; bounce_count = bounce_count + VALUES(bounce_count),
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; total_events = total_events + VALUES(total_events);
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; msg &lt;span style="color:#f92672"&gt;in&lt;/span&gt; messages:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; payload &lt;span style="color:#f92672"&gt;=&lt;/span&gt; json&lt;span style="color:#f92672"&gt;.&lt;/span&gt;loads(msg)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data&lt;span style="color:#f92672"&gt;.&lt;/span&gt;append((
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; payload[&lt;span style="color:#e6db74"&gt;&amp;#39;event_date&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; payload[&lt;span style="color:#e6db74"&gt;&amp;#39;campaign_id&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; payload[&lt;span style="color:#e6db74"&gt;&amp;#39;age_group&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; payload[&lt;span style="color:#e6db74"&gt;&amp;#39;is_new_user&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; payload[&lt;span style="color:#e6db74"&gt;&amp;#39;session_duration&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; payload[&lt;span style="color:#e6db74"&gt;&amp;#39;is_bounce&amp;#39;&lt;/span&gt;] &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;executemany(query, data)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; db_connection&lt;span style="color:#f92672"&gt;.&lt;/span&gt;commit()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; mysql&lt;span style="color:#f92672"&gt;.&lt;/span&gt;connector&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Error &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; err:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; db_connection&lt;span style="color:#f92672"&gt;.&lt;/span&gt;rollback()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; err
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="53-implementation-of-caching-api-endpoint-fastapi"&gt;5.3. Implementation of Caching API Endpoint (FastAPI)
+&lt;/h3&gt;&lt;p&gt;We build an endpoint using FastAPI that preferentially references the Redis cache and accesses the MySQL pre-aggregation table only on a cache miss.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI, Depends
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; redis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; mysql.connector
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis_client &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redis&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Redis(host&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;, port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;6379&lt;/span&gt;, db&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_db&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; conn &lt;span style="color:#f92672"&gt;=&lt;/span&gt; mysql&lt;span style="color:#f92672"&gt;.&lt;/span&gt;connector&lt;span style="color:#f92672"&gt;.&lt;/span&gt;connect(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; host&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;, user&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;root&amp;#34;&lt;/span&gt;, password&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;, database&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;analytics&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;yield&lt;/span&gt; conn
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; conn&lt;span style="color:#f92672"&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/api/v1/metrics&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_metrics&lt;/span&gt;(campaign_id: str, age_group: str, db &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Depends(get_db)):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cache_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;metrics:&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;campaign_id&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;:&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;age_group&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cached_data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redis_client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get(cache_key)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; cached_data:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; json&lt;span style="color:#f92672"&gt;.&lt;/span&gt;loads(cached_data)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cursor &lt;span style="color:#f92672"&gt;=&lt;/span&gt; db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cursor(dictionary&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; query &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; SELECT 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; event_date,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; dau,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; (total_session_duration / total_sessions) AS avg_session_duration,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; (bounce_count / total_events) AS bounce_rate
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; FROM aggregated_daily_metrics
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; WHERE campaign_id = &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt; AND age_group = &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ORDER BY event_date DESC
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; LIMIT 90;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;execute(query, (campaign_id, age_group))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; results &lt;span style="color:#f92672"&gt;=&lt;/span&gt; cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fetchall()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; redis_client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setex(cache_key, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, json&lt;span style="color:#f92672"&gt;.&lt;/span&gt;dumps(results, default&lt;span style="color:#f92672"&gt;=&lt;/span&gt;str))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; results
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;💡 When operating this architecture in a production environment, the following operational considerations are recommended:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Cache Invalidation Strategy&lt;/b&gt;: If delayed data or historical corrections flow into the data source, implement event-driven cache invalidation logic that explicitly deletes (DEL) or updates the corresponding Redis cache keys for the affected periods and dimensions in sync with the pre-aggregation table updates.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Maintaining Weighted Average Precision&lt;/b&gt;: Calculating the average session duration within &lt;code&gt;ON DUPLICATE KEY UPDATE&lt;/code&gt; may accumulate floating-point rounding errors. If higher precision is required, we recommend a design that separately maintains &lt;code&gt;session_duration_sum&lt;/code&gt; (total session duration) and &lt;code&gt;total_sessions&lt;/code&gt; (total session count) in the table, and performs division at read time.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Resource Monitoring&lt;/b&gt;: Monitor Redis memory usage and eviction policies (such as &lt;code&gt;allkeys-lru&lt;/code&gt;) and perform appropriate memory capacity planning to prevent a sudden drop in the cache hit rate.&lt;/li&gt;
+&lt;/ol&gt;</description></item></channel></rss>

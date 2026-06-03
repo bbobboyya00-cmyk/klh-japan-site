@@ -1,4 +1,194 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 09:05:16 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Ubuntu Server基盤における仮想化・認証・ログ管理の統合実装</title><link>https://klifehack.com/p/ubuntu-server-infra-integration-guide/</link><pubDate>Wed, 03 Jun 2026 09:05:16 +0900</pubDate><guid>https://klifehack.com/p/ubuntu-server-infra-integration-guide/</guid><description>&lt;h1 id="ubuntu-serverにおけるkvm仮想化基盤とネットワーク統合管理サービスの構築"&gt;Ubuntu ServerにおけるKVM仮想化基盤とネットワーク統合管理サービスの構築
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 09:11:09 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>高トラフィックなアクティビティログのリアルタイム集計パイプライン設計</title><link>https://klifehack.com/p/realtime-data-aggregation-redis-pipeline/</link><pubDate>Wed, 03 Jun 2026 09:11:09 +0900</pubDate><guid>https://klifehack.com/p/realtime-data-aggregation-redis-pipeline/</guid><description>&lt;h2 id="概要"&gt;概要
+&lt;/h2&gt;&lt;p&gt;リレーショナルデータベースに対するオンデマンドなクエリ実行パターンは、リアルタイムかつ大規模なデータ集計要件において深刻なパフォーマンス限界に直面します。高パフォーマンスかつ低レイテンシなメトリクス描画を実現するためには、生のログデータをリクエストのたびに集計する設計から脱却し、&lt;b&gt;専用の事前集計テーブル（Pre-aggregation Tables）&lt;/b&gt;と&lt;b&gt;インメモリキャッシュレイヤー&lt;/b&gt;を組み合わせた非同期処理パイプラインを構築する必要があります。&lt;/p&gt;
+&lt;p&gt;本稿では、データ整合性の担保、効率的なインメモリデータ構造の選択、システム障害時における再処理・リカバリロジックの設計など、実務における具体的な実装仕様とアーキテクチャ設計について解説します。&lt;/p&gt;
+&lt;h2 id="背景とコンテキスト"&gt;背景とコンテキスト
+&lt;/h2&gt;&lt;p&gt;データ処理や分析レポートの分野において、従来のリレーショナルデータベースの限界を超えるようなシステム要件に直面することは少なくありません。&lt;/p&gt;
+&lt;p&gt;以前、ソウル江南地区のオフィスにて実施されたクライアントとの技術協議において、以下のような要件が提示されました。&lt;/p&gt;
+&lt;blockquote&gt;「現在、月次レポートの描画に約2分30秒かかっています。このレスポンスタイムを来週までに5秒未満に短縮してください」&lt;/blockquote&gt;
+&lt;p&gt;この要件は、一般的なアーキテクチャ上のボトルネックを浮き彫りにするものでした。本稿では、この高スループット要件に基づき、秒単位で発生する大量のユーザーアクティビティデータを集計し、1秒未満のレイテンシで提供するための技術的なアプローチを整理します。&lt;/p&gt;
+&lt;h2 id="1-システム要件"&gt;1. システム要件
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;データソース&lt;/b&gt;: 直近3ヶ月間にわたるサービス全体のユーザーアクティビティログ。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対象メトリクス&lt;/b&gt;: 日次アクティブユーザー数（DAU）、平均セッション時間、直帰率（Bounce Rate）のリアルタイム集計。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;可視化&lt;/b&gt;: Webダッシュボード上での動的なグラフおよびテーブルレポート表示。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;データ規模&lt;/b&gt;: 数億件規模に達する生のアクティビティログ。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;クエリの柔軟性&lt;/b&gt;: 特定のマーケティングキャンペーンや年齢層などの多次元フィルタを適用した際、数秒以内に結果が更新されること。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-技術的課題とボトルネック"&gt;2. 技術的課題とボトルネック
+&lt;/h2&gt;&lt;p&gt;既存のシステムでは、MySQLなどの標準的なリレーショナルデータベースに生のアクティビティログを格納していました。ログは1日あたり数百万件のペースで累積し、レポートエンジンはリクエストのたびに &lt;code&gt;GROUP BY&lt;/code&gt; や &lt;code&gt;JOIN&lt;/code&gt; を含む重いSQLを実行していました。&lt;/p&gt;
+&lt;p&gt;このアプローチには、主に3つの限界が存在します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- オンデマンドでの重い集計クエリの例
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DATE(created_at) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; event_date,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;campaign_id,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;DISTINCT&lt;/span&gt; user_id) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; dau,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;AVG&lt;/span&gt;(session_duration) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; avg_session_duration,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SUM&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;CASE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;WHEN&lt;/span&gt; is_bounce &lt;span style="color:#66d9ef"&gt;THEN&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ELSE&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;END&lt;/span&gt;) &lt;span style="color:#f92672"&gt;/&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; bounce_rate
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;user_activity_logs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;created_at &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt; DATE_SUB(NOW(), INTERVAL &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;MONTH&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;GROUP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DATE(created_at), campaign_id;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="a-パフォーマンスのボトルネック"&gt;A. パフォーマンスのボトルネック
+&lt;/h3&gt;&lt;p&gt;数億行のデータをオンザフライでスキャン・集計することは、CPUおよびI/Oの深刻なボトルネックを引き起こします。単純なDAU算出クエリであっても10秒以上を要し、複雑な多次元フィルタを適用した場合には、レスポンスが数十秒から数分にまで悪化します。&lt;/p&gt;
+&lt;h3 id="b-データベースリソースの枯渇"&gt;B. データベースリソースの枯渇
+&lt;/h3&gt;&lt;p&gt;複数の管理者が同時にレポートを要求した場合、分析クエリがデータベースの接続プールとCPU容量を占有します。これにより、トランザクションを処理するメインデータベースの性能が低下し、ユーザー向けサービスの安定性が脅かされます。&lt;/p&gt;
+&lt;h3 id="c-スキーマの柔軟性の欠如"&gt;C. スキーマの柔軟性の欠如
+&lt;/h3&gt;&lt;p&gt;新たなフィルタリング次元や分析メトリクスが追加されるたびに、複雑なSQLクエリの書き直し、インデックスの再設計、最適化作業が発生し、機能開発のサイクルが遅延します。&lt;/p&gt;
+&lt;h2 id="3-アーキテクチャ設計"&gt;3. アーキテクチャ設計
+&lt;/h2&gt;&lt;p&gt;これらの課題を解決するため、設計方針を「リクエスト時のオンデマンド計算」から「&lt;b&gt;事前の非同期計算とキャッシュ格納&lt;/b&gt;」へと移行します。&lt;/p&gt;
+&lt;p&gt;インジェクション、集計、サービングの各レイヤーを以下のように分離します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[Event Source] ──&amp;amp;gt; [Message Queue] ──&amp;amp;gt; [Consumer Service]
+│
+▼ (Async Update)
+[User Request] ──&amp;amp;gt; [API Gateway / FastAPI] ──&amp;amp;gt; [Redis Cache]
+│ (Cache Miss) ▲
+└───────────────────┘ (Write Back)
+│
+▼
+[MySQL (Pre-aggregation Table)]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="a-非同期データ収集"&gt;A. 非同期データ収集
+&lt;/h3&gt;&lt;p&gt;イベント発生時、アプリケーションは生ログをメインDBに書き込むと同時に、軽量なメッセージキュー（Apache KafkaやRedis Pub/Subなど）にイベントを発行します。これにより、分析用のデータ収集処理がユーザーのトランザクションをブロックするのを防ぎます。&lt;/p&gt;
+&lt;h3 id="b-専用集計サービス"&gt;B. 専用集計サービス
+&lt;/h3&gt;&lt;p&gt;独立したコンシューマーサービスがメッセージキューをサブスクライブし、リアルタイムにログを処理して、専用の事前集計テーブルを更新します。このテーブルは、時間単位や日単位の粒度で、キャンペーンIDや年齢層などのフィルタ次元ごとにメトリクスを事前に計算して保持します。&lt;/p&gt;
+&lt;h3 id="c-キャッシュレイヤー"&gt;C. キャッシュレイヤー
+&lt;/h3&gt;&lt;p&gt;頻繁にアクセスされる特定期間のレポートクエリは、インメモリデータストア（Redis）にキャッシュされます。アプリケーションはこれらのリクエストをメモリから直接返すため、データベースへのアクセスは発生しません。&lt;/p&gt;
+&lt;h3 id="d-apiエンドポイント"&gt;D. APIエンドポイント
+&lt;/h3&gt;&lt;p&gt;ダッシュボードからのクエリを処理する専用のAPIゲートウェイを配置します。リクエスト受信時、まずRedisキャッシュを確認し、ヒットした場合は即座にレスポンスを返します。キャッシュミスの場合は事前集計テーブルにクエリを実行し、結果をRedisにキャッシュした上で返却します。&lt;/p&gt;
+&lt;h3 id="トレードオフ分析"&gt;トレードオフ分析
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;メリット&lt;/b&gt;:&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;DB負荷 軽減&lt;/b&gt;: メインDBに対するCPUおよびリードI/O負荷を劇的に削減します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;低レイテンシ&lt;/b&gt;: 事前集計データとインメモリキャッシュにより、数億件のデータに対しても1秒未満の高速レスポンスを実現します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;拡張性&lt;/b&gt;: 新しいフィルタ次元を追加する際も、事前集計テーブルのスキーマ拡張のみで対応でき、クエリロジックをシンプルに保てます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;デメリット&lt;/b&gt;:&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;インフラコストの増加&lt;/b&gt;: メッセージキュー、キャッシュクラスタ、コンシューマーデーモンなどの追加コンポーネントの運用管理が必要になります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;整合性の管理&lt;/b&gt;: 非同期処理の導入により、結果整合性（Eventual Consistency）の担保が必要になります。イベントの順序ズレやシステム障害に対処するための再処理・整合性検証ロジックを組み込む必要があります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-ライフサイクルダイナミクスとコンテナデプロイ"&gt;4. ライフサイクルダイナミクスとコンテナデプロイ
+&lt;/h2&gt;&lt;p&gt;集計コンシューマーサービスを本番環境で運用する際、コンテナのローリングアップデート（Rolling Update）やゼロダウンタイムスケーリング（Zero-Downtime Scaling）時のトラフィック制御と重複処理の防止が極めて重要になります。&lt;/p&gt;
+&lt;h3 id="a-ローリングアップデート時の重複排除"&gt;A. ローリングアップデート時の重複排除
+&lt;/h3&gt;&lt;p&gt;⚠️ コンシューマーコンテナが入れ替わる際、一時的に新旧のコンテナが同時にメッセージキュー（Kafka等）を購読する期間が発生します。このとき、同一メッセージが重複して処理されるリスクを防ぐため、以下の対策を講じます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;べき等（Idempotent）なUPSERTの徹底&lt;/b&gt;: 後述する &lt;code&gt;ON DUPLICATE KEY UPDATE&lt;/code&gt; を使用し、同一データが複数回書き込まれても状態が均一に保たれるように設計します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;コンシューマーグループの適切な管理&lt;/b&gt;: Kafkaのパーティション再割り当て（Rebalance）時に、重複処理が発生しないよう、コミットタイミング（Offset Commit）をバッチ処理の完了直後に同期的に実行します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="b-ゼロダウンタイムスケーリング"&gt;B. ゼロダウンタイムスケーリング
+&lt;/h3&gt;&lt;p&gt;トラフィックの急増に伴い、コンシューマーコンテナを水平スケーリング（HPA: Horizontal Pod Autoscaler等）する際、データベースへの同時接続数が急増し、コネクションプールが枯渇するリスクがあります。これを防ぐため、コンシューマー側で適切な接続プーリング制限を設定し、Redisを用いた分散ロック（Redlockアルゴリズム等）を活用して同一キーに対する同時書き込みの競合を抑制します。&lt;/p&gt;
+&lt;h2 id="5-実装詳細"&gt;5. 実装詳細
+&lt;/h2&gt;&lt;p&gt;バックエンドAPIには &lt;b&gt;Python&lt;/b&gt; と &lt;b&gt;FastAPI&lt;/b&gt; を、キャッシュレイヤーには &lt;b&gt;Redis&lt;/b&gt; を、事前集計データの保存には &lt;b&gt;MySQL&lt;/b&gt; を使用します。&lt;/p&gt;
+&lt;h3 id="51-事前集計テーブルのスキーマ設計"&gt;5.1. 事前集計テーブルのスキーマ設計
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;aggregated_daily_metrics&lt;/code&gt; テーブルは、事前に計算されたメトリクスを格納します。複合ユニークキーを設定することで、データの整合性を担保し、高速なUPSERT処理を可能にします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; aggregated_daily_metrics (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;event_date DATE &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;campaign_id VARCHAR(&lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;age_group VARCHAR(&lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dau INT UNSIGNED &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total_session_duration INT UNSIGNED &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total_sessions INT UNSIGNED &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bounce_count INT UNSIGNED &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total_events INT UNSIGNED &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;updated_at &lt;span style="color:#66d9ef"&gt;TIMESTAMP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CURRENT_TIMESTAMP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;UPDATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CURRENT_TIMESTAMP&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;PRIMARY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (event_date, campaign_id, age_group),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;INDEX&lt;/span&gt; idx_campaign_age (campaign_id, age_group)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;) ENGINE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;InnoDB &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; CHARSET&lt;span style="color:#f92672"&gt;=&lt;/span&gt;utf8mb4;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;UNIQUE KEY (event_date, campaign_id, age_group)&lt;/code&gt;: 次元の一意性を保証し、&lt;code&gt;ON DUPLICATE KEY UPDATE&lt;/code&gt; によるアトミックな更新を可能にします。&lt;/p&gt;
+&lt;h3 id="52-非同期集計サービスの実装python"&gt;5.2. 非同期集計サービスの実装（Python）
+&lt;/h3&gt;&lt;p&gt;以下は、メッセージキューからイベントをバッチで取得し、事前集計テーブルを更新するコンシューマーサービスのコード例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; mysql.connector
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;process_message_batch&lt;/span&gt;(messages, db_connection):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cursor &lt;span style="color:#f92672"&gt;=&lt;/span&gt; db_connection&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cursor()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;query &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;INSERT INTO aggregated_daily_metrics 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;(event_date, campaign_id, age_group, dau, total_session_duration, total_sessions, bounce_count, total_events)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;VALUES 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;ON DUPLICATE KEY UPDATE
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;dau = dau + VALUES(dau),
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;total_session_duration = total_session_duration + VALUES(total_session_duration),
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;total_sessions = total_sessions + VALUES(total_sessions),
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;bounce_count = bounce_count + VALUES(bounce_count),
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;total_events = total_events + VALUES(total_events);
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; msg &lt;span style="color:#f92672"&gt;in&lt;/span&gt; messages:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;payload &lt;span style="color:#f92672"&gt;=&lt;/span&gt; json&lt;span style="color:#f92672"&gt;.&lt;/span&gt;loads(msg)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;data&lt;span style="color:#f92672"&gt;.&lt;/span&gt;append((
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;payload[&lt;span style="color:#e6db74"&gt;&amp;#39;event_date&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;payload[&lt;span style="color:#e6db74"&gt;&amp;#39;campaign_id&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;payload[&lt;span style="color:#e6db74"&gt;&amp;#39;age_group&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;payload[&lt;span style="color:#e6db74"&gt;&amp;#39;is_new_user&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;payload[&lt;span style="color:#e6db74"&gt;&amp;#39;session_duration&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; payload[&lt;span style="color:#e6db74"&gt;&amp;#39;is_bounce&amp;#39;&lt;/span&gt;] &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;executemany(query, data)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;db_connection&lt;span style="color:#f92672"&gt;.&lt;/span&gt;commit()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; mysql&lt;span style="color:#f92672"&gt;.&lt;/span&gt;connector&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Error &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; err:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;db_connection&lt;span style="color:#f92672"&gt;.&lt;/span&gt;rollback()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; err
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="53-キャッシュapiエンドポイントの実装fastapi"&gt;5.3. キャッシュAPIエンドポイントの実装（FastAPI）
+&lt;/h3&gt;&lt;p&gt;FastAPIを用いて、Redisキャッシュを優先的に参照し、キャッシュミス時にのみMySQLの事前集計テーブルにアクセスするエンドポイントを構築します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI, Depends
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; redis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; mysql.connector
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis_client &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redis&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Redis(host&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;, port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;6379&lt;/span&gt;, db&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_db&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;conn &lt;span style="color:#f92672"&gt;=&lt;/span&gt; mysql&lt;span style="color:#f92672"&gt;.&lt;/span&gt;connector&lt;span style="color:#f92672"&gt;.&lt;/span&gt;connect(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;host&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;, user&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;root&amp;#34;&lt;/span&gt;, password&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;, database&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;analytics&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;yield&lt;/span&gt; conn
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;conn&lt;span style="color:#f92672"&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/api/v1/metrics&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_metrics&lt;/span&gt;(campaign_id: str, age_group: str, db &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Depends(get_db)):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cache_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;metrics:&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;campaign_id&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;:&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;age_group&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cached_data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redis_client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get(cache_key)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; cached_data:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; json&lt;span style="color:#f92672"&gt;.&lt;/span&gt;loads(cached_data)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cursor &lt;span style="color:#f92672"&gt;=&lt;/span&gt; db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cursor(dictionary&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;query &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;SELECT 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;event_date,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;dau,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;(total_session_duration / total_sessions) AS avg_session_duration,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;(bounce_count / total_events) AS bounce_rate
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;FROM aggregated_daily_metrics
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;WHERE campaign_id = &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt; AND age_group = &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;ORDER BY event_date DESC
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;LIMIT 90;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;execute(query, (campaign_id, age_group))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;results &lt;span style="color:#f92672"&gt;=&lt;/span&gt; cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fetchall()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis_client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setex(cache_key, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, json&lt;span style="color:#f92672"&gt;.&lt;/span&gt;dumps(results, default&lt;span style="color:#f92672"&gt;=&lt;/span&gt;str))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; results
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;💡 本アーキテクチャを本番環境で運用するにあたり、以下の運用上の考慮事項を推奨します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;キャッシュ無効化（Invalidation）戦略&lt;/b&gt;: データソースに遅延データや過去の修正データが流入した場合、事前集計テーブルの更新に合わせて、該当する期間・次元のRedisキャッシュキーを明示的に削除（DEL）または更新するイベント駆動型のキャッシュ無効化ロジックを実装してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;加重平均の精度維持&lt;/b&gt;: &lt;code&gt;ON DUPLICATE KEY UPDATE&lt;/code&gt; 内での平均セッション時間の計算は、浮動小数点数の丸め誤差が累積する可能性があります。より高い精度が求められる場合は、テーブルに &lt;code&gt;session_duration_sum&lt;/code&gt;（総セッション時間）と &lt;code&gt;total_sessions&lt;/code&gt;（総セッション数）を個別に保持し、読み出し時に除算を行う設計を推奨します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;リソースの監視&lt;/b&gt;: Redisのメモリ使用量およびエビクション（Eviction）ポリシー（&lt;code&gt;allkeys-lru&lt;/code&gt; 等）を監視し、キャッシュヒット率が急激に低下しないよう、適切なメモリキャパシティプランニングを行ってください。&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Ubuntu Server基盤における仮想化・認証・ログ管理の統合実装</title><link>https://klifehack.com/p/ubuntu-server-infra-integration-guide/</link><pubDate>Mon, 01 Jun 2026 17:05:16 +0900</pubDate><guid>https://klifehack.com/p/ubuntu-server-infra-integration-guide/</guid><description>&lt;h1 id="ubuntu-serverにおけるkvm仮想化基盤とネットワーク統合管理サービスの構築"&gt;Ubuntu ServerにおけるKVM仮想化基盤とネットワーク統合管理サービスの構築
 &lt;/h1&gt;&lt;p&gt;本稿では、Ubuntu ServerをホストとしたKVM仮想化環境の構築から、ネットワーク基盤サービス（DHCP, NTP）、集中管理（NIS, NFS, rsyslog）、およびKerberosによる認証統合までの実装プロセスを記述します。&lt;/p&gt;
 &lt;h2 id="1-kvm仮想化環境の展開"&gt;1. KVM仮想化環境の展開
 &lt;/h2&gt;&lt;p&gt;Linuxカーネル組み込みの仮想化機能であるKVMを利用し、単一の物理サーバ上で複数のVMを運用する基盤を構築します。&lt;/p&gt;
@@ -14,7 +204,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export DBUS_SESSION_BUS_ADDRESS&lt;span style="color:#f92672"&gt;=&lt;/span&gt;unix:path&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/run/user/&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;id -u&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;/bus
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export DBUS_SESSION_BUS_PID&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;pgrep -u &lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;id -u&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt; dbus-daemon&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="vmのデプロイと管理"&gt;VMのデプロイと管理
-&lt;/h3&gt;&lt;p&gt;&lt;code&gt;virsh&lt;/code&gt;コマンドを用いてハイパーバイザを管理します。CentOS 7およびWindows 7のISOイメージからVMを作成し、必要に応じてクローニングを実施します。&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;virsh&lt;/code&gt;コマンドを用いてハイパーバイザを管理します。ISOイメージからVMを作成し、必要に応じてクローニングを実施します。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# VMリストの確認&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;virsh -c qemu:///system list --all
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
