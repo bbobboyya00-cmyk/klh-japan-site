@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Spring-Boot on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/spring-boot/</link><description>Recent content in Spring-Boot on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 09:17:37 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/spring-boot/index.xml" rel="self" type="application/rss+xml"/><item><title>Protocol Selection in Backend Communication Design and Structural Analysis of MSA Architecture</title><link>https://klifehack.com/en/p/backend-communication-msa-architecture-analysis/</link><pubDate>Wed, 03 Jun 2026 09:17:37 +0900</pubDate><guid>https://klifehack.com/en/p/backend-communication-msa-architecture-analysis/</guid><description>&lt;h1 id="analysis-of-communication-protocols-and-msa-design-strategies-in-modern-backend"&gt;Analysis of Communication Protocols and MSA Design Strategies in Modern Backend
+&lt;/h1&gt;&lt;p&gt;In modern backend engineering, the choice of communication patterns is a critical decision that determines system performance, development productivity, and scalability. This analysis evaluates the characteristics of major communication protocols, design strategies in Microservices Architecture (MSA), and specific implementation methods.&lt;/p&gt;
+&lt;h2 id="1-technical-comparison-matrix-of-communication-patterns"&gt;1. Technical Comparison Matrix of Communication Patterns
+&lt;/h2&gt;&lt;p&gt;In environments where MSA or real-time performance is required, multiple patterns are strategically combined according to the use case rather than relying on a single standard.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Feature&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;REST&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;GraphQL&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;gRPC&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;WebSocket&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Paradigm&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Resource-oriented&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Query-oriented&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Procedural Call (RPC)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Event/Stream-oriented&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Network Protocol&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;HTTP/1.1, HTTP/2&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;HTTP/1.1, HTTP/2&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;HTTP/2 (Required)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;WebSocket (TCP)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Data Format&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;JSON, XML, etc.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;JSON&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Protocol Buffers&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;No restrictions (usually JSON)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Communication Method&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Unidirectional (Req/Res)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Unidirectional (Req/Res)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Bidirectional Streaming&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Full-duplex (Bidirectional)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Primary Use Cases&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;General Public APIs&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Web/Mobile Frontend&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Internal Inter-MSA Communication&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Real-time Data Transfer&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="2-mechanisms-and-constraints-of-each-protocol"&gt;2. Mechanisms and Constraints of Each Protocol
+&lt;/h2&gt;&lt;p&gt;REST identifies resources via URIs and defines actions using standard HTTP methods (GET, POST, PUT, DELETE). It facilitates static caching (Cache-Control) by leveraging HTTP standard characteristics and maintains a low learning curve. Conversely, it is prone to &amp;ldquo;Over-fetching&amp;rdquo; (retrieving unnecessary data) and &amp;ldquo;Under-fetching&amp;rdquo; (requiring multiple API calls for a single screen configuration).&lt;/p&gt;
+&lt;p&gt;GraphQL uses a single endpoint (/graphql) where the client specifies the required data structure in a query. It allows for retrieving exact data in a single request, minimizing backend schema changes in response to frontend requirement changes. However, since queries are dynamic, URL-based HTTP caching is difficult, and server load may increase due to complex nested queries.&lt;/p&gt;
+&lt;p&gt;gRPC combines HTTP/2 multiplexing performance with binary serialization via Protocol Buffers (Protobuf). Being binary-based, packet sizes are minimized, enabling high-speed serialization and deserialization. It supports strict type definitions and code generation via .proto files. Constraints include the requirement for a proxy like gRPC-Web for direct browser calls and a dedicated decoder for debugging due to the binary format.&lt;/p&gt;
+&lt;p&gt;WebSocket establishes a persistent TCP-based connection via an HTTP handshake to achieve full-duplex communication. It eliminates HTTP header overhead and enables server push with low latency. However, it results in a stateful design that increases backend memory consumption to maintain connections, and reconnection logic implementation is complex.&lt;/p&gt;
+&lt;h2 id="3-communication-design-strategies-in-microservices"&gt;3. Communication Design Strategies in Microservices
+&lt;/h2&gt;&lt;p&gt;In MSA, synchronous and asynchronous patterns are used selectively to manage the degree of coupling between services.&lt;/p&gt;
+&lt;h3 id="synchronous-communication-and-resilience"&gt;Synchronous Communication and Resilience
+&lt;/h3&gt;&lt;p&gt;In synchronous communication using gRPC or REST, the caller waits for a response. To prevent latency accumulation in the call chain, the adoption of gRPC for internal communication is recommended. The introduction of the &lt;b&gt;Circuit Breaker&lt;/b&gt; pattern is essential to prevent cascading failures.&lt;/p&gt;
+&lt;h3 id="asynchronous-messaging-and-event-driven"&gt;Asynchronous Messaging and Event-Driven
+&lt;/h3&gt;&lt;p&gt;Events are published and subscribed via message brokers such as Apache Kafka or RabbitMQ. This ensures fault tolerance, as the coupling between services is low, allowing other services to continue processing even if a specific service is temporarily down.&lt;/p&gt;
+&lt;h3 id="distributed-transactions-saga-pattern"&gt;Distributed Transactions: Saga Pattern
+&lt;/h3&gt;&lt;p&gt;To maintain data consistency in distributed database environments, the Saga pattern using Compensating Transactions is applied.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Choreography&lt;/b&gt;: A method where each service exchanges events and operates autonomously without central control.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Orchestration&lt;/b&gt;: A method where a central &amp;ldquo;Saga Manager&amp;rdquo; instructs each service on the communication to be executed.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-role-and-design-requirements-of-api-gateways"&gt;4. Role and Design Requirements of API Gateways
+&lt;/h2&gt;&lt;p&gt;An API Gateway functions as a single entry point for all client requests and manages the following responsibilities:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Routing&lt;/b&gt;: Forwarding requests to the appropriate microservice based on the URI.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Authentication Aggregation&lt;/b&gt;: Batch processing of JWT token verification at the gateway layer.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Load Balancing&lt;/b&gt;: Distributing traffic to dynamic instances in coordination with Service Discovery (Eureka, Consul, etc.).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Rate Limiting&lt;/b&gt;: Limiting the number of calls per IP (429 Too Many Requests) for DDoS protection and resource preservation.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;To handle large volumes of traffic, solutions adopting non-blocking I/O models, such as Spring Cloud Gateway or Kong, are commonly selected.&lt;/p&gt;
+&lt;h2 id="5-local-https-implementation-in-spring-boot"&gt;5. Local HTTPS Implementation in Spring Boot
+&lt;/h2&gt;&lt;p&gt;Verification of OAuth2 and SameSite cookie policies requires HTTPS in local environments. Implementation procedure using mkcert:&lt;/p&gt;
+&lt;h3 id="certificate-generation"&gt;Certificate Generation
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Install local CA&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkcert -install
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Generate PKCS12 certificate for localhost&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkcert -pkcs12 localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="spring-boot-configuration-applicationyml"&gt;Spring Boot Configuration (application.yml)
+&lt;/h3&gt;&lt;p&gt;Placement of the generated keystore.p12 in src/main/resources/ and application of configuration settings:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;server&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;8443&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ssl&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;enabled&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key-store&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;classpath:keystore.p12&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key-store-password&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;changeit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key-store-type&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PKCS12&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key-alias&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;localhost&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Verification of the startup log for &amp;ldquo;Tomcat initialized with port(s): 8443 (https)&amp;rdquo;. For security reasons, the .p12 file must be added to .gitignore to avoid inclusion in the repository.&lt;/p&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;p&gt;The selection of communication protocols is a product of trade-offs based on network topology, data consistency requirements, and operational costs. A multi-layered approach—utilizing gRPC for internal communication to achieve high efficiency while ensuring interoperability for external use via REST—is the standard configuration in modern backend architecture.&lt;/p&gt;</description></item></channel></rss>
