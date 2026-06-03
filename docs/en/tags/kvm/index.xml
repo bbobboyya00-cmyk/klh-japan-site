@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kvm on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</title><link>https://klifehack.com/en/tags/kvm/</link><description>Recent content in Kvm on K-Life Hack | Seoul Gastronomy &amp; Travel Guide</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 09:05:17 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/kvm/index.xml" rel="self" type="application/rss+xml"/><item><title>Integrated Implementation of Virtualization, Authentication, and Log Management on Ubuntu Server Infrastructure</title><link>https://klifehack.com/en/p/ubuntu-server-infra-integration-guide/</link><pubDate>Wed, 03 Jun 2026 09:05:17 +0900</pubDate><guid>https://klifehack.com/en/p/ubuntu-server-infra-integration-guide/</guid><description>&lt;h1 id="building-a-kvm-virtualization-infrastructure-and-integrated-network-management-services-on-ubuntu-server"&gt;Building a KVM Virtualization Infrastructure and Integrated Network Management Services on Ubuntu Server
+&lt;/h1&gt;&lt;p&gt;This technical report details the implementation of a KVM-based virtualization environment on Ubuntu Server. The scope includes the configuration of core network services (DHCP, NTP), centralized management systems (NIS, NFS, rsyslog), and the integration of Kerberos for unified authentication.&lt;/p&gt;
+&lt;h2 id="1-deploying-the-kvm-virtualization-environment"&gt;1. Deploying the KVM Virtualization Environment
+&lt;/h2&gt;&lt;p&gt;The infrastructure leverages KVM (Kernel-based Virtual Machine) to host multiple guest operating systems on a single physical node. The deployment process involves installing the virtualization stack and configuring user permissions for the libvirt daemon.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Package installation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update &amp;amp;amp;&amp;amp;amp; sudo apt -y install qemu-kvm qemu-system libvirt-bin bridge-utils virt-manager
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Granting user privileges&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo adduser ubuntu libvirt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# D-Bus session configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export DBUS_SESSION_BUS_ADDRESS&lt;span style="color:#f92672"&gt;=&lt;/span&gt;unix:path&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/run/user/&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;id -u&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;/bus
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export DBUS_SESSION_BUS_PID&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;pgrep -u &lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;id -u&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt; dbus-daemon&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Virtual machine lifecycle management is handled via the &lt;b&gt;virsh&lt;/b&gt; command-line interface. The environment supports cloning existing instances, such as Windows 7 or CentOS 7 images, to streamline deployment.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Verify VM list&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;virsh -c qemu:///system list --all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Example of VM cloning&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;virt-clone --original win7 --name win7-2 --file /var/lib/libvirt/images/win7-2.qcow2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-network-infrastructure-services-dhcp--ntp"&gt;2. Network Infrastructure Services (DHCP &amp;amp; NTP)
+&lt;/h2&gt;&lt;p&gt;Automated IP address management is implemented using a DHCP server targeting the 192.168.100.0/24 subnet. This ensures consistent network parameters for all connected clients.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;# /etc/dhcp/dhcpd.conf configuration
+subnet 192.168.100.0 netmask 255.255.255.0 {
+ range 192.168.100.100 192.168.100.110;
+ option domain-name-servers 8.8.8.8;
+ option routers 192.168.100.1;
+ default-lease-time 600;
+ max-lease-time 7200;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Time synchronization is maintained through Chrony to ensure log accuracy across the distributed system. The NTP service is permitted through the host firewall to allow client synchronization.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Verify chrony synchronization&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chronyc tracking
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Firewall configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ntp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-centralized-management-via-nis-and-nfs"&gt;3. Centralized Management via NIS and NFS
+&lt;/h2&gt;&lt;p&gt;User account information is centralized using NIS (Network Information Service), while shared storage is provided via NFS (Network File System) to facilitate data persistence across nodes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# NIS domain configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ypdomainname kahn.edu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Database initialization&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo /usr/lib/yp/ypinit -m
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The NFS server exports specific directories with defined access controls. Clients mount these exports to access centralized data volumes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# /etc/exports&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/NFS 192.168.100.204&lt;span style="color:#f92672"&gt;(&lt;/span&gt;rw,sync,no_root_squash&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-log-aggregation-via-rsyslog"&gt;4. Log Aggregation via rsyslog
+&lt;/h2&gt;&lt;p&gt;Centralized logging is established using rsyslog. The server is configured with templates to categorize incoming logs from remote hosts based on their hostname and the originating program.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;# /etc/rsyslog.conf server-side configuration
+$template TmplAuth, &amp;#34;/var/log/%HOSTNAME%/%PROGRAMNAME%.log&amp;#34;
+$template TmplMsg, &amp;#34;/var/log/%HOSTNAME%/messages.log&amp;#34;
+
+authpriv.* ?TmplAuth
+*.warn;authpriv.none;mail.none;cron.none ?TmplMsg
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Client nodes are configured to forward all log data to the central aggregator at 192.168.100.203.&lt;/p&gt;
+&lt;h2 id="5-kerberos-kdc-authentication-integration"&gt;5. Kerberos (KDC) Authentication Integration
+&lt;/h2&gt;&lt;p&gt;A Kerberos Key Distribution Center (KDC) is deployed to provide ticket-based authentication, enabling Single Sign-On (SSO) for SSH services within the KAHN.EDU realm.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Principal registration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kadmin.local -q &lt;span style="color:#e6db74"&gt;&amp;#34;addprinc admin/admin&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kadmin.local -q &lt;span style="color:#e6db74"&gt;&amp;#34;addprinc ubuntu&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Host keytab extraction&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kadmin.local -q &lt;span style="color:#e6db74"&gt;&amp;#34;ktadd host/ubun-1.kahn.edu&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;SSH configurations are updated to support GSSAPI authentication, allowing users to authenticate using Kerberos tickets instead of passwords.&lt;/p&gt;
+&lt;h2 id="6-external-storage-integration-via-freenas"&gt;6. External Storage Integration via FreeNAS
+&lt;/h2&gt;&lt;p&gt;FreeNAS is utilized to manage a ZFS pool (MySHARE) composed of multiple SCSI disks. When mounting these volumes on Linux clients, the &lt;b&gt;nolock&lt;/b&gt; option is applied to prevent conflicts with the RPC lock daemon.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Client-side mount execution&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount -t nfs -o nolock 192.168.100.180:/mnt/MySHARE/MyLIN /mnt/FreeNAS
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;SELinux Considerations&lt;/b&gt;: SELinux policies may interfere with NIS or Chrony operations. Mitigation involves using &lt;b&gt;setenforce 0&lt;/b&gt; for troubleshooting or defining specific policy exceptions. ⚠️&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Network Constraints&lt;/b&gt;: The use of a single network interface limits high-availability features like VM live migration. Future iterations require NIC teaming or advanced bridge configurations. 🛠️&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;NFS Permissions&lt;/b&gt;: The &lt;b&gt;no_root_squash&lt;/b&gt; parameter is essential for ensuring that the client-side root user maintains administrative write access to the shared storage. 💡&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

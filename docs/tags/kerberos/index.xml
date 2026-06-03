@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kerberos on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</title><link>https://klifehack.com/tags/kerberos/</link><description>Recent content in Kerberos on K-Life Hack | 韓国ハイエンド・ライフスタイルガイド</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 09:05:16 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/kerberos/index.xml" rel="self" type="application/rss+xml"/><item><title>Ubuntu Server基盤における仮想化・認証・ログ管理の統合実装</title><link>https://klifehack.com/p/ubuntu-server-infra-integration-guide/</link><pubDate>Wed, 03 Jun 2026 09:05:16 +0900</pubDate><guid>https://klifehack.com/p/ubuntu-server-infra-integration-guide/</guid><description>&lt;h1 id="ubuntu-serverにおけるkvm仮想化基盤とネットワーク統合管理サービスの構築"&gt;Ubuntu ServerにおけるKVM仮想化基盤とネットワーク統合管理サービスの構築
+&lt;/h1&gt;&lt;p&gt;本稿では、Ubuntu ServerをホストとしたKVM仮想化環境の構築から、ネットワーク基盤サービス（DHCP, NTP）、集中管理（NIS, NFS, rsyslog）、およびKerberosによる認証統合までの実装プロセスを記述します。&lt;/p&gt;
+&lt;h2 id="1-kvm仮想化環境の展開"&gt;1. KVM仮想化環境の展開
+&lt;/h2&gt;&lt;p&gt;Linuxカーネル組み込みの仮想化機能であるKVMを利用し、単一の物理サーバ上で複数のVMを運用する基盤を構築します。&lt;/p&gt;
+&lt;h3 id="インストールと権限設定"&gt;インストールと権限設定
+&lt;/h3&gt;&lt;p&gt;必要なパッケージを導入し、管理ユーザーを&lt;code&gt;libvirt&lt;/code&gt;グループに追加します。GUIツールである&lt;code&gt;virt-manager&lt;/code&gt;を正常に動作させるため、D-Busセッション変数のエクスポートが必要です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# パッケージのインストール&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update &amp;amp;amp;&amp;amp;amp; sudo apt -y install qemu-kvm qemu-system libvirt-bin bridge-utils virt-manager
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ユーザー権限の付与&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo adduser ubuntu libvirt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# D-Busセッションの設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export DBUS_SESSION_BUS_ADDRESS&lt;span style="color:#f92672"&gt;=&lt;/span&gt;unix:path&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/run/user/&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;id -u&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;/bus
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export DBUS_SESSION_BUS_PID&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;pgrep -u &lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;id -u&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt; dbus-daemon&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="vmのデプロイと管理"&gt;VMのデプロイと管理
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;virsh&lt;/code&gt;コマンドを用いてハイパーバイザを管理します。CentOS 7およびWindows 7のISOイメージからVMを作成し、必要に応じてクローニングを実施します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# VMリストの確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;virsh -c qemu:///system list --all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# VMのクローニング例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;virt-clone --original win7 --name win7-2 --file /var/lib/libvirt/images/win7-2.qcow2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-ネットワーク基盤サービスdhcp--ntp"&gt;2. ネットワーク基盤サービス（DHCP &amp;amp; NTP）
+&lt;/h2&gt;&lt;h3 id="dhcpによるip自動割り当て"&gt;DHCPによるIP自動割り当て
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;192.168.100.0/24&lt;/code&gt;サブネットを定義し、クライアントへの動的IP割り当てを構成します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;# /etc/dhcp/dhcpd.conf 設定例
+subnet 192.168.100.0 netmask 255.255.255.0 {
+ range 192.168.100.100 192.168.100.110;
+ option domain-name-servers 8.8.8.8;
+ option routers 192.168.100.1;
+ default-lease-time 600;
+ max-lease-time 7200;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="chronyによる時刻同期"&gt;Chronyによる時刻同期
+&lt;/h3&gt;&lt;p&gt;ログの整合性維持のため、Chronyを導入します。外部NTPサーバとの同期を確立し、ファイアウォールでNTPポートを開放します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# chronyの同期確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chronyc tracking
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ファイアウォール設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ntp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-nisおよびnfsによる集中管理"&gt;3. NISおよびNFSによる集中管理
+&lt;/h2&gt;&lt;p&gt;NISを用いたユーザーアカウントの集中管理と、NFSによる共有ストレージを構成します。&lt;/p&gt;
+&lt;h3 id="nisマスターサーバの設定"&gt;NISマスターサーバの設定
+&lt;/h3&gt;&lt;p&gt;ドメイン名を&lt;code&gt;kahn.edu&lt;/code&gt;に設定し、&lt;code&gt;ypinit&lt;/code&gt;でデータベースを構築します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# NISドメインの設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ypdomainname kahn.edu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# マップの作成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo /usr/lib/yp/ypinit -m
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="nfs共有の構成"&gt;NFS共有の構成
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;/etc/exports&lt;/code&gt;にてアクセス権限を定義し、クライアント側でマウントを実施します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# /etc/exports&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/NFS 192.168.100.204&lt;span style="color:#f92672"&gt;(&lt;/span&gt;rw,sync,no_root_squash&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-rsyslogによるログ集約"&gt;4. rsyslogによるログ集約
+&lt;/h2&gt;&lt;p&gt;複数のホストからログを収集し、ホスト名およびプログラム名ごとにディレクトリを分離して保存するテンプレートを定義します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;# /etc/rsyslog.conf サーバ側設定
+$template TmplAuth, &amp;#34;/var/log/%HOSTNAME%/%PROGRAMNAME%.log&amp;#34;
+$template TmplMsg, &amp;#34;/var/log/%HOSTNAME%/messages.log&amp;#34;
+
+authpriv.* ?TmplAuth
+*.warn;authpriv.none;mail.none;cron.none ?TmplMsg
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;クライアント側では、すべてのログをリモートサーバ（&lt;code&gt;192.168.100.203&lt;/code&gt;）へ転送する設定を行います。&lt;/p&gt;
+&lt;h2 id="5-kerberos-kdc-認証統合"&gt;5. Kerberos (KDC) 認証統合
+&lt;/h2&gt;&lt;p&gt;チケットベースの認証基盤を構築し、SSHのシングルサインオン（SSO）を実現します。&lt;/p&gt;
+&lt;h3 id="kdcの構築とプリンシパル作成"&gt;KDCの構築とプリンシパル作成
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;KAHN.EDU&lt;/code&gt;レルムを定義し、管理ユーザーおよびホストプリンシパルを登録します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# プリンシパルの追加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kadmin.local -q &lt;span style="color:#e6db74"&gt;&amp;#34;addprinc admin/admin&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kadmin.local -q &lt;span style="color:#e6db74"&gt;&amp;#34;addprinc ubuntu&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ホストキータブの抽出&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kadmin.local -q &lt;span style="color:#e6db74"&gt;&amp;#34;ktadd host/ubun-1.kahn.edu&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ssh-gssapi認証の有効化"&gt;SSH GSSAPI認証の有効化
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;/etc/ssh/ssh_config&lt;/code&gt;にて&lt;code&gt;GSSAPIAuthentication yes&lt;/code&gt;を設定することで、パスワードレスでのログインを可能にします。&lt;/p&gt;
+&lt;h2 id="6-freenasによる外部ストレージ連携"&gt;6. FreeNASによる外部ストレージ連携
+&lt;/h2&gt;&lt;p&gt;FreeNASを導入し、複数のSCSIディスクを束ねたZFSプール（MySHARE）を構築します。LinuxクライアントからNFSマウントを行う際、ロックデーモンの競合を避けるために&lt;code&gt;nolock&lt;/code&gt;オプションを付与します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# クライアント側でのマウント実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mount -t nfs -o nolock 192.168.100.180:/mnt/MySHARE/MyLIN /mnt/FreeNAS
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;SELinuxの考慮&lt;/b&gt;: ChronyやNISの初期化時にSELinuxが干渉する場合があるため、必要に応じて&lt;code&gt;setenforce 0&lt;/code&gt;による一時的な緩和とポリシー調整を検討してください。⚠️&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ネットワーク制約&lt;/b&gt;: 現状の構成では単一のネットワークインターフェースに依存しているため、VMのライブマイグレーションには制約が存在します。冗長化が必要な場合は、NICチーミングまたはブリッジ構成の拡張が必要です。🛠️&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;NFS権限&lt;/b&gt;: クライアント側のrootユーザーが書き込み権限を保持できるよう、サーバ側の&lt;code&gt;no_root_squash&lt;/code&gt;設定を適切に管理してください。💡&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
