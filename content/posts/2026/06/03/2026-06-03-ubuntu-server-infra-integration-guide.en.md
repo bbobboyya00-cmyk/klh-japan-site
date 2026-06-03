@@ -1,7 +1,7 @@
 ---
 title: "Integrated Implementation of Virtualization, Authentication, and Log Management on Ubuntu Server Infrastructure"
 slug: "ubuntu-server-infra-integration-guide"
-date: 2026-06-03T09:05:17+09:00
+date: 2026-06-01T17:05:16+09:00
 draft: false
 image: ""
 description: "A record of initial setup and security hardening procedures for KVM virtualization, DHCP, NTP, NIS/NFS, rsyslog, and Kerberos-based authentication integration on Ubuntu Server."
@@ -34,7 +34,7 @@ export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
 export DBUS_SESSION_BUS_PID=$(pgrep -u $(id -u) dbus-daemon)
 ```
 
-Virtual machine lifecycle management is handled via the <b>virsh</b> command-line interface. The environment supports cloning existing instances, such as Windows 7 or CentOS 7 images, to streamline deployment.
+Virtual machine lifecycle management is handled via the <b>virsh</b> command-line interface. 
 
 
 

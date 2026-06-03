@@ -1,7 +1,7 @@
 ---
 title: "Ubuntu Server基盤における仮想化・認証・ログ管理の統合実装"
 slug: "ubuntu-server-infra-integration-guide"
-date: 2026-06-03T09:05:16+09:00
+date: 2026-06-01T17:05:16+09:00
 draft: false
 image: ""
 description: "Ubuntu ServerをベースとしたKVM仮想化、DHCP、NTP、NIS/NFS、rsyslog、およびKerberosによる認証統合の初期設定とセキュリティ硬化手順の記録。"
@@ -36,7 +36,7 @@ export DBUS_SESSION_BUS_PID=$(pgrep -u $(id -u) dbus-daemon)
 
 ### VMのデプロイと管理
 
-`virsh`コマンドを用いてハイパーバイザを管理します。CentOS 7およびWindows 7のISOイメージからVMを作成し、必要に応じてクローニングを実施します。
+`virsh`コマンドを用いてハイパーバイザを管理します。ISOイメージからVMを作成し、必要に応じてクローニングを実施します。
 
 ```bash
 # VMリストの確認
