@@ -1,4 +1,67 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 02 Jun 2026 15:11:09 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>バックエンド通信設計におけるプロトコル選定とMSAアーキテクチャの構造分析</title><link>https://klifehack.com/p/backend-communication-msa-architecture-analysis/</link><pubDate>Tue, 02 Jun 2026 15:11:09 +0900</pubDate><guid>https://klifehack.com/p/backend-communication-msa-architecture-analysis/</guid><description>&lt;h1 id="モダンバックエンドにおける通信プロトコルとmsa設計戦略の分析"&gt;モダンバックエンドにおける通信プロトコルとMSA設計戦略の分析
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 03 Jun 2026 15:08:46 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Web InterfaceにおけるCGIからASGIへの変遷とモダンWAS構成の技術的考察</title><link>https://klifehack.com/p/python-web-interface-cgi-wsgi-asgi/</link><pubDate>Wed, 03 Jun 2026 15:08:46 +0900</pubDate><guid>https://klifehack.com/p/python-web-interface-cgi-wsgi-asgi/</guid><description>&lt;p&gt;Pythonにおけるウェブアプリケーションのインターフェース規格は、初期のCGIからWSGI、そして現代のASGIへと進化を遂げてきました。本稿では、各プロトコルの動作原理、パフォーマンス特性、およびモダンなインフラストラクチャにおけるWAS（Web Application Server）の役割について技術的な分析を行います。&lt;/p&gt;
+&lt;h2 id="1-cgi-common-gateway-interface-の構造と限界"&gt;1. CGI (Common Gateway Interface) の構造と限界
+&lt;/h2&gt;&lt;p&gt;CGIは、ウェブサーバーが外部プログラムと対話するための最も初期の標準プロトコルです。その核心は「リクエストごとのプロセス生成」モデルにあります。&lt;/p&gt;
+&lt;h3 id="-動作ロジック"&gt;💡 動作ロジック
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;ウェブサーバーがHTTPリクエストを受信します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;サーバーはリクエストごとに新しいOSプロセスをフォークし、Pythonインタプリタとスクリプトを実行します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;スクリプトは標準出力（stdout）に結果を書き込み、プロセスは終了します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;サーバーがその出力をHTTPレスポンスとしてクライアントに返却します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="-技術的課題"&gt;⚠️ 技術的課題
+&lt;/h3&gt;&lt;p&gt;このモデルは、リクエストごとにインタプリタのロードと環境の初期化が発生するため、オーバーヘッドが極めて大きく、高トラフィック環境での運用には適しません。プロセス分離による安全性は確保されますが、リソース効率の観点から現代のシステムでは殆ど採用されません。&lt;/p&gt;
+&lt;h2 id="2-wsgi-web-server-gateway-interface-による最適化"&gt;2. WSGI (Web Server Gateway Interface) による最適化
+&lt;/h2&gt;&lt;p&gt;CGIのオーバーヘッドを解消するために策定されたのがWSGIです。WSGIは、Pythonアプリケーションを永続的なプロセスとしてメモリ上に保持し、リクエストを処理する標準的なインターフェースを提供します。&lt;/p&gt;
+&lt;h3 id="-実装の要諦"&gt;🛠️ 実装の要諦
+&lt;/h3&gt;&lt;p&gt;WSGIでは、アプリケーションは「呼び出し可能オブジェクト（Callable）」として定義されます。サーバーはこのオブジェクトを一度ロードすれば、プロセスを再起動することなく繰り返し呼び出すことが可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;application&lt;/span&gt;(environ, start_response):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; status &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;200 OK&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; headers &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [(&lt;span style="color:#e6db74"&gt;&amp;#39;Content-Type&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;text/plain; charset=utf-8&amp;#39;&lt;/span&gt;)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; start_response(status, headers)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;b&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Hello, WSGI World&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;現在のプロダクション環境では、Nginxをリバースプロキシとし、GunicornをWSGIサーバー（WAS）として配置する構成が一般的です。&lt;/p&gt;
+&lt;h2 id="3-asgi-asynchronous-server-gateway-interface-への移行"&gt;3. ASGI (Asynchronous Server Gateway Interface) への移行
+&lt;/h2&gt;&lt;p&gt;WSGIは同期的なリクエスト・レスポンスサイクルを前提として設計されているため、WebSocketsやLong Polling、HTTP2といったモダンな非同期通信の処理に制約があります。これを解決するために登場したのがASGIです。&lt;/p&gt;
+&lt;h3 id="-asgiの特性"&gt;💡 ASGIの特性
+&lt;/h3&gt;&lt;p&gt;ASGIはWSGIの精神を継承しつつ、Pythonの&lt;code&gt;async/await&lt;/code&gt;構文をネイティブにサポートします。これにより、単一のプロセスで数千の同時接続を非同期I/Oによって効率的に管理することが可能となりました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;application&lt;/span&gt;(scope, receive, send):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; scope[&lt;span style="color:#e6db74"&gt;&amp;#39;type&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;http&amp;#39;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; send({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;type&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;http.response.start&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;status&amp;#39;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;headers&amp;#39;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#e6db74"&gt;b&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;content-type&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;b&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;text/plain&amp;#39;&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; send({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;type&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;http.response.body&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;body&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;b&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;Hello, ASGI World&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-was-web-application-server-レイヤーの定義"&gt;4. WAS (Web Application Server) レイヤーの定義
+&lt;/h2&gt;&lt;p&gt;システムアーキテクチャにおいて、Webサーバー（Nginx, Apache）とWAS（Gunicorn, Uvicorn）の役割分担を明確に定義することが重要です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Web Server&lt;/b&gt;: 静的ファイルの配信、SSL/TLS終端、リバースプロキシ、負荷分散を担当します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;WAS&lt;/b&gt;: ビジネスロジックの実行、データベース操作、動的コンテンツの生成を担当します。Pythonエコシステムでは、WSGI/ASGIサーバーがこのWAS層に該当します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-フレームワークのアーキテクチャ比較"&gt;5. フレームワークのアーキテクチャ比較
+&lt;/h2&gt;&lt;h3 id="django"&gt;Django
+&lt;/h3&gt;&lt;p&gt;WSGI時代に設計されたフルスタックフレームワークであり、ORMや管理画面などの機能を包括しています。Django 3.0以降、ASGIのネイティブサポートが追加され、同期・非同期の両方のビューを共存させることが可能になりました。&lt;/p&gt;
+&lt;h3 id="fastapi"&gt;FastAPI
+&lt;/h3&gt;&lt;p&gt;最初からASGIを前提に構築されたモダンなフレームワークです。非同期I/Oを最大限に活用し、特にAI/機械学習モデルの推論エンドポイントなど、I/Oバウンドなタスクにおいて高いスループットを発揮します。型ヒントを活用した自動ドキュメント生成など、開発効率の面でも最適化されています。&lt;/p&gt;
+&lt;h2 id="findings"&gt;Findings
+&lt;/h2&gt;&lt;p&gt;Pythonウェブインターフェースの選択は、アプリケーションの通信特性に依存します。単純なCRUD操作が中心の同期的なシステムであればWSGI（Gunicorn + Django/Flask）で十分な安定性を確保できますが、リアルタイム通信や高並列なAPIサーバーを構築する場合は、ASGI（Uvicorn + FastAPI/Django ASGI）への移行が不可欠です。インフラ設計においては、これらのインターフェース規格がリソース消費とレイテンシに与える影響を考慮し、適切なWAS構成を選択する必要があります。&lt;/p&gt;</description></item><item><title>バックエンド通信設計におけるプロトコル選定とMSAアーキテクチャの構造分析</title><link>https://klifehack.com/p/backend-communication-msa-architecture-analysis/</link><pubDate>Tue, 02 Jun 2026 15:11:09 +0900</pubDate><guid>https://klifehack.com/p/backend-communication-msa-architecture-analysis/</guid><description>&lt;h1 id="モダンバックエンドにおける通信プロトコルとmsa設計戦略の分析"&gt;モダンバックエンドにおける通信プロトコルとMSA設計戦略の分析
 &lt;/h1&gt;&lt;p&gt;モダンなバックエンドエンジニアリングにおいて、通信パターンの選択はシステムのパフォーマンス、開発生産性、およびスケーラビリティを決定付ける極めて重要な意思決定です。本稿では、主要な通信プロトコルの特性を比較し、マイクロサービスアーキテクチャ（MSA）における設計戦略と具体的な実装手法について分析します。&lt;/p&gt;
 &lt;h2 id="1-通信パターンの技術比較マトリクス"&gt;1. 通信パターンの技術比較マトリクス
 &lt;/h2&gt;&lt;p&gt;MSAやリアルタイム性が求められる環境では、単一の標準に依存するのではなく、ユースケースに応じて複数のパターンを戦略的に組み合わせる必要があります。&lt;/p&gt;

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Uvicorn on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/uvicorn/</link><description>Recent content in Uvicorn on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 03 Jun 2026 15:08:46 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/uvicorn/index.xml" rel="self" type="application/rss+xml"/><item><title>Technical Considerations on the Evolution of Python Web Interfaces from CGI to ASGI and Modern WAS Configurations</title><link>https://klifehack.com/en/p/python-web-interface-cgi-wsgi-asgi/</link><pubDate>Wed, 03 Jun 2026 15:08:46 +0900</pubDate><guid>https://klifehack.com/en/p/python-web-interface-cgi-wsgi-asgi/</guid><description>&lt;p&gt;Web application interface standards in Python have evolved from the early CGI to WSGI, and now to modern ASGI. This article provides a technical analysis of the operating principles, performance characteristics of each protocol, and the role of the WAS (Web Application Server) in modern infrastructure.&lt;/p&gt;
+&lt;h2 id="1-structure-and-limitations-of-cgi-common-gateway-interface"&gt;1. Structure and Limitations of CGI (Common Gateway Interface)
+&lt;/h2&gt;&lt;p&gt;CGI is the earliest standard protocol for web servers to interact with external programs. Its core lies in the &amp;ldquo;process-per-request&amp;rdquo; model.&lt;/p&gt;
+&lt;h3 id="-operating-logic"&gt;💡 Operating Logic
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;The web server receives an HTTP request.&lt;/li&gt;
+&lt;li&gt;The server forks a new OS process for each request, executing the Python interpreter and script.&lt;/li&gt;
+&lt;li&gt;The script writes the result to standard output (stdout), and the process terminates.&lt;/li&gt;
+&lt;li&gt;The server returns that output to the client as an HTTP response.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="-technical-challenges"&gt;⚠️ Technical Challenges
+&lt;/h3&gt;&lt;p&gt;Because this model loads the interpreter and initializes the environment for every request, the overhead is extremely high, making it unsuitable for operation in high-traffic environments. While safety is ensured through process isolation, it is rarely adopted in modern systems due to resource efficiency concerns.&lt;/p&gt;
+&lt;h2 id="2-optimization-via-wsgi-web-server-gateway-interface"&gt;2. Optimization via WSGI (Web Server Gateway Interface)
+&lt;/h2&gt;&lt;p&gt;WSGI was formulated to resolve the overhead of CGI. WSGI provides a standard interface that keeps the Python application in memory as a persistent process to handle requests.&lt;/p&gt;
+&lt;h3 id="-key-implementation-points"&gt;🛠️ Key Implementation Points
+&lt;/h3&gt;&lt;p&gt;In WSGI, the application is defined as a &amp;ldquo;callable object (Callable)&amp;rdquo;. Once the server loads this object, it can call it repeatedly without restarting the process.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;application&lt;/span&gt;(environ, start_response):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; status &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;200 OK&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; headers &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [(&lt;span style="color:#e6db74"&gt;&amp;#39;Content-Type&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;text/plain; charset=utf-8&amp;#39;&lt;/span&gt;)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; start_response(status, headers)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;b&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Hello, WSGI World&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In current production environments, a configuration placing Nginx as a reverse proxy and Gunicorn as the WSGI server (WAS) is common.&lt;/p&gt;
+&lt;h2 id="3-transition-to-asgi-asynchronous-server-gateway-interface"&gt;3. Transition to ASGI (Asynchronous Server Gateway Interface)
+&lt;/h2&gt;&lt;p&gt;Since WSGI is designed assuming a synchronous request-response cycle, it has limitations in handling modern asynchronous communications such as WebSockets, Long Polling, and HTTP2. ASGI emerged to resolve this.&lt;/p&gt;
+&lt;h3 id="-characteristics-of-asgi"&gt;💡 Characteristics of ASGI
+&lt;/h3&gt;&lt;p&gt;While inheriting the spirit of WSGI, ASGI natively supports Python&amp;rsquo;s &lt;code&gt;async/await&lt;/code&gt; syntax. This makes it possible to efficiently manage thousands of concurrent connections in a single process using asynchronous I/O.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;application&lt;/span&gt;(scope, receive, send):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; scope[&lt;span style="color:#e6db74"&gt;&amp;#39;type&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;http&amp;#39;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; send({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;type&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;http.response.start&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;status&amp;#39;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;headers&amp;#39;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#e6db74"&gt;b&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;content-type&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;b&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;text/plain&amp;#39;&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; send({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;type&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;http.response.body&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;body&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;b&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;Hello, ASGI World&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-definition-of-the-was-web-application-server-layer"&gt;4. Definition of the WAS (Web Application Server) Layer
+&lt;/h2&gt;&lt;p&gt;In system architecture, it is important to clearly define the division of roles between the web server (Nginx, Apache) and the WAS (Gunicorn, Uvicorn).&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Web Server&lt;/b&gt;: Responsible for serving static files, SSL/TLS termination, reverse proxying, and load balancing.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;WAS&lt;/b&gt;: Responsible for executing business logic, database operations, and generating dynamic content. In the Python ecosystem, WSGI/ASGI servers correspond to this WAS layer.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-architectural-comparison-of-frameworks"&gt;5. Architectural Comparison of Frameworks
+&lt;/h2&gt;&lt;h3 id="django"&gt;Django
+&lt;/h3&gt;&lt;p&gt;A full-stack framework designed in the WSGI era, encompassing features such as an ORM and an admin panel. Since Django 3.0, native support for ASGI has been added, allowing both synchronous and asynchronous views to coexist.&lt;/p&gt;
+&lt;h3 id="fastapi"&gt;FastAPI
+&lt;/h3&gt;&lt;p&gt;A modern framework built from the ground up assuming ASGI. It maximizes the use of asynchronous I/O, delivering high throughput particularly in I/O-bound tasks such as inference endpoints for AI/machine learning models. It is also optimized for development efficiency, featuring automatic document generation leveraging type hints.&lt;/p&gt;
+&lt;h2 id="findings"&gt;Findings
+&lt;/h2&gt;&lt;p&gt;The choice of Python web interface depends on the communication characteristics of the application. For synchronous systems centered on simple CRUD operations, WSGI (Gunicorn + Django/Flask) can ensure sufficient stability. However, when building real-time communication or highly concurrent API servers, transitioning to ASGI (Uvicorn + FastAPI/Django ASGI) is indispensable. In infrastructure design, it is necessary to select the appropriate WAS configuration, considering the impact of these interface standards on resource consumption and latency.&lt;/p&gt;</description></item></channel></rss>
