@@ -1,4 +1,412 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nginx on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/nginx/</link><description>Recent content in Nginx on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 28 May 2026 17:04:17 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/nginx/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation Methods for NGINX Reverse Proxy: Nginx Proxy Manager and Manual Configuration</title><link>https://klifehack.com/en/p/nginx-reverse-proxy-implementation-guide/</link><pubDate>Thu, 28 May 2026 17:04:17 +0900</pubDate><guid>https://klifehack.com/en/p/nginx-reverse-proxy-implementation-guide/</guid><description>&lt;p&gt;This document details the procedures for constructing an NGINX reverse proxy environment to route external traffic from a public IP address to a backend application (Apache Tomcat) on a private network. Two implementation approaches are explained: the introduction of &lt;b&gt;Nginx Proxy Manager (NPM)&lt;/b&gt;, a Docker-based GUI management tool, and &lt;b&gt;manual configuration&lt;/b&gt; via the command line.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nginx on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/nginx/</link><description>Recent content in Nginx on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 04 Jun 2026 10:09:58 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/nginx/index.xml" rel="self" type="application/rss+xml"/><item><title>Network Protocols and Request Lifecycle Structure in Backend Design</title><link>https://klifehack.com/en/p/network-protocols-request-lifecycle-analysis/</link><pubDate>Thu, 04 Jun 2026 10:09:58 +0900</pubDate><guid>https://klifehack.com/en/p/network-protocols-request-lifecycle-analysis/</guid><description>&lt;h2 id="network-layer-stack-structure-osi-7-layer-vs-tcpip-4-layer"&gt;Network Layer Stack Structure (OSI 7-Layer vs. TCP/IP 4-Layer)
+&lt;/h2&gt;&lt;p&gt;Understanding the network stack is essential for designing and building backend systems. The mapping of the OSI 7-layer model to the TCP/IP 4-layer model, along with a summary of key technical elements in backend development, is structured as follows.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-----------------------------------+-----------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| OSI 7-Layer Model | TCP/IP 4-Layer Model |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-----------------------------------+-----------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Layer 7: Application Layer | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Layer 6: Presentation Layer | Layer 4: Application Layer |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Layer 5: Session Layer | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-----------------------------------+-----------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Layer 4: Transport Layer | Layer 3: Transport Layer |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-----------------------------------+-----------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Layer 3: Network Layer | Layer 2: Internet Layer |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-----------------------------------+-----------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Layer 2: Data Link Layer | Layer 1: Network Access Layer |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Layer 1: Physical Layer | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-----------------------------------+-----------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="layers-57-osi-rightarrow-layer-4-application-layer-tcpip"&gt;Layers 5–7 (OSI) $\rightarrow$ Layer 4: Application Layer (TCP/IP)
+&lt;/h3&gt;&lt;p&gt;Defines communication protocols that interact directly with application software to generate and exchange data over the network.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;HTTP/HTTPS:&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;REST API Design:&lt;/b&gt; Resource structuring, utilization of appropriate HTTP methods (GET, POST, PUT, DELETE), and definition of status lines.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Status Codes:&lt;/b&gt; Semantic classification into success ($2xx$), client errors ($4xx$), and server errors ($5xx$).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Header Management:&lt;/b&gt; Control of headers such as &lt;code&gt;Cookie&lt;/code&gt;, &lt;code&gt;Cache-Control&lt;/code&gt;, and &lt;code&gt;CORS&lt;/code&gt; (Cross-Origin Resource Sharing).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Session and Proxy Headers:&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Set-Cookie&lt;/code&gt;: Sent by the server to the browser to transmit session IDs or custom settings and initiate session management.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Cookie&lt;/code&gt;: Returns cookie information stored in the browser back to the server in subsequent requests.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;X-Forwarded-For&lt;/code&gt; (XFF) and &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; (XFP): Used to identify the original client IP and protocol when passing through proxies or load balancers.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;gRPC:&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;A Remote Procedure Call (RPC) framework based on HTTP/2, used for high-speed, low-latency inter-service communication in microservice architectures (MSA).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Binary Framing:&lt;/b&gt; Instead of text-based messages like JSON, data is serialized into a binary format called &amp;ldquo;frames,&amp;rdquo; reducing payload overhead and accelerating parsing.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Multiplexing:&lt;/b&gt; Creates multiple virtual bidirectional channels called &amp;ldquo;streams&amp;rdquo; within a single TCP connection, multiplexing requests and responses in parallel to eliminate Head-of-Line (HoL) blocking at the application layer.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;HPACK:&lt;/b&gt; A compression algorithm dedicated to HTTP/2 headers that uses static and dynamic tables to eliminate duplicate header fields, reducing bandwidth consumption.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Server Push:&lt;/b&gt; A feature where the server analyzes the initial request from the client and proactively sends required resources to the client cache before the client explicitly requests them.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Data Serialization:&lt;/b&gt; Converts and parses structured data using formats like JSON or Protocol Buffers (Protobuf) for network transmission.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Authentication and Authorization:&lt;/b&gt; Implementation of secure user identification and access control using JSON Web Tokens (JWT) or session-based architectures.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="layer-4-osi-rightarrow-layer-3-transport-layer-tcpip"&gt;Layer 4 (OSI) $\rightarrow$ Layer 3: Transport Layer (TCP/IP)
+&lt;/h3&gt;&lt;p&gt;Controls end-to-end communication reliability, flow control, and connection management between specific processes (identified by port numbers) from the source host to the destination host.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;TCP (Transmission Control Protocol):&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Connection Management:&lt;/b&gt; Connection establishment via a &lt;b&gt;3-Way Handshake&lt;/b&gt; (SYN $\rightarrow$ SYN-ACK $\rightarrow$ ACK) and connection termination via a &lt;b&gt;4-Way Handshake&lt;/b&gt; (FIN $\rightarrow$ ACK $\rightarrow$ FIN $\rightarrow$ ACK).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Reliability Mechanisms:&lt;/b&gt; Guarantees data ordering and delivery confirmation using sequence numbers, acknowledgments (ACK), and automatic retransmission upon packet loss.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Application Foundation:&lt;/b&gt; Serves as the underlying protocol for HTTP/1.1, HTTP/2, and database connection pools (such as HikariCP).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Performance Features:&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Keep-Alive&lt;/code&gt;: Reuses established TCP connections for multiple requests, reducing the overhead of repeated handshakes.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Pipelining&lt;/code&gt;: A feature in HTTP/1.1 that sends the next request without waiting for the response of the previous one (though it is limited by application-layer HoL blocking).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;UDP (User Datagram Protocol):&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;A connectionless, lightweight protocol that prioritizes speed and low overhead over reliability. Packet delivery and ordering are not guaranteed.&lt;/li&gt;
+&lt;li&gt;Widely used in DNS queries, WebRTC, real-time media streaming, online gaming, etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Concept of Ports:&lt;/b&gt; Logical addresses (ranging from $0$ to $65535$) used to identify and route to specific processes running on a server (e.g., port $80$ for HTTP, port $443$ for HTTPS).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="layer-3-osi-rightarrow-layer-2-internet-layer-tcpip"&gt;Layer 3 (OSI) $\rightarrow$ Layer 2: Internet Layer (TCP/IP)
+&lt;/h3&gt;&lt;p&gt;Determines the path (routing) from source to destination across multiple networks and transfers data in packets.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;IP (IPv4 / IPv6):&lt;/b&gt; A logical addressing system to uniquely identify hosts on a network.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Routers and Gateways:&lt;/b&gt; Physical or virtual devices that relay and forward traffic between different network segments (such as routing between different VPC subnets in a cloud environment).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Subnet Mask Design:&lt;/b&gt; Logically divides a network into smaller subnets to optimize IP address allocation and define security boundaries.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="layers-12-osi-rightarrow-layer-1-network-access-layer-tcpip"&gt;Layers 1–2 (OSI) $\rightarrow$ Layer 1: Network Access Layer (TCP/IP)
+&lt;/h3&gt;&lt;p&gt;Manages the transmission of raw bitstreams over physical media (cables, fiber optics, wireless, etc.) and data transfer between nodes within the same local network.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;MAC Address:&lt;/b&gt; A unique physical address assigned to a network interface card (NIC) at the hardware level.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ARP (Address Resolution Protocol):&lt;/b&gt; A protocol that dynamically resolves a physical MAC address corresponding to a known IP address, enabling communication within a local area network (LAN).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Switches:&lt;/b&gt; Local network devices that analyze the destination MAC address of received frames and forward data only to the port where the appropriate device is connected.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="protocol-evolution-http11-vs-http2-vs-http3-quic"&gt;Protocol Evolution: HTTP/1.1 vs. HTTP/2 vs. HTTP/3 (QUIC)
+&lt;/h2&gt;&lt;p&gt;The evolution of the HTTP protocol has focused on reducing latency, improving connection utilization efficiency, and overcoming the limitations of underlying transport protocols.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Feature / Item&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;HTTP/1.1&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;HTTP/2&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;HTTP/3&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Underlying Protocol&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;TCP&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;TCP&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;UDP (QUIC)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Data Format&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Plain Text&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Binary Frame&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Binary Frame&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Multiplexing&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;❌ (Sequential / Pipelining)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;⭕ (Multiple streams over a single connection)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;⭕ (Stream-level advanced multiplexing)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;HOLB (Head-of-Line Blocking)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Application Layer:&lt;/b&gt; Delay of a preceding request blocks subsequent ones.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Transport Layer:&lt;/b&gt; Loss of a single packet blocks all streams.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Resolved:&lt;/b&gt; Packet loss only affects the corresponding stream; others continue.&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Header Compression&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;❌ (Plain text, redundant transmission)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;⭕ &lt;b&gt;HPACK&lt;/b&gt; (Static/dynamic tables and Huffman coding)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;⭕ &lt;b&gt;QPACK&lt;/b&gt; (Optimized for UDP/QUIC, prevents blocking from out-of-order delivery)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Connection Handshake&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Slow:&lt;/b&gt; TCP 3-Way ($1$ RTT) + TLS ($1$-$2$ RTT)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Slow:&lt;/b&gt; TCP + TLS (requires multiple round trips before data transfer)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Fast:&lt;/b&gt; Integrated transport and cryptographic handshake (&lt;b&gt;1-RTT / 0-RTT&lt;/b&gt;)&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="dns-domain-name-system-resolution-flow-and-record-design"&gt;DNS (Domain Name System) Resolution Flow and Record Design
+&lt;/h2&gt;&lt;p&gt;DNS is a distributed database system that translates human-readable domain names into machine-readable IP addresses.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; (1) Local DNS Cache / Resolver
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (2) Root DNS Server (.)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (3) TLD DNS Server (.com)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (4) Authoritative DNS Server (example.com)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-dns-query-resolution-process"&gt;1. DNS Query Resolution Process
+&lt;/h3&gt;&lt;p&gt;When a user enters &lt;code&gt;https://example.com&lt;/code&gt; in a browser, the system resolves the IP address through a hierarchical lookup process.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Check Local DNS Cache:&lt;/b&gt; The client device first queries a local DNS server, such as one provided by an ISP (Internet Service Provider). If a valid record exists in the cache, the IP address is returned immediately.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Query Root DNS Servers (.):&lt;/b&gt; If there is no cache on the local DNS server, it queries the global root DNS servers. The root server parses the top-level domain (e.g., &lt;code&gt;.com&lt;/code&gt;) and returns information for the corresponding TLD servers.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Query TLD DNS Servers (.com):&lt;/b&gt; The local DNS server queries the designated &lt;code&gt;.com&lt;/code&gt; TLD server. The TLD server returns the address of the name server (authoritative DNS server) of the registrar where the target domain is registered.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Query Authoritative DNS Servers:&lt;/b&gt; The local DNS server queries the authoritative DNS server where the developer manages the domain records to retrieve the final IP address or record value.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Caching and Connection:&lt;/b&gt; The local DNS server returns the retrieved IP address to the client and caches the result for the configured TTL (Time To Live). The browser initiates a connection to the resolved IP address.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="2-three-key-dns-records-for-backend-design"&gt;2. Three Key DNS Records for Backend Design
+&lt;/h3&gt;&lt;p&gt;When configuring domains on a name server, the appropriate record type must be selected based on routing objectives.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;A Record (Address Record):&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Concept:&lt;/b&gt; Directly maps a domain name to a specific IPv4 address.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Configuration Example:&lt;/b&gt; &lt;code&gt;example.com&lt;/code&gt; $\rightarrow$ &lt;code&gt;13.125.1.2&lt;/code&gt; (a static public IP, such as an EC2 instance).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Characteristics:&lt;/b&gt; If the server&amp;rsquo;s public IP changes, the value on the name server must be updated manually.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;CNAME Record (Canonical Name Record):&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Concept:&lt;/b&gt; Maps a domain name to another domain name (alias) instead of an IP address.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Configuration Example:&lt;/b&gt; &lt;code&gt;api.example.com&lt;/code&gt; $\rightarrow$ &lt;code&gt;my-load-balancer-123456.amazonaws.com&lt;/code&gt; (an AWS ALB domain).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Characteristics:&lt;/b&gt; Used to maintain name resolution consistency for infrastructure where IP addresses change dynamically, such as load balancers or CDNs (e.g., Cloudflare).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;MX Record (Mail Exchanger Record):&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Concept:&lt;/b&gt; Specifies the mail servers responsible for receiving email messages on behalf of the domain.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Configuration Example:&lt;/b&gt; Mail addressed to &lt;code&gt;example.com&lt;/code&gt; $\rightarrow$ routed to Google Workspace mail servers (&lt;code&gt;aspmx.l.google.com&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Characteristics:&lt;/b&gt; By setting priorities, you can configure a redundant setup that automatically falls back to secondary servers if the primary server goes down.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-dns-operations-and-management-in-practice"&gt;3. DNS Operations and Management in Practice
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;TTL (Time To Live) Control:&lt;/b&gt; TTL is a parameter that specifies the duration in seconds for which a DNS record is cached. When performing maintenance involving server migration or IP address changes, &lt;b&gt;lowering the TTL to a short value such as 60 seconds (1 minute) in advance&lt;/b&gt; minimizes downtime caused by propagation delays after the switchover.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Subdomain Routing:&lt;/b&gt; Subdomains are divided and managed according to infrastructure roles.
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;example.com&lt;/code&gt; $\rightarrow$ Static web server (A or CNAME)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;api.example.com&lt;/code&gt; $\rightarrow$ Backend API gateway (CNAME)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dev-api.example.com&lt;/code&gt; $\rightarrow$ Gateway for development environment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Utilization of TXT Records:&lt;/b&gt; Records used to associate arbitrary text data with a domain, primarily for the following purposes:
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Domain Ownership Verification:&lt;/b&gt; Proves ownership by registering a specified unique string when using external services like Google Workspace or AWS SES.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Email Sender Authentication:&lt;/b&gt; Configures SPF (Sender Policy Framework) or DKIM (DomainKeys Identified Mail) to prevent email spoofing and spam classification.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="division-of-roles-forward-proxy-vs-reverse-proxy"&gt;Division of Roles: Forward Proxy vs. Reverse Proxy
+&lt;/h2&gt;&lt;p&gt;A proxy server is an intermediary server that relays communication between a client and a server. It is classified into a forward proxy or a reverse proxy depending on which side of the communication it is positioned.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Forward Proxy]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 1] --+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 2] --+--&amp;amp;gt; [Forward Proxy] ---&amp;amp;gt; [Internet] ---&amp;amp;gt; [Target Server]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Reverse Proxy]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [Internet] ---&amp;amp;gt; [Reverse Proxy (Nginx)] ---&amp;amp;gt; [WAS 1]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; [WAS 2]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-comparison-of-forward-proxy-and-reverse-proxy"&gt;1. Comparison of Forward Proxy and Reverse Proxy
+&lt;/h3&gt;&lt;h4 id="forward-proxy"&gt;Forward Proxy
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Placement:&lt;/b&gt; Positioned within the &lt;b&gt;client-side&lt;/b&gt; network.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Proxy Target:&lt;/b&gt; Acts on behalf of the client. The destination server only sees the proxy&amp;rsquo;s IP address, hiding the actual client&amp;rsquo;s IP address.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Primary Uses:&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;Restricting access to external sites from internal corporate networks (enforcing security policies).&lt;/li&gt;
+&lt;li&gt;Ensuring client anonymity or bypassing specific geographical restrictions.&lt;/li&gt;
+&lt;li&gt;Saving bandwidth by caching frequently accessed external resources.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="reverse-proxy"&gt;Reverse Proxy
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Placement:&lt;/b&gt; Positioned at the boundary of the server infrastructure (&lt;b&gt;in front of backend servers&lt;/b&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Proxy Target:&lt;/b&gt; Acts on behalf of the servers. Clients perceive the reverse proxy as the final destination and remain unaware of the internal server configuration.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Representative Software:&lt;/b&gt; Nginx, Apache HTTP Server, AWS Application Load Balancer (ALB), Cloudflare.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Primary Uses:&lt;/b&gt; Backend server protection, load balancing, and consolidation of SSL/TLS termination.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-why-reverse-proxies-are-essential"&gt;2. Why Reverse Proxies Are Essential
+&lt;/h3&gt;&lt;p&gt;Exposing application servers (such as Spring Boot, Express, or Django) directly to the public internet poses security risks. Placing a reverse proxy (e.g., Nginx) in front of them provides the following benefits:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Load Balancing:&lt;/b&gt; Distributes traffic across multiple backend Web Application Servers (WAS). It performs periodic health checks and automatically cuts off routing to unhealthy instances.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Security and Server Obfuscation:&lt;/b&gt; Hides internal network IP addresses and port configurations from the outside. It blocks unauthorized requests at the boundary and mitigates threats like DDoS attacks in coordination with Web Application Firewalls (WAF).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;SSL/TLS Termination:&lt;/b&gt; Consolidates CPU-intensive encryption and decryption processes at the reverse proxy. By communicating via lightweight HTTP between the reverse proxy and the backend WAS, WAS CPU resources can be focused on executing business logic.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Static Content Caching:&lt;/b&gt; Serves static files like images, CSS, and JavaScript directly to clients from the reverse proxy&amp;rsquo;s disk or memory, reducing unnecessary request forwarding to the WAS.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="3-client-ip-tracking-mechanism"&gt;3. Client IP Tracking Mechanism
+&lt;/h3&gt;&lt;p&gt;When passing through a reverse proxy, the source IP address obtained by the backend WAS becomes the &lt;b&gt;internal IP address of the reverse proxy&lt;/b&gt;. To record access logs and enforce rate limiting, the original client IP must be propagated.&lt;/p&gt;
+&lt;p&gt;The reverse proxy appends the following headers before forwarding requests to the backend:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;X-Forwarded-For (XFF)&lt;/code&gt;: A comma-separated list of IP addresses of the client and the proxies it passed through. The first value is the &lt;b&gt;original client IP&lt;/b&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;X-Real-IP&lt;/code&gt;: The IP address of the immediate client (or proxy) that connected directly to the reverse proxy.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="configuration-example-in-nginx"&gt;Configuration Example in Nginx:
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nginx" data-lang="nginx"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;listen&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server_name&lt;/span&gt; &lt;span style="color:#e6db74"&gt;api.example.com&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_pass&lt;/span&gt; &lt;span style="color:#e6db74"&gt;http://backend_servers&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Host&lt;/span&gt; $host;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Real-IP&lt;/span&gt; $remote_addr;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-For&lt;/span&gt; $proxy_add_x_forwarded_for;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-Proto&lt;/span&gt; $scheme;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="l4l7-load-balancers-and-traffic-distribution-algorithms"&gt;L4/L7 Load Balancers and Traffic Distribution Algorithms
+&lt;/h2&gt;&lt;p&gt;Load balancers are components that distribute traffic across multiple servers to ensure high availability and fault tolerance.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L4 Load Balancer]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [L4 LB (IP/Port-based)] ---&amp;amp;gt; [Server A (10.0.0.1:80)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; [Server B (10.0.0.2:80)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [L7 LB (URL/Header-based)] ---&amp;amp;gt; /api/users ---&amp;amp;gt; [User Service]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; /api/orders ---&amp;amp;gt; [Order Service]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-technical-differences-between-l4-and-l7-load-balancers"&gt;1. Technical Differences Between L4 and L7 Load Balancers
+&lt;/h3&gt;&lt;h4 id="l4-load-balancer-transport-layer"&gt;L4 Load Balancer (Transport Layer)
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Operating Layer:&lt;/b&gt; OSI Layer 4 (Transport Layer).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Routing Criteria:&lt;/b&gt; Distributes traffic based solely on information in IP addresses, port numbers, and TCP/UDP protocol headers.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Characteristics:&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;Extremely fast with low resource consumption because it does not parse application-layer payloads (HTTP bodies, cookies, headers, etc.).&lt;/li&gt;
+&lt;li&gt;Cannot perform SSL/TLS decryption or routing based on URL paths.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Uses:&lt;/b&gt; Suitable for placement at the outermost perimeter of infrastructure to rapidly distribute massive traffic to downstream L7 load balancers.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="l7-load-balancer-application-layer"&gt;L7 Load Balancer (Application Layer)
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Operating Layer:&lt;/b&gt; OSI Layer 7 (Application Layer).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Routing Criteria:&lt;/b&gt; Decides routing by parsing HTTP URIs, cookies, HTTP headers, and payload content.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Characteristics:&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;Enables &lt;b&gt;content-based routing&lt;/b&gt; (e.g., routing to specific microservices based on URL paths).&lt;/li&gt;
+&lt;li&gt;Supports SSL/TLS termination and session persistence (Sticky Sessions) using cookie values.&lt;/li&gt;
+&lt;li&gt;Consumes more CPU and memory resources compared to L4 load balancers due to packet decryption and parsing.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Uses:&lt;/b&gt; AWS ALB, Nginx, HAProxy, etc. Used in microservice architectures (MSA) to route requests destined for &lt;code&gt;/api/users&lt;/code&gt; to a user service and &lt;code&gt;/api/orders&lt;/code&gt; to an order service.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-representative-traffic-distribution-algorithms"&gt;2. Representative Traffic Distribution Algorithms
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Round Robin:&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Mechanism:&lt;/b&gt; Assigns requests sequentially and evenly to available servers.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Suitable Environment:&lt;/b&gt; Environments where all servers have identical specifications and request processing loads do not vary significantly.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Weighted Round Robin:&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Mechanism:&lt;/b&gt; Assigns a static &amp;ldquo;weight&amp;rdquo; to each server, proportionally allocating more requests to higher-spec servers.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Suitable Environment:&lt;/b&gt; Environments with a mix of old and new servers with differing processing capacities.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Least Connections:&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Mechanism:&lt;/b&gt; Prioritizes assigning requests to the server with the fewest active connections.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Suitable Environment:&lt;/b&gt; Environments with long-lived connections (such as WebSockets) or highly variable processing loads per request.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;IP Hash / Source Hash:&lt;/b&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Mechanism:&lt;/b&gt; Hashes the client&amp;rsquo;s IP address and consistently routes requests to a specific server based on the result.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Suitable Environment:&lt;/b&gt; Legacy applications that store session information in local server memory, requiring requests from the same client to always be sent to the same server.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-importance-of-health-checks"&gt;3. Importance of Health Checks
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;L4 Health Check:&lt;/b&gt; Attempts a TCP 3-way handshake on the target port to verify if it is open. A weakness is that even if the application process is frozen and returning errors (such as 500 Internal Server Error), it will still be determined as &amp;ldquo;healthy&amp;rdquo; as long as the port is open.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;L7 Health Check:&lt;/b&gt; Sends an actual HTTP request (e.g., &lt;code&gt;GET /healthz&lt;/code&gt;) and verifies if a successful response, such as status code &lt;code&gt;200 OK&lt;/code&gt;, is returned. It is recommended to implement a health check endpoint on the backend that also evaluates the health of dependencies, such as database connections.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-container-lifecycle-and-traffic-control"&gt;4. Container Lifecycle and Traffic Control
+&lt;/h3&gt;&lt;p&gt;During container rolling updates or zero-downtime scaling, coordination between service discovery and load balancers is essential. When containers are replaced, &amp;ldquo;connection draining&amp;rdquo;—which blocks new traffic to old containers while maintaining existing connections to gracefully migrate traffic—is executed at the L7 load balancer or reverse proxy layer.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="network-debugging-and-troubleshooting-workflow"&gt;Network Debugging and Troubleshooting Workflow
+&lt;/h2&gt;&lt;p&gt;When inter-service communication errors or API connection failures occur, specific command-line tools are used to identify the root cause.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Network connectivity and diagnostic commands&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ping &lt;span style="color:#f92672"&gt;[&lt;/span&gt;IP/Domain&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nslookup &lt;span style="color:#f92672"&gt;[&lt;/span&gt;Domain&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;traceroute &lt;span style="color:#f92672"&gt;[&lt;/span&gt;IP/Domain&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl &lt;span style="color:#f92672"&gt;[&lt;/span&gt;URL&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-ping--network-layer-l3-connectivity-verification"&gt;1. ping — Network Layer (L3) Connectivity Verification
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Purpose:&lt;/b&gt; Verifies if the target host is up and reachable over the network.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Execution Example:&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ping -c &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt; google.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Caveat:&lt;/b&gt; Cloud environments (such as AWS Security Groups) and corporate firewalls often block the &lt;b&gt;ICMP protocol&lt;/b&gt; (the protocol used by &lt;code&gt;ping&lt;/code&gt;) for security reasons. Therefore, a failed &lt;code&gt;ping&lt;/code&gt; does not necessarily mean the web service is down.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-nslookup--dns-record-verification"&gt;2. nslookup — DNS Record Verification
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Purpose:&lt;/b&gt; Verifies if a domain name resolves to the correct IP address.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Execution Example:&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nslookup google.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-traceroute--routing-path-tracing"&gt;3. traceroute — Routing Path Tracing
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Purpose:&lt;/b&gt; Measures the path of routers traversed from the source to the destination server, along with the latency at each hop.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Execution Example:&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;traceroute google.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Result Analysis:&lt;/b&gt; If consecutive timeouts (&lt;code&gt;* * *&lt;/code&gt;) occur after a specific hop, it is highly likely that packets are being blocked by a router or firewall located at that boundary.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-curl--application-layer-l7-connectivity-verification"&gt;4. curl — Application Layer (L7) Connectivity Verification
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Purpose:&lt;/b&gt; Sends an actual HTTP request to inspect response headers, body, and TLS handshake details from the server.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Execution Example:&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -v https://example.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="end-to-end-request-lifecycle"&gt;End-to-End Request Lifecycle
+&lt;/h2&gt;&lt;p&gt;Traces the step-by-step flow of communication from when a user enters a URL in a browser to when the data is displayed on the screen.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Browser] --(1. DNS Query)--&amp;amp;gt; [DNS Server]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(2. TCP/QUIC Handshake &amp;amp;amp; HTTPS Request)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer (ALB)] --(3. SSL Termination &amp;amp;amp; Route)--&amp;amp;gt; [Nginx (Reverse Proxy)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (4. Forward Request)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Database] &amp;amp;lt;--(6. SQL Query / Connection Pool)-- [WAS (Spring Boot / Node.js)]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-1-name-server-resolution-dns-query"&gt;Step 1: Name Server Resolution (DNS Query)
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Address Input:&lt;/b&gt; A user enters &lt;code&gt;https://example.com/v1/users&lt;/code&gt; in the browser.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;IP Address Lookup:&lt;/b&gt; To identify the IP address corresponding to the domain, the browser checks the local DNS cache and, if necessary, queries authoritative DNS servers (such as AWS Route 53).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Record Return:&lt;/b&gt; The authoritative DNS server resolves the CNAME record (the load balancer&amp;rsquo;s domain) configured for &lt;code&gt;example.com&lt;/code&gt; and returns the corresponding IP address to the browser.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="step-2-passing-through-the-edge-gateway-l7-load-balancer--ssl"&gt;Step 2: Passing Through the Edge Gateway (L7 Load Balancer &amp;amp; SSL)
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Connection Establishment:&lt;/b&gt; The browser performs a TCP 3-way handshake (or a UDP-based QUIC handshake in the case of HTTP/3) with the resolved IP address of the load balancer (ALB) to establish a connection.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;SSL Termination:&lt;/b&gt; The ALB completes the TLS handshake with the client, decrypts the encrypted HTTPS request, and converts it into a plain HTTP request.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Path-Based Routing:&lt;/b&gt; The ALB analyzes the request URI path &lt;code&gt;/v1/users&lt;/code&gt; and forwards the request to the Nginx reverse proxy server located in the private subnet according to predefined routing rules.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="step-3-relaying-via-reverse-proxy"&gt;Step 3: Relaying via Reverse Proxy
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Proxy Processing:&lt;/b&gt; Nginx receives the request and prepares to forward it to the backend Web Application Server (WAS).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Injecting Client IP:&lt;/b&gt; Nginx injects the client&amp;rsquo;s public IP address into the &lt;code&gt;X-Forwarded-For&lt;/code&gt; and &lt;code&gt;X-Real-IP&lt;/code&gt; headers so that the backend WAS can identify the actual client.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Forwarding to WAS:&lt;/b&gt; Nginx forwards the request to the port where the WAS is listening, either locally or within the same network.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="step-4-business-logic-execution-and-data-retrieval-was--db"&gt;Step 4: Business Logic Execution and Data Retrieval (WAS &amp;amp; DB)
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Request Parsing:&lt;/b&gt; The WAS (such as Spring Boot or Node.js) parses the received HTTP request and maps headers and query parameters to objects that can be handled by the application code.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Connection Acquisition:&lt;/b&gt; When database access is required to execute business logic, the WAS acquires an active TCP connection from a pre-established database connection pool (such as HikariCP).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Query Execution:&lt;/b&gt; The WAS sends SQL queries (e.g., &lt;code&gt;SELECT * FROM users;&lt;/code&gt;) to the database server (such as MySQL or PostgreSQL) via the acquired connection.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Data Return:&lt;/b&gt; The database extracts the corresponding records from memory buffers or disk and returns the results to the WAS.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="step-5-returning-the-response"&gt;Step 5: Returning the Response
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Serialization:&lt;/b&gt; The WAS serializes the data retrieved from the database into a JSON payload and constructs an HTTP response object containing status code &lt;code&gt;200 OK&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Reverse Path Forwarding:&lt;/b&gt; The response is returned along the reverse path of the request.
+$$\text{WAS} \longrightarrow \text{Nginx} \longrightarrow \text{ALB (SSL Re-encryption)} \longrightarrow \text{Internet} \longrightarrow \text{Client Browser}$$&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Rendering:&lt;/b&gt; The browser parses the received JSON data, reflects it in the DOM, and renders the information on the user&amp;rsquo;s screen. This completes the request-response cycle.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Understanding Layered Models:&lt;/b&gt; Serves as a baseline for isolating whether a network issue lies in the physical/transport layers (unopened ports, packet drops) or the application layer (DNS misconfigurations, HTTP 5xx errors) when troubleshooting.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Protocol Selection:&lt;/b&gt; It is crucial to understand the characteristics of each protocol—such as HTTP/2 multiplexing or HTTP/3 QUIC handshake acceleration—and reflect them in system design.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Header Propagation:&lt;/b&gt; In infrastructure designs with multi-tiered reverse proxies or load balancers, headers like &lt;code&gt;X-Forwarded-For&lt;/code&gt; must be properly controlled to maintain client identifiability.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Implementation Methods for NGINX Reverse Proxy: Nginx Proxy Manager and Manual Configuration</title><link>https://klifehack.com/en/p/nginx-reverse-proxy-implementation-guide/</link><pubDate>Thu, 28 May 2026 17:04:17 +0900</pubDate><guid>https://klifehack.com/en/p/nginx-reverse-proxy-implementation-guide/</guid><description>&lt;p&gt;This document details the procedures for constructing an NGINX reverse proxy environment to route external traffic from a public IP address to a backend application (Apache Tomcat) on a private network. Two implementation approaches are explained: the introduction of &lt;b&gt;Nginx Proxy Manager (NPM)&lt;/b&gt;, a Docker-based GUI management tool, and &lt;b&gt;manual configuration&lt;/b&gt; via the command line.&lt;/p&gt;
 &lt;h2 id="1-implementation-via-nginx-proxy-manager-npm"&gt;1. Implementation via Nginx Proxy Manager (NPM)
 &lt;/h2&gt;&lt;p&gt;Nginx Proxy Manager is a solution that allows centralized management of reverse proxies, SSL certificate management, and access list control from a web interface.&lt;/p&gt;
 &lt;h3 id="11-avoiding-conflicts-with-existing-services"&gt;1.1 Avoiding Conflicts with Existing Services
