@@ -1,4 +1,91 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cisco-Ios on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/cisco-ios/</link><description>Recent content in Cisco-Ios on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 22 May 2026 17:34:52 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/cisco-ios/index.xml" rel="self" type="application/rss+xml"/><item><title>NetmikoのSSHタイムアウトによるAnsibleプロビジョニング失敗の解決</title><link>https://klifehack.com/p/netmiko-ssh-timeout-ansible-fix/</link><pubDate>Fri, 22 May 2026 17:34:52 +0900</pubDate><guid>https://klifehack.com/p/netmiko-ssh-timeout-ansible-fix/</guid><description>&lt;img src="https://klifehack.com/" alt="Featured image of post NetmikoのSSHタイムアウトによるAnsibleプロビジョニング失敗の解決" /&gt;&lt;h1 id="cisco-iosスイッチ200台へのacl一括適用におけるnetmikoタイムアウト対策とpyats検証自動化"&gt;Cisco IOSスイッチ200台へのACL一括適用におけるNetmikoタイムアウト対策とpyATS検証自動化
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cisco-Ios on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/cisco-ios/</link><description>Recent content in Cisco-Ios on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 04 Jun 2026 14:24:44 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/cisco-ios/index.xml" rel="self" type="application/rss+xml"/><item><title>BGPセッション切断時における有限状態機械に基づく原因特定と復旧プロトコル</title><link>https://klifehack.com/p/bgp-session-troubleshooting-fsm-analysis/</link><pubDate>Thu, 04 Jun 2026 14:24:44 +0900</pubDate><guid>https://klifehack.com/p/bgp-session-troubleshooting-fsm-analysis/</guid><description>&lt;h1 id="bgpセッション切断におけるトラブルシューティングと予防的ネットワーク設計"&gt;BGPセッション切断におけるトラブルシューティングと予防的ネットワーク設計
+&lt;/h1&gt;&lt;p&gt;高可用性ネットワークにおいて、BGP（Border Gateway Protocol）セッションの切断は、インターネット接続の喪失、拠点間VPNの切断、クラウド相互接続の停止など、即座に重大な影響を及ぼすイベントです。平均復旧時間（MTTR）を最小限に抑えるためには、プロトコルの動作原理に基づいた迅速な診断が不可欠です。&lt;/p&gt;
+&lt;h2 id="1-bgp有限状態機械fsmの遷移状態と診断のポイント"&gt;1. BGP有限状態機械（FSM）の遷移状態と診断のポイント
+&lt;/h2&gt;&lt;p&gt;BGPセッションのトラブルシューティングを開始する際、対象のセッションがBGP有限状態機械（FSM）のどのフェーズで停止しているかを特定することが極めて重要です。&lt;/p&gt;
+&lt;p&gt;BGPのステート遷移は、Idle → Connect → Active → OpenSent → OpenConfirm → Established の順序で進行します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Idle&lt;/b&gt;: BGPプロセスが初期化中、またはリトライタイマーの起動を待機している状態です。この状態で停止している場合、ルーターに対象ネイバーへのルート自体が存在しない可能性があります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Connect&lt;/b&gt;: TCPの3ウェイハンドシェイクの完了を待機している状態です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Active&lt;/b&gt;: TCP接続の確立に失敗し、再試行を繰り返している状態です。L3の到達性（Reachability）に問題があるか、ファイアウォール等でTCPポート179が遮断されている可能性を示唆します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;OpenSent&lt;/b&gt;: TCP接続が確立され、OPENメッセージを送信した状態です。対向ルーターからのOPENメッセージを待機しています。AS番号やBGP識別子（Router ID）の不一致が疑われます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;OpenConfirm&lt;/b&gt;: OPENメッセージを受信し、KEEPALIVEメッセージを待機している状態です。MD5認証の不一致やタイマーの不整合が発生している場合、この状態で停止することがあります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Established&lt;/b&gt;: セッションが完全に確立され、正常に動作している状態です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="2-初期診断コマンドの実行手順"&gt;2. 初期診断コマンドの実行手順
+&lt;/h2&gt;&lt;p&gt;障害発生時には、以下のコマンドシーケンスを実行して障害ドメインを切り分けます。&lt;/p&gt;
+&lt;h3 id="ステップ1-全体的なbgpステータスの確認"&gt;ステップ1: 全体的なBGPステータスの確認
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;show ip bgp summary
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;出力結果の「State/PfxRcd」フィールドを確認します。この値が &lt;code&gt;Active&lt;/code&gt; や &lt;code&gt;Idle&lt;/code&gt; の場合はセッションがダウンしています。数値が表示されている場合は、セッションが確立され、その数だけプレフィックスを受信していることを示します。&lt;/p&gt;
+&lt;h3 id="ステップ2-ネイバー詳細情報の確認"&gt;ステップ2: ネイバー詳細情報の確認
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;show ip bgp neighbors 192.168.1.1
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;BGP state&lt;/b&gt;: 現在のFSMステートを確認します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Last reset&lt;/b&gt;: セッションが切断された直近の理由（例: &amp;ldquo;Peer closed the session&amp;rdquo; や &amp;ldquo;Hold time expired&amp;rdquo;）が表示されます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Notification error message&lt;/b&gt;: 送受信されたBGPエラーコードが表示されます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="ステップ3-l1l2インターフェース状態の確認"&gt;ステップ3: L1/L2インターフェース状態の確認
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;show interfaces GigabitEthernet0/1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;ステータスが &lt;code&gt;Up/Up&lt;/code&gt; であれば物理層およびデータリンク層は正常です。&lt;code&gt;Up/Down&lt;/code&gt; の場合はカプセル化の不一致やキープアライブの失敗などL2の問題が疑われ、&lt;code&gt;Administratively Down&lt;/code&gt; の場合は手動でシャットダウンされています。&lt;/p&gt;
+&lt;h3 id="ステップ4-l3到達性の検証"&gt;ステップ4: L3到達性の検証
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;ping 192.168.1.1 source Loopback0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;ソースインターフェースを指定して疎通確認を行います。パケットロスが100%の場合はL3経路が存在せず、部分的なロスの場合はリンク品質の低下によるホールドタイマー満了が疑われます。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="3-bgpセッション切断における7つの主な原因と対策"&gt;3. BGPセッション切断における7つの主な原因と対策
+&lt;/h2&gt;&lt;h3 id="原因1-tcp接続の失敗"&gt;原因1: TCP接続の失敗
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: ステートが &lt;code&gt;Active&lt;/code&gt; で固定され、対向のRouter IDが &lt;code&gt;0.0.0.0&lt;/code&gt; と表示されます。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: アクセスリスト（ACL）でTCPポート179が許可されているか確認します。また、BGPのキープアライブはサイズが小さいものの、アップデートメッセージは大きくなるため、経路上のMTU不整合によるパケットドロップがないか確認します。&lt;/p&gt;
+&lt;h3 id="原因2-as番号の不一致"&gt;原因2: AS番号の不一致
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: ステートが &lt;code&gt;Active&lt;/code&gt; と &lt;code&gt;Idle&lt;/code&gt; の間をループし、ログに &lt;code&gt;OPEN message error&lt;/code&gt; が記録されます。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: 自ルーターに設定された &lt;code&gt;neighbor [IP] remote-as [AS]&lt;/code&gt; の値と、対向ルーターの実際のAS番号が一致しているか確認します。&lt;/p&gt;
+&lt;h3 id="原因3-ホールドタイマーの満了hold-timer-expiration"&gt;原因3: ホールドタイマーの満了（Hold Timer Expiration）
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: セッションが断続的にフラッピングし、ログに &lt;code&gt;hold time expired&lt;/code&gt; が出力されます。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: 対向ルーターのCPU高負荷によるKEEPALIVE送信遅延、または回線混雑を確認します。ミリ秒単位での高速な障害検知が必要な場合は、BFD（Bidirectional Forwarding Detection）の導入を検討します。&lt;/p&gt;
+&lt;h3 id="原因4-md5認証の不一致"&gt;原因4: MD5認証の不一致
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: ステートが &lt;code&gt;Active&lt;/code&gt; で停止し、pingは通るものの、ログに &lt;code&gt;MD5 digest error&lt;/code&gt; や &lt;code&gt;%TCP-6-BADAUTH&lt;/code&gt; が出力されます。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: 設定されたパスワードの大文字・小文字の区別、特殊文字、末尾のスペースの有無を再確認します。&lt;/p&gt;
+&lt;h3 id="原因5-アップデートソースupdate-sourceの不一致"&gt;原因5: アップデートソース（Update Source）の不一致
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: ループバックインターフェース同士でピアを確立する際、ループバックIPへのpingは通るものの、BGPステートが &lt;code&gt;Active&lt;/code&gt; のまま遷移しません。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: ピア設定において、明示的にアップデートソースを指定しているか確認します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;router bgp 65001
+ neighbor 192.168.1.2 remote-as 65002
+ neighbor 192.168.1.2 update-source Loopback0
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="原因6-最大受信プレフィックス数の超過"&gt;原因6: 最大受信プレフィックス数の超過
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: セッションが突然切断され、ログに &lt;code&gt;Maximum prefix limit reached&lt;/code&gt; と記録されます。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: 受信プレフィックス数を確認し、必要に応じて制限値を引き上げるか、インバウンドのフィルタリングを強化します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;router bgp 65001
+ neighbor 192.168.1.2 maximum-prefix 10000 80
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="原因7-ルーターのリソース枯渇"&gt;原因7: ルーターのリソース枯渇
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: 複数のBGPセッションが同時に切断され、CLIの応答が極端に遅くなります。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: &lt;code&gt;show processes cpu sorted&lt;/code&gt; および &lt;code&gt;show processes memory sorted&lt;/code&gt; でリソース消費状況を確認し、不要なフルルートの受信を避け、デフォルトルートのみの受信に切り替えるなどの最適化を行います。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="4-セッションの再確立と検証"&gt;4. セッションの再確立と検証
+&lt;/h2&gt;&lt;p&gt;設定変更を適用した後、セッションをクリアして再ネゴシエーションをトリガーします。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ソフトリセット（推奨：トラフィックへの影響なし）&lt;/b&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;clear ip bgp 192.168.1.2 soft in
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ハードリセット（注意：一時的にトラフィックが遮断されます）&lt;/b&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;clear ip bgp 192.168.1.2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;クリア後、&lt;code&gt;show ip bgp summary&lt;/code&gt; を実行し、ステートが &lt;code&gt;Established&lt;/code&gt;（受信プレフィックス数が数値で表示されている状態）に遷移したことを確認します。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="5-予防的なネットワーク設計"&gt;5. 予防的なネットワーク設計
+&lt;/h2&gt;&lt;p&gt;セッションの安定性を長期的に維持するため、以下の設定をテンプレートとして導入することを推奨します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;router bgp 65001
+ neighbor 192.168.1.2 remote-as 65002
+ neighbor 192.168.1.2 update-source Loopback0
+ neighbor 192.168.1.2 password StrongMD5Key
+ neighbor 192.168.1.2 maximum-prefix 10000 80 warning-only
+ neighbor 192.168.1.2 fall-over bfd
+ timers bgp 10 30
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;⚠️ &lt;b&gt;デバッグ実行時の注意&lt;/b&gt;: 本番環境において、フルルートを受信している状態で &lt;code&gt;debug ip bgp&lt;/code&gt; などのコマンドをフィルタなしで実行すると、CPU使用率が100%に達しルーターがクラッシュする危険性があります。デバッグを行う際は必ず対象のネイバーIPを指定し、検証完了後は速やかに &lt;code&gt;undebug all&lt;/code&gt; を実行してください。&lt;/li&gt;
+&lt;li&gt;💡 &lt;b&gt;切り分けの起点&lt;/b&gt;: BGPセッション障害の約8割は、TCP接続性、AS番号設定、またはホールドタイマー満了に起因します。まずは「ソースインターフェースを指定したping」が通るかどうかを切り分けの起点とすることで、インフラ側の問題かプロトコル設定側の問題かを迅速に特定できます。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>NetmikoのSSHタイムアウトによるAnsibleプロビジョニング失敗の解決</title><link>https://klifehack.com/p/netmiko-ssh-timeout-ansible-fix/</link><pubDate>Fri, 22 May 2026 17:34:52 +0900</pubDate><guid>https://klifehack.com/p/netmiko-ssh-timeout-ansible-fix/</guid><description>&lt;img src="https://klifehack.com/" alt="Featured image of post NetmikoのSSHタイムアウトによるAnsibleプロビジョニング失敗の解決" /&gt;&lt;h1 id="cisco-iosスイッチ200台へのacl一括適用におけるnetmikoタイムアウト対策とpyats検証自動化"&gt;Cisco IOSスイッチ200台へのACL一括適用におけるNetmikoタイムアウト対策とpyATS検証自動化
 &lt;/h1&gt;&lt;p&gt;2026年5月31日の本番デプロイにおいて、200台のCisco IOSスイッチに対する一括ACL適用中に発生した&lt;b&gt;&lt;mark&gt;Netmiko&lt;/mark&gt;&lt;/b&gt;のSSHタイムアウトエラー（&lt;code&gt;NetmikoTimeoutException&lt;/code&gt;）およびそれに伴う構成ドリフトの解決手順を記録します。この問題は、制御ノードの並行処理セマフォ制御の導入と、Netmikoの接続パラメータ（&lt;code&gt;global_delay_factor&lt;/code&gt;および&lt;code&gt;read_timeout_override&lt;/code&gt;）の最適化、そして&lt;b&gt;&lt;mark&gt;pyATS&lt;/mark&gt;&lt;/b&gt;による事後検証自動化によって解決されました。&lt;/p&gt;
 &lt;p&gt;本システムは、Gitを信頼の唯一の情報源（Source of Truth）とするNetDevOpsのアーキテクチャを採用しています。&lt;/p&gt;
 &lt;img alt="System operational pipeline topology flow description" fetchpriority="high" height="376" loading="eager" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/31/netmiko-ssh-timeout-ansible-fix/khack_1780194891_0.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);" width="672"/&gt;

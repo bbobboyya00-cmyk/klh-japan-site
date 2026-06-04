@@ -1,265 +1,91 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 04 Jun 2026 14:05:29 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>k6とPrometheus Remote Writeを用いたローカルバックエンドの段階的負荷試験とリアルタイム可観測性パイプラインの構築</title><link>https://klifehack.com/p/k6-prometheus-observability-pipeline/</link><pubDate>Thu, 04 Jun 2026 14:05:29 +0900</pubDate><guid>https://klifehack.com/p/k6-prometheus-observability-pipeline/</guid><description>&lt;h1 id="k6prometheusgrafanaによるリアルタイム可観測性負荷試験パイプラインの構築と検証"&gt;k6・Prometheus・Grafanaによるリアルタイム可観測性負荷試験パイプラインの構築と検証
-&lt;/h1&gt;&lt;p&gt;本稿では、ローカル開発環境におけるバックエンドサーバーの性能検証を目的とした、k6、Prometheus、およびGrafanaを組み合わせたリアルタイム可観測性（Observability）パイプラインの構築と、段階的な負荷試験の実施手順について解説します。&lt;/p&gt;
-&lt;p&gt;本検証では、本番環境への影響を完全に排除するため、すべてのコンテナおよびターゲットサーバーをローカル環境内に閉じた状態で実行しています。k6から出力されるメトリクスをPrometheus Remote Writeプロトコル経由でリアルタイムに収集し、Grafana上で可視化するシステムを構築しました。&lt;/p&gt;
-&lt;h2 id="1-負荷試験の目的"&gt;1. 負荷試験の目的
-&lt;/h2&gt;&lt;p&gt;本フェーズにおける負荷試験の主な目的は以下の通りです。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;b&gt;段階的なGETリクエスト負荷の適用&lt;/b&gt;: ターゲットとなるローカルバックエンドサーバーに対し、構造化されたHTTP GETトラフィックを送信します。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;b&gt;仮想ユーザー（VU）の段階的スケーリング&lt;/b&gt;: 仮想ユーザー数を 10 → 30 → 50 → 20 → 0 とプログラム制御に基づいて段階的に増減させます。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;b&gt;Prometheus Remote Writeの検証&lt;/b&gt;: k6の実験的機能である &lt;code&gt;experimental-prometheus-rw&lt;/code&gt; プロトコルを用いて、メトリクスが遅延なくPrometheus時系列データベースにプッシュされることを確認します。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;b&gt;リアルタイム可観測性の確保&lt;/b&gt;: Grafanaを用いて、RPS（Requests Per Second）、アクティブVU、HTTPステータスコード、エンドポイント別リクエスト数、5xxエラー率などの主要業績評価指標（KPI）をリアルタイムに監視します。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;b&gt;サーバーの安定性評価&lt;/b&gt;: ピーク負荷時において、バックエンドサーバーのクラッシュ、リソースリーク、または5xx系エラーが発生しないことを検証します。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id="2-検証環境の構成"&gt;2. 検証環境の構成
-&lt;/h2&gt;&lt;p&gt;本番環境への不要なトラフィック流入やサービス停止を防ぐため、検証はすべてローカルのDockerネットワーク内に限定して実施しました。&lt;/p&gt;
-&lt;h3 id="ターゲットサーバー"&gt;ターゲットサーバー
-&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;&lt;b&gt;WGSローカルバックエンド&lt;/b&gt;: &lt;code&gt;http://localhost:5000&lt;/code&gt;&lt;/li&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 04 Jun 2026 14:24:44 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>BGPセッション切断時における有限状態機械に基づく原因特定と復旧プロトコル</title><link>https://klifehack.com/p/bgp-session-troubleshooting-fsm-analysis/</link><pubDate>Thu, 04 Jun 2026 14:24:44 +0900</pubDate><guid>https://klifehack.com/p/bgp-session-troubleshooting-fsm-analysis/</guid><description>&lt;h1 id="bgpセッション切断におけるトラブルシューティングと予防的ネットワーク設計"&gt;BGPセッション切断におけるトラブルシューティングと予防的ネットワーク設計
+&lt;/h1&gt;&lt;p&gt;高可用性ネットワークにおいて、BGP（Border Gateway Protocol）セッションの切断は、インターネット接続の喪失、拠点間VPNの切断、クラウド相互接続の停止など、即座に重大な影響を及ぼすイベントです。平均復旧時間（MTTR）を最小限に抑えるためには、プロトコルの動作原理に基づいた迅速な診断が不可欠です。&lt;/p&gt;
+&lt;h2 id="1-bgp有限状態機械fsmの遷移状態と診断のポイント"&gt;1. BGP有限状態機械（FSM）の遷移状態と診断のポイント
+&lt;/h2&gt;&lt;p&gt;BGPセッションのトラブルシューティングを開始する際、対象のセッションがBGP有限状態機械（FSM）のどのフェーズで停止しているかを特定することが極めて重要です。&lt;/p&gt;
+&lt;p&gt;BGPのステート遷移は、Idle → Connect → Active → OpenSent → OpenConfirm → Established の順序で進行します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Idle&lt;/b&gt;: BGPプロセスが初期化中、またはリトライタイマーの起動を待機している状態です。この状態で停止している場合、ルーターに対象ネイバーへのルート自体が存在しない可能性があります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Connect&lt;/b&gt;: TCPの3ウェイハンドシェイクの完了を待機している状態です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Active&lt;/b&gt;: TCP接続の確立に失敗し、再試行を繰り返している状態です。L3の到達性（Reachability）に問題があるか、ファイアウォール等でTCPポート179が遮断されている可能性を示唆します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;OpenSent&lt;/b&gt;: TCP接続が確立され、OPENメッセージを送信した状態です。対向ルーターからのOPENメッセージを待機しています。AS番号やBGP識別子（Router ID）の不一致が疑われます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;OpenConfirm&lt;/b&gt;: OPENメッセージを受信し、KEEPALIVEメッセージを待機している状態です。MD5認証の不一致やタイマーの不整合が発生している場合、この状態で停止することがあります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Established&lt;/b&gt;: セッションが完全に確立され、正常に動作している状態です。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id="監視可観測性インフラdockerコンテナ"&gt;監視・可観測性インフラ（Dockerコンテナ）
-&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;&lt;b&gt;Grafana&lt;/b&gt;: &lt;code&gt;http://localhost:3001&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;b&gt;Prometheus&lt;/b&gt;: &lt;code&gt;http://localhost:9090&lt;/code&gt;&lt;/li&gt;
+&lt;hr&gt;
+&lt;h2 id="2-初期診断コマンドの実行手順"&gt;2. 初期診断コマンドの実行手順
+&lt;/h2&gt;&lt;p&gt;障害発生時には、以下のコマンドシーケンスを実行して障害ドメインを切り分けます。&lt;/p&gt;
+&lt;h3 id="ステップ1-全体的なbgpステータスの確認"&gt;ステップ1: 全体的なBGPステータスの確認
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;show ip bgp summary
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;出力結果の「State/PfxRcd」フィールドを確認します。この値が &lt;code&gt;Active&lt;/code&gt; や &lt;code&gt;Idle&lt;/code&gt; の場合はセッションがダウンしています。数値が表示されている場合は、セッションが確立され、その数だけプレフィックスを受信していることを示します。&lt;/p&gt;
+&lt;h3 id="ステップ2-ネイバー詳細情報の確認"&gt;ステップ2: ネイバー詳細情報の確認
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;show ip bgp neighbors 192.168.1.1
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;BGP state&lt;/b&gt;: 現在のFSMステートを確認します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Last reset&lt;/b&gt;: セッションが切断された直近の理由（例: &amp;ldquo;Peer closed the session&amp;rdquo; や &amp;ldquo;Hold time expired&amp;rdquo;）が表示されます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Notification error message&lt;/b&gt;: 送受信されたBGPエラーコードが表示されます。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id="コンポーネント構成"&gt;コンポーネント構成
-&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;k6&lt;/b&gt;: シナリオスクリプトに基づき、並行仮想ユーザー（VU）からターゲットに対してHTTPリクエストを生成する負荷生成エンジンです。&lt;/p&gt;
-&lt;p&gt;💡 &lt;b&gt;Prometheus&lt;/b&gt;: k6からプッシュされた時系列パフォーマンスメトリクスを蓄積するデータストアです。&lt;/p&gt;
-&lt;p&gt;💡 &lt;b&gt;Grafana&lt;/b&gt;: Prometheusをデータソースとしてクエリを投げ、リアルタイムでグラフ描画を行うビジュアライゼーションプラットフォームです。&lt;/p&gt;
-&lt;p&gt;💡 &lt;b&gt;Docker Compose&lt;/b&gt;: Prometheus、Grafana、およびk6を同一の分離されたローカルネットワーク内でオーケストレーションするツールです。&lt;/p&gt;
-&lt;h2 id="3-事前準備コンテナ環境の初期化"&gt;3. 事前準備：コンテナ環境の初期化
-&lt;/h2&gt;&lt;p&gt;過去の試験メトリクスがGrafanaの可視化に混入するのを防ぐため、試験開始前にPrometheusおよびGrafanaコンテナを完全に破棄し、再初期化を行います。&lt;/p&gt;
-&lt;p&gt;PowerShell等のターミナル環境において、コンテナの初期化コマンドを実行します。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;```&lt;/span&gt;powershell
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# プロジェクトディレクトリへ移動&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd &lt;span style="color:#e6db74"&gt;&amp;#34;C:\python-src\WebDevelop_project\wgs_loadtest_lab&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 既存の監視コンテナおよびネットワークの破棄&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose -f docker-compose.monitor.yml down
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# PrometheusとGrafanaをバックグラウンドで再起動&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose -f docker-compose.monitor.yml up -d prometheus grafana
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 起動ステータスの確認&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker ps --filter &lt;span style="color:#e6db74"&gt;&amp;#34;name=wgs-&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
-これにより、過去のテストデータがクリアされたクリーンな状態から計測を開始できます。
-
-## 4. バックエンドサーバーの稼働確認
-
-負荷試験を開始する前に、ターゲットとなるローカルバックエンドサーバーが正常に応答可能な状態にあるかを確認します。
-
-```bash
-```powershell
-curl.exe -I http://localhost:5000
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
-### 期待されるレスポンスヘッダー
-
-```http
-```http
-HTTP/1.1 200 OK
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
-上記のように `200 OK` が返却されれば、バックエンドが正常に起動しており、負荷試験を受け入れ可能であると判断できます。
-
-## 5. k6負荷試験シナリオの設計
-
-負荷試験シナリオスクリプトである `06_final_recording_public_get.js` の実装構成を定義します。
-
-```javascript
-```javascript
-import http from &amp;#34;k6/http&amp;#34;;
-import { check, sleep } from &amp;#34;k6&amp;#34;;
-
-// 200〜499のステータスコードを正常なアプリケーション応答として定義
-http.setResponseCallback(
-http.expectedStatuses({ min: 200, max: 499 })
-);
-
-export const options = {
-stages: [
-{ duration: &amp;#34;30s&amp;#34;, target: 10 }, // 30秒で10 VUまでランプアップ
-{ duration: &amp;#34;30s&amp;#34;, target: 30 }, // 30秒で30 VUまでランプアップ
-{ duration: &amp;#34;30s&amp;#34;, target: 50 }, // 30秒で50 VUまでランプアップ（ピーク負荷）
-{ duration: &amp;#34;30s&amp;#34;, target: 20 }, // 30秒で20 VUまでランプダウン
-{ duration: &amp;#34;30s&amp;#34;, target: 0 } // 30秒で0 VUまでランプダウン
-],
-thresholds: {
-http_req_duration: [&amp;#34;p(95)&amp;amp;lt;2000&amp;#34;], // 95%のリクエストが2000ms以内に完了すること
-http_req_failed: [&amp;#34;rate&amp;amp;lt;0.01&amp;#34;] // エラー率（5xx等）を1%未満に抑えること
-},
-summaryTrendStats: [&amp;#34;avg&amp;#34;, &amp;#34;min&amp;#34;, &amp;#34;med&amp;#34;, &amp;#34;max&amp;#34;, &amp;#34;p(90)&amp;#34;, &amp;#34;p(95)&amp;#34;, &amp;#34;p(99)&amp;#34;]
-};
-
-// Dockerコンテナ内からホストマシンのlocalhostを参照するためのベースURL設定
-const BASE_URL = __ENV.BASE_URL || &amp;#34;http://host.docker.internal:5000&amp;#34;;
-
-// 負荷検証対象のエンドポイント定義
-const endpoints = [
-{ name: &amp;#34;home-root&amp;#34;, path: &amp;#34;/&amp;#34; },
-{ name: &amp;#34;screen-settings&amp;#34;, path: &amp;#34;/api/screen-settings&amp;#34; },
-{ name: &amp;#34;class-schedules&amp;#34;, path: &amp;#34;/api/class-schedules&amp;#34; },
-{ name: &amp;#34;mealmap-places&amp;#34;, path: &amp;#34;/api/mealmap/places&amp;#34; },
-{ name: &amp;#34;exam-catalogs&amp;#34;, path: &amp;#34;/api/exam-catalogs&amp;#34; },
-{ name: &amp;#34;ipep-catalog&amp;#34;, path: &amp;#34;/api/ipep/exam-catalog&amp;#34; },
-{ name: &amp;#34;ipep-random&amp;#34;, path: &amp;#34;/api/ipep/random-question&amp;#34; },
-{ name: &amp;#34;ranking&amp;#34;, path: &amp;#34;/api/ranking&amp;#34; },
-{ name: &amp;#34;notices&amp;#34;, path: &amp;#34;/api/notices&amp;#34; },
-{ name: &amp;#34;posts&amp;#34;, path: &amp;#34;/api/posts&amp;#34; }
-];
-
-export default function () {
-// ターミナルログの流量を抑えるため、5イテレーションごとにログを出力
-if (__ITER % 5 === 0) {
-console.log(`[WGS LOAD TEST] VU=${__VU}, ITER=${__ITER}, target=${BASE_URL}`);
-}
-
-// 定義されたエンドポイントを順次実行
-for (const item of endpoints) {
-const res = http.get(`${BASE_URL}${item.path}`, {
-tags: {
-endpoint: item.name // Grafanaでのフィルタリング用にタグを付与
-}
-});
-
-// サーバーがクラッシュせず、何らかの応答を返していることを検証
-check(res, {
-[`${item.name} no server crash`]: (r) =&amp;amp;gt; r.status &amp;amp;gt; 0 &amp;amp;amp;&amp;amp;amp; r.status &amp;amp;lt; 500
-});
-
-// リクエスト間に100msのウェイトを挿入
-sleep(0.1);
-}
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
-### 実装のポイント
-
-🛠️ &amp;lt;b&amp;gt;http.expectedStatuses({ min: 200, max: 499 })&amp;lt;/b&amp;gt;: `401 Unauthorized` や `404 Not Found` などのクライアントエラーは、アプリケーションロジックが正常に稼働している証拠であるため、テストフレームワーク側で「失敗」としてカウントしないよう除外します。一方、`5xx`系エラーはサーバー側のクラッシュや過負荷を示すため、厳格に失敗として検知します。
-
-🛠️ &amp;lt;b&amp;gt;stages&amp;lt;/b&amp;gt;: 総計測時間は2分30秒（150秒）であり、段階的に負荷を増減させることで、コンテナのオートスケーリングやリソース限界点をシミュレートしやすい構成にしています。
-
-🛠️ &amp;lt;b&amp;gt;tags: { endpoint: item.name }&amp;lt;/b&amp;gt;: 各HTTPリクエストにメタデータを付与することで、Grafana側で特定のエンドポイントにボトルネックがないかをドリルダウンして分析可能にします。
-
-## 6. Grafana可観測性ダッシュボードとPromQL設計
-
-Prometheusに蓄積されたメトリクスを可視化するため、GrafanaのExploreインターフェースおよびダッシュボードにおいてPromQLクエリを設定します。
-
-### A. RPS (Requests Per Second)
-
-```promql
-```promql
-sum(rate(k6_http_reqs_total[10s]))
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
-直近10秒間のスライディングウィンドウにおける、秒間平均HTTPリクエスト数を算出します。
-
-### B. アクティブ仮想ユーザー数 (VUs)
-
-```promql
-```promql
-max_over_time(k6_vus[10s])
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
-k6が生成している現在の同時実行仮想ユーザー数をリアルタイムに追跡します。
-
-### C. HTTPステータスコード別リクエスト数
-
-```promql
-```promql
-sum by (status) (increase(k6_http_reqs_total[2m]))
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
-直近2分間で発生したリクエストをステータスコード（200, 401, 404等）ごとにグルーピングして累積表示します。
-
-### D. エンドポイント別リクエスト数
-
-```promql
-```promql
-sum by (endpoint) (increase(k6_http_reqs_total[2m]))
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
-スクリプト内で付与した `endpoint` タグを基に、どのAPIにトラフィックが集中しているかを可視化します。
-
-### E. 5xx系サーバーエラー検出
-
-```promql
-```promql
-sum(increase(k6_http_reqs_total{status=~&amp;#34;5..&amp;#34;}[2m]))
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
-サーバー内部エラー（HTTP 500〜599）の発生件数を監視し、システムの不安定化を即座に検知します。
-
-⚠️ &amp;lt;b&amp;gt;トラブルシューティング注意点&amp;lt;/b&amp;gt;: 初期検証時、Grafanaのグラフがリアルタイムに更新されない事象が発生しました。原因はGrafanaの自動更新間隔（Auto-Refresh Interval）がデフォルトのままになっていたことでした。これを `5s` に明示的に設定することで、k6からPrometheus Remote Write経由で送られてくる1秒間隔のメトリクスが遅延なく画面上に描画されるようになりました。
-
-## 7. 負荷試験の実行
-
-PowerShellからDocker Composeを呼び出し、k6コンテナを起動して負荷試験を実行します。
-
-```bash
-```powershell
-# k6コンテナによる負荷試験の実行
-docker compose -f docker-compose.monitor.yml --profile test run --rm `
--e BASE_URL=http://host.docker.internal:5000 `
--e K6_PROMETHEUS_RW_PUSH_INTERVAL=1s `
-k6 run -o experimental-prometheus-rw /scripts/06_final_recording_public_get.js
-&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
-### コマンドオプションの解説
-
-🛠️ &amp;lt;b&amp;gt;--profile test&amp;lt;/b&amp;gt;: Composeファイル内の `test` プロファイルに属するk6サービスを有効化します。
-
-🛠️ &amp;lt;b&amp;gt;run --rm&amp;lt;/b&amp;gt;: 試験終了後、不要になった一時コンテナを自動的に削除し、ホストのリソースを解放します。
-
-🛠️ &amp;lt;b&amp;gt;-e K6_PROMETHEUS_RW_PUSH_INTERVAL=1s&amp;lt;/b&amp;gt;: デフォルトのプッシュ間隔を1秒に短縮し、Grafana上でのリアルタイムなグラフ追従性を極限まで高めます。
-
-🛠️ &amp;lt;b&amp;gt;-o experimental-prometheus-rw&amp;lt;/b&amp;gt;: メトリクス出力先としてPrometheus Remote Writeプロトコルを指定します。
-
-## 8. 試験結果の分析
-
-負荷試験完了後、k6から出力された最終サマリーレポートの測定結果です。
-
-| メトリクス項目 | 測定値 |
-| :--- | :--- |
-| &amp;lt;b&amp;gt;総HTTPリクエスト数&amp;lt;/b&amp;gt; | 32,200 |
-| &amp;lt;b&amp;gt;完了イテレーション数&amp;lt;/b&amp;gt; | 3,220 |
-| &amp;lt;b&amp;gt;ピーク仮想ユーザー数 (VUs)&amp;lt;/b&amp;gt; | 50 |
-| &amp;lt;b&amp;gt;中断されたイテレーション数&amp;lt;/b&amp;gt; | 0 |
-| &amp;lt;b&amp;gt;HTTP失敗率 (Error Rate)&amp;lt;/b&amp;gt; | 0.00% |
-| &amp;lt;b&amp;gt;アサーションクリア率 (Checks)&amp;lt;/b&amp;gt; | 100.00% |
-| &amp;lt;b&amp;gt;平均応答時間 (Average Latency)&amp;lt;/b&amp;gt; | 2.73 ms |
-| &amp;lt;b&amp;gt;95パーセンタイル (p95) 応答時間&amp;lt;/b&amp;gt; | 5.88 ms |
-| &amp;lt;b&amp;gt;99パーセンタイル (p99) 応答時間&amp;lt;/b&amp;gt; | 15.26 ms |
-| &amp;lt;b&amp;gt;最大応答時間 (Max Latency)&amp;lt;/b&amp;gt; | 57.09 ms |
-| &amp;lt;b&amp;gt;平均スループット&amp;lt;/b&amp;gt; | ~213.75 reqs/sec |
-
-### 性能評価
-
-🛠️ &amp;lt;b&amp;gt;極めて低いレイテンシ&amp;lt;/b&amp;gt;: 95%のリクエストが5.88ms以内に処理されており、目標値である2000ms（2.0秒）を大幅に下回る極めて良好な応答性能を示しました。
-
-🛠️ &amp;lt;b&amp;gt;エラーフリーの達成&amp;lt;/b&amp;gt;: 総リクエスト32,200件のうち、5xx系エラーおよび接続エラーは0件（0.00%）であり、アサーションクリア率は100.00%を達成しました。ローカル環境のシングルプロセス構成においても、50 VUの同時接続に対してバックエンドが安定してソケットを処理しきれていることが実証されました。
-
-## 9. 可観測性データの可視化分析
-
-Grafanaダッシュボードのリアルタイム監視から、以下の挙動が確認されました。
-
-1. &amp;lt;b&amp;gt;RPSとVUの相関性&amp;lt;/b&amp;gt;: 仮想ユーザー数（VU）の段階的な増減（10 → 30 → 50 → 20 → 0）に完全に比例して、RPSのグラフが綺麗な階段状の放物線を描きました。これは、k6の負荷生成エンジンおよびPrometheusへのデータ転送パイプラインがボトルネックなく機能していることを示します。
-
-2. &amp;lt;b&amp;gt;HTTPステータスコードの分布&amp;lt;/b&amp;gt;: 期待通り、認証不要なエンドポイントへの `200 OK` と、保護されたエンドポイントへの `401 Unauthorized` のみが記録され、不予期な `404` や `500` などのエラーは一切発生しませんでした。
-
-3. &amp;lt;b&amp;gt;エンドポイントの均等分散&amp;lt;/b&amp;gt;: 10個のエンドポイントに対するリクエスト数が完全に均等に推移しており、特定の重いクエリを処理するAPIに偏ることなく、シナリオ通りにラウンドロビンでリクエストが分散されていることが確認されました。
-
-## Lessons Learned
-
-本検証を通じて得られた知見および今後の改善点は以下の通りです。
-
-💡 &amp;lt;b&amp;gt;リアルタイム可視化における更新間隔の重要性&amp;lt;/b&amp;gt;: Prometheus Remote Writeを使用する場合、k6側のプッシュ間隔（`K6_PROMETHEUS_RW_PUSH_INTERVAL`）だけでなく、Grafana側のダッシュボード自動更新間隔（Auto-Refresh）の双方を同期させなければ、データが不連続に見える、あるいは描画が遅延する原因になります。
-
-💡 &amp;lt;b&amp;gt;コンテナ間名前解決の考慮&amp;lt;/b&amp;gt;: Dockerブリッジネットワーク内で実行されるk6からホストマシンのローカルポートにアクセスする際、`localhost` ではなく `host.docker.internal` を適切に解決させる環境変数設計が必須となります。
-
-💡 &amp;lt;b&amp;gt;ホストリソース監視の欠如&amp;lt;/b&amp;gt;: 現在の構成では、k6側から見たアプリケーションの応答性能（外形監視）は取得できていますが、バックエンドプロセスが稼働しているコンテナ自体のCPU使用率やメモリ消費量（内部監視）が統合されていません。今後は、Node.jsバックエンドに `prom-client` などのライブラリを組み込み、`/metrics` エンドポイント経由で内部リソースメトリクスをPrometheusにプルさせる構成への拡張が推奨されます。
-&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>バックエンド設計におけるネットワークプロトコルとリクエストライフサイクルの構造</title><link>https://klifehack.com/p/network-protocols-request-lifecycle-analysis/</link><pubDate>Thu, 04 Jun 2026 10:09:57 +0900</pubDate><guid>https://klifehack.com/p/network-protocols-request-lifecycle-analysis/</guid><description>&lt;h2 id="ネットワークレイヤースタックの構造osi-7階層-vs-tcpip-4階層"&gt;ネットワークレイヤースタックの構造（OSI 7階層 vs TCP/IP 4階層）
+&lt;h3 id="ステップ3-l1l2インターフェース状態の確認"&gt;ステップ3: L1/L2インターフェース状態の確認
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;show interfaces GigabitEthernet0/1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;ステータスが &lt;code&gt;Up/Up&lt;/code&gt; であれば物理層およびデータリンク層は正常です。&lt;code&gt;Up/Down&lt;/code&gt; の場合はカプセル化の不一致やキープアライブの失敗などL2の問題が疑われ、&lt;code&gt;Administratively Down&lt;/code&gt; の場合は手動でシャットダウンされています。&lt;/p&gt;
+&lt;h3 id="ステップ4-l3到達性の検証"&gt;ステップ4: L3到達性の検証
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;ping 192.168.1.1 source Loopback0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;ソースインターフェースを指定して疎通確認を行います。パケットロスが100%の場合はL3経路が存在せず、部分的なロスの場合はリンク品質の低下によるホールドタイマー満了が疑われます。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="3-bgpセッション切断における7つの主な原因と対策"&gt;3. BGPセッション切断における7つの主な原因と対策
+&lt;/h2&gt;&lt;h3 id="原因1-tcp接続の失敗"&gt;原因1: TCP接続の失敗
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: ステートが &lt;code&gt;Active&lt;/code&gt; で固定され、対向のRouter IDが &lt;code&gt;0.0.0.0&lt;/code&gt; と表示されます。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: アクセスリスト（ACL）でTCPポート179が許可されているか確認します。また、BGPのキープアライブはサイズが小さいものの、アップデートメッセージは大きくなるため、経路上のMTU不整合によるパケットドロップがないか確認します。&lt;/p&gt;
+&lt;h3 id="原因2-as番号の不一致"&gt;原因2: AS番号の不一致
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: ステートが &lt;code&gt;Active&lt;/code&gt; と &lt;code&gt;Idle&lt;/code&gt; の間をループし、ログに &lt;code&gt;OPEN message error&lt;/code&gt; が記録されます。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: 自ルーターに設定された &lt;code&gt;neighbor [IP] remote-as [AS]&lt;/code&gt; の値と、対向ルーターの実際のAS番号が一致しているか確認します。&lt;/p&gt;
+&lt;h3 id="原因3-ホールドタイマーの満了hold-timer-expiration"&gt;原因3: ホールドタイマーの満了（Hold Timer Expiration）
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: セッションが断続的にフラッピングし、ログに &lt;code&gt;hold time expired&lt;/code&gt; が出力されます。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: 対向ルーターのCPU高負荷によるKEEPALIVE送信遅延、または回線混雑を確認します。ミリ秒単位での高速な障害検知が必要な場合は、BFD（Bidirectional Forwarding Detection）の導入を検討します。&lt;/p&gt;
+&lt;h3 id="原因4-md5認証の不一致"&gt;原因4: MD5認証の不一致
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: ステートが &lt;code&gt;Active&lt;/code&gt; で停止し、pingは通るものの、ログに &lt;code&gt;MD5 digest error&lt;/code&gt; や &lt;code&gt;%TCP-6-BADAUTH&lt;/code&gt; が出力されます。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: 設定されたパスワードの大文字・小文字の区別、特殊文字、末尾のスペースの有無を再確認します。&lt;/p&gt;
+&lt;h3 id="原因5-アップデートソースupdate-sourceの不一致"&gt;原因5: アップデートソース（Update Source）の不一致
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: ループバックインターフェース同士でピアを確立する際、ループバックIPへのpingは通るものの、BGPステートが &lt;code&gt;Active&lt;/code&gt; のまま遷移しません。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: ピア設定において、明示的にアップデートソースを指定しているか確認します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;router bgp 65001
+ neighbor 192.168.1.2 remote-as 65002
+ neighbor 192.168.1.2 update-source Loopback0
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="原因6-最大受信プレフィックス数の超過"&gt;原因6: 最大受信プレフィックス数の超過
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: セッションが突然切断され、ログに &lt;code&gt;Maximum prefix limit reached&lt;/code&gt; と記録されます。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: 受信プレフィックス数を確認し、必要に応じて制限値を引き上げるか、インバウンドのフィルタリングを強化します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;router bgp 65001
+ neighbor 192.168.1.2 maximum-prefix 10000 80
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="原因7-ルーターのリソース枯渇"&gt;原因7: ルーターのリソース枯渇
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;症状&lt;/b&gt;: 複数のBGPセッションが同時に切断され、CLIの応答が極端に遅くなります。
+🛠️ &lt;b&gt;対策&lt;/b&gt;: &lt;code&gt;show processes cpu sorted&lt;/code&gt; および &lt;code&gt;show processes memory sorted&lt;/code&gt; でリソース消費状況を確認し、不要なフルルートの受信を避け、デフォルトルートのみの受信に切り替えるなどの最適化を行います。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="4-セッションの再確立と検証"&gt;4. セッションの再確立と検証
+&lt;/h2&gt;&lt;p&gt;設定変更を適用した後、セッションをクリアして再ネゴシエーションをトリガーします。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ソフトリセット（推奨：トラフィックへの影響なし）&lt;/b&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;clear ip bgp 192.168.1.2 soft in
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ハードリセット（注意：一時的にトラフィックが遮断されます）&lt;/b&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;clear ip bgp 192.168.1.2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;クリア後、&lt;code&gt;show ip bgp summary&lt;/code&gt; を実行し、ステートが &lt;code&gt;Established&lt;/code&gt;（受信プレフィックス数が数値で表示されている状態）に遷移したことを確認します。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="5-予防的なネットワーク設計"&gt;5. 予防的なネットワーク設計
+&lt;/h2&gt;&lt;p&gt;セッションの安定性を長期的に維持するため、以下の設定をテンプレートとして導入することを推奨します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;router bgp 65001
+ neighbor 192.168.1.2 remote-as 65002
+ neighbor 192.168.1.2 update-source Loopback0
+ neighbor 192.168.1.2 password StrongMD5Key
+ neighbor 192.168.1.2 maximum-prefix 10000 80 warning-only
+ neighbor 192.168.1.2 fall-over bfd
+ timers bgp 10 30
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;⚠️ &lt;b&gt;デバッグ実行時の注意&lt;/b&gt;: 本番環境において、フルルートを受信している状態で &lt;code&gt;debug ip bgp&lt;/code&gt; などのコマンドをフィルタなしで実行すると、CPU使用率が100%に達しルーターがクラッシュする危険性があります。デバッグを行う際は必ず対象のネイバーIPを指定し、検証完了後は速やかに &lt;code&gt;undebug all&lt;/code&gt; を実行してください。&lt;/li&gt;
+&lt;li&gt;💡 &lt;b&gt;切り分けの起点&lt;/b&gt;: BGPセッション障害の約8割は、TCP接続性、AS番号設定、またはホールドタイマー満了に起因します。まずは「ソースインターフェースを指定したping」が通るかどうかを切り分けの起点とすることで、インフラ側の問題かプロトコル設定側の問題かを迅速に特定できます。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>バックエンド設計におけるネットワークプロトコルとリクエストライフサイクルの構造</title><link>https://klifehack.com/p/network-protocols-request-lifecycle-analysis/</link><pubDate>Thu, 04 Jun 2026 10:09:57 +0900</pubDate><guid>https://klifehack.com/p/network-protocols-request-lifecycle-analysis/</guid><description>&lt;h2 id="ネットワークレイヤースタックの構造osi-7階層-vs-tcpip-4階層"&gt;ネットワークレイヤースタックの構造（OSI 7階層 vs TCP/IP 4階層）
 &lt;/h2&gt;&lt;p&gt;バックエンドシステムを設計・構築する上で、ネットワークスタックの理解は不可欠です。以下は、OSI 7階層モデルとTCP/IP 4階層モデルの対応関係、およびバックエンド開発において重要となる技術要素の整理です。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-----------------------------------+-----------------------------------+
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| OSI 7階層モデル | TCP/IP 4階層モデル |

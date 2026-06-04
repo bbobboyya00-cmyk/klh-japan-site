@@ -1,4 +1,91 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 02 Jun 2026 17:02:38 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Detection of Unassociated GIDs and Security Hardening Procedures in Linux Systems</title><link>https://klifehack.com/en/p/linux-security-orphaned-gid-audit/</link><pubDate>Tue, 02 Jun 2026 17:02:38 +0900</pubDate><guid>https://klifehack.com/en/p/linux-security-orphaned-gid-audit/</guid><description>&lt;h1 id="guidelines-for-identifying-and-removing-unnecessary-groups-orphaned-gids-in-linux-systems"&gt;Guidelines for Identifying and Removing Unnecessary Groups (Orphaned GIDs) in Linux Systems
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 04 Jun 2026 14:24:45 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Root Cause Identification and Recovery Protocol Based on Finite State Machine During BGP Session Disconnection</title><link>https://klifehack.com/en/p/bgp-session-troubleshooting-fsm-analysis/</link><pubDate>Thu, 04 Jun 2026 14:24:45 +0900</pubDate><guid>https://klifehack.com/en/p/bgp-session-troubleshooting-fsm-analysis/</guid><description>&lt;h1 id="troubleshooting-and-proactive-network-design-for-bgp-session-disconnections"&gt;Troubleshooting and Proactive Network Design for BGP Session Disconnections
+&lt;/h1&gt;&lt;p&gt;In high-availability networks, a BGP (Border Gateway Protocol) session disconnection is an event that has an immediate and critical impact, such as loss of Internet connectivity, disconnection of site-to-site VPNs, or interruption of cloud interconnections. To minimize the Mean Time to Repair (MTTR), rapid diagnosis based on the protocol&amp;rsquo;s operating principles is essential.&lt;/p&gt;
+&lt;h2 id="1-bgp-finite-state-machine-fsm-transition-states-and-key-diagnostic-points"&gt;1. BGP Finite State Machine (FSM) Transition States and Key Diagnostic Points
+&lt;/h2&gt;&lt;p&gt;When starting BGP session troubleshooting, it is extremely important to identify which phase of the BGP Finite State Machine (FSM) the target session is stuck in.&lt;/p&gt;
+&lt;p&gt;BGP state transitions progress in the following order: Idle → Connect → Active → OpenSent → OpenConfirm → Established.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Idle&lt;/b&gt;: The state where the BGP process is initializing or waiting for the retry timer to start. If stuck in this state, the route to the target neighbor itself may not exist on the router.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Connect&lt;/b&gt;: The state where the router is waiting for the completion of the TCP 3-way handshake.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Active&lt;/b&gt;: The state where the TCP connection establishment has failed and the router is repeatedly retrying. This suggests a potential issue with L3 reachability or that TCP port 179 is blocked by a firewall, etc.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;OpenSent&lt;/b&gt;: The state where the TCP connection has been established and an OPEN message has been sent. The router is waiting for an OPEN message from the peer. A mismatch in AS number or BGP Identifier (Router ID) is suspected.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;OpenConfirm&lt;/b&gt;: The state where the OPEN message has been received and the router is waiting for a KEEPALIVE message. If an MD5 authentication mismatch or timer mismatch occurs, the session may get stuck in this state.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Established&lt;/b&gt;: The state where the session is fully established and operating normally.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="2-execution-procedures-for-initial-diagnostic-commands"&gt;2. Execution Procedures for Initial Diagnostic Commands
+&lt;/h2&gt;&lt;p&gt;When a failure occurs, execute the command sequence to isolate the failure domain.&lt;/p&gt;
+&lt;h3 id="step-1-verify-overall-bgp-status"&gt;Step 1: Verify Overall BGP Status
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;show ip bgp summary
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Verify the &amp;ldquo;State/PfxRcd&amp;rdquo; field in the output. If this value is &lt;b&gt;Active&lt;/b&gt; or &lt;b&gt;Idle&lt;/b&gt;, the session is down. If a numeric value is displayed, it indicates that the session is established and that many prefixes have been received.&lt;/p&gt;
+&lt;h3 id="step-2-verify-detailed-neighbor-information"&gt;Step 2: Verify Detailed Neighbor Information
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;show ip bgp neighbors 192.168.1.1
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;BGP state&lt;/b&gt;: Verifies the current FSM state.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Last reset&lt;/b&gt;: Displays the most recent reason why the session was disconnected (e.g., &amp;ldquo;Peer closed the session&amp;rdquo; or &amp;ldquo;Hold time expired&amp;rdquo;).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Notification error message&lt;/b&gt;: Displays the sent or received BGP error codes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="step-3-verify-l1l2-interface-status"&gt;Step 3: Verify L1/L2 Interface Status
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;show interfaces GigabitEthernet0/1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If the status is &lt;b&gt;Up/Up&lt;/b&gt;, the physical layer and data link layer are normal. If it is &lt;b&gt;Up/Down&lt;/b&gt;, L2 issues such as encapsulation mismatch or keepalive failure are suspected, and if it is &lt;b&gt;Administratively Down&lt;/b&gt;, it has been manually shut down.&lt;/p&gt;
+&lt;h3 id="step-4-verify-l3-reachability"&gt;Step 4: Verify L3 Reachability
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;ping 192.168.1.1 source Loopback0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Perform a connectivity test by specifying the source interface. If packet loss is 100%, an L3 route does not exist; if there is partial loss, hold timer expiration due to degraded link quality is suspected.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="3-seven-major-causes-and-countermeasures-for-bgp-session-disconnections"&gt;3. Seven Major Causes and Countermeasures for BGP Session Disconnections
+&lt;/h2&gt;&lt;p&gt;&lt;b&gt;Cause 1: TCP Connection Failure&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Symptom: The state is stuck in &lt;b&gt;Active&lt;/b&gt;, and the peer&amp;rsquo;s Router ID is displayed as &lt;b&gt;0.0.0.0&lt;/b&gt;.&lt;/p&gt;
+&lt;p&gt;Countermeasure: Verify whether TCP port 179 is allowed in the Access Control List (ACL). Also, while BGP keepalives are small, update messages can be large, so verify whether there are packet drops due to MTU mismatch along the path.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Cause 2: AS Number Mismatch&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Symptom: The state loops between &lt;b&gt;Active&lt;/b&gt; and &lt;b&gt;Idle&lt;/b&gt;, and an &lt;b&gt;OPEN message error&lt;/b&gt; is recorded in the log.&lt;/p&gt;
+&lt;p&gt;Countermeasure: Verify whether the &lt;b&gt;neighbor [IP] remote-as [AS]&lt;/b&gt; value configured on the local router matches the actual AS number of the peer router.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Cause 3: Hold Timer Expiration&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Symptom: The session flaps intermittently, and &lt;b&gt;hold time expired&lt;/b&gt; is output to the log.&lt;/p&gt;
+&lt;p&gt;Countermeasure: Check for KEEPALIVE transmission delays caused by high CPU load on the peer router, or link congestion. If rapid failure detection in milliseconds is required, consider implementing BFD (Bidirectional Forwarding Detection).&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Cause 4: MD5 Authentication Mismatch&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Symptom: The state is stuck in &lt;b&gt;Active&lt;/b&gt;, and while ping succeeds, &lt;b&gt;MD5 digest error&lt;/b&gt; or &lt;b&gt;%TCP-6-BADAUTH&lt;/b&gt; is output to the log.&lt;/p&gt;
+&lt;p&gt;Countermeasure: Double-check the configured password for case sensitivity, special characters, and trailing spaces.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Cause 5: Update Source Mismatch&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Symptom: When establishing a peer relationship between loopback interfaces, pinging the loopback IP succeeds, but the BGP state remains stuck in &lt;b&gt;Active&lt;/b&gt;.&lt;/p&gt;
+&lt;p&gt;Countermeasure: Verify whether the update source is explicitly specified in the peer configuration.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;router bgp 65001
+ neighbor 192.168.1.2 remote-as 65002
+ neighbor 192.168.1.2 update-source Loopback0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;b&gt;Cause 6: Maximum Received Prefix Limit Exceeded&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Symptom: The session is suddenly disconnected, and &lt;b&gt;Maximum prefix limit reached&lt;/b&gt; is recorded in the log.&lt;/p&gt;
+&lt;p&gt;Countermeasure: Verify the number of received prefixes and, if necessary, increase the limit or strengthen inbound filtering.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;router bgp 65001
+ neighbor 192.168.1.2 maximum-prefix 10000 80
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;b&gt;Cause 7: Router Resource Exhaustion&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Symptom: Multiple BGP sessions disconnect simultaneously, and CLI responsiveness becomes extremely slow.&lt;/p&gt;
+&lt;p&gt;Countermeasure: Check resource consumption using &lt;b&gt;show processes cpu sorted&lt;/b&gt; and &lt;b&gt;show processes memory sorted&lt;/b&gt;, and optimize by avoiding the receipt of unnecessary full routes, switching to receiving only default routes, etc.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="4-session-re-establishment-and-verification"&gt;4. Session Re-establishment and Verification
+&lt;/h2&gt;&lt;p&gt;After applying configuration changes, clear the session to trigger renegotiation.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Soft Reset (Recommended: No impact on traffic)&lt;/b&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;clear ip bgp 192.168.1.2 soft in
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Hard Reset (Caution: Traffic is temporarily interrupted)&lt;/b&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;clear ip bgp 192.168.1.2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;After clearing, execute &lt;b&gt;show ip bgp summary&lt;/b&gt; and verify that the state has transitioned to &lt;b&gt;Established&lt;/b&gt; (where the number of received prefixes is displayed as a numeric value).&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="5-proactive-network-design"&gt;5. Proactive Network Design
+&lt;/h2&gt;&lt;p&gt;To maintain session stability over the long term, it is recommended to implement the configuration as a template.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-router-os" data-lang="router-os"&gt;router bgp 65001
+ neighbor 192.168.1.2 remote-as 65002
+ neighbor 192.168.1.2 update-source Loopback0
+ neighbor 192.168.1.2 password StrongMD5Key
+ neighbor 192.168.1.2 maximum-prefix 10000 80 warning-only
+ neighbor 192.168.1.2 fall-over bfd
+ timers bgp 10 30
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Caution When Running Debugs&lt;/b&gt;: In a production environment, executing commands like &lt;b&gt;debug ip bgp&lt;/b&gt; without filters while receiving full routes carries a risk of CPU utilization reaching 100% and crashing the router. When debugging, always specify the target neighbor IP, and promptly execute &lt;b&gt;undebug all&lt;/b&gt; once verification is complete.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Starting Point for Isolation&lt;/b&gt;: Approximately 80% of BGP session failures are caused by TCP connectivity, AS number configuration, or hold timer expiration. By using &amp;ldquo;ping specifying the source interface&amp;rdquo; as the starting point for isolation to see if it succeeds, you can quickly determine whether the issue lies on the infrastructure side or the protocol configuration side.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Detection of Unassociated GIDs and Security Hardening Procedures in Linux Systems</title><link>https://klifehack.com/en/p/linux-security-orphaned-gid-audit/</link><pubDate>Tue, 02 Jun 2026 17:02:38 +0900</pubDate><guid>https://klifehack.com/en/p/linux-security-orphaned-gid-audit/</guid><description>&lt;h1 id="guidelines-for-identifying-and-removing-unnecessary-groups-orphaned-gids-in-linux-systems"&gt;Guidelines for Identifying and Removing Unnecessary Groups (Orphaned GIDs) in Linux Systems
 &lt;/h1&gt;&lt;p&gt;In Linux system operations, the existence of groups defined in the /etc/group file that are not linked to any active user in /etc/passwd (orphaned GIDs) is considered a security management deficiency. Based on item [U-09] of the Technical Vulnerability Analysis and Evaluation Guidelines for Critical Information Infrastructure (2026 Revision), this article details the technical approach to identifying and properly handling these unnecessary GIDs.&lt;/p&gt;
 &lt;h2 id="1-overview-of-vulnerability-and-risk-analysis"&gt;1. Overview of Vulnerability and Risk Analysis
 &lt;/h2&gt;&lt;h3 id="11-objective-of-the-assessment"&gt;1.1 Objective of the Assessment
