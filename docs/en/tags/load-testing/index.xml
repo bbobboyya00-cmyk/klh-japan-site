@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Load-Testing on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/load-testing/</link><description>Recent content in Load-Testing on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 04 Jun 2026 14:05:30 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/load-testing/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Real-Time Observability Pipeline and Step-by-Step Load Testing of a Local Backend Using k6 and Prometheus Remote Write</title><link>https://klifehack.com/en/p/k6-prometheus-observability-pipeline/</link><pubDate>Thu, 04 Jun 2026 14:05:30 +0900</pubDate><guid>https://klifehack.com/en/p/k6-prometheus-observability-pipeline/</guid><description>&lt;h1 id="building-and-verifying-a-real-time-observability-load-testing-pipeline-with-k6-prometheus-and-grafana"&gt;Building and Verifying a Real-Time Observability Load Testing Pipeline with k6, Prometheus, and Grafana
+&lt;/h1&gt;&lt;p&gt;This article explains the procedure for building a real-time observability pipeline combining k6, Prometheus, and Grafana, and conducting step-by-step load testing to verify the performance of a backend server in a local development environment.&lt;/p&gt;
+&lt;p&gt;In this verification, to completely eliminate any impact on the production environment, all containers and target servers are run fully enclosed within the local environment. We built a system that collects metrics output from k6 in real time via the Prometheus Remote Write protocol and visualizes them on Grafana.&lt;/p&gt;
+&lt;h2 id="1-objectives-of-the-load-test"&gt;1. Objectives of the Load Test
+&lt;/h2&gt;&lt;p&gt;The main objectives of the load test in this phase are as follows:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Applying Step-by-Step GET Request Load&lt;/b&gt;: Send structured HTTP GET traffic to the target local backend server.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Step-by-Step Scaling of Virtual Users (VUs)&lt;/b&gt;: Increase and decrease the number of virtual users step-by-step (10 → 30 → 50 → 20 → 0) based on programmatic control.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Verifying Prometheus Remote Write&lt;/b&gt;: Confirm that metrics are pushed to the Prometheus time-series database without delay using k6&amp;rsquo;s experimental feature, the &lt;code&gt;experimental-prometheus-rw&lt;/code&gt; protocol.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Ensuring Real-Time Observability&lt;/b&gt;: Monitor key performance indicators (KPIs) such as RPS (Requests Per Second), active VUs, HTTP status codes, requests per endpoint, and 5xx error rates in real time using Grafana.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Evaluating Server Stability&lt;/b&gt;: Verify that no backend server crashes, resource leaks, or 5xx errors occur during peak load.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="2-verification-environment-configuration"&gt;2. Verification Environment Configuration
+&lt;/h2&gt;&lt;p&gt;To prevent unnecessary traffic flow to the production environment or service disruption, all verifications were conducted strictly within a local Docker network.&lt;/p&gt;
+&lt;h3 id="target-server"&gt;Target Server
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;WGS Local Backend&lt;/b&gt;: &lt;code&gt;http://localhost:5000&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="monitoring-and-observability-infrastructure-docker-containers"&gt;Monitoring and Observability Infrastructure (Docker Containers)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Grafana&lt;/b&gt;: &lt;code&gt;http://localhost:3001&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Prometheus&lt;/b&gt;: &lt;code&gt;http://localhost:9090&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="component-configuration"&gt;Component Configuration
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;k6&lt;/b&gt;: A load generation engine that generates HTTP requests from concurrent virtual users (VUs) to the target based on a scenario script.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Prometheus&lt;/b&gt;: A data store that accumulates time-series performance metrics pushed from k6.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Grafana&lt;/b&gt;: A visualization platform that queries Prometheus as a data source and renders graphs in real time.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Docker Compose&lt;/b&gt;: A tool that orchestrates Prometheus, Grafana, and k6 within the same isolated local network.&lt;/p&gt;
+&lt;h2 id="3-preparation-initializing-the-container-environment"&gt;3. Preparation: Initializing the Container Environment
+&lt;/h2&gt;&lt;p&gt;To prevent past test metrics from mixing into the Grafana visualization, the Prometheus and Grafana containers are completely destroyed and reinitialized before starting the test.&lt;/p&gt;
+&lt;p&gt;Run the container initialization commands in a terminal environment such as PowerShell.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This allows measurement to start from a clean state with past test data cleared.&lt;/p&gt;
+&lt;h2 id="4-verifying-backend-server-operation"&gt;4. Verifying Backend Server Operation
+&lt;/h2&gt;&lt;p&gt;Before starting the load test, verify that the target local backend server is in a state where it can respond normally.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="expected-response-headers"&gt;Expected Response Headers
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-http" data-lang="http"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If &lt;code&gt;200 OK&lt;/code&gt; is returned as shown above, it can be determined that the backend has started normally and is ready to accept the load test.&lt;/p&gt;
+&lt;h2 id="5-designing-the-k6-load-testing-scenario"&gt;5. Designing the k6 Load Testing Scenario
+&lt;/h2&gt;&lt;p&gt;Define the implementation structure of the load testing scenario script, &lt;code&gt;06_final_recording_public_get.js&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="key-implementation-points"&gt;Key Implementation Points
+&lt;/h3&gt;&lt;p&gt;🛠️ &lt;b&gt;http.expectedStatuses({ min: 200, max: 499 })&lt;/b&gt;: Client errors such as &lt;code&gt;401 Unauthorized&lt;/code&gt; or &lt;code&gt;404 Not Found&lt;/code&gt; are evidence that the application logic is running normally, so they are excluded from being counted as &amp;ldquo;failures&amp;rdquo; by the test framework. On the other hand, &lt;code&gt;5xx&lt;/code&gt; errors indicate server-side crashes or overload, so they are strictly detected as failures.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;stages&lt;/b&gt;: The total measurement time is 2 minutes and 30 seconds (150 seconds). By gradually increasing and decreasing the load, the configuration makes it easy to simulate container auto-scaling and resource limits.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;tags: { endpoint: item.name }&lt;/b&gt;: By adding metadata to each HTTP request, it becomes possible to drill down and analyze on the Grafana side whether there is a bottleneck at a specific endpoint.&lt;/p&gt;
+&lt;h2 id="6-grafana-observability-dashboard-and-promql-design"&gt;6. Grafana Observability Dashboard and PromQL Design
+&lt;/h2&gt;&lt;p&gt;To visualize the metrics accumulated in Prometheus, configure PromQL queries in Grafana&amp;rsquo;s Explore interface and dashboards.&lt;/p&gt;
+&lt;h3 id="a-rps-requests-per-second"&gt;A. RPS (Requests Per Second)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-promql" data-lang="promql"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Calculates the average HTTP requests per second within the most recent 10-second sliding window.&lt;/p&gt;
+&lt;h3 id="b-active-virtual-users-vus"&gt;B. Active Virtual Users (VUs)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-promql" data-lang="promql"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Tracks the current concurrent virtual users being generated by k6 in real time.&lt;/p&gt;
+&lt;h3 id="c-requests-by-http-status-code"&gt;C. Requests by HTTP Status Code
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-promql" data-lang="promql"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Groups and cumulatively displays requests that occurred in the last 2 minutes by status code (200, 401, 404, etc.).&lt;/p&gt;
+&lt;h3 id="d-requests-by-endpoint"&gt;D. Requests by Endpoint
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-promql" data-lang="promql"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Visualizes which APIs traffic is concentrated on, based on the &lt;code&gt;endpoint&lt;/code&gt; tag applied within the script.&lt;/p&gt;
+&lt;h3 id="e-5xx-server-error-detection"&gt;E. 5xx Server Error Detection
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-promql" data-lang="promql"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Monitors the occurrence of internal server errors (HTTP 500 to 599) to immediately detect system instability.&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Troubleshooting Note&lt;/b&gt;: During initial verification, an issue occurred where the Grafana graphs did not update in real time. The cause was that Grafana&amp;rsquo;s Auto-Refresh Interval was left at its default. By explicitly setting this to &lt;code&gt;5s&lt;/code&gt;, the 1-second interval metrics sent from k6 via Prometheus Remote Write are now rendered on the screen without delay.&lt;/p&gt;
+&lt;h2 id="7-running-the-load-test"&gt;7. Running the Load Test
+&lt;/h2&gt;&lt;p&gt;Call Docker Compose from PowerShell to start the k6 container and run the load test.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="command-option-explanations"&gt;Command Option Explanations
+&lt;/h3&gt;&lt;p&gt;🛠️ &lt;b&gt;&amp;ndash;profile test&lt;/b&gt;: Enables the k6 service belonging to the &lt;code&gt;test&lt;/code&gt; profile in the Compose file.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;run &amp;ndash;rm&lt;/b&gt;: Automatically deletes temporary containers that are no longer needed after the test completes, freeing up host resources.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;-e K6_PROMETHEUS_RW_PUSH_INTERVAL=1s&lt;/b&gt;: Shortens the default push interval to 1 second, maximizing the real-time graph responsiveness on Grafana.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;-o experimental-prometheus-rw&lt;/b&gt;: Specifies the Prometheus Remote Write protocol as the metrics output destination.&lt;/p&gt;
+&lt;h2 id="8-analysis-of-test-results"&gt;8. Analysis of Test Results
+&lt;/h2&gt;&lt;p&gt;These are the measurement results from the final summary report output by k6 after the load test completed.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Metrics Item&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Measured Value&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Total HTTP Requests&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;32,200&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Completed Iterations&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;3,220&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Peak Virtual Users (VUs)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;50&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Interrupted Iterations&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;0&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;HTTP Failure Rate (Error Rate)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;0.00%&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Assertion Pass Rate (Checks)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;100.00%&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Average Response Time (Average Latency)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;2.73 ms&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;95th Percentile (p95) Response Time&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;5.88 ms&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;99th Percentile (p99) Response Time&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;15.26 ms&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Maximum Response Time (Max Latency)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;57.09 ms&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Average Throughput&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;~213.75 reqs/sec&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="performance-evaluation"&gt;Performance Evaluation
+&lt;/h3&gt;&lt;p&gt;🛠️ &lt;b&gt;Extremely Low Latency&lt;/b&gt;: 95% of requests were processed within 5.88 ms, showing extremely good response performance that is significantly below the target value of 2000 ms (2.0 seconds).&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Achieving Error-Free Execution&lt;/b&gt;: Out of 32,200 total requests, there were 0 (0.00%) 5xx errors or connection errors, achieving a 100.00% assertion pass rate. Even in a single-process configuration in a local environment, it was demonstrated that the backend stably handled sockets against 50 concurrent VUs.&lt;/p&gt;
+&lt;h2 id="9-visualization-analysis-of-observability-data"&gt;9. Visualization Analysis of Observability Data
+&lt;/h2&gt;&lt;p&gt;The following behaviors were confirmed from the real-time monitoring on the Grafana dashboard:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Correlation between RPS and VUs&lt;/b&gt;: Completely proportional to the step-by-step increase and decrease of virtual users (VUs) (10 → 30 → 50 → 20 → 0), the RPS graph drew a clean step-like parabola. This indicates that the k6 load generation engine and the data transfer pipeline to Prometheus functioned without any bottlenecks.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Distribution of HTTP Status Codes&lt;/b&gt;: As expected, only &lt;code&gt;200 OK&lt;/code&gt; for endpoints not requiring authentication and &lt;code&gt;401 Unauthorized&lt;/code&gt; for protected endpoints were recorded, and no unexpected errors such as &lt;code&gt;404&lt;/code&gt; or &lt;code&gt;500&lt;/code&gt; occurred at all.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Even Distribution of Endpoints&lt;/b&gt;: The number of requests to the 10 endpoints remained completely even, confirming that requests were distributed in a round-robin fashion as designed in the scenario, without biasing toward APIs processing specific heavy queries.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;The insights and future improvement points obtained through this verification are as follows:&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Importance of Refresh Intervals in Real-Time Visualization&lt;/b&gt;: When using Prometheus Remote Write, if both the push interval on the k6 side (&lt;code&gt;K6_PROMETHEUS_RW_PUSH_INTERVAL&lt;/code&gt;) and the dashboard auto-refresh interval on the Grafana side are not synchronized, it can cause data to appear discontinuous or rendering to be delayed.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Consideration for Container-to-Container Name Resolution&lt;/b&gt;: When accessing the local port of the host machine from k6 running within a Docker bridge network, an environment variable design that properly resolves &lt;code&gt;host.docker.internal&lt;/code&gt; instead of &lt;code&gt;localhost&lt;/code&gt; is essential.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Lack of Host Resource Monitoring&lt;/b&gt;: In the current configuration, while the application response performance from the perspective of k6 (external monitoring) is captured, the CPU usage and memory consumption of the container itself where the backend process runs (internal monitoring) are not integrated. In the future, it is recommended to extend the configuration by incorporating a library such as &lt;code&gt;prom-client&lt;/code&gt; into the Node.js backend to pull internal resource metrics into Prometheus via a &lt;code&gt;/metrics&lt;/code&gt; endpoint.&lt;/p&gt;</description></item></channel></rss>

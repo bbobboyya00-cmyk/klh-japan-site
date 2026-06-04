@@ -1,0 +1,269 @@
+<!doctype html><html lang=ja dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="k6のPrometheus Remote Writeプロトコルを活用し、ローカルバックエンドに対する段階的負荷試験を実施。Grafanaによるリアルタイム可観測性パイプラインの構築手順と検証結果を解説します。"><title>k6とPrometheus Remote Writeを用いたローカルバックエンドの段階的負荷試験とリアルタイム可観測性パイプラインの構築</title><link rel=canonical href=https://klifehack.com/p/k6-prometheus-observability-pipeline/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.166aa5bdeb7d404471668645f98967b7803f0e24913be8dca78065ece6f0d352.css><meta property='og:title' content="k6とPrometheus Remote Writeを用いたローカルバックエンドの段階的負荷試験とリアルタイム可観測性パイプラインの構築"><meta property='og:description' content="k6のPrometheus Remote Writeプロトコルを活用し、ローカルバックエンドに対する段階的負荷試験を実施。Grafanaによるリアルタイム可観測性パイプラインの構築手順と検証結果を解説します。"><meta property='og:url' content='https://klifehack.com/p/k6-prometheus-observability-pipeline/'><meta property='og:site_name' content='K-Life Hack | システムアーキテクチャ & DevOps'><meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='k6'><meta property='article:tag' content='prometheus-remote-write'><meta property='article:tag' content='grafana'><meta property='article:tag' content='docker-compose'><meta property='article:tag' content='load-testing'><meta property='article:published_time' content='2026-06-04T14:05:29+09:00'><meta property='article:modified_time' content='2026-06-04T14:05:29+09:00'><meta name=twitter:title content="k6とPrometheus Remote Writeを用いたローカルバックエンドの段階的負荷試験とリアルタイム可観測性パイプラインの構築"><meta name=twitter:description content="k6のPrometheus Remote Writeプロトコルを活用し、ローカルバックエンドに対する段階的負荷試験を実施。Grafanaによるリアルタイム可観測性パイプラインの構築手順と検証結果を解説します。"><script async src="https://www.googletagmanager.com/gtag/js?id=G-4KGC4HJF0E"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-4KGC4HJF0E")}</script><link rel=icon href=/favicon.ico type=image/x-icon><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"K-Life Hack | システムアーキテクチャ \u0026 DevOps","item":"https:\/\/klifehack.com\/"},{"@type":"ListItem","position":2,"name":"Posts","item":"https:\/\/klifehack.com\/posts/"},{"@type":"ListItem","position":3,"name":"k6とPrometheus Remote Writeを用いたローカルバックエンドの段階的負荷試験とリアルタイム可観測性パイプラインの構築","item":"https:\/\/klifehack.com\/p\/k6-prometheus-observability-pipeline\/"}]}</script><link rel=alternate hreflang=ja href=https://klifehack.com/p/k6-prometheus-observability-pipeline/><meta property="og:image" content="https://klifehack.com/img/logo.webp"><meta property="twitter:image" content="https://klifehack.com/img/logo.webp"><style>@media(max-width:640px){.pagination{display:flex!important;flex-wrap:nowrap!important;justify-content:center!important;align-items:center!important;overflow:hidden!important;width:100%!important;padding:15px 0!important;margin:0!important;gap:3px!important;box-sizing:border-box!important}.pagination>*{min-width:28px!important;height:32px!important;padding:0 4px!important;text-decoration:none!important;box-sizing:border-box!important;border-radius:4px!important;flex:initial!important}.pagination>:first-child,.pagination>:last-child,.pagination>.pagination-link{min-width:24px!important;padding:0!important}.pagination svg{width:16px!important;height:16px!important;margin:0!important}.pagination>*{display:none!important}.pagination>:first-child,.pagination>:last-child,.pagination>:nth-child(2),.pagination>:nth-last-child(2),.pagination>.pagination-link,.pagination>.current{display:inline-flex!important}.pagination>.current+*,.pagination>.current+*+*{display:inline-flex!important}.pagination>*:has(+.current),.pagination>*:has(+*+.current){display:inline-flex!important}}</style></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=メニューを開く・閉じる>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/persona_k_ambient.webp width=559 height=559 class=site-logo loading=lazy alt=Avatar></a></figure><div class=site-meta><h1 class=site-name><a href=/>K-Life Hack | システムアーキテクチャ & DevOps</a></h1><h2 class=site-description>ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。</h2></div></header><ol class=menu id=main-menu><li><a href=/search/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1014 0A7 7 0 103 10"/><path d="M21 21l-6-6"/></svg>
+<span>検索</span></a></li><li><a href=/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>ホーム</span></a></li><li><a href=/archives/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6a2 2 0 012-2h14a2 2 0 012 2 2 2 0 01-2 2H5A2 2 0 013 6"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><path d="M10 12h4"/></svg>
+<span>アーカイブ</span></a></li><li><a href=/about/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 108 0A4 4 0 008 7"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>紹介</span></a></li><li><a href=mailto:contact@klifehack.com><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7"/><path d="M3 7l9 6 9-6"/></svg>
+<span>お問い合わせ</span></a></li><li class=menu-bottom-section><ol class=menu><li id=i18n-switch><svg class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<select name=language title=language onchange="window.location.href=this.selectedOptions[0].value"><option value=/p/k6-prometheus-observability-pipeline/ selected>日本語</option><option value=/en/p/k6-prometheus-observability-pipeline/>English</option></select></li><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>ダークモード</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><form action=/search/ class="search-form widget"><p><label>検索</label>
+<input name=keyword required placeholder=入力...>
+<button title=検索>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1014 0A7 7 0 103 10"/><path d="M21 21l-6-6"/></svg></button></p></form><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目次</h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ul><li><a href=#1-負荷試験の目的>1. 負荷試験の目的</a></li><li><a href=#2-検証環境の構成>2. 検証環境の構成</a><ul><li><a href=#ターゲットサーバー>ターゲットサーバー</a></li><li><a href=#監視可観測性インフラdockerコンテナ>監視・可観測性インフラ（Dockerコンテナ）</a></li><li><a href=#コンポーネント構成>コンポーネント構成</a></li></ul></li><li><a href=#3-事前準備コンテナ環境の初期化>3. 事前準備：コンテナ環境の初期化</a></li></ul></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-category><a href=/categories/devops-logistics/ style=background-color:#cdbeef;color:#1e0f3d>DevOps Logistics</a></div><div class=article-title-wrapper><h2 class=article-title><a href=/p/k6-prometheus-observability-pipeline/>k6とPrometheus Remote Writeを用いたローカルバックエンドの段階的負荷試験とリアルタイム可観測性パイプラインの構築</a></h2><h3 class=article-subtitle>k6のPrometheus Remote Writeプロトコルを活用し、ローカルバックエンドに対する段階的負荷試験を実施。Grafanaによるリアルタイム可観測性パイプラインの構築手順と検証結果を解説します。</h3></div><div class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-06-04T14:05:29+09:00>2026/06/04</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span class=article-time--reading>読了時間: 11分</span></div><div class=inline-meta><svg class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<a href=/en/p/k6-prometheus-observability-pipeline/ class=link>English</a></div></div></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span>目次</span></div></summary><nav class=toc-nav><ul><li><a href=#1-負荷試験の目的>1. 負荷試験の目的</a></li><li><a href=#2-検証環境の構成>2. 検証環境の構成</a><ul><li><a href=#ターゲットサーバー>ターゲットサーバー</a></li><li><a href=#監視可観測性インフラdockerコンテナ>監視・可観測性インフラ（Dockerコンテナ）</a></li><li><a href=#コンポーネント構成>コンポーネント構成</a></li></ul></li><li><a href=#3-事前準備コンテナ環境の初期化>3. 事前準備：コンテナ環境の初期化</a></li></ul></nav></details></aside><section class=article-content><h1 id=k6prometheusgrafanaによるリアルタイム可観測性負荷試験パイプラインの構築と検証>k6・Prometheus・Grafanaによるリアルタイム可観測性負荷試験パイプラインの構築と検証</h1><p>本稿では、ローカル開発環境におけるバックエンドサーバーの性能検証を目的とした、k6、Prometheus、およびGrafanaを組み合わせたリアルタイム可観測性（Observability）パイプラインの構築と、段階的な負荷試験の実施手順について解説します。</p><p>本検証では、本番環境への影響を完全に排除するため、すべてのコンテナおよびターゲットサーバーをローカル環境内に閉じた状態で実行しています。k6から出力されるメトリクスをPrometheus Remote Writeプロトコル経由でリアルタイムに収集し、Grafana上で可視化するシステムを構築しました。</p><h2 id=1-負荷試験の目的>1. 負荷試験の目的</h2><p>本フェーズにおける負荷試験の主な目的は以下の通りです。</p><ol><li><p><b>段階的なGETリクエスト負荷の適用</b>: ターゲットとなるローカルバックエンドサーバーに対し、構造化されたHTTP GETトラフィックを送信します。</p></li><li><p><b>仮想ユーザー（VU）の段階的スケーリング</b>: 仮想ユーザー数を 10 → 30 → 50 → 20 → 0 とプログラム制御に基づいて段階的に増減させます。</p></li><li><p><b>Prometheus Remote Writeの検証</b>: k6の実験的機能である <code>experimental-prometheus-rw</code> プロトコルを用いて、メトリクスが遅延なくPrometheus時系列データベースにプッシュされることを確認します。</p></li><li><p><b>リアルタイム可観測性の確保</b>: Grafanaを用いて、RPS（Requests Per Second）、アクティブVU、HTTPステータスコード、エンドポイント別リクエスト数、5xxエラー率などの主要業績評価指標（KPI）をリアルタイムに監視します。</p></li><li><p><b>サーバーの安定性評価</b>: ピーク負荷時において、バックエンドサーバーのクラッシュ、リソースリーク、または5xx系エラーが発生しないことを検証します。</p></li></ol><h2 id=2-検証環境の構成>2. 検証環境の構成</h2><p>本番環境への不要なトラフィック流入やサービス停止を防ぐため、検証はすべてローカルのDockerネットワーク内に限定して実施しました。</p><h3 id=ターゲットサーバー>ターゲットサーバー</h3><ul><li><b>WGSローカルバックエンド</b>: <code>http://localhost:5000</code></li></ul><h3 id=監視可観測性インフラdockerコンテナ>監視・可観測性インフラ（Dockerコンテナ）</h3><ul><li><b>Grafana</b>: <code>http://localhost:3001</code></li><li><b>Prometheus</b>: <code>http://localhost:9090</code></li></ul><h3 id=コンポーネント構成>コンポーネント構成</h3><p>💡 <b>k6</b>: シナリオスクリプトに基づき、並行仮想ユーザー（VU）からターゲットに対してHTTPリクエストを生成する負荷生成エンジンです。</p><p>💡 <b>Prometheus</b>: k6からプッシュされた時系列パフォーマンスメトリクスを蓄積するデータストアです。</p><p>💡 <b>Grafana</b>: Prometheusをデータソースとしてクエリを投げ、リアルタイムでグラフ描画を行うビジュアライゼーションプラットフォームです。</p><p>💡 <b>Docker Compose</b>: Prometheus、Grafana、およびk6を同一の分離されたローカルネットワーク内でオーケストレーションするツールです。</p><h2 id=3-事前準備コンテナ環境の初期化>3. 事前準備：コンテナ環境の初期化</h2><p>過去の試験メトリクスがGrafanaの可視化に混入するのを防ぐため、試験開始前にPrometheusおよびGrafanaコンテナを完全に破棄し、再初期化を行います。</p><p>PowerShell等のターミナル環境において、コンテナの初期化コマンドを実行します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#e6db74>```</span>powershell
+</span></span><span style=display:flex><span><span style=color:#75715e># プロジェクトディレクトリへ移動</span>
+</span></span><span style=display:flex><span>cd <span style=color:#e6db74>&#34;C:\python-src\WebDevelop_project\wgs_loadtest_lab&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 既存の監視コンテナおよびネットワークの破棄</span>
+</span></span><span style=display:flex><span>docker compose -f docker-compose.monitor.yml down
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># PrometheusとGrafanaをバックグラウンドで再起動</span>
+</span></span><span style=display:flex><span>docker compose -f docker-compose.monitor.yml up -d prometheus grafana
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 起動ステータスの確認</span>
+</span></span><span style=display:flex><span>docker ps --filter <span style=color:#e6db74>&#34;name=wgs-&#34;</span>
+</span></span></code></pre></div><pre tabindex=0><code>
+これにより、過去のテストデータがクリアされたクリーンな状態から計測を開始できます。
+
+## 4. バックエンドサーバーの稼働確認
+
+負荷試験を開始する前に、ターゲットとなるローカルバックエンドサーバーが正常に応答可能な状態にあるかを確認します。
+
+```bash
+```powershell
+curl.exe -I http://localhost:5000
+</code></pre><pre tabindex=0><code>
+### 期待されるレスポンスヘッダー
+
+```http
+```http
+HTTP/1.1 200 OK
+</code></pre><pre tabindex=0><code>
+上記のように `200 OK` が返却されれば、バックエンドが正常に起動しており、負荷試験を受け入れ可能であると判断できます。
+
+## 5. k6負荷試験シナリオの設計
+
+負荷試験シナリオスクリプトである `06_final_recording_public_get.js` の実装構成を定義します。
+
+```javascript
+```javascript
+import http from &#34;k6/http&#34;;
+import { check, sleep } from &#34;k6&#34;;
+
+// 200〜499のステータスコードを正常なアプリケーション応答として定義
+http.setResponseCallback(
+http.expectedStatuses({ min: 200, max: 499 })
+);
+
+export const options = {
+stages: [
+{ duration: &#34;30s&#34;, target: 10 }, // 30秒で10 VUまでランプアップ
+{ duration: &#34;30s&#34;, target: 30 }, // 30秒で30 VUまでランプアップ
+{ duration: &#34;30s&#34;, target: 50 }, // 30秒で50 VUまでランプアップ（ピーク負荷）
+{ duration: &#34;30s&#34;, target: 20 }, // 30秒で20 VUまでランプダウン
+{ duration: &#34;30s&#34;, target: 0 }   // 30秒で0 VUまでランプダウン
+],
+thresholds: {
+http_req_duration: [&#34;p(95)&amp;lt;2000&#34;], // 95%のリクエストが2000ms以内に完了すること
+http_req_failed: [&#34;rate&amp;lt;0.01&#34;]     // エラー率（5xx等）を1%未満に抑えること
+},
+summaryTrendStats: [&#34;avg&#34;, &#34;min&#34;, &#34;med&#34;, &#34;max&#34;, &#34;p(90)&#34;, &#34;p(95)&#34;, &#34;p(99)&#34;]
+};
+
+// Dockerコンテナ内からホストマシンのlocalhostを参照するためのベースURL設定
+const BASE_URL = __ENV.BASE_URL || &#34;http://host.docker.internal:5000&#34;;
+
+// 負荷検証対象のエンドポイント定義
+const endpoints = [
+{ name: &#34;home-root&#34;, path: &#34;/&#34; },
+{ name: &#34;screen-settings&#34;, path: &#34;/api/screen-settings&#34; },
+{ name: &#34;class-schedules&#34;, path: &#34;/api/class-schedules&#34; },
+{ name: &#34;mealmap-places&#34;, path: &#34;/api/mealmap/places&#34; },
+{ name: &#34;exam-catalogs&#34;, path: &#34;/api/exam-catalogs&#34; },
+{ name: &#34;ipep-catalog&#34;, path: &#34;/api/ipep/exam-catalog&#34; },
+{ name: &#34;ipep-random&#34;, path: &#34;/api/ipep/random-question&#34; },
+{ name: &#34;ranking&#34;, path: &#34;/api/ranking&#34; },
+{ name: &#34;notices&#34;, path: &#34;/api/notices&#34; },
+{ name: &#34;posts&#34;, path: &#34;/api/posts&#34; }
+];
+
+export default function () {
+// ターミナルログの流量を抑えるため、5イテレーションごとにログを出力
+if (__ITER % 5 === 0) {
+console.log(`[WGS LOAD TEST] VU=${__VU}, ITER=${__ITER}, target=${BASE_URL}`);
+}
+
+// 定義されたエンドポイントを順次実行
+for (const item of endpoints) {
+const res = http.get(`${BASE_URL}${item.path}`, {
+tags: {
+endpoint: item.name // Grafanaでのフィルタリング用にタグを付与
+}
+});
+
+// サーバーがクラッシュせず、何らかの応答を返していることを検証
+check(res, {
+[`${item.name} no server crash`]: (r) =&amp;gt; r.status &amp;gt; 0 &amp;amp;&amp;amp; r.status &amp;lt; 500
+});
+
+// リクエスト間に100msのウェイトを挿入
+sleep(0.1);
+}
+}
+</code></pre><pre tabindex=0><code>
+### 実装のポイント
+
+🛠️ &lt;b&gt;http.expectedStatuses({ min: 200, max: 499 })&lt;/b&gt;: `401 Unauthorized` や `404 Not Found` などのクライアントエラーは、アプリケーションロジックが正常に稼働している証拠であるため、テストフレームワーク側で「失敗」としてカウントしないよう除外します。一方、`5xx`系エラーはサーバー側のクラッシュや過負荷を示すため、厳格に失敗として検知します。
+
+🛠️ &lt;b&gt;stages&lt;/b&gt;: 総計測時間は2分30秒（150秒）であり、段階的に負荷を増減させることで、コンテナのオートスケーリングやリソース限界点をシミュレートしやすい構成にしています。
+
+🛠️ &lt;b&gt;tags: { endpoint: item.name }&lt;/b&gt;: 各HTTPリクエストにメタデータを付与することで、Grafana側で特定のエンドポイントにボトルネックがないかをドリルダウンして分析可能にします。
+
+## 6. Grafana可観測性ダッシュボードとPromQL設計
+
+Prometheusに蓄積されたメトリクスを可視化するため、GrafanaのExploreインターフェースおよびダッシュボードにおいてPromQLクエリを設定します。
+
+### A. RPS (Requests Per Second)
+
+```promql
+```promql
+sum(rate(k6_http_reqs_total[10s]))
+</code></pre><pre tabindex=0><code>
+直近10秒間のスライディングウィンドウにおける、秒間平均HTTPリクエスト数を算出します。
+
+### B. アクティブ仮想ユーザー数 (VUs)
+
+```promql
+```promql
+max_over_time(k6_vus[10s])
+</code></pre><pre tabindex=0><code>
+k6が生成している現在の同時実行仮想ユーザー数をリアルタイムに追跡します。
+
+### C. HTTPステータスコード別リクエスト数
+
+```promql
+```promql
+sum by (status) (increase(k6_http_reqs_total[2m]))
+</code></pre><pre tabindex=0><code>
+直近2分間で発生したリクエストをステータスコード（200, 401, 404等）ごとにグルーピングして累積表示します。
+
+### D. エンドポイント別リクエスト数
+
+```promql
+```promql
+sum by (endpoint) (increase(k6_http_reqs_total[2m]))
+</code></pre><pre tabindex=0><code>
+スクリプト内で付与した `endpoint` タグを基に、どのAPIにトラフィックが集中しているかを可視化します。
+
+### E. 5xx系サーバーエラー検出
+
+```promql
+```promql
+sum(increase(k6_http_reqs_total{status=~&#34;5..&#34;}[2m]))
+</code></pre><pre tabindex=0><code>
+サーバー内部エラー（HTTP 500〜599）の発生件数を監視し、システムの不安定化を即座に検知します。
+
+⚠️ &lt;b&gt;トラブルシューティング注意点&lt;/b&gt;: 初期検証時、Grafanaのグラフがリアルタイムに更新されない事象が発生しました。原因はGrafanaの自動更新間隔（Auto-Refresh Interval）がデフォルトのままになっていたことでした。これを `5s` に明示的に設定することで、k6からPrometheus Remote Write経由で送られてくる1秒間隔のメトリクスが遅延なく画面上に描画されるようになりました。
+
+## 7. 負荷試験の実行
+
+PowerShellからDocker Composeを呼び出し、k6コンテナを起動して負荷試験を実行します。
+
+```bash
+```powershell
+# k6コンテナによる負荷試験の実行
+docker compose -f docker-compose.monitor.yml --profile test run --rm `
+-e BASE_URL=http://host.docker.internal:5000 `
+-e K6_PROMETHEUS_RW_PUSH_INTERVAL=1s `
+k6 run -o experimental-prometheus-rw /scripts/06_final_recording_public_get.js
+</code></pre><pre tabindex=0><code>
+### コマンドオプションの解説
+
+🛠️ &lt;b&gt;--profile test&lt;/b&gt;: Composeファイル内の `test` プロファイルに属するk6サービスを有効化します。
+
+🛠️ &lt;b&gt;run --rm&lt;/b&gt;: 試験終了後、不要になった一時コンテナを自動的に削除し、ホストのリソースを解放します。
+
+🛠️ &lt;b&gt;-e K6_PROMETHEUS_RW_PUSH_INTERVAL=1s&lt;/b&gt;: デフォルトのプッシュ間隔を1秒に短縮し、Grafana上でのリアルタイムなグラフ追従性を極限まで高めます。
+
+🛠️ &lt;b&gt;-o experimental-prometheus-rw&lt;/b&gt;: メトリクス出力先としてPrometheus Remote Writeプロトコルを指定します。
+
+## 8. 試験結果の分析
+
+負荷試験完了後、k6から出力された最終サマリーレポートの測定結果です。
+
+| メトリクス項目 | 測定値 |
+| :--- | :--- |
+| &lt;b&gt;総HTTPリクエスト数&lt;/b&gt; | 32,200 |
+| &lt;b&gt;完了イテレーション数&lt;/b&gt; | 3,220 |
+| &lt;b&gt;ピーク仮想ユーザー数 (VUs)&lt;/b&gt; | 50 |
+| &lt;b&gt;中断されたイテレーション数&lt;/b&gt; | 0 |
+| &lt;b&gt;HTTP失敗率 (Error Rate)&lt;/b&gt; | 0.00% |
+| &lt;b&gt;アサーションクリア率 (Checks)&lt;/b&gt; | 100.00% |
+| &lt;b&gt;平均応答時間 (Average Latency)&lt;/b&gt; | 2.73 ms |
+| &lt;b&gt;95パーセンタイル (p95) 応答時間&lt;/b&gt; | 5.88 ms |
+| &lt;b&gt;99パーセンタイル (p99) 応答時間&lt;/b&gt; | 15.26 ms |
+| &lt;b&gt;最大応答時間 (Max Latency)&lt;/b&gt; | 57.09 ms |
+| &lt;b&gt;平均スループット&lt;/b&gt; | ~213.75 reqs/sec |
+
+### 性能評価
+
+🛠️ &lt;b&gt;極めて低いレイテンシ&lt;/b&gt;: 95%のリクエストが5.88ms以内に処理されており、目標値である2000ms（2.0秒）を大幅に下回る極めて良好な応答性能を示しました。
+
+🛠️ &lt;b&gt;エラーフリーの達成&lt;/b&gt;: 総リクエスト32,200件のうち、5xx系エラーおよび接続エラーは0件（0.00%）であり、アサーションクリア率は100.00%を達成しました。ローカル環境のシングルプロセス構成においても、50 VUの同時接続に対してバックエンドが安定してソケットを処理しきれていることが実証されました。
+
+## 9. 可観測性データの可視化分析
+
+Grafanaダッシュボードのリアルタイム監視から、以下の挙動が確認されました。
+
+1. &lt;b&gt;RPSとVUの相関性&lt;/b&gt;: 仮想ユーザー数（VU）の段階的な増減（10 → 30 → 50 → 20 → 0）に完全に比例して、RPSのグラフが綺麗な階段状の放物線を描きました。これは、k6の負荷生成エンジンおよびPrometheusへのデータ転送パイプラインがボトルネックなく機能していることを示します。
+
+2. &lt;b&gt;HTTPステータスコードの分布&lt;/b&gt;: 期待通り、認証不要なエンドポイントへの `200 OK` と、保護されたエンドポイントへの `401 Unauthorized` のみが記録され、不予期な `404` や `500` などのエラーは一切発生しませんでした。
+
+3. &lt;b&gt;エンドポイントの均等分散&lt;/b&gt;: 10個のエンドポイントに対するリクエスト数が完全に均等に推移しており、特定の重いクエリを処理するAPIに偏ることなく、シナリオ通りにラウンドロビンでリクエストが分散されていることが確認されました。
+
+## Lessons Learned
+
+本検証を通じて得られた知見および今後の改善点は以下の通りです。
+
+💡 &lt;b&gt;リアルタイム可視化における更新間隔の重要性&lt;/b&gt;: Prometheus Remote Writeを使用する場合、k6側のプッシュ間隔（`K6_PROMETHEUS_RW_PUSH_INTERVAL`）だけでなく、Grafana側のダッシュボード自動更新間隔（Auto-Refresh）の双方を同期させなければ、データが不連続に見える、あるいは描画が遅延する原因になります。
+
+💡 &lt;b&gt;コンテナ間名前解決の考慮&lt;/b&gt;: Dockerブリッジネットワーク内で実行されるk6からホストマシンのローカルポートにアクセスする際、`localhost` ではなく `host.docker.internal` を適切に解決させる環境変数設計が必須となります。
+
+💡 &lt;b&gt;ホストリソース監視の欠如&lt;/b&gt;: 現在の構成では、k6側から見たアプリケーションの応答性能（外形監視）は取得できていますが、バックエンドプロセスが稼働しているコンテナ自体のCPU使用率やメモリ消費量（内部監視）が統合されていません。今後は、Node.jsバックエンドに `prom-client` などのライブラリを組み込み、`/metrics` エンドポイント経由で内部リソースメトリクスをPrometheusにプルさせる構成への拡張が推奨されます。
+</code></pre></section><footer class="article-meta article-footer"><section class=article-tags><a href=/tags/k6/>K6</a>
+<a href=/tags/prometheus-remote-write/>Prometheus-Remote-Write</a>
+<a href=/tags/grafana/>Grafana</a>
+<a href=/tags/docker-compose/>Docker-Compose</a>
+<a href=/tags/load-testing/>Load-Testing</a></section></footer></article><aside><h2 class=section-title>関連するコンテンツ</h2><div class=subsection-list><div class=article-list--tile><article><a href=/p/gitlab-ci-dind-dood-architecture-conflict/><div class=article-details><h2 class=article-title>GitLab CIにおけるDinDとDooDのアーキテクチャ比較と実装上の競合分析</h2></div></a></article><article><a href=/p/eks-auto-mode-idp-platform-engineering/><div class=article-details><h2 class=article-title>EKS Auto ModeとIDPによるKubernetes運用の抽象化とプラットフォームエンジニアリングの展望</h2></div></a></article><article><a href=/p/npm-typosquatting-mini-shai-hulud-analysis/><div class=article-details><h2 class=article-title>npmエコシステムにおけるサプライチェーン攻撃「Mini Shai-Hulud」の技術解析</h2></div></a></article><article><a href=/p/container-security-scanning-cicd-automation/><div class=article-details><h2 class=article-title>CI/CDパイプラインにおけるコンテナイメージ・セキュリティスキャン自動化の実装</h2></div></a></article><article><a href=/p/software-engineering-evolution-roadmap/><div class=article-details><h2 class=article-title>ソフトウェアエンジニアの技術的進化段階と専門領域のアーキテクチャ分析</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><div class=copyright>&copy;
+2026 K-Life Hack | システムアーキテクチャ & DevOps</div><div class=powerby><a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> で構築されています。<br>テーマ <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.0>Stack</a></b> は <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> によって設計されています。</div></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script><div style=text-align:center;margin-top:15px;font-size:.85em;opacity:.6><a href=/privacy-policy/ style="color:inherit;text-decoration:none;margin:0 10px">Privacy Policy</a>
+<a href=/disclaimer/ style="color:inherit;text-decoration:none;margin:0 10px">Disclaimer</a>
+<a href=mailto:contact@klifehack.com style="color:inherit;text-decoration:none;margin:0 10px">Contact</a></div></body></html>
