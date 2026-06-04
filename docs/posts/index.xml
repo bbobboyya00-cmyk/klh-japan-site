@@ -1,4 +1,107 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 04 Jun 2026 14:24:44 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>BGPセッション切断時における有限状態機械に基づく原因特定と復旧プロトコル</title><link>https://klifehack.com/p/bgp-session-troubleshooting-fsm-analysis/</link><pubDate>Thu, 04 Jun 2026 14:24:44 +0900</pubDate><guid>https://klifehack.com/p/bgp-session-troubleshooting-fsm-analysis/</guid><description>&lt;h1 id="bgpセッション切断におけるトラブルシューティングと予防的ネットワーク設計"&gt;BGPセッション切断におけるトラブルシューティングと予防的ネットワーク設計
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 04 Jun 2026 18:02:34 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub ActionsとSelf-Hosted RunnerによるKubernetesデプロイ自動化の実装</title><link>https://klifehack.com/p/github-actions-k8s-self-hosted-runner/</link><pubDate>Thu, 04 Jun 2026 18:02:34 +0900</pubDate><guid>https://klifehack.com/p/github-actions-k8s-self-hosted-runner/</guid><description>&lt;h2 id="1-概要と目的"&gt;1. 概要と目的
+&lt;/h2&gt;&lt;p&gt;GitHub ActionsとローカルのKubernetes環境を統合し、ソースコードのプッシュからデプロイまでを完全に自動化するCI/CDパイプラインを構築します。手動介入を排除し、ローリングアップデートを自動的に実行するワークフローの確立を目的とします。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;ターゲットワークフロー:&lt;/b&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Git Push:&lt;/b&gt; 開発者が &lt;code&gt;master&lt;/code&gt; ブランチへコードをプッシュ。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Docker Build:&lt;/b&gt; GitHub Actionsがコンテナイメージのビルドをトリガー。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Docker Push:&lt;/b&gt; ビルドされたイメージをDockerHub等のレジストリへプッシュ。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Kubernetes Update:&lt;/b&gt; クラスターが新しいイメージをプルし、ローリングアップデートを実行。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="2-kubernetes接続の確立と認証設定"&gt;2. Kubernetes接続の確立と認証設定
+&lt;/h2&gt;&lt;p&gt;GitHub Actionsが外部からクラスターを操作するためには、適切な認証情報（kubeconfig）の定義が不可欠です。&lt;/p&gt;
+&lt;h3 id="21-kubeconfigの抽出"&gt;2.1 Kubeconfigの抽出
+&lt;/h3&gt;&lt;p&gt;まず、ローカル環境で現在の接続情報を確認し、必要なデータを抽出します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl config view
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;このコマンドから出力されるYAML構造には、クラスターのサーバーURL、証明書データ、およびユーザーコンテキストが含まれます。これをGitHub Secretsに登録しますが、単純なコピー＆ペーストでは改行コードやインデントの崩れにより、PEMブロックのパースエラーが発生するリスクがあります。&lt;/p&gt;
+&lt;h3 id="22-base64エンコーディングによるデータ保護"&gt;2.2 Base64エンコーディングによるデータ保護
+&lt;/h3&gt;&lt;p&gt;証明書データの整合性を保つため、kubeconfigファイルをBase64でエンコードしてからGitHub Secretsに登録する手法を採用します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Windows PowerShell環境での実行例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#66d9ef"&gt;Convert&lt;/span&gt;]::ToBase64String([&lt;span style="color:#66d9ef"&gt;IO.File&lt;/span&gt;]::ReadAllBytes(&lt;span style="color:#e6db74"&gt;&amp;#34;C:\Users\Administrator\.kube\config&amp;#34;&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;取得した文字列をGitHubリポジトリの &lt;code&gt;Settings &amp;amp;gt; Secrets and variables &amp;amp;gt; Actions&lt;/code&gt; に &lt;code&gt;KUBE_CONFIG&lt;/code&gt; という名前で保存します。💡 &lt;b&gt;Base64エンコード&lt;/b&gt;は、CI環境におけるバイナリデータの破損を防ぐための標準的なプラクティスです。&lt;/p&gt;
+&lt;h2 id="3-ワークフローの定義とトラブルシューティング"&gt;3. ワークフローの定義とトラブルシューティング
+&lt;/h2&gt;&lt;h3 id="31-初期ワークフロー構成-githubworkflowsdocker-buildyml"&gt;3.1 初期ワークフロー構成 (&lt;code&gt;.github/workflows/docker-build.yml&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;イメージのビルド、プッシュ、およびデプロイを一貫して実行する初期の定義を構成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build and Deploy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;master&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build-and-deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Docker Login&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;docker/login-action@v3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;username&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.DOCKER_USERNAME }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;password&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.DOCKER_PASSWORD }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build Docker Image&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker build -t ${{ secrets.DOCKER_USERNAME }}/my-tomcat:latest .&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Push Docker Image&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker push ${{ secrets.DOCKER_USERNAME }}/my-tomcat:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; mkdir -p ~/.kube
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34; | base64 -d &amp;amp;gt; ~/.kube/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy to Kubernetes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; kubectl rollout restart deployment tomcat-deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-pemパースエラーの解決"&gt;3.2 PEMパースエラーの解決
+&lt;/h3&gt;&lt;p&gt;GitHub Actionsのログに &lt;code&gt;error: unable to load root certificates: unable to parse bytes as PEM block&lt;/code&gt; が出力される場合、Secretsからデコードされたファイル形式が不正である可能性が高いです。⚠️ 前述のBase64エンコード手法を適用し、ワークフロー内で &lt;code&gt;base64 -d&lt;/code&gt; を用いて復元することで、この問題を確実に回避できます。&lt;/p&gt;
+&lt;h2 id="4-self-hosted-runnerの導入"&gt;4. Self-Hosted Runnerの導入
+&lt;/h2&gt;&lt;h3 id="41-ネットワーク境界の課題"&gt;4.1 ネットワーク境界の課題
+&lt;/h3&gt;&lt;p&gt;GitHubが提供するホスト型ランナー（ubuntu-latest等）を使用する場合、ローカル環境のDocker Desktop（&lt;code&gt;kubernetes.docker.internal&lt;/code&gt;）への名前解決ができず、接続エラーが発生します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Unable to connect to the server: dial tcp: lookup kubernetes.docker.internal: no such host
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この課題を解決するため、ローカルネットワーク内で動作する &lt;b&gt;Self-Hosted Runner&lt;/b&gt; を導入し、内部リソースへの直接アクセスを可能にします。&lt;/p&gt;
+&lt;h3 id="42-windows環境へのインストール手順"&gt;4.2 Windows環境へのインストール手順
+&lt;/h3&gt;&lt;p&gt;GitHubリポジトリの &lt;code&gt;Settings &amp;amp;gt; Actions &amp;amp;gt; Runners&lt;/code&gt; から「New self-hosted runner」を選択します。OSに「Windows」を指定し、提供されるPowerShellスクリプトを実行してランナーを構成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ランナーの配置と設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir actions-runner; cd actions-runner
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# (GitHubから提供されるトークンを使用して設定を実行)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.\config.cmd --url https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//github.com/[&lt;span style="color:#66d9ef"&gt;USER&lt;/span&gt;]/[&lt;span style="color:#66d9ef"&gt;REPO&lt;/span&gt;] --token [&lt;span style="color:#66d9ef"&gt;TOKEN&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.\run.cmd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="43-ワークフローの修正"&gt;4.3 ワークフローの修正
+&lt;/h3&gt;&lt;p&gt;ランナーの指定を &lt;code&gt;self-hosted&lt;/code&gt; に変更し、ローカル環境でのジョブ実行を有効化します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;self-hosted&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-クロスプラットフォームにおけるコマンドの互換性"&gt;5. クロスプラットフォームにおけるコマンドの互換性
+&lt;/h2&gt;&lt;p&gt;Windows上のランナーでシェルを実行する場合、Linux標準の &lt;code&gt;mkdir -p&lt;/code&gt; 等のコマンドが失敗することがあります。🛠️ PowerShellの構文に合わせてステップを調整し、環境依存のエラーを排除する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;shell&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;powershell&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if (!(Test-Path &amp;#34;$HOME\.kube&amp;#34;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; New-Item -ItemType Directory -Path &amp;#34;$HOME\.kube&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String(&amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34;)) | Out-File &amp;#34;$HOME\.kube\config&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-errimagepullの解析とマニフェストの調整"&gt;6. ErrImagePullの解析とマニフェストの調整
+&lt;/h2&gt;&lt;p&gt;デプロイ後にPodが &lt;code&gt;ErrImagePull&lt;/code&gt; 状態になる場合、以下の要因を検証する必要があります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;レジストリへのプッシュ失敗:&lt;/b&gt; イメージがDockerHubに正しく存在するか確認。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Pull Policyの不一致:&lt;/b&gt; &lt;code&gt;imagePullPolicy: Always&lt;/code&gt; が設定されている場合、ローカルにイメージが存在しても常に外部レジストリからの取得を試みます。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;開発環境においてローカルキャッシュのイメージを優先的に使用する場合は、&lt;code&gt;Deployment.yaml&lt;/code&gt; を以下のように修正します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;apps/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;tomcat2-deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;tomcat&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;abungard/my-tomcat:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;imagePullPolicy&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;IfNotPresent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="7-結論と今後の展望"&gt;7. 結論と今後の展望
+&lt;/h2&gt;&lt;p&gt;今回の実装を通じて、GitHub Actionsを用いたCI/CDパイプライン構築における重要な知見が得られました。特に、証明書データのBase64による保護は、CI環境での認証エラーを防ぐための極めて有効な手段です。また、ローカル環境へのデプロイにおいては、ネットワークの到達性を確保するためにSelf-Hosted Runnerが不可欠であることを再確認しました。今後は、&lt;code&gt;latest&lt;/code&gt; タグの運用からGit SHAを用いたバージョン管理への移行、およびArgoCD等のGitOpsツールの導入を検討し、より堅牢なデプロイフローの構築を目指します。&lt;/p&gt;</description></item><item><title>BGPセッション切断時における有限状態機械に基づく原因特定と復旧プロトコル</title><link>https://klifehack.com/p/bgp-session-troubleshooting-fsm-analysis/</link><pubDate>Thu, 04 Jun 2026 14:24:44 +0900</pubDate><guid>https://klifehack.com/p/bgp-session-troubleshooting-fsm-analysis/</guid><description>&lt;h1 id="bgpセッション切断におけるトラブルシューティングと予防的ネットワーク設計"&gt;BGPセッション切断におけるトラブルシューティングと予防的ネットワーク設計
 &lt;/h1&gt;&lt;p&gt;高可用性ネットワークにおいて、BGP（Border Gateway Protocol）セッションの切断は、インターネット接続の喪失、拠点間VPNの切断、クラウド相互接続の停止など、即座に重大な影響を及ぼすイベントです。平均復旧時間（MTTR）を最小限に抑えるためには、プロトコルの動作原理に基づいた迅速な診断が不可欠です。&lt;/p&gt;
 &lt;h2 id="1-bgp有限状態機械fsmの遷移状態と診断のポイント"&gt;1. BGP有限状態機械（FSM）の遷移状態と診断のポイント
 &lt;/h2&gt;&lt;p&gt;BGPセッションのトラブルシューティングを開始する際、対象のセッションがBGP有限状態機械（FSM）のどのフェーズで停止しているかを特定することが極めて重要です。&lt;/p&gt;

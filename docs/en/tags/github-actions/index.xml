@@ -1,4 +1,111 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Github-Actions on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/github-actions/</link><description>Recent content in Github-Actions on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 30 May 2026 10:33:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/github-actions/index.xml" rel="self" type="application/rss+xml"/><item><title>Technical Analysis of the 'Mini Shai-Hulud' npm Ecosystem Supply Chain Attack</title><link>https://klifehack.com/en/p/npm-typosquatting-mini-shai-hulud-analysis/</link><pubDate>Sat, 30 May 2026 10:33:07 +0900</pubDate><guid>https://klifehack.com/en/p/npm-typosquatting-mini-shai-hulud-analysis/</guid><description>&lt;h1 id="analysis-report-of-the-mini-shai-hulud-npm-supply-chain-attack-advanced-credential-theft-methods-exploiting-the-bun-runtime"&gt;Analysis Report of the &amp;ldquo;Mini Shai-Hulud&amp;rdquo; npm Supply Chain Attack: Advanced Credential Theft Methods Exploiting the Bun Runtime
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Github-Actions on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/github-actions/</link><description>Recent content in Github-Actions on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 04 Jun 2026 18:02:35 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/github-actions/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Kubernetes Deployment Automation with GitHub Actions and Self-Hosted Runners</title><link>https://klifehack.com/en/p/github-actions-k8s-self-hosted-runner/</link><pubDate>Thu, 04 Jun 2026 18:02:35 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-k8s-self-hosted-runner/</guid><description>&lt;h2 id="1-overview-and-purpose"&gt;1. Overview and Purpose
+&lt;/h2&gt;&lt;p&gt;The objective is to construct a CI/CD pipeline integrating GitHub Actions with a local Kubernetes environment to automate the transition from source code push to deployment. This workflow eliminates manual intervention and executes automated rolling updates.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Target Workflow:&lt;/b&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Git Push: Developer pushes code to the master branch.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Docker Build: GitHub Actions triggers the container image build.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Docker Push: The built image is pushed to a registry such as DockerHub.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Kubernetes Update: The cluster pulls the new image and executes a rolling update.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="2-establishing-kubernetes-connection-and-authentication-settings"&gt;2. Establishing Kubernetes Connection and Authentication Settings
+&lt;/h2&gt;&lt;p&gt;Defining appropriate authentication credentials (kubeconfig) is essential to allow GitHub Actions to operate the cluster from external environments.&lt;/p&gt;
+&lt;h3 id="21-kubeconfig-extraction"&gt;2.1 Kubeconfig Extraction
+&lt;/h3&gt;&lt;p&gt;Verify the current connection information in the local environment and extract the necessary data.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl config view
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The YAML structure includes the cluster server URL, certificate data, and user context. Registering this in GitHub Secrets requires caution to avoid PEM block parsing errors caused by line break codes or indentation issues.&lt;/p&gt;
+&lt;h3 id="22-data-protection-via-base64-encoding"&gt;2.2 Data Protection via Base64 Encoding
+&lt;/h3&gt;&lt;p&gt;To maintain the integrity of certificate data, the kubeconfig file is encoded in Base64 before registration in GitHub Secrets.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Execution example in Windows PowerShell environment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#66d9ef"&gt;Convert&lt;/span&gt;]::ToBase64String([&lt;span style="color:#66d9ef"&gt;IO.File&lt;/span&gt;]::ReadAllBytes(&lt;span style="color:#e6db74"&gt;&amp;#34;C:\Users\Administrator\.kube\config&amp;#34;&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The resulting string is stored in the GitHub repository under Settings &amp;gt; Secrets and variables &amp;gt; Actions as KUBE_CONFIG. &lt;b&gt;Base64 encoding&lt;/b&gt; prevents binary data corruption in CI environments.&lt;/p&gt;
+&lt;h2 id="3-workflow-definition-and-troubleshooting"&gt;3. Workflow Definition and Troubleshooting
+&lt;/h2&gt;&lt;h3 id="31-initial-workflow-configuration-githubworkflowsdocker-buildyml"&gt;3.1 Initial Workflow Configuration (.github/workflows/docker-build.yml)
+&lt;/h3&gt;&lt;p&gt;The initial definition ensures consistent execution of image building, pushing, and deployment.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build and Deploy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;master&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build-and-deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Docker Login&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;docker/login-action@v3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;username&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.DOCKER_USERNAME }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;password&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.DOCKER_PASSWORD }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build Docker Image&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker build -t ${{ secrets.DOCKER_USERNAME }}/my-tomcat:latest .&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Push Docker Image&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker push ${{ secrets.DOCKER_USERNAME }}/my-tomcat:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; mkdir -p ~/.kube
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34; | base64 -d &amp;amp;gt; ~/.kube/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy to Kubernetes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; kubectl rollout restart deployment tomcat-deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-resolving-pem-parsing-errors"&gt;3.2 Resolving PEM Parsing Errors
+&lt;/h3&gt;&lt;p&gt;If the error &amp;ldquo;unable to load root certificates: unable to parse bytes as PEM block&amp;rdquo; occurs, the decoded file format from Secrets is likely invalid. Applying Base64 encoding and restoring it via base64 -d within the workflow reliably avoids this issue.&lt;/p&gt;
+&lt;h2 id="4-introduction-of-self-hosted-runners"&gt;4. Introduction of Self-Hosted Runners
+&lt;/h2&gt;&lt;h3 id="41-network-boundary-issues"&gt;4.1 Network Boundary Issues
+&lt;/h3&gt;&lt;p&gt;GitHub-hosted runners (ubuntu-latest) fail to resolve the name for Docker Desktop on local environments (kubernetes.docker.internal), resulting in connection errors.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Unable to connect to the server: dial tcp: lookup kubernetes.docker.internal: no such host
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A &lt;b&gt;Self-Hosted Runner&lt;/b&gt; operating within the local network enables direct access to internal resources.&lt;/p&gt;
+&lt;h3 id="42-installation-steps-for-windows"&gt;4.2 Installation Steps for Windows
+&lt;/h3&gt;&lt;p&gt;Select New self-hosted runner from Settings &amp;gt; Actions &amp;gt; Runners. Specify Windows as the OS and execute the PowerShell script to configure the runner.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Runner placement and configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir actions-runner; cd actions-runner
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# (Execute configuration using the token provided by GitHub)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.\config.cmd --url https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//github.com/[&lt;span style="color:#66d9ef"&gt;USER&lt;/span&gt;]/[&lt;span style="color:#66d9ef"&gt;REPO&lt;/span&gt;] --token [&lt;span style="color:#66d9ef"&gt;TOKEN&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.\run.cmd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="43-modifying-the-workflow"&gt;4.3 Modifying the Workflow
+&lt;/h3&gt;&lt;p&gt;Change the runner specification to self-hosted to enable job execution in the local environment.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;self-hosted&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-command-compatibility-in-cross-platform-environments"&gt;5. Command Compatibility in Cross-Platform Environments
+&lt;/h2&gt;&lt;p&gt;Standard Linux commands like mkdir -p may fail on Windows runners. Adjusting steps to match PowerShell syntax eliminates environment-dependent errors.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;shell&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;powershell&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if (!(Test-Path &amp;#34;$HOME\.kube&amp;#34;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; New-Item -ItemType Directory -Path &amp;#34;$HOME\.kube&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String(&amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34;)) | Out-File &amp;#34;$HOME\.kube\config&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-analysis-of-errimagepull-and-manifest-adjustments"&gt;6. Analysis of ErrImagePull and Manifest Adjustments
+&lt;/h2&gt;&lt;p&gt;If a Pod enters the ErrImagePull state, verify the registry push status and the pull policy. If imagePullPolicy: Always is set, the system attempts to retrieve the image from the external registry even if it exists locally.&lt;/p&gt;
+&lt;p&gt;To prioritize locally cached images in a development environment, modify the Deployment manifest.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;apps/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;tomcat2-deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;tomcat&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;abungard/my-tomcat:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;imagePullPolicy&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;IfNotPresent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="7-conclusion-and-future-outlook"&gt;7. Conclusion and Future Outlook
+&lt;/h2&gt;&lt;p&gt;Protecting certificate data with Base64 is an effective method for preventing authentication errors in CI environments. Self-Hosted Runners are indispensable for ensuring network reachability when deploying to local environments. Future improvements include transitioning from latest tags to Git SHAs and introducing GitOps tools such as ArgoCD.&lt;/p&gt;</description></item><item><title>Technical Analysis of the 'Mini Shai-Hulud' npm Ecosystem Supply Chain Attack</title><link>https://klifehack.com/en/p/npm-typosquatting-mini-shai-hulud-analysis/</link><pubDate>Sat, 30 May 2026 10:33:07 +0900</pubDate><guid>https://klifehack.com/en/p/npm-typosquatting-mini-shai-hulud-analysis/</guid><description>&lt;h1 id="analysis-report-of-the-mini-shai-hulud-npm-supply-chain-attack-advanced-credential-theft-methods-exploiting-the-bun-runtime"&gt;Analysis Report of the &amp;ldquo;Mini Shai-Hulud&amp;rdquo; npm Supply Chain Attack: Advanced Credential Theft Methods Exploiting the Bun Runtime
 &lt;/h1&gt;&lt;p&gt;On May 28, 2026, an advanced supply chain attack campaign named &amp;ldquo;Mini Shai-Hulud&amp;rdquo; was identified in the npm ecosystem. This attack distributed 14 malicious packages within a 4-hour window, aiming to immediately extract high-value credentials from cloud environments and CI/CD pipelines. This report analyzes the technical execution flow, evolution for increased stealth, and defense measures required for infrastructure security.&lt;/p&gt;
 &lt;h2 id="1-attack-origin-typosquatting-and-metadata-impersonation"&gt;1. Attack Origin: Typosquatting and Metadata Impersonation
 &lt;/h2&gt;&lt;p&gt;The attacker targeted ecosystems related to OpenSearch and ElasticSearch, which are widely utilized in corporate environments. A maintainer account with the identifier &lt;b&gt;vpmdhaj&lt;/b&gt; employed the following sophisticated methods:&lt;/p&gt;
