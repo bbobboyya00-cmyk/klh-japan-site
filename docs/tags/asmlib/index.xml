@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Asmlib on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/asmlib/</link><description>Recent content in Asmlib on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 05 Jun 2026 18:12:54 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/asmlib/index.xml" rel="self" type="application/rss+xml"/><item><title>VMware環境における2ノードOracle 19c RACのプロビジョニングと共有ストレージ設定</title><link>https://klifehack.com/p/vmware-oracle-19c-rac-provisioning/</link><pubDate>Fri, 05 Jun 2026 18:12:54 +0900</pubDate><guid>https://klifehack.com/p/vmware-oracle-19c-rac-provisioning/</guid><description>&lt;h1 id="vmware環境における2ノードoracle-19c-racのプロビジョニング手順"&gt;VMware環境における2ノードOracle 19c RACのプロビジョニング手順
+&lt;/h1&gt;&lt;p&gt;本稿では、VMware仮想化プラットフォーム上に2ノードのOracle 19c Real Application Clusters (RAC) データベース環境を構築するための、仮想マシンの作成、OS設定、共有ストレージ構成、ASMLibのプロビジョニング、およびGrid Infrastructureの初期セットアップ手順について記述します。&lt;/p&gt;
+&lt;h2 id="1-仮想マシンのプロビジョニング-ノード1-ora191"&gt;1. 仮想マシンのプロビジョニング (ノード1: ORA191)
+&lt;/h2&gt;&lt;p&gt;最初のノード（ホスト名: &lt;b&gt;ORA191&lt;/b&gt;）をベースライン仮想マシンとして作成します。&lt;/p&gt;
+&lt;h3 id="11-ハードウェア仕様およびvm設定"&gt;1.1. ハードウェア仕様およびVM設定
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;VM名&lt;/b&gt;: &lt;code&gt;ORA191&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;プロセッサ&lt;/b&gt;: &lt;b&gt;8 vCPU&lt;/b&gt;（並列処理およびクラスタのオーバーヘッドに対応するため）&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;メモリ&lt;/b&gt;: &lt;b&gt;12 GB&lt;/b&gt;（Oracle Grid InfrastructureおよびDatabaseインスタンスの最小要件を満たすため）&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ネットワーク&lt;/b&gt;: 1次ネットワークアダプタは外部接続（パッケージダウンロード用）のために&lt;b&gt;NAT&lt;/b&gt;に設定&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;I/Oコントローラ&lt;/b&gt;: LSI Logic SAS（推奨デフォルト）&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;仮想ディスクタイプ&lt;/b&gt;: &lt;b&gt;SCSI&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ディスク容量&lt;/b&gt;:&lt;/li&gt;
+&lt;li&gt;システム領域として&lt;b&gt;50 GB&lt;/b&gt;の単一仮想ディスクファイル（&lt;code&gt;.vmdk&lt;/code&gt;）を割り当て&lt;/li&gt;
+&lt;li&gt;💡 データベース作成やパッチ適用時の容量不足を防ぐため、実際の検証環境では&lt;b&gt;100 GB&lt;/b&gt;以上の割り当てを推奨します。&lt;/li&gt;
+&lt;li&gt;ディスクは「単一ファイルとして格納」を選択し、パフォーマンス向上のために事前割り当て（Pre-allocate）オプションの適用を検討します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="2-osのインストールと基本設定"&gt;2. OSのインストールと基本設定
+&lt;/h2&gt;&lt;p&gt;Oracle LinuxまたはCentOSを仮想マシンにインストールします。&lt;/p&gt;
+&lt;h3 id="21-ローカリゼーションとソフトウェア選択"&gt;2.1. ローカリゼーションとソフトウェア選択
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;言語&lt;/b&gt;: English (United States)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;日付と時刻&lt;/b&gt;: タイムゾーンを &lt;b&gt;Asia/Seoul&lt;/b&gt; に設定し、システムクロックを同期&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ソフトウェア選択&lt;/b&gt;: OUIやGrid Setupなどのグラフィカルツールを使用するため、&lt;b&gt;Server with GUI&lt;/b&gt; を選択。さらに以下のパッケージグループを追加します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;KDE&lt;/b&gt;（または任意のデスクトップ環境）&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Compatibility Libraries&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Development Tools&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;System Administration Tools&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="22-手動ディスクパーティショニング"&gt;2.2. 手動ディスクパーティショニング
+&lt;/h3&gt;&lt;p&gt;50 GBの仮想ディスク（&lt;code&gt;sda&lt;/code&gt;）に対して手動パーティショニングを実行します。&lt;/p&gt;
+&lt;h4 id="パーティション構成"&gt;パーティション構成:
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;/boot&lt;/code&gt;: &lt;b&gt;1000 MB&lt;/b&gt;（標準パーティション、&lt;code&gt;ext4&lt;/code&gt; または &lt;code&gt;xfs&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swap&lt;/code&gt;: &lt;b&gt;24000 MB&lt;/b&gt;（24 GB、12 GBのRAM要件に対応するため）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/&lt;/code&gt;（ルート）: &lt;b&gt;残りの全容量&lt;/b&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;⚠️ パーティショニング時に既存のパーティションテーブルを消去する警告が表示される場合がありますが、新規インストールの場合はそのまま進行して問題ありません。&lt;/p&gt;
+&lt;h3 id="23-ネットワークとホスト名の設定"&gt;2.3. ネットワークとホスト名の設定
+&lt;/h3&gt;&lt;p&gt;ネットワーク設定画面で、プライマリインターフェース（&lt;code&gt;ens33&lt;/code&gt;）の「Configure」を選択します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Generalタブ&lt;/b&gt;: &lt;b&gt;&amp;ldquo;Automatically connect to this network when it is available&amp;rdquo;&lt;/b&gt; にチェックを入れ、起動時に自動接続されるようにします。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;接続優先度&lt;/b&gt;: 優先度（Connection Priority）はデフォルトの &lt;code&gt;0&lt;/code&gt; のままとします。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ホスト名&lt;/b&gt;: 静的ホスト名を &lt;code&gt;ora191&lt;/code&gt; に設定し、適用します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="3-osインストール後のカスタマイズ"&gt;3. OSインストール後のカスタマイズ
+&lt;/h2&gt;&lt;h3 id="31-vmware共有フォルダの設定"&gt;3.1. VMware共有フォルダの設定
+&lt;/h3&gt;&lt;p&gt;ホストOSとゲストOS間でのインストールメディア等のファイル転送を容易にするため、VMwareの設定から「Shared Folders」を「Always enabled」に設定し、ホスト側のディレクトリをマウントします。&lt;/p&gt;
+&lt;h3 id="32-oracle-pre-installation-rpmの実行"&gt;3.2. Oracle Pre-installation RPMの実行
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;oracle-database-preinstall-19c&lt;/code&gt; パッケージを使用して、カーネルパラメータ、リソース制限（limits.conf）、および必要なOSユーザーとグループの作成を自動化します。パッケージマネージャー（&lt;code&gt;yum&lt;/code&gt;）がバックグラウンドプロセスによってロックされている場合は、以下の手順でプロセスを終了させてから実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rm -f /var/run/yum.pid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install -y oracle-database-preinstall-19c
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="33-ユーザーおよびグループのカスタマイズ"&gt;3.3. ユーザーおよびグループのカスタマイズ
+&lt;/h3&gt;&lt;p&gt;プリインストールRPMによって作成された &lt;code&gt;oracle&lt;/code&gt; ユーザーに加え、Grid Infrastructure用の &lt;code&gt;grid&lt;/code&gt; ユーザーを手動で作成し、グループ構成を調整します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;groupadd -g &lt;span style="color:#ae81ff"&gt;54321&lt;/span&gt; oinstall
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;groupadd -g &lt;span style="color:#ae81ff"&gt;54322&lt;/span&gt; dba
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;groupadd -g &lt;span style="color:#ae81ff"&gt;54323&lt;/span&gt; oper
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;useradd -u &lt;span style="color:#ae81ff"&gt;1200&lt;/span&gt; -g oinstall -G dba,oper grid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;usermod -u &lt;span style="color:#ae81ff"&gt;1201&lt;/span&gt; -g oinstall -G dba,oper oracle
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="設定の確認"&gt;設定の確認:
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;id oracle&lt;/code&gt; コマンドを実行し、マッピングが正確に行われているか確認します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;uid=1201(oracle)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;gid=54321(oinstall)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;groups=54321(oinstall),54322(dba),54323(oper)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="4-環境変数とシェル制限の設定"&gt;4. 環境変数とシェル制限の設定
+&lt;/h2&gt;&lt;h3 id="41-oracleユーザーの環境変数-homeoraclebash_profile"&gt;4.1. Oracleユーザーの環境変数 (&lt;code&gt;/home/oracle/.bash_profile&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;oracle&lt;/code&gt; ユーザーの &lt;code&gt;.bash_profile&lt;/code&gt; に以下の設定を追加します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_BASE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/u01/app/oracle
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_HOME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$ORACLE_BASE/product/19.3.0/dbhome_1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_SID&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ORA191
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$ORACLE_HOME/bin:$PATH
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;umask &lt;span style="color:#ae81ff"&gt;022&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ORACLE_SID&lt;/code&gt;: 2ノードRACではノードごとに一意である必要があります。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;umask 022&lt;/code&gt;: 新規作成されるファイルおよびディレクトリのデフォルト権限を制御します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="42-gridユーザーの環境変数-homegridbash_profile"&gt;4.2. Gridユーザーの環境変数 (&lt;code&gt;/home/grid/.bash_profile&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;grid&lt;/code&gt; ユーザーの &lt;code&gt;.bash_profile&lt;/code&gt; に以下の設定を追加します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_BASE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/u01/app/grid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_HOME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/u01/app/19.3.0/grid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_SID&lt;span style="color:#f92672"&gt;=&lt;/span&gt;+ASM1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$ORACLE_HOME/bin:$PATH
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;umask &lt;span style="color:#ae81ff"&gt;022&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ORACLE_SID&lt;/code&gt;: ノード1のASMインスタンス識別子として &lt;code&gt;+ASM1&lt;/code&gt; を指定します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="5-ディレクトリ構造の作成と権限設定"&gt;5. ディレクトリ構造の作成と権限設定
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;root&lt;/code&gt; ユーザーでログインし、マウントポイントを作成して所有権と権限を割り当てます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /u01/app/19.3.0/grid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /u01/app/grid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /u01/app/oracle
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chown -R grid:oinstall /u01
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chown -R oracle:oinstall /u01/app/oracle
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod -R &lt;span style="color:#ae81ff"&gt;775&lt;/span&gt; /u01
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="6-ネットワーク設計と名前解決"&gt;6. ネットワーク設計と名前解決
+&lt;/h2&gt;&lt;h3 id="61-インターフェースの確認"&gt;6.1. インターフェースの確認
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;ip addr&lt;/code&gt; コマンドでプライマリインターフェースの状態を確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ip addr show ens33
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;&amp;lt;up,lower_up&amp;gt;&lt;/code&gt; フラグにより、物理層および論理層がアクティブであることを確認します。&lt;/p&gt;
+&lt;h3 id="62-静的な名前解決設定-etchosts"&gt;6.2. 静的な名前解決設定 (&lt;code&gt;/etc/hosts&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;DNSサーバーを使用しない環境向けに、両ノードの &lt;code&gt;/etc/hosts&lt;/code&gt; に以下のマッピングを追加します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Public
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.11 ora191
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.12 ora192
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Private
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;172.16.40.11 ora191-priv
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;172.16.40.12 ora192-priv
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Virtual IP (VIP)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.21 ora191-vip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.22 ora192-vip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# SCAN
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.31 ora-scan
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Private IP&lt;/b&gt;: ノード間のインターコネクトおよびCache Fusion専用の帯域です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Virtual IP (VIP)&lt;/b&gt;: Oracle Clusterwareが管理する高可用性IP。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;SCAN (Single Client Access Name)&lt;/b&gt;: クライアントがクラスタへ接続するための共通エントリポイントです。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="63-ホスト名と時刻同期の設定"&gt;6.3. ホスト名と時刻同期の設定
+&lt;/h3&gt;&lt;p&gt;静的ホスト名を設定し、不要なファイアウォールを無効化します。また、ノード間の時刻ズレによるクラスタ強制終了（Eviction）を防ぐため、NTPを設定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hostnamectl set-hostname ora191
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="7-ノードのクローン作成とノード2の個別設定"&gt;7. ノードのクローン作成とノード2の個別設定
+&lt;/h2&gt;&lt;p&gt;シャットダウンしたノード1（&lt;code&gt;ORA191&lt;/code&gt;）をベースに、ノード2（&lt;code&gt;ORA192&lt;/code&gt;）をクローン作成します。&lt;/p&gt;
+&lt;h3 id="71-フルクローンの実行"&gt;7.1. フルクローンの実行
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;VMwareの管理メニューから「Clone」を選択します。&lt;/li&gt;
+&lt;li&gt;「Clone from current state」を選択します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Clone Type&lt;/b&gt;: &lt;b&gt;Full Clone&lt;/b&gt; を選択します。&lt;/li&gt;
+&lt;li&gt;移行先VM名を &lt;code&gt;ORA192&lt;/code&gt; に指定します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="72-ノード2のホスト名および環境変数のカスタマイズ"&gt;7.2. ノード2のホスト名および環境変数のカスタマイズ
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;ORA192&lt;/code&gt; を起動し、&lt;code&gt;root&lt;/code&gt; ユーザーでログインして個別設定を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hostnamectl set-hostname ora192
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;grid&lt;/code&gt; ユーザーの &lt;code&gt;/home/grid/.bash_profile&lt;/code&gt; のASM SIDを修正します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sed -i &lt;span style="color:#e6db74"&gt;&amp;#39;s/+ASM1/+ASM2/g&amp;#39;&lt;/span&gt; /home/grid/.bash_profile
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;oracle&lt;/code&gt; ユーザーの &lt;code&gt;/home/oracle/.bash_profile&lt;/code&gt; のデータベースSIDを修正します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sed -i &lt;span style="color:#e6db74"&gt;&amp;#39;s/ORA191/ORA192/g&amp;#39;&lt;/span&gt; /home/oracle/.bash_profile
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="8-asmlibのインストール"&gt;8. ASMLibのインストール
+&lt;/h2&gt;&lt;p&gt;ASMディスクの管理を容易にするため、&lt;b&gt;両方のノード&lt;/b&gt;で以下のパッケージをインストールします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install -y oracleasm-support kmod-oracleasm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install -y oracleasmlib
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="9-共有ストレージ設定-vmware-vmxファイルの編集"&gt;9. 共有ストレージ設定 (VMware VMXファイルの編集)
+&lt;/h2&gt;&lt;p&gt;Oracle RACでは、両ノードから同時に読み書き可能な共有ディスクが必要です。&lt;/p&gt;
+&lt;h3 id="91-ノード1-ora191-への共有ディスク追加"&gt;9.1. ノード1 (&lt;code&gt;ORA191&lt;/code&gt;) への共有ディスク追加
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;ORA191&lt;/code&gt; の設定画面から「Add &amp;gt; Hard Disk」を選択。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;SCSI&lt;/b&gt; を選択し、必要な容量を割り当てます。&lt;/li&gt;
+&lt;li&gt;追加した各ディスクの「Advanced」プロパティを開き、&lt;b&gt;Independent&lt;/b&gt; および &lt;b&gt;Persistent&lt;/b&gt; にチェックを入れます。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="92-vmx-設定ファイルの編集"&gt;9.2. &lt;code&gt;.vmx&lt;/code&gt; 設定ファイルの編集
+&lt;/h3&gt;&lt;p&gt;両方のVMがロック競合を起こさずに同一ディスクにアクセスできるよう、各ノードの &lt;code&gt;.vmx&lt;/code&gt; ファイルを編集します。両方のファイルの末尾に以下のパラメータを追加します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;disk.locking = &amp;#34;FALSE&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;diskLib.dataCacheMaxSize = &amp;#34;0&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scsi0.sharedBus = &amp;#34;virtual&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;disk.locking = &amp;quot;FALSE&amp;quot;&lt;/code&gt;: VMwareによるディスクロックを無効化します。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;scsi0.sharedBus = &amp;quot;virtual&amp;quot;&lt;/code&gt;: 複数VM間でのSCSIバス共有を可能にします。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="10-プライベートネットワークアダプタの追加"&gt;10. プライベートネットワークアダプタの追加
+&lt;/h2&gt;&lt;p&gt;ノード間のインターコネクト用に、2枚目のネットワークアダプタを追加します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;ORA191&lt;/code&gt; の設定から「Add &amp;gt; Network Adapter」を選択。&lt;/li&gt;
+&lt;li&gt;ネットワーク接続タイプを &lt;b&gt;Host-only&lt;/b&gt; に設定。&lt;/li&gt;
+&lt;li&gt;「Advanced」から「Generate」をクリックし、一意のMACアドレスを生成します。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ORA192&lt;/code&gt; に対しても同様の手順を実行し、必ずMACアドレスを再生成してください。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="11-プライベートネットワークインターフェースの設定-ens36"&gt;11. プライベートネットワークインターフェースの設定 (ens36)
+&lt;/h2&gt;&lt;h3 id="111-ノード1-ora191-の設定"&gt;11.1. ノード1 (&lt;code&gt;ORA191&lt;/code&gt;) の設定
+&lt;/h3&gt;&lt;p&gt;IPv4設定を「Manual」に変更し、以下のように設定します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Address&lt;/b&gt;: &lt;code&gt;172.16.40.11&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Netmask&lt;/b&gt;: &lt;code&gt;255.255.255.0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="112-ノード2-ora192-の設定"&gt;11.2. ノード2 (&lt;code&gt;ORA192&lt;/code&gt;) の設定
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Address&lt;/b&gt;: &lt;code&gt;172.16.40.12&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Netmask&lt;/b&gt;: &lt;code&gt;255.255.255.0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="12-asmディスクのプロビジョニング"&gt;12. ASMディスクのプロビジョニング
+&lt;/h2&gt;&lt;h3 id="121-asmlibの初期化-両ノード"&gt;12.1. ASMLibの初期化 (両ノード)
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;両方のノード&lt;/b&gt;で &lt;code&gt;root&lt;/code&gt; ユーザーとして初期化ユーティリティを実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm configure -i
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Owner user: &lt;code&gt;grid&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Owner group: &lt;code&gt;dba&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Start on boot: &lt;code&gt;y&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Scan on boot: &lt;code&gt;y&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm init
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="122-ディスクパーティショニング-ノード1のみ"&gt;12.2. ディスクパーティショニング (ノード1のみ)
+&lt;/h3&gt;&lt;p&gt;追加した共有ディスクを、&lt;b&gt;ノード1のみ&lt;/b&gt;でパーティショニングします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fdisk /dev/sdb
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# n -&amp;amp;gt; p -&amp;amp;gt; 1 -&amp;amp;gt; default -&amp;amp;gt; default -&amp;amp;gt; w&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="123-asmディスクの作成-ノード1のみ"&gt;12.3. ASMディスクの作成 (ノード1のみ)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm createdisk ASMDISK01 /dev/sdb1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="124-ノード2でのディスクスキャン"&gt;12.4. ノード2でのディスクスキャン
+&lt;/h3&gt;&lt;p&gt;作成したディスクをノード2に認識させるため、スキャンを実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Node 1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm scandisks
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Node 2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm scandisks
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm listdisks
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="13-grid-infrastructureのインストール"&gt;13. Grid Infrastructureのインストール
+&lt;/h2&gt;&lt;h3 id="131-インストール前処理"&gt;13.1. インストール前処理
+&lt;/h3&gt;&lt;p&gt;DNS競合を防ぐため、&lt;b&gt;両ノード&lt;/b&gt;で &lt;code&gt;avahi-daemon&lt;/code&gt; を停止します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop avahi-daemon
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable avahi-daemon
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ノード1の &lt;code&gt;grid&lt;/code&gt; ユーザーでインストールメディアを展開します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd $ORACLE_HOME
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;unzip -q /mnt/hgfs/shared/LINUX.X64_193000_grid_home.zip
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./gridSetup.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="132-セットアップウィザードの要点"&gt;13.2. セットアップウィザードの要点
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Cluster Type&lt;/b&gt;: &lt;b&gt;Configure a Standalone Cluster&lt;/b&gt; を選択。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cluster Node Information&lt;/b&gt;: ノード2 (&lt;code&gt;ora192&lt;/code&gt;, &lt;code&gt;ora192-vip&lt;/code&gt;) を追加。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;SSH Connectivity&lt;/b&gt;: &lt;code&gt;grid&lt;/code&gt; ユーザーのパスワードを入力し「Setup」を実行。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Network Interface&lt;/b&gt;: &lt;code&gt;ens33&lt;/code&gt; を &lt;b&gt;Public&lt;/b&gt;、&lt;code&gt;ens36&lt;/code&gt; を &lt;b&gt;1st Private&lt;/b&gt; に設定。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Storage&lt;/b&gt;: &lt;b&gt;Use ASM&lt;/b&gt; を選択し、Discovery Path を &lt;code&gt;/dev/oracleasm/disks/*&lt;/code&gt; に設定。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;本手順で構築した環境は、VMware Workstation等のハイパーバイザー上で動作する2ノードRACの最小構成モデルです。実稼働環境への適用にあたっては、共有ストレージの物理的な冗長化（SAN/NASマルチパス設定）や、ネットワークのチーミング（Bonding）を別途検討する必要があります。特に &lt;code&gt;.vmx&lt;/code&gt; における &lt;code&gt;disk.locking = &amp;quot;FALSE&amp;quot;&lt;/code&gt; 設定は、Clusterwareが停止している状態で両ノードから直接マウントを行うとデータ破損を招くリスクがあるため、運用管理には細心の注意を払ってください。&amp;lt;/up,lower_up&amp;gt;&lt;/p&gt;</description></item></channel></rss>

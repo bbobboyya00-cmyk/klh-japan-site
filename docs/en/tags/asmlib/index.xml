@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Asmlib on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/asmlib/</link><description>Recent content in Asmlib on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 05 Jun 2026 18:12:54 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/asmlib/index.xml" rel="self" type="application/rss+xml"/><item><title>Provisioning and Shared Storage Configuration of a 2-Node Oracle 19c RAC in a VMware Environment</title><link>https://klifehack.com/en/p/vmware-oracle-19c-rac-provisioning/</link><pubDate>Fri, 05 Jun 2026 18:12:54 +0900</pubDate><guid>https://klifehack.com/en/p/vmware-oracle-19c-rac-provisioning/</guid><description>&lt;h1 id="provisioning-procedure-for-a-2-node-oracle-19c-rac-in-a-vmware-environment"&gt;Provisioning Procedure for a 2-Node Oracle 19c RAC in a VMware Environment
+&lt;/h1&gt;&lt;p&gt;This document describes the procedures for creating virtual machines, configuring the OS, setting up shared storage, provisioning ASMLib, and performing the initial setup of Grid Infrastructure to build a 2-node Oracle 19c Real Application Clusters (RAC) database environment on a VMware virtualization platform.&lt;/p&gt;
+&lt;h2 id="1-virtual-machine-provisioning-node-1-ora191"&gt;1. Virtual Machine Provisioning (Node 1: ORA191)
+&lt;/h2&gt;&lt;p&gt;Create the first node (hostname: &lt;b&gt;ORA191&lt;/b&gt;) as the baseline virtual machine.&lt;/p&gt;
+&lt;h3 id="11-hardware-specifications-and-vm-settings"&gt;1.1. Hardware Specifications and VM Settings
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;VM Name&lt;/b&gt;: &lt;code&gt;ORA191&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Processors&lt;/b&gt;: &lt;b&gt;8 vCPUs&lt;/b&gt; (to handle parallel processing and cluster overhead)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Memory&lt;/b&gt;: &lt;b&gt;12 GB&lt;/b&gt; (to meet the minimum requirements for Oracle Grid Infrastructure and Database instances)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Network&lt;/b&gt;: The primary network adapter is configured as &lt;b&gt;NAT&lt;/b&gt; for external connectivity (for downloading packages)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;I/O Controller&lt;/b&gt;: LSI Logic SAS (recommended default)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Virtual Disk Type&lt;/b&gt;: &lt;b&gt;SCSI&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Disk Capacity&lt;/b&gt;:
+&lt;ul&gt;
+&lt;li&gt;Allocate a single virtual disk file (&lt;code&gt;.vmdk&lt;/code&gt;) of &lt;b&gt;50 GB&lt;/b&gt; for the system area&lt;/li&gt;
+&lt;li&gt;💡 To prevent disk space shortages during database creation or patching, an allocation of &lt;b&gt;100 GB&lt;/b&gt; or more is recommended in actual verification environments.&lt;/li&gt;
+&lt;li&gt;Select &amp;ldquo;Store virtual disk as a single file&amp;rdquo; and consider applying the pre-allocate option to improve performance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="2-os-installation-and-basic-configuration"&gt;2. OS Installation and Basic Configuration
+&lt;/h2&gt;&lt;p&gt;Install Oracle Linux or CentOS on the virtual machine.&lt;/p&gt;
+&lt;h3 id="21-localization-and-software-selection"&gt;2.1. Localization and Software Selection
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Language&lt;/b&gt;: English (United States)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Date &amp;amp; Time&lt;/b&gt;: Set the timezone to &lt;b&gt;Asia/Seoul&lt;/b&gt; and synchronize the system clock&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Software Selection&lt;/b&gt;: Select &lt;b&gt;Server with GUI&lt;/b&gt; to use graphical tools such as OUI and Grid Setup. Additionally, add the following package groups:
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;KDE&lt;/b&gt; (or any preferred desktop environment)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Compatibility Libraries&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Development Tools&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;System Administration Tools&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="22-manual-disk-partitioning"&gt;2.2. Manual Disk Partitioning
+&lt;/h3&gt;&lt;p&gt;Perform manual partitioning on the 50 GB virtual disk (&lt;code&gt;sda&lt;/code&gt;).&lt;/p&gt;
+&lt;h4 id="partition-configuration"&gt;Partition Configuration:
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;/boot&lt;/code&gt;: &lt;b&gt;1000 MB&lt;/b&gt; (standard partition, &lt;code&gt;ext4&lt;/code&gt; or &lt;code&gt;xfs&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;swap&lt;/code&gt;: &lt;b&gt;24000 MB&lt;/b&gt; (24 GB, to accommodate the 12 GB RAM requirement)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/&lt;/code&gt; (root): &lt;b&gt;All remaining capacity&lt;/b&gt;
+⚠️ A warning about erasing the existing partition table may appear during partitioning, but for a new installation, you can proceed without issue.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="23-network-and-hostname-configuration"&gt;2.3. Network and Hostname Configuration
+&lt;/h3&gt;&lt;p&gt;In the network configuration screen, select &amp;ldquo;Configure&amp;rdquo; for the primary interface (&lt;code&gt;ens33&lt;/code&gt;).&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;General Tab&lt;/b&gt;: Check &lt;b&gt;&amp;ldquo;Automatically connect to this network when it is available&amp;rdquo;&lt;/b&gt; to ensure automatic connection on boot.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Connection Priority&lt;/b&gt;: Leave the connection priority at the default value of &lt;code&gt;0&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Hostname&lt;/b&gt;: Set the static hostname to &lt;code&gt;ora191&lt;/code&gt; and apply.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="3-post-os-installation-customization"&gt;3. Post-OS Installation Customization
+&lt;/h2&gt;&lt;h3 id="31-vmware-shared-folders-configuration"&gt;3.1. VMware Shared Folders Configuration
+&lt;/h3&gt;&lt;p&gt;To facilitate file transfers such as installation media between the host OS and guest OS, set &amp;ldquo;Shared Folders&amp;rdquo; to &amp;ldquo;Always enabled&amp;rdquo; in the VMware settings and mount the host-side directory.&lt;/p&gt;
+&lt;h3 id="32-running-the-oracle-pre-installation-rpm"&gt;3.2. Running the Oracle Pre-installation RPM
+&lt;/h3&gt;&lt;p&gt;Use the &lt;code&gt;oracle-database-preinstall-19c&lt;/code&gt; package to automate the configuration of kernel parameters, resource limits (limits.conf), and the creation of required OS users and groups. If the package manager (&lt;code&gt;yum&lt;/code&gt;) is locked by a background process, terminate the process using the following steps before running it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rm -f /var/run/yum.pid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install -y oracle-database-preinstall-19c
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="33-customizing-users-and-groups"&gt;3.3. Customizing Users and Groups
+&lt;/h3&gt;&lt;p&gt;In addition to the &lt;code&gt;oracle&lt;/code&gt; user created by the pre-installation RPM, manually create the &lt;code&gt;grid&lt;/code&gt; user for Grid Infrastructure and adjust the group configuration.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;groupadd -g &lt;span style="color:#ae81ff"&gt;54321&lt;/span&gt; oinstall
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;groupadd -g &lt;span style="color:#ae81ff"&gt;54322&lt;/span&gt; dba
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;groupadd -g &lt;span style="color:#ae81ff"&gt;54323&lt;/span&gt; oper
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;useradd -u &lt;span style="color:#ae81ff"&gt;1200&lt;/span&gt; -g oinstall -G dba,oper grid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;usermod -u &lt;span style="color:#ae81ff"&gt;1201&lt;/span&gt; -g oinstall -G dba,oper oracle
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="verifying-the-configuration"&gt;Verifying the Configuration:
+&lt;/h4&gt;&lt;p&gt;Run the &lt;code&gt;id oracle&lt;/code&gt; command to verify that the mapping is correct.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;uid=1201(oracle)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;gid=54321(oinstall)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;groups=54321(oinstall),54322(dba),54323(oper)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="4-configuring-environment-variables-and-shell-limits"&gt;4. Configuring Environment Variables and Shell Limits
+&lt;/h2&gt;&lt;h3 id="41-oracle-user-environment-variables-homeoraclebash_profile"&gt;4.1. Oracle User Environment Variables (&lt;code&gt;/home/oracle/.bash_profile&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;Add the following settings to the &lt;code&gt;.bash_profile&lt;/code&gt; of the &lt;code&gt;oracle&lt;/code&gt; user.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_BASE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/u01/app/oracle
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_HOME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$ORACLE_BASE/product/19.3.0/dbhome_1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_SID&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ORA191
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$ORACLE_HOME/bin:$PATH
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;umask &lt;span style="color:#ae81ff"&gt;022&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ORACLE_SID&lt;/code&gt;: Must be unique for each node in a 2-node RAC.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;umask 022&lt;/code&gt;: Controls the default permissions for newly created files and directories.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="42-grid-user-environment-variables-homegridbash_profile"&gt;4.2. Grid User Environment Variables (&lt;code&gt;/home/grid/.bash_profile&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;Add the following settings to the &lt;code&gt;.bash_profile&lt;/code&gt; of the &lt;code&gt;grid&lt;/code&gt; user.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_BASE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/u01/app/grid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_HOME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/u01/app/19.3.0/grid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export ORACLE_SID&lt;span style="color:#f92672"&gt;=&lt;/span&gt;+ASM1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$ORACLE_HOME/bin:$PATH
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;umask &lt;span style="color:#ae81ff"&gt;022&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ORACLE_SID&lt;/code&gt;: Specifies &lt;code&gt;+ASM1&lt;/code&gt; as the ASM instance identifier for Node 1.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="5-creating-directory-structure-and-setting-permissions"&gt;5. Creating Directory Structure and Setting Permissions
+&lt;/h2&gt;&lt;p&gt;Log in as the &lt;code&gt;root&lt;/code&gt; user, create the mount points, and assign ownership and permissions.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /u01/app/19.3.0/grid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /u01/app/grid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /u01/app/oracle
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chown -R grid:oinstall /u01
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chown -R oracle:oinstall /u01/app/oracle
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod -R &lt;span style="color:#ae81ff"&gt;775&lt;/span&gt; /u01
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="6-network-design-and-name-resolution"&gt;6. Network Design and Name Resolution
+&lt;/h2&gt;&lt;h3 id="61-verifying-interfaces"&gt;6.1. Verifying Interfaces
+&lt;/h3&gt;&lt;p&gt;Verify the status of the primary interface using the &lt;code&gt;ip addr&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ip addr show ens33
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Confirm that the physical and logical layers are active via the &lt;code&gt;&amp;lt;up,lower_up&amp;gt;&lt;/code&gt; flags.&amp;lt;/up,lower_up&amp;gt;&lt;/p&gt;
+&lt;h3 id="62-static-name-resolution-configuration-etchosts"&gt;6.2. Static Name Resolution Configuration (&lt;code&gt;/etc/hosts&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;For environments without a DNS server, add the following mappings to &lt;code&gt;/etc/hosts&lt;/code&gt; on both nodes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Public
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.11 ora191
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.12 ora192
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Private
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;172.16.40.11 ora191-priv
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;172.16.40.12 ora192-priv
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Virtual IP (VIP)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.21 ora191-vip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.22 ora192-vip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# SCAN
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.31 ora-scan
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Private IP&lt;/b&gt;: Dedicated bandwidth for interconnect and Cache Fusion between nodes.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Virtual IP (VIP)&lt;/b&gt;: High-availability IP managed by Oracle Clusterware.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;SCAN (Single Client Access Name)&lt;/b&gt;: Common entry point for clients to connect to the cluster.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="63-hostname-and-time-synchronization-configuration"&gt;6.3. Hostname and Time Synchronization Configuration
+&lt;/h3&gt;&lt;p&gt;Set the static hostname and disable unnecessary firewalls. Also, configure NTP to prevent cluster eviction caused by time drift between nodes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hostnamectl set-hostname ora191
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="7-node-cloning-and-node-2-specific-configuration"&gt;7. Node Cloning and Node 2 Specific Configuration
+&lt;/h2&gt;&lt;p&gt;Clone Node 2 (&lt;code&gt;ORA192&lt;/code&gt;) based on the shut-down Node 1 (&lt;code&gt;ORA191&lt;/code&gt;).&lt;/p&gt;
+&lt;h3 id="71-performing-a-full-clone"&gt;7.1. Performing a Full Clone
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;Select &amp;ldquo;Clone&amp;rdquo; from the VMware management menu.&lt;/li&gt;
+&lt;li&gt;Select &amp;ldquo;Clone from current state&amp;rdquo;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Clone Type&lt;/b&gt;: Select &lt;b&gt;Full Clone&lt;/b&gt;.&lt;/li&gt;
+&lt;li&gt;Specify the target VM name as &lt;code&gt;ORA192&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="72-customizing-hostname-and-environment-variables-on-node-2"&gt;7.2. Customizing Hostname and Environment Variables on Node 2
+&lt;/h3&gt;&lt;p&gt;Start &lt;code&gt;ORA192&lt;/code&gt;, log in as the &lt;code&gt;root&lt;/code&gt; user, and perform specific configurations.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hostnamectl set-hostname ora192
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Modify the ASM SID in &lt;code&gt;/home/grid/.bash_profile&lt;/code&gt; for the &lt;code&gt;grid&lt;/code&gt; user.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sed -i &lt;span style="color:#e6db74"&gt;&amp;#39;s/+ASM1/+ASM2/g&amp;#39;&lt;/span&gt; /home/grid/.bash_profile
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Modify the database SID in &lt;code&gt;/home/oracle/.bash_profile&lt;/code&gt; for the &lt;code&gt;oracle&lt;/code&gt; user.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sed -i &lt;span style="color:#e6db74"&gt;&amp;#39;s/ORA191/ORA192/g&amp;#39;&lt;/span&gt; /home/oracle/.bash_profile
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="8-installing-asmlib"&gt;8. Installing ASMLib
+&lt;/h2&gt;&lt;p&gt;To simplify ASM disk management, install the following packages on &lt;b&gt;both nodes&lt;/b&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install -y oracleasm-support kmod-oracleasm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install -y oracleasmlib
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="9-shared-storage-configuration-editing-vmware-vmx-files"&gt;9. Shared Storage Configuration (Editing VMware VMX Files)
+&lt;/h2&gt;&lt;p&gt;Oracle RAC requires shared disks that can be read and written to simultaneously by both nodes.&lt;/p&gt;
+&lt;h3 id="91-adding-shared-disks-to-node-1-ora191"&gt;9.1. Adding Shared Disks to Node 1 (&lt;code&gt;ORA191&lt;/code&gt;)
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;Select &amp;ldquo;Add &amp;gt; Hard Disk&amp;rdquo; from the configuration screen of &lt;code&gt;ORA191&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Select &lt;b&gt;SCSI&lt;/b&gt; and allocate the required capacity.&lt;/li&gt;
+&lt;li&gt;Open the &amp;ldquo;Advanced&amp;rdquo; properties of each added disk and check &lt;b&gt;Independent&lt;/b&gt; and &lt;b&gt;Persistent&lt;/b&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="92-editing-the-vmx-configuration-file"&gt;9.2. Editing the &lt;code&gt;.vmx&lt;/code&gt; Configuration File
+&lt;/h3&gt;&lt;p&gt;Edit the &lt;code&gt;.vmx&lt;/code&gt; file of each node so that both VMs can access the same disk without lock conflicts. Add the following parameters to the end of both files.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;disk.locking = &amp;#34;FALSE&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;diskLib.dataCacheMaxSize = &amp;#34;0&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scsi0.sharedBus = &amp;#34;virtual&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;disk.locking = &amp;quot;FALSE&amp;quot;&lt;/code&gt;: Disables disk locking by VMware.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;scsi0.sharedBus = &amp;quot;virtual&amp;quot;&lt;/code&gt;: Enables SCSI bus sharing between multiple VMs.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="10-adding-a-private-network-adapter"&gt;10. Adding a Private Network Adapter
+&lt;/h2&gt;&lt;p&gt;Add a second network adapter for the interconnect between nodes.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Select &amp;ldquo;Add &amp;gt; Network Adapter&amp;rdquo; from the settings of &lt;code&gt;ORA191&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Set the network connection type to &lt;b&gt;Host-only&lt;/b&gt;.&lt;/li&gt;
+&lt;li&gt;Click &amp;ldquo;Generate&amp;rdquo; under &amp;ldquo;Advanced&amp;rdquo; to generate a unique MAC address.&lt;/li&gt;
+&lt;li&gt;Perform the same steps for &lt;code&gt;ORA192&lt;/code&gt; and ensure you regenerate the MAC address.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="11-configuring-the-private-network-interface-ens36"&gt;11. Configuring the Private Network Interface (ens36)
+&lt;/h2&gt;&lt;h3 id="111-node-1-ora191-configuration"&gt;11.1. Node 1 (&lt;code&gt;ORA191&lt;/code&gt;) Configuration
+&lt;/h3&gt;&lt;p&gt;Change the IPv4 settings to &amp;ldquo;Manual&amp;rdquo; and configure as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Address&lt;/b&gt;: &lt;code&gt;172.16.40.11&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Netmask&lt;/b&gt;: &lt;code&gt;255.255.255.0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="112-node-2-ora192-configuration"&gt;11.2. Node 2 (&lt;code&gt;ORA192&lt;/code&gt;) Configuration
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Address&lt;/b&gt;: &lt;code&gt;172.16.40.12&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Netmask&lt;/b&gt;: &lt;code&gt;255.255.255.0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="12-provisioning-asm-disks"&gt;12. Provisioning ASM Disks
+&lt;/h2&gt;&lt;h3 id="121-initializing-asmlib-both-nodes"&gt;12.1. Initializing ASMLib (Both Nodes)
+&lt;/h3&gt;&lt;p&gt;Run the initialization utility as the &lt;code&gt;root&lt;/code&gt; user on &lt;b&gt;both nodes&lt;/b&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm configure -i
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Owner user: &lt;code&gt;grid&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Owner group: &lt;code&gt;dba&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Start on boot: &lt;code&gt;y&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Scan on boot: &lt;code&gt;y&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm init
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="122-disk-partitioning-node-1-only"&gt;12.2. Disk Partitioning (Node 1 Only)
+&lt;/h3&gt;&lt;p&gt;Partition the added shared disks on &lt;b&gt;Node 1 only&lt;/b&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fdisk /dev/sdb
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# n -&amp;amp;gt; p -&amp;amp;gt; 1 -&amp;amp;gt; default -&amp;amp;gt; default -&amp;amp;gt; w&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="123-creating-asm-disks-node-1-only"&gt;12.3. Creating ASM Disks (Node 1 Only)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm createdisk ASMDISK01 /dev/sdb1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="124-scanning-disks-on-node-2"&gt;12.4. Scanning Disks on Node 2
+&lt;/h3&gt;&lt;p&gt;Run a scan to make Node 2 recognize the created disks.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Node 1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm scandisks
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Node 2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm scandisks
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm listdisks
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="13-grid-infrastructure-of-installation"&gt;13. Grid Infrastructure of Installation
+&lt;/h2&gt;&lt;h3 id="131-pre-installation-tasks"&gt;13.1. Pre-installation Tasks
+&lt;/h3&gt;&lt;p&gt;To prevent DNS conflicts, stop &lt;code&gt;avahi-daemon&lt;/code&gt; on &lt;b&gt;both nodes&lt;/b&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop avahi-daemon
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable avahi-daemon
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Extract the installation media as the &lt;code&gt;grid&lt;/code&gt; user on Node 1.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd $ORACLE_HOME
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;unzip -q /mnt/hgfs/shared/LINUX.X64_193000_grid_home.zip
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./gridSetup.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="132-setup-wizard-key-points"&gt;13.2. Setup Wizard Key Points
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Cluster Type&lt;/b&gt;: Select &lt;b&gt;Configure a Standalone Cluster&lt;/b&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cluster Node Information&lt;/b&gt;: Add Node 2 (&lt;code&gt;ora192&lt;/code&gt;, &lt;code&gt;ora192-vip&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;SSH Connectivity&lt;/b&gt;: Enter the password for the &lt;code&gt;grid&lt;/code&gt; user and run &amp;ldquo;Setup&amp;rdquo;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Network Interface&lt;/b&gt;: Set &lt;code&gt;ens33&lt;/code&gt; to &lt;b&gt;Public&lt;/b&gt; and &lt;code&gt;ens36&lt;/code&gt; to &lt;b&gt;1st Private&lt;/b&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Storage&lt;/b&gt;: Select &lt;b&gt;Use ASM&lt;/b&gt; and set the Discovery Path to &lt;code&gt;/dev/oracleasm/disks/*&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;The environment built in this procedure is a minimal configuration model of a 2-node RAC running on a hypervisor such as VMware Workstation. When applying this to a production environment, physical redundancy of shared storage (SAN/NAS multipath configuration) and network teaming (bonding) must be considered separately. In particular, the &lt;code&gt;disk.locking = &amp;quot;FALSE&amp;quot;&lt;/code&gt; setting in &lt;code&gt;.vmx&lt;/code&gt; carries a risk of data corruption if direct mounting is performed from both nodes while Clusterware is stopped, so extreme care must be taken in operational management.&lt;/p&gt;</description></item></channel></rss>
