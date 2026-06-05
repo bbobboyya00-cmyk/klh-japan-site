@@ -1,34 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 05 Jun 2026 10:11:22 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Apache HTTP Server and Tomcat Integration Architecture and Implementation Process in Linux Environments</title><link>https://klifehack.com/en/p/apache-httpd-tomcat-integration-architecture/</link><pubDate>Fri, 05 Jun 2026 10:11:22 +0900</pubDate><guid>https://klifehack.com/en/p/apache-httpd-tomcat-integration-architecture/</guid><description>&lt;h2 id="1-overview-of-apache-tomcat-integration"&gt;1. Overview of Apache-Tomcat Integration
-&lt;/h2&gt;&lt;p&gt;In web systems, integrating Apache HTTP Server for static content processing with Tomcat for Java Servlet and JSP execution is a standard architecture for optimizing availability and performance.&lt;/p&gt;
-&lt;p&gt;This configuration provides several technical advantages:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Load Balancing and Performance Improvement&lt;/strong&gt;: Apache handles static requests and forwards dynamic requests to Tomcat, reducing application server overhead.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Enhanced Security&lt;/strong&gt;: Tomcat remains in an internal network while Apache acts as a reverse proxy, restricting direct access to the application layer.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Flexible Operations&lt;/strong&gt;: Multiple Tomcat instances can be clustered under Apache to enable zero-downtime deployment.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id="selection-of-integration-protocols"&gt;Selection of Integration Protocols
-&lt;/h3&gt;&lt;p&gt;Communication between Apache and Tomcat typically utilizes &lt;b&gt;mod_proxy_ajp&lt;/b&gt; (AJP protocol) or &lt;b&gt;mod_proxy_http&lt;/b&gt; (HTTP protocol). AJP is a binary protocol designed for lower overhead and more efficient request metadata transfer compared to standard HTTP.&lt;/p&gt;
-&lt;h2 id="2-implementation-procedures-in-linux-environments"&gt;2. Implementation Procedures in Linux Environments
-&lt;/h2&gt;&lt;p&gt;Standard implementation procedures for RHEL/CentOS and Ubuntu/Debian systems involve specific module and configuration adjustments.&lt;/p&gt;
-&lt;h3 id="enabling-modules"&gt;Enabling Modules
-&lt;/h3&gt;&lt;p&gt;Activation of modules required for reverse proxy functionality and AJP integration.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;CODE_BLOCK_1&lt;/strong&gt;&lt;/p&gt;
-&lt;h3 id="apache-configuration-proxy_ajpconf"&gt;Apache Configuration (proxy_ajp.conf)
-&lt;/h3&gt;&lt;p&gt;Definition of proxy settings to forward specific request paths to the Tomcat backend.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;CODE_BLOCK_2&lt;/strong&gt;&lt;/p&gt;
-&lt;h3 id="tomcat-configuration-serverxml"&gt;Tomcat Configuration (server.xml)
-&lt;/h3&gt;&lt;p&gt;Configuration of the AJP connector within the Tomcat environment, including listening port and security attributes.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;CODE_BLOCK_3&lt;/strong&gt;&lt;/p&gt;
-&lt;h2 id="3-security-and-optimization-considerations"&gt;3. Security and Optimization Considerations
-&lt;/h2&gt;&lt;h3 id="ajp-vulnerability-mitigation-ghostcat"&gt;AJP Vulnerability Mitigation (Ghostcat)
-&lt;/h3&gt;&lt;p&gt;Mitigation of AJP protocol vulnerabilities, such as Ghostcat, requires specific configurations alongside the latest security patches:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Implementation of the &lt;code&gt;requiredSecret&lt;/code&gt; or &lt;code&gt;secret&lt;/code&gt; attribute to enforce authentication between the proxy and the backend.&lt;/li&gt;
-&lt;li&gt;Definition of &lt;code&gt;address=&amp;quot;127.0.0.1&amp;quot;&lt;/code&gt; to restrict AJP connections to the local loopback interface, preventing external access.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="timeouts-and-connection-pools"&gt;Timeouts and Connection Pools
-&lt;/h3&gt;&lt;p&gt;In high-concurrency environments, the configuration of &lt;code&gt;timeout&lt;/code&gt; and &lt;code&gt;keepalive&lt;/code&gt; parameters within the Apache &lt;code&gt;ProxyPass&lt;/code&gt; directive is essential to prevent resource exhaustion.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;CODE_BLOCK_4&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>Implementation of Kubernetes Deployment Automation with GitHub Actions and Self-Hosted Runners</title><link>https://klifehack.com/en/p/github-actions-k8s-self-hosted-runner/</link><pubDate>Thu, 04 Jun 2026 18:02:35 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-k8s-self-hosted-runner/</guid><description>&lt;h2 id="1-overview-and-purpose"&gt;1. Overview and Purpose
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 04 Jun 2026 18:02:35 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Kubernetes Deployment Automation with GitHub Actions and Self-Hosted Runners</title><link>https://klifehack.com/en/p/github-actions-k8s-self-hosted-runner/</link><pubDate>Thu, 04 Jun 2026 18:02:35 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-k8s-self-hosted-runner/</guid><description>&lt;h2 id="1-overview-and-purpose"&gt;1. Overview and Purpose
 &lt;/h2&gt;&lt;p&gt;The objective is to construct a CI/CD pipeline integrating GitHub Actions with a local Kubernetes environment to automate the transition from source code push to deployment. This workflow eliminates manual intervention and executes automated rolling updates.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Target Workflow:&lt;/b&gt;&lt;/p&gt;
 &lt;ol&gt;
