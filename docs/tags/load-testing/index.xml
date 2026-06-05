@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Load-Testing on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/load-testing/</link><description>Recent content in Load-Testing on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 05 Jun 2026 12:34:44 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/load-testing/index.xml" rel="self" type="application/rss+xml"/><item><title>k6とPrometheusを用いたローカルバックエンドの負荷試験とリアルタイム監視パイプラインの構築</title><link>https://klifehack.com/p/k6-prometheus-grafana-load-testing/</link><pubDate>Fri, 05 Jun 2026 12:34:44 +0900</pubDate><guid>https://klifehack.com/p/k6-prometheus-grafana-load-testing/</guid><description>&lt;p&gt;本稿では、ローカル開発環境における「Woogongsil」バックエンドサービスを対象とした、段階的な負荷シミュレーションおよびリアルタイム監視環境の構築手順について解説します。本検証は、本番環境への影響を完全に排除したローカルサンドボックス環境にて実施されました。&lt;/p&gt;
+&lt;h2 id="1-検証の目的とアプローチ"&gt;1. 検証の目的とアプローチ
+&lt;/h2&gt;&lt;p&gt;本検証の主な目的は、接続確認レベルのテストから一歩進め、段階的な負荷をバックエンドに与えた際のシステム挙動をリアルタイムに観測することです。具体的には以下のステップを実行します。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;段階的な負荷生成&lt;/b&gt;: GETリクエストを中心とした負荷を段階的に適用します。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;仮想ユーザー（VU）の動的スケーリング&lt;/b&gt;: VU数を 10 → 30 → 50 → 20 → 0 の順に増減させます。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;時系列データの統合&lt;/b&gt;: Prometheus Remote Write機能を利用し、k6が生成するメトリクスをPrometheusへ直接ストリーミングします。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;可視化パイプラインの構築&lt;/b&gt;: Grafanaを用いて、RPS（Requests Per Second）、VU数、HTTPステータスコード、エンドポイントごとのリクエスト分布、5xxエラー率をリアルタイムに監視します。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;システムの安定性検証&lt;/b&gt;: ピーク負荷時において、サーバーダウンや内部エラー（500 Internal Server Error）が発生しないことを確認します。&lt;/p&gt;
+&lt;h2 id="2-技術スタックと検証環境"&gt;2. 技術スタックと検証環境
+&lt;/h2&gt;&lt;p&gt;本検証は、外部サービスへの影響を防ぐため、すべてローカルのDockerコンテナおよび開発環境内で完結させています。&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;検証対象バックエンド&lt;/b&gt;: Woogongsil Local Backend (http://localhost:5000)&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;可視化ツール&lt;/b&gt;: Grafana (http://localhost:3001)&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;時系列データベース&lt;/b&gt;: Prometheus (http://localhost:9090)&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;負荷生成ツール&lt;/b&gt;: k6&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;オーケストレーション&lt;/b&gt;: Docker Compose&lt;/p&gt;
+&lt;h2 id="3-コンテナ環境の初期化と事前検証"&gt;3. コンテナ環境の初期化と事前検証
+&lt;/h2&gt;&lt;p&gt;過去のテスト実行によるメトリクスの混入を防ぐため、測定開始前に監視スタックの初期化を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;```&lt;/span&gt;powershell
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 既存のコンテナおよびネットワークの停止&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose -f docker-compose.monitor.yml down
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# PrometheusとGrafanaのバックグラウンド起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose -f docker-compose.monitor.yml up -d prometheus grafana
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# コンテナの起動状態確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker ps --filter &lt;span style="color:#e6db74"&gt;&amp;#34;name=wgs-&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
+コンテナ wgs-prometheus および wgs-grafana が正常に起動していることを確認後、ターゲットとなるバックエンドのヘルスチェックを行います。
+
+```bash
+```powershell
+curl.exe -I http://localhost:5000
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
+HTTPヘッダーの返却値として HTTP/1.1 200 OK が確認できれば、負荷試験の準備は完了です。
+
+## 4. k6負荷試験スクリプトの実装
+
+負荷シミュレーションには、以下のJavaScriptシナリオ（06_final_recording_public_get.js）を使用します。
+
+```javascript
+```javascript
+import http from &amp;#34;k6/http&amp;#34;;
+import { check, sleep } from &amp;#34;k6&amp;#34;;
+
+// 200〜499のステータスコードを許容範囲として定義
+http.setResponseCallback(
+http.expectedStatuses({ min: 200, max: 499 })
+);
+
+export const options = {
+stages: [
+{ duration: &amp;#34;30s&amp;#34;, target: 10 }, // 10 VUまでランプアップ
+{ duration: &amp;#34;30s&amp;#34;, target: 30 }, // 30 VUまでランプアップ
+{ duration: &amp;#34;30s&amp;#34;, target: 50 }, // 50 VUでピーク負荷維持
+{ duration: &amp;#34;30s&amp;#34;, target: 20 }, // 20 VUまでランプダウン
+{ duration: &amp;#34;30s&amp;#34;, target: 0 } // 0 VUまでクールダウン
+],
+thresholds: {
+http_req_duration: [&amp;#34;p(95)&amp;amp;lt;2000&amp;#34;], // 95%のリクエストが2秒以内に完了すること
+http_req_failed: [&amp;#34;rate&amp;amp;lt;0.01&amp;#34;] // エラー率が1%未満であること
+},
+summaryTrendStats: [&amp;#34;avg&amp;#34;, &amp;#34;min&amp;#34;, &amp;#34;med&amp;#34;, &amp;#34;max&amp;#34;, &amp;#34;p(90)&amp;#34;, &amp;#34;p(95)&amp;#34;, &amp;#34;p(99)&amp;#34;]
+};
+
+const BASE_URL = __ENV.BASE_URL || &amp;#34;http://host.docker.internal:5000&amp;#34;;
+
+const endpoints = [
+{ name: &amp;#34;home-root&amp;#34;, path: &amp;#34;/&amp;#34; },
+{ name: &amp;#34;screen-settings&amp;#34;, path: &amp;#34;/api/screen-settings&amp;#34; },
+{ name: &amp;#34;class-schedules&amp;#34;, path: &amp;#34;/api/class-schedules&amp;#34; },
+{ name: &amp;#34;mealmap-places&amp;#34;, path: &amp;#34;/api/mealmap/places&amp;#34; },
+{ name: &amp;#34;exam-catalogs&amp;#34;, path: &amp;#34;/api/exam-catalogs&amp;#34; },
+{ name: &amp;#34;ipep-catalog&amp;#34;, path: &amp;#34;/api/ipep/exam-catalog&amp;#34; },
+{ name: &amp;#34;ipep-random&amp;#34;, path: &amp;#34;/api/ipep/random-question&amp;#34; },
+{ name: &amp;#34;ranking&amp;#34;, path: &amp;#34;/api/ranking&amp;#34; },
+{ name: &amp;#34;notices&amp;#34;, path: &amp;#34;/api/notices&amp;#34; },
+{ name: &amp;#34;posts&amp;#34;, path: &amp;#34;/api/posts&amp;#34; }
+];
+
+export default function () {
+if (__ITER % 5 === 0) {
+console.log(`[WGS LOAD TEST] VU=${__VU}, ITER=${__ITER}, target=${BASE_URL}`);
+}
+
+for (const item of endpoints) {
+const res = http.get(`${BASE_URL}${item.path}`, {
+tags: { endpoint: item.name } // Grafanaでの集計用タグ
+});
+
+check(res, { 
+[`${item.name} no server crash`]: (r) =&amp;amp;gt; r.status &amp;amp;gt; 0 &amp;amp;amp;&amp;amp;amp; r.status &amp;amp;lt; 500
+});
+
+sleep(0.1); // ローカルソケットの枯渇を防ぐためのウェイト
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
+### 実装上の注意点
+
+⚠️ &amp;lt;b&amp;gt;host.docker.internal&amp;lt;/b&amp;gt;: k6コンテナ内からホストマシンの localhost（ポート5000）へ通信するために必要なホスト名定義です。
+
+⚠️ &amp;lt;b&amp;gt;タグ付け (tags)&amp;lt;/b&amp;gt;: 各HTTPリクエストにエンドポイント名を付与することで、Grafana上でルートごとのレイテンシやエラー率を個別に集計可能にしています。
+
+## 5. 負荷試験の実行とPrometheus連携
+
+以下のコマンドを実行し、Prometheus Remote Writeを有効化した状態でk6を起動します。
+
+```bash
+```powershell
+docker compose -f docker-compose.monitor.yml --profile test run --rm `
+-e BASE_URL=http://host.docker.internal:5000 `
+-e K6_PROMETHEUS_RW_PUSH_INTERVAL=1s `
+k6 run -o experimental-prometheus-rw /scripts/06_final_recording_public_get.js
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
+🛠️ &amp;lt;b&amp;gt;--profile test&amp;lt;/b&amp;gt;: Docker Composeファイル内のk6サービス定義を有効化します。
+
+🛠️ &amp;lt;b&amp;gt;K6_PROMETHEUS_RW_PUSH_INTERVAL=1s&amp;lt;/b&amp;gt;: リアルタイム監視のグラフ描画を滑らかにするため、メトリクスのプッシュ間隔を1秒に設定しています。
+
+## 6. 測定結果とメトリクス分析
+
+約2分30秒の試験実行によって得られた主要メトリクスは以下の通りです。
+
+| メトリクス項目 | 測定値 |
+| :--- | :--- |
+| &amp;lt;b&amp;gt;総HTTPリクエスト数&amp;lt;/b&amp;gt; | 32,200 回 |
+| &amp;lt;b&amp;gt;総イテレーション数&amp;lt;/b&amp;gt; | 3,220 回 |
+| &amp;lt;b&amp;gt;最大仮想ユーザー数 (VU)&amp;lt;/b&amp;gt; | 50 VU |
+| &amp;lt;b&amp;gt;HTTPリクエスト失敗率&amp;lt;/b&amp;gt; | 0.00% |
+| &amp;lt;b&amp;gt;チェック成功率&amp;lt;/b&amp;gt; | 100.00% |
+| &amp;lt;b&amp;gt;平均レスポンス時間&amp;lt;/b&amp;gt; | 2.73ms |
+| &amp;lt;b&amp;gt;p95 レスポンス時間&amp;lt;/b&amp;gt; | 5.88ms |
+| &amp;lt;b&amp;gt;p99 レスポンス時間&amp;lt;/b&amp;gt; | 15.26ms |
+| &amp;lt;b&amp;gt;最大レスポンス時間&amp;lt;/b&amp;gt; | 57.09ms |
+| &amp;lt;b&amp;gt;スループット&amp;lt;/b&amp;gt; | 約 213.75 reqs/sec |
+
+### リアルタイム監視による分析結果
+
+💡 &amp;lt;b&amp;gt;RPSとVUの相関関係&amp;lt;/b&amp;gt;: VU数の増減（10 → 30 → 50 → 20 → 0）に追従して、RPSのグラフが綺麗な山型のカーブを描き、スケールアップ・ダウンが意図通りに機能していることを確認しました。
+
+💡 &amp;lt;b&amp;gt;ステータスコードの分布&amp;lt;/b&amp;gt;: 大半のリクエストは 200 OK でしたが、一部の保護されたAPIにおいて 401 Unauthorized が記録されました。これは認証セッションなしでアクセスしたことによる期待通りの挙動であり、サーバーエラー（5xx）は一切発生していません。
+
+💡 &amp;lt;b&amp;gt;エンドポイント別の負荷分散&amp;lt;/b&amp;gt;: スクリプト内のループ処理により、定義した10個のエンドポイントに対して均等にトラフィックが分散されていることが確認できました。
+
+## 7. Lessons Learned
+
+⚠️ &amp;lt;b&amp;gt;リアルタイム監視における更新頻度の重要性&amp;lt;/b&amp;gt;: 初期検証時、Grafanaのデータ更新頻度がデフォルトのままであったため、グラフが静的に見える問題が発生しました。更新間隔を5秒（5s）に明示的に設定することで、負荷の増減をリアルタイムに追従できるようになりました。
+
+⚠️ &amp;lt;b&amp;gt;テスト実行IDの識別&amp;lt;/b&amp;gt;: Prometheus上で複数のテスト実行結果が混在するのを防ぐため、今後は実行ごとに一意の run_id などのカスタムラベルを付与する設計が推奨されます。
+
+⚠️ &amp;lt;b&amp;gt;サーバーサイドリソースの可視化不足&amp;lt;/b&amp;gt;: 今回はクライアント（k6）側から見たメトリクス収集に留まったため、サーバー側のCPUやメモリ使用率の推移が追いきれませんでした。今後はNode.jsバックエンドに prom-client を組み込み、/metrics エンドポイント経由で内部リソース情報を統合するアプローチを検討します。
+&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>

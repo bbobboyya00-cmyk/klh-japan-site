@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Celery-Beat on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/celery-beat/</link><description>Recent content in Celery-Beat on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 05 Jun 2026 12:45:41 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/celery-beat/index.xml" rel="self" type="application/rss+xml"/><item><title>Design and Operational Practices for Distributed Job Scheduling Using Celery</title><link>https://klifehack.com/en/p/celery-distributed-job-scheduling-architecture/</link><pubDate>Fri, 05 Jun 2026 12:45:41 +0900</pubDate><guid>https://klifehack.com/en/p/celery-distributed-job-scheduling-architecture/</guid><description>&lt;p&gt;In distributed systems, reliably executing periodic batch processing and asynchronous background tasks is a critical requirement for maintaining system reliability. Celery, which is widely adopted in the Python ecosystem, provides a powerful mechanism for executing tasks in a distributed manner via a message broker.&lt;/p&gt;
+&lt;p&gt;This article explains the architecture of job scheduling using Celery, specific configuration methods, lifecycle control in container environments, and operational considerations.&lt;/p&gt;
+&lt;h2 id="1-cooperative-architecture-of-celery-beat-and-celery-worker"&gt;1. Cooperative Architecture of Celery Beat and Celery Worker
+&lt;/h2&gt;&lt;p&gt;The scheduling functionality in Celery is designed to physically and logically separate task &amp;ldquo;schedule management (triggering)&amp;rdquo; and &amp;ldquo;execution.&amp;rdquo; To achieve this, two distinct components, &lt;b&gt;Celery Beat&lt;/b&gt; and &lt;b&gt;Celery Worker&lt;/b&gt;, operate in coordination.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;+-----------------------------------------------------------------+
+| Celery Beat |
+| (スケジューラプロセス: スケジュールを監視し、タスク信号を送信) |
++-------------------------------+---------------------------------+
+ |
+ | (タスクメッセージのパブリッシュ)
+ v
++-----------------------------------------------------------------+
+| Message Broker |
+| (Redis, RabbitMQ など) |
++-------------------------------+---------------------------------+
+ |
+ | (タスクメッセージのコンシューム)
+ v
++-----------------------------------------------------------------+
+| Celery Worker |
+| (実際のタスクロジックを非同期で実行) |
++-----------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="celery-beat-scheduler"&gt;Celery Beat (Scheduler)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Role&lt;/b&gt;: A single daemon process specialized in schedule management. When a configured time or interval is reached, it sends a message to the message broker to execute the task.&lt;/li&gt;
+&lt;li&gt;💡 &lt;b&gt;Persistence and State Management&lt;/b&gt;: By default, it uses a local database file named &lt;code&gt;celerybeat-schedule&lt;/code&gt; (typically in shelve format) to record the last execution time of each task. This allows it to accurately determine unexecuted tasks or duplicate executions even when the process restarts.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Dynamic Scheduling&lt;/b&gt;: In addition to static configuration files, using extension libraries such as &lt;code&gt;django-celery-beat&lt;/code&gt; or &lt;code&gt;redbeat&lt;/code&gt; allows schedules to be dynamically loaded from a database or Redis, enabling schedule changes without restarting the process.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="celery-worker-worker"&gt;Celery Worker (Worker)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Role&lt;/b&gt;: Polls the message broker, retrieves task messages stored in the queue, and executes the actual Python functions.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Scalability&lt;/b&gt;: Since workers are completely decoupled from the scheduler, it is easy to horizontally scale out worker nodes according to the processing load.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-schedule-definition-and-timezone-configuration"&gt;2. Schedule Definition and Timezone Configuration
+&lt;/h2&gt;&lt;p&gt;Celery flexibly supports everything from simple interval specifications in seconds to advanced Unix cron-compatible schedule specifications. Typical schedule configurations in production environments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; celery &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Celery
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; celery.schedules &lt;span style="color:#f92672"&gt;import&lt;/span&gt; crontab
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Celeryアプリケーションの初期化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Celery(&lt;span style="color:#e6db74"&gt;&amp;#39;tasks&amp;#39;&lt;/span&gt;, broker&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;redis://localhost:6379/0&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# スケジュール構成の定義&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;conf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;beat_schedule &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 例1: 毎週月曜日の午前9:00に週次レポートを生成・送信&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;send-weekly-report-monday-morning&amp;#39;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;tasks.send_weekly_report&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;schedule&amp;#39;&lt;/span&gt;: crontab(hour&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;9&lt;/span&gt;, minute&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, day_of_week&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;args&amp;#39;&lt;/span&gt;: (),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 例2: 毎日深夜0:00にデータベースのバックアップを実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;daily-midnight-data-backup&amp;#39;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;tasks.execute_database_backup&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;schedule&amp;#39;&lt;/span&gt;: crontab(hour&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, minute&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;args&amp;#39;&lt;/span&gt;: (),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 例3: 15分（900秒）間隔で保留中のメールを送信&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;periodic-email-dispatch&amp;#39;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;tasks.dispatch_pending_emails&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;schedule&amp;#39;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;900.0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;args&amp;#39;&lt;/span&gt;: (),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# スケジュールのズレを防ぐためのタイムゾーン設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;conf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;timezone &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;Asia/Tokyo&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠️ If the timezone setting (&lt;code&gt;timezone&lt;/code&gt;) is not explicitly specified, it will depend on Coordinated Universal Time (UTC) or the system clock of the execution environment, which can cause tasks to run at unintended times. It must always be explicitly defined.&lt;/p&gt;
+&lt;h2 id="3-lifecycle-control-and-scaling-in-container-environments"&gt;3. Lifecycle Control and Scaling in Container Environments
+&lt;/h2&gt;&lt;p&gt;When operating Celery in container orchestration environments such as Kubernetes or ECS, task lifecycle control during rolling updates or container scale-in/out becomes extremely critical.&lt;/p&gt;
+&lt;h3 id="-singleton-constraint-of-celery-beat"&gt;⚠️ Singleton Constraint of Celery Beat
+&lt;/h3&gt;&lt;p&gt;Celery Beat &lt;b&gt;must always run as a single instance (singleton) to prevent sending duplicate messages for the same schedule&lt;/b&gt;. If multiple Beat processes are started for redundancy, the same scheduled task may be triggered multiple times, risking data integrity corruption.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Mitigation&lt;/b&gt;: When deploying with Kubernetes, restrict the number of replicas in the &lt;code&gt;Deployment&lt;/code&gt; to &lt;code&gt;1&lt;/code&gt;, or use a &lt;code&gt;StatefulSet&lt;/code&gt; to strictly control that only a single Pod runs.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="graceful-shutdown-of-celery-worker"&gt;Graceful Shutdown of Celery Worker
+&lt;/h3&gt;&lt;p&gt;During container replacement (rolling updates) or container destruction due to autoscaling, it is necessary to prevent running tasks from being forcibly terminated.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Signal Handling&lt;/b&gt;: Upon receiving a &lt;code&gt;SIGTERM&lt;/code&gt; signal, the Celery Worker stops accepting new tasks and waits until currently executing tasks are completed (Warm Shutdown).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Container Configuration&lt;/b&gt;: The shutdown grace period on the container orchestrator side (such as &lt;code&gt;terminationGracePeriodSeconds&lt;/code&gt; in Kubernetes) must be set longer than the execution time of the longest-running task.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-resource-management-and-load-mitigation-measures"&gt;4. Resource Management and Load Mitigation Measures
+&lt;/h2&gt;&lt;p&gt;As periodic execution jobs increase, task executions may concentrate at specific times, potentially placing an excessive load on downstream systems such as databases or external APIs.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Optimization of Execution Frequency&lt;/b&gt;
+Scrutinize business requirements and adjust tasks to run at the minimum necessary frequency. For example, instead of running synchronization processes every 5 minutes on a system with low data change frequency, relaxing it to 30-minute or 1-hour intervals can reduce unnecessary CPU and I/O resource consumption.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Adjustment of Concurrency&lt;/b&gt;
+Use the &lt;code&gt;--concurrency&lt;/code&gt; option (or &lt;code&gt;-c&lt;/code&gt;) when starting workers to limit the number of tasks that can be executed simultaneously. In resource-constrained environments, excessive concurrency leads to context-switching overhead and Out-Of-Memory (OOM) errors.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Introduction of Jitter (Fluctuation)&lt;/b&gt;
+To prevent a large number of tasks from starting simultaneously, consider designing random delays (jitter) into the task start times.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="5-error-handling-and-retry-strategy"&gt;5. Error Handling and Retry Strategy
+&lt;/h2&gt;&lt;p&gt;💡 Define an appropriate retry policy to prepare for task failures caused by transient issues, such as temporary network interruptions or database timeouts. Introducing Exponential Backoff avoids concentrating load on downstream systems due to retries immediately after a failure.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.task&lt;/span&gt;(bind&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, max_retries&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;, default_retry_delay&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;60&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;execute_database_backup&lt;/span&gt;(self):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# バックアップ処理ロジックをここに記述&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Exception&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; exc:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 失敗回数に応じてリトライ間隔を段階的に延長（60秒、120秒、180秒...）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;retry(exc&lt;span style="color:#f92672"&gt;=&lt;/span&gt;exc, countdown&lt;span style="color:#f92672"&gt;=&lt;/span&gt;self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;request&lt;span style="color:#f92672"&gt;.&lt;/span&gt;retries &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;60&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-comparison-between-celery-beat-and-system-cron"&gt;6. Comparison Between Celery Beat and System Cron
+&lt;/h2&gt;&lt;p&gt;When implementing periodic execution tasks, whether to adopt the OS standard &lt;code&gt;cron&lt;/code&gt; or Celery Beat depends on the architectural requirements.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Comparison Item&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Celery Beat&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;System Cron (&lt;code&gt;cron&lt;/code&gt;)&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Execution Model&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Asynchronous, execution via distributed task queues&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Synchronous, execution via local system processes&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Architecture&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Decoupled (Scheduler -&amp;gt; Broker -&amp;gt; Workers)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Tightly coupled (scheduling and execution occur on the same host)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Scalability&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;High (tasks can be distributed to any worker in the cluster)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Dependent on resource limits of a single host&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Suitable Use Cases&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Microservices, container environments, distributed systems&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;System maintenance within a single server, log rotation&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Configuration Complexity&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Requires management of message brokers and dedicated processes&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;No additional infrastructure configuration required as it is an OS standard feature&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Dynamic Control&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Dynamic schedule changes are possible through database integration&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Requires direct modification of configuration files&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;p&gt;🛠️ To stably operate job scheduling with Celery in a production environment, please review the following checklist.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;Process Separation&lt;/b&gt;: In production environments, are the scheduler (Beat) and worker (Worker) always started as separate processes (or containers)?
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ワーカープロセスの起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;celery -A tasks worker --loglevel&lt;span style="color:#f92672"&gt;=&lt;/span&gt;info
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# スケジューラプロセスの起動（単一インスタンスで実行すること）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;celery -A tasks beat --loglevel&lt;span style="color:#f92672"&gt;=&lt;/span&gt;info
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;Timezone Alignment&lt;/b&gt;: Is &lt;code&gt;app.conf.timezone&lt;/code&gt; correctly configured and consistent with the database and OS timezones?&lt;/li&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;Broker Connection Monitoring&lt;/b&gt;: Is it configured to automatically reconnect in the event of a transient connection loss to the message broker (Redis/RabbitMQ)?&lt;/li&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;Dead Letter Queue Consideration&lt;/b&gt;: Is there a design in place to isolate repeatedly failing tasks and prevent them from blocking other periodic execution tasks?&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

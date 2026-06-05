@@ -1,4 +1,417 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 04 Jun 2026 18:02:34 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub ActionsとSelf-Hosted RunnerによるKubernetesデプロイ自動化の実装</title><link>https://klifehack.com/p/github-actions-k8s-self-hosted-runner/</link><pubDate>Thu, 04 Jun 2026 18:02:34 +0900</pubDate><guid>https://klifehack.com/p/github-actions-k8s-self-hosted-runner/</guid><description>&lt;h2 id="1-概要と目的"&gt;1. 概要と目的
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 05 Jun 2026 12:45:41 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Celeryを用いた分散ジョブスケジューリングの設計と運用プラクティス</title><link>https://klifehack.com/p/celery-distributed-job-scheduling-architecture/</link><pubDate>Fri, 05 Jun 2026 12:45:41 +0900</pubDate><guid>https://klifehack.com/p/celery-distributed-job-scheduling-architecture/</guid><description>&lt;p&gt;分散システムにおいて、定期的なバッチ処理や非同期のバックグラウンドタスクを確実に実行することは、システムの信頼性を維持するための重要な要件です。Pythonエコシステムにおいて広く採用されているCeleryは、メッセージブローカーを介してタスクを分散実行する強力な仕組みを提供します。&lt;/p&gt;
+&lt;p&gt;本稿では、Celeryを用いたジョブスケジューリングのアーキテクチャ、具体的な設定方法、コンテナ環境におけるライフサイクル制御、および運用上の注意点について解説します。&lt;/p&gt;
+&lt;h2 id="1-celery-beatとcelery-workerの協調アーキテクチャ"&gt;1. Celery BeatとCelery Workerの協調アーキテクチャ
+&lt;/h2&gt;&lt;p&gt;Celeryにおけるスケジューリング機能は、タスクの「スケジュール管理（トリガー）」と「実行」を物理的・論理的に分離した設計になっています。これを実現するために、&lt;b&gt;Celery Beat&lt;/b&gt;と&lt;b&gt;Celery Worker&lt;/b&gt;という2つの異なるコンポーネントが協調して動作します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;+-----------------------------------------------------------------+
+| Celery Beat |
+| (スケジューラプロセス: スケジュールを監視し、タスク信号を送信) |
++-------------------------------+---------------------------------+
+ |
+ | (タスクメッセージのパブリッシュ)
+ v
++-----------------------------------------------------------------+
+| Message Broker |
+| (Redis, RabbitMQ など) |
++-------------------------------+---------------------------------+
+ |
+ | (タスクメッセージのコンシューム)
+ v
++-----------------------------------------------------------------+
+| Celery Worker |
+| (実際のタスクロジックを非同期で実行) |
++-----------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="celery-beatスケジューラ"&gt;Celery Beat（スケジューラ）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;役割&lt;/b&gt;: スケジュール管理に特化した単一のデーモンプロセスです。設定された時間やインターバルに達した際に、タスクを実行するためのメッセージをメッセージブローカーに送信します。&lt;/li&gt;
+&lt;li&gt;💡 &lt;b&gt;永続化と状態管理&lt;/b&gt;: デフォルトでは &lt;code&gt;celerybeat-schedule&lt;/code&gt; というローカルデータベースファイル（通常はshelve形式）を使用して、各タスクの最終実行日時を記録します。これにより、プロセスが再起動した際にも、未実行のタスクや重複実行を正確に判定できます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;動的スケジューリング&lt;/b&gt;: 静的な設定ファイルだけでなく、&lt;code&gt;django-celery-beat&lt;/code&gt; や &lt;code&gt;redbeat&lt;/code&gt; などの拡張ライブラリを使用することで、データベースやRedisから動的にスケジュールを読み込み、プロセスを再起動することなくスケジュールを変更することが可能です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="celery-workerワーカー"&gt;Celery Worker（ワーカー）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;役割&lt;/b&gt;: メッセージブローカーをポーリングし、キューに格納されたタスクメッセージを取得して実際のPython関数を実行します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;スケーラビリティ&lt;/b&gt;: ワーカーはスケジューラから完全に分離されているため、処理負荷に応じてワーカーノードを水平方向にスケールアウトさせることが容易です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-スケジュール定義とタイムゾーンの設定"&gt;2. スケジュール定義とタイムゾーンの設定
+&lt;/h2&gt;&lt;p&gt;Celeryでは、シンプルな秒単位のインターバル指定から、Unixのcron互換の高度なスケジュール指定まで柔軟に対応しています。実務における代表的なスケジュール設定の構成は次の通りです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; celery &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Celery
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; celery.schedules &lt;span style="color:#f92672"&gt;import&lt;/span&gt; crontab
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Celeryアプリケーションの初期化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Celery(&lt;span style="color:#e6db74"&gt;&amp;#39;tasks&amp;#39;&lt;/span&gt;, broker&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;redis://localhost:6379/0&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# スケジュール構成の定義&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;conf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;beat_schedule &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 例1: 毎週月曜日の午前9:00に週次レポートを生成・送信&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;send-weekly-report-monday-morning&amp;#39;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;tasks.send_weekly_report&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;schedule&amp;#39;&lt;/span&gt;: crontab(hour&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;9&lt;/span&gt;, minute&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, day_of_week&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;args&amp;#39;&lt;/span&gt;: (),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 例2: 毎日深夜0:00にデータベースのバックアップを実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;daily-midnight-data-backup&amp;#39;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;tasks.execute_database_backup&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;schedule&amp;#39;&lt;/span&gt;: crontab(hour&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, minute&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;args&amp;#39;&lt;/span&gt;: (),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 例3: 15分（900秒）間隔で保留中のメールを送信&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;periodic-email-dispatch&amp;#39;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;tasks.dispatch_pending_emails&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;schedule&amp;#39;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;900.0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;args&amp;#39;&lt;/span&gt;: (),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# スケジュールのズレを防ぐためのタイムゾーン設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;conf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;timezone &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;Asia/Tokyo&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠️ タイムゾーン設定（&lt;code&gt;timezone&lt;/code&gt;）を明示的に指定しない場合、協定世界時（UTC）や実行環境のシステムクロックに依存するため、意図しない時間帯にタスクが実行される原因となります。必ず明示的に定義する必要があります。&lt;/p&gt;
+&lt;h2 id="3-コンテナ環境におけるライフサイクル制御とスケーリング"&gt;3. コンテナ環境におけるライフサイクル制御とスケーリング
+&lt;/h2&gt;&lt;p&gt;KubernetesやECSなどのコンテナオーケストレーション環境でCeleryを運用する場合、ローリングアップデートやコンテナのスケールイン・アウト時におけるタスクのライフサイクル制御が極めて重要になります。&lt;/p&gt;
+&lt;h3 id="-celery-beatのシングルトン制約"&gt;⚠️ Celery Beatのシングルトン制約
+&lt;/h3&gt;&lt;p&gt;Celery Beatは、&lt;b&gt;同一のスケジュールに対して重複してメッセージを送信しないよう、必ず単一のインスタンス（シングルトン）として動作させる必要があります&lt;/b&gt;。冗長化のためにBeatプロセスを複数起動すると、同一のスケジュールタスクが重複してトリガーされ、データの整合性が破損するリスクが生じます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: Kubernetesでデプロイする場合、&lt;code&gt;Deployment&lt;/code&gt; のレプリカ数を &lt;code&gt;1&lt;/code&gt; に制限するか、&lt;code&gt;StatefulSet&lt;/code&gt; を使用して厳密に単一のPodのみが動作するように制御します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="celery-workerの優雅なシャットダウンgraceful-shutdown"&gt;Celery Workerの優雅なシャットダウン（Graceful Shutdown）
+&lt;/h3&gt;&lt;p&gt;コンテナの入れ替え（ローリングアップデート）やオートスケーリングによるコンテナ破棄の際、実行中のタスクが強制終了されるのを防ぐ必要があります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;シグナルハンドリング&lt;/b&gt;: Celery Workerは &lt;code&gt;SIGTERM&lt;/code&gt; シグナルを受信すると、新しいタスクの受け入れを停止し、現在実行中のタスクが完了するまで待機します（Warm Shutdown）。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;コンテナ設定&lt;/b&gt;: コンテナオーケレーター側のシャットダウン猶予期間（Kubernetesの &lt;code&gt;terminationGracePeriodSeconds&lt;/code&gt; など）を、最も実行時間の長いタスクの処理時間よりも長く設定しておく必要があります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-リソース管理と負荷軽減対策"&gt;4. リソース管理と負荷軽減対策
+&lt;/h2&gt;&lt;p&gt;定期実行ジョブが増加すると、特定の時間帯にタスクの実行が集中し、データベースや外部APIなどの下流システムに過度な負荷がかかる可能性があります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;実行頻度の最適化&lt;/b&gt;
+ビジネス要件を精査し、必要最小限の頻度でタスクを実行するように調整します。例えば、データの変更頻度が低いシステムに対して5分間隔で同期処理を行うのではなく、30分や1時間間隔に緩和することで、不要なCPUおよびI/Oリソースの消費を削減できます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;並行処理数の調整&lt;/b&gt;
+ワーカー起動時の &lt;code&gt;--concurrency&lt;/code&gt; オプション（または &lt;code&gt;-c&lt;/code&gt;）を使用して、同時に実行できるタスク数を制限します。リソースが限られた環境では、過剰な並行処理はコンテキストスイッチのオーバーヘッドやメモリ枯渇（OOM）を招きます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ジッター（ゆらぎ）の導入&lt;/b&gt;
+多数 of タスクが同時に起動するのを防ぐため、タスクの開始時刻にランダムな遅延（ジッター）を挿入する設計を検討してください。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="5-エラーハンドリングとリトライ戦略"&gt;5. エラーハンドリングとリトライ戦略
+&lt;/h2&gt;&lt;p&gt;💡 ネットワークの一時的な瞬断やデータベースのタイムアウトなど、一時的な障害によってタスクが失敗した場合に備え、適切なリトライポリシーを定義します。指数バックオフ（Exponential Backoff）を導入することで、失敗直後の再試行による下流システムへの負荷集中を回避できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.task&lt;/span&gt;(bind&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, max_retries&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;, default_retry_delay&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;60&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;execute_database_backup&lt;/span&gt;(self):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# バックアップ処理ロジックをここに記述&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Exception&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; exc:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 失敗回数に応じてリトライ間隔を段階的に延長（60秒、120秒、180秒...）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;retry(exc&lt;span style="color:#f92672"&gt;=&lt;/span&gt;exc, countdown&lt;span style="color:#f92672"&gt;=&lt;/span&gt;self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;request&lt;span style="color:#f92672"&gt;.&lt;/span&gt;retries &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;60&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-celery-beatとシステムcronの比較"&gt;6. Celery BeatとシステムCronの比較
+&lt;/h2&gt;&lt;p&gt;定期実行タスクを実装するにあたり、OS標準の &lt;code&gt;cron&lt;/code&gt; と Celery Beatのどちらを採用すべきかは、アーキテクチャの要件によって異なります。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;比較項目&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Celery Beat&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;システムCron (&lt;code&gt;cron&lt;/code&gt;)&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;実行モデル&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;非同期、分散タスクキューによる実行&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;同期、ローカルシステムプロセスによる実行&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;アーキテクチャ&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;デカップリング（Scheduler -&amp;gt; Broker -&amp;gt; Workers）&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;密結合（同一ホスト上でスケジュールと実行を行う）&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;スケーラビリティ&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;高い（タスクをクラスタ内の任意のワーカーに分散可能）&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;単一ホストのリソース制限に依存する&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;適したユースケース&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;マイクロサービス、コンテナ環境、分散システム&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;単一サーバー内のシステムメンテナンス、ログローテーション&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;構成の複雑さ&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;メッセージブローカーと専用プロセスの管理が必要&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;OS標準機能のため、追加のインフラ構成が不要&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;動的制御&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;データベース連携による動的なスケジュール変更が可能&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;設定ファイルの直接書き換えが必要&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;p&gt;🛠️ 本番環境でCeleryによるジョブスケジューリングを安定して運用するために、以下のチェックリストを確認してください。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;プロセスの分離&lt;/b&gt;: 本番環境では、スケジューラ（Beat）とワーカー（Worker）を必ず別々のプロセス（またはコンテナ）として起動しているか。
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ワーカープロセスの起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;celery -A tasks worker --loglevel&lt;span style="color:#f92672"&gt;=&lt;/span&gt;info
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# スケジューラプロセスの起動（単一インスタンスで実行すること）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;celery -A tasks beat --loglevel&lt;span style="color:#f92672"&gt;=&lt;/span&gt;info
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;タイムゾーンの一致&lt;/b&gt;: &lt;code&gt;app.conf.timezone&lt;/code&gt; が正しく設定され、データベースやOSのタイムゾーンと整合性が取れているか。&lt;/li&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;ブローカーの接続監視&lt;/b&gt;: メッセージブローカー（Redis/RabbitMQ）への接続瞬断時に、再接続が自動で行われる設定になっているか。&lt;/li&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;デッドレターキューの検討&lt;/b&gt;: 繰り返し失敗するタスクを隔離し、他の定期実行タスクのブロッキングを防ぐ設計がなされているか。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>k6とPrometheusを用いたローカルバックエンドの負荷試験とリアルタイム監視パイプラインの構築</title><link>https://klifehack.com/p/k6-prometheus-grafana-load-testing/</link><pubDate>Fri, 05 Jun 2026 12:34:44 +0900</pubDate><guid>https://klifehack.com/p/k6-prometheus-grafana-load-testing/</guid><description>&lt;p&gt;本稿では、ローカル開発環境における「Woogongsil」バックエンドサービスを対象とした、段階的な負荷シミュレーションおよびリアルタイム監視環境の構築手順について解説します。本検証は、本番環境への影響を完全に排除したローカルサンドボックス環境にて実施されました。&lt;/p&gt;
+&lt;h2 id="1-検証の目的とアプローチ"&gt;1. 検証の目的とアプローチ
+&lt;/h2&gt;&lt;p&gt;本検証の主な目的は、接続確認レベルのテストから一歩進め、段階的な負荷をバックエンドに与えた際のシステム挙動をリアルタイムに観測することです。具体的には以下のステップを実行します。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;段階的な負荷生成&lt;/b&gt;: GETリクエストを中心とした負荷を段階的に適用します。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;仮想ユーザー（VU）の動的スケーリング&lt;/b&gt;: VU数を 10 → 30 → 50 → 20 → 0 の順に増減させます。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;時系列データの統合&lt;/b&gt;: Prometheus Remote Write機能を利用し、k6が生成するメトリクスをPrometheusへ直接ストリーミングします。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;可視化パイプラインの構築&lt;/b&gt;: Grafanaを用いて、RPS（Requests Per Second）、VU数、HTTPステータスコード、エンドポイントごとのリクエスト分布、5xxエラー率をリアルタイムに監視します。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;システムの安定性検証&lt;/b&gt;: ピーク負荷時において、サーバーダウンや内部エラー（500 Internal Server Error）が発生しないことを確認します。&lt;/p&gt;
+&lt;h2 id="2-技術スタックと検証環境"&gt;2. 技術スタックと検証環境
+&lt;/h2&gt;&lt;p&gt;本検証は、外部サービスへの影響を防ぐため、すべてローカルのDockerコンテナおよび開発環境内で完結させています。&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;検証対象バックエンド&lt;/b&gt;: Woogongsil Local Backend (http://localhost:5000)&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;可視化ツール&lt;/b&gt;: Grafana (http://localhost:3001)&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;時系列データベース&lt;/b&gt;: Prometheus (http://localhost:9090)&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;負荷生成ツール&lt;/b&gt;: k6&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;オーケストレーション&lt;/b&gt;: Docker Compose&lt;/p&gt;
+&lt;h2 id="3-コンテナ環境の初期化と事前検証"&gt;3. コンテナ環境の初期化と事前検証
+&lt;/h2&gt;&lt;p&gt;過去のテスト実行によるメトリクスの混入を防ぐため、測定開始前に監視スタックの初期化を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;```&lt;/span&gt;powershell
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 既存のコンテナおよびネットワークの停止&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose -f docker-compose.monitor.yml down
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# PrometheusとGrafanaのバックグラウンド起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose -f docker-compose.monitor.yml up -d prometheus grafana
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# コンテナの起動状態確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker ps --filter &lt;span style="color:#e6db74"&gt;&amp;#34;name=wgs-&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
+コンテナ wgs-prometheus および wgs-grafana が正常に起動していることを確認後、ターゲットとなるバックエンドのヘルスチェックを行います。
+
+```bash
+```powershell
+curl.exe -I http://localhost:5000
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
+HTTPヘッダーの返却値として HTTP/1.1 200 OK が確認できれば、負荷試験の準備は完了です。
+
+## 4. k6負荷試験スクリプトの実装
+
+負荷シミュレーションには、以下のJavaScriptシナリオ（06_final_recording_public_get.js）を使用します。
+
+```javascript
+```javascript
+import http from &amp;#34;k6/http&amp;#34;;
+import { check, sleep } from &amp;#34;k6&amp;#34;;
+
+// 200〜499のステータスコードを許容範囲として定義
+http.setResponseCallback(
+http.expectedStatuses({ min: 200, max: 499 })
+);
+
+export const options = {
+stages: [
+{ duration: &amp;#34;30s&amp;#34;, target: 10 }, // 10 VUまでランプアップ
+{ duration: &amp;#34;30s&amp;#34;, target: 30 }, // 30 VUまでランプアップ
+{ duration: &amp;#34;30s&amp;#34;, target: 50 }, // 50 VUでピーク負荷維持
+{ duration: &amp;#34;30s&amp;#34;, target: 20 }, // 20 VUまでランプダウン
+{ duration: &amp;#34;30s&amp;#34;, target: 0 } // 0 VUまでクールダウン
+],
+thresholds: {
+http_req_duration: [&amp;#34;p(95)&amp;amp;lt;2000&amp;#34;], // 95%のリクエストが2秒以内に完了すること
+http_req_failed: [&amp;#34;rate&amp;amp;lt;0.01&amp;#34;] // エラー率が1%未満であること
+},
+summaryTrendStats: [&amp;#34;avg&amp;#34;, &amp;#34;min&amp;#34;, &amp;#34;med&amp;#34;, &amp;#34;max&amp;#34;, &amp;#34;p(90)&amp;#34;, &amp;#34;p(95)&amp;#34;, &amp;#34;p(99)&amp;#34;]
+};
+
+const BASE_URL = __ENV.BASE_URL || &amp;#34;http://host.docker.internal:5000&amp;#34;;
+
+const endpoints = [
+{ name: &amp;#34;home-root&amp;#34;, path: &amp;#34;/&amp;#34; },
+{ name: &amp;#34;screen-settings&amp;#34;, path: &amp;#34;/api/screen-settings&amp;#34; },
+{ name: &amp;#34;class-schedules&amp;#34;, path: &amp;#34;/api/class-schedules&amp;#34; },
+{ name: &amp;#34;mealmap-places&amp;#34;, path: &amp;#34;/api/mealmap/places&amp;#34; },
+{ name: &amp;#34;exam-catalogs&amp;#34;, path: &amp;#34;/api/exam-catalogs&amp;#34; },
+{ name: &amp;#34;ipep-catalog&amp;#34;, path: &amp;#34;/api/ipep/exam-catalog&amp;#34; },
+{ name: &amp;#34;ipep-random&amp;#34;, path: &amp;#34;/api/ipep/random-question&amp;#34; },
+{ name: &amp;#34;ranking&amp;#34;, path: &amp;#34;/api/ranking&amp;#34; },
+{ name: &amp;#34;notices&amp;#34;, path: &amp;#34;/api/notices&amp;#34; },
+{ name: &amp;#34;posts&amp;#34;, path: &amp;#34;/api/posts&amp;#34; }
+];
+
+export default function () {
+if (__ITER % 5 === 0) {
+console.log(`[WGS LOAD TEST] VU=${__VU}, ITER=${__ITER}, target=${BASE_URL}`);
+}
+
+for (const item of endpoints) {
+const res = http.get(`${BASE_URL}${item.path}`, {
+tags: { endpoint: item.name } // Grafanaでの集計用タグ
+});
+
+check(res, { 
+[`${item.name} no server crash`]: (r) =&amp;amp;gt; r.status &amp;amp;gt; 0 &amp;amp;amp;&amp;amp;amp; r.status &amp;amp;lt; 500
+});
+
+sleep(0.1); // ローカルソケットの枯渇を防ぐためのウェイト
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
+### 実装上の注意点
+
+⚠️ &amp;lt;b&amp;gt;host.docker.internal&amp;lt;/b&amp;gt;: k6コンテナ内からホストマシンの localhost（ポート5000）へ通信するために必要なホスト名定義です。
+
+⚠️ &amp;lt;b&amp;gt;タグ付け (tags)&amp;lt;/b&amp;gt;: 各HTTPリクエストにエンドポイント名を付与することで、Grafana上でルートごとのレイテンシやエラー率を個別に集計可能にしています。
+
+## 5. 負荷試験の実行とPrometheus連携
+
+以下のコマンドを実行し、Prometheus Remote Writeを有効化した状態でk6を起動します。
+
+```bash
+```powershell
+docker compose -f docker-compose.monitor.yml --profile test run --rm `
+-e BASE_URL=http://host.docker.internal:5000 `
+-e K6_PROMETHEUS_RW_PUSH_INTERVAL=1s `
+k6 run -o experimental-prometheus-rw /scripts/06_final_recording_public_get.js
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;
+🛠️ &amp;lt;b&amp;gt;--profile test&amp;lt;/b&amp;gt;: Docker Composeファイル内のk6サービス定義を有効化します。
+
+🛠️ &amp;lt;b&amp;gt;K6_PROMETHEUS_RW_PUSH_INTERVAL=1s&amp;lt;/b&amp;gt;: リアルタイム監視のグラフ描画を滑らかにするため、メトリクスのプッシュ間隔を1秒に設定しています。
+
+## 6. 測定結果とメトリクス分析
+
+約2分30秒の試験実行によって得られた主要メトリクスは以下の通りです。
+
+| メトリクス項目 | 測定値 |
+| :--- | :--- |
+| &amp;lt;b&amp;gt;総HTTPリクエスト数&amp;lt;/b&amp;gt; | 32,200 回 |
+| &amp;lt;b&amp;gt;総イテレーション数&amp;lt;/b&amp;gt; | 3,220 回 |
+| &amp;lt;b&amp;gt;最大仮想ユーザー数 (VU)&amp;lt;/b&amp;gt; | 50 VU |
+| &amp;lt;b&amp;gt;HTTPリクエスト失敗率&amp;lt;/b&amp;gt; | 0.00% |
+| &amp;lt;b&amp;gt;チェック成功率&amp;lt;/b&amp;gt; | 100.00% |
+| &amp;lt;b&amp;gt;平均レスポンス時間&amp;lt;/b&amp;gt; | 2.73ms |
+| &amp;lt;b&amp;gt;p95 レスポンス時間&amp;lt;/b&amp;gt; | 5.88ms |
+| &amp;lt;b&amp;gt;p99 レスポンス時間&amp;lt;/b&amp;gt; | 15.26ms |
+| &amp;lt;b&amp;gt;最大レスポンス時間&amp;lt;/b&amp;gt; | 57.09ms |
+| &amp;lt;b&amp;gt;スループット&amp;lt;/b&amp;gt; | 約 213.75 reqs/sec |
+
+### リアルタイム監視による分析結果
+
+💡 &amp;lt;b&amp;gt;RPSとVUの相関関係&amp;lt;/b&amp;gt;: VU数の増減（10 → 30 → 50 → 20 → 0）に追従して、RPSのグラフが綺麗な山型のカーブを描き、スケールアップ・ダウンが意図通りに機能していることを確認しました。
+
+💡 &amp;lt;b&amp;gt;ステータスコードの分布&amp;lt;/b&amp;gt;: 大半のリクエストは 200 OK でしたが、一部の保護されたAPIにおいて 401 Unauthorized が記録されました。これは認証セッションなしでアクセスしたことによる期待通りの挙動であり、サーバーエラー（5xx）は一切発生していません。
+
+💡 &amp;lt;b&amp;gt;エンドポイント別の負荷分散&amp;lt;/b&amp;gt;: スクリプト内のループ処理により、定義した10個のエンドポイントに対して均等にトラフィックが分散されていることが確認できました。
+
+## 7. Lessons Learned
+
+⚠️ &amp;lt;b&amp;gt;リアルタイム監視における更新頻度の重要性&amp;lt;/b&amp;gt;: 初期検証時、Grafanaのデータ更新頻度がデフォルトのままであったため、グラフが静的に見える問題が発生しました。更新間隔を5秒（5s）に明示的に設定することで、負荷の増減をリアルタイムに追従できるようになりました。
+
+⚠️ &amp;lt;b&amp;gt;テスト実行IDの識別&amp;lt;/b&amp;gt;: Prometheus上で複数のテスト実行結果が混在するのを防ぐため、今後は実行ごとに一意の run_id などのカスタムラベルを付与する設計が推奨されます。
+
+⚠️ &amp;lt;b&amp;gt;サーバーサイドリソースの可視化不足&amp;lt;/b&amp;gt;: 今回はクライアント（k6）側から見たメトリクス収集に留まったため、サーバー側のCPUやメモリ使用率の推移が追いきれませんでした。今後はNode.jsバックエンドに prom-client を組み込み、/metrics エンドポイント経由で内部リソース情報を統合するアプローチを検討します。
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Linux環境における各種ファイアウォール管理ツールの技術仕様と実装</title><link>https://klifehack.com/p/linux-firewall-management-systems-analysis/</link><pubDate>Fri, 05 Jun 2026 12:01:00 +0900</pubDate><guid>https://klifehack.com/p/linux-firewall-management-systems-analysis/</guid><description>&lt;h1 id="linuxファイアウォール管理ツールの実装と運用比較"&gt;Linuxファイアウォール管理ツールの実装と運用比較
+&lt;/h1&gt;&lt;p&gt;Linuxカーネルのnetfilterフレームワークを制御するためのフロントエンドツールは、ディストリビューションや運用要件によって異なります。本稿では、Rocky Linux (RHEL系) で標準的なfirewalld、Ubuntuで採用されるUFW、低レイヤー制御を可能にするiptables、そしてモダンな後継であるnftablesの各実装仕様について記述します。&lt;/p&gt;
+&lt;h2 id="1-firewalld-rocky-linux--rhel系"&gt;1. firewalld (Rocky Linux / RHEL系)
+&lt;/h2&gt;&lt;p&gt;firewalldは「ゾーン」と「サービス」という概念を用いてネットワークトラフィックを動的に管理します。ランタイム設定と永続設定を分離して管理する点が特徴であり、システム稼働中に接続を遮断することなくルールを更新できる利点があります。&lt;/p&gt;
+&lt;h3 id="11-状態確認と基本設定"&gt;1.1. 状態確認と基本設定
+&lt;/h3&gt;&lt;p&gt;現在のデーモンの稼働状態および適用されているルールセットを確認します。アクティブなゾーンとインターフェースの紐付けを把握することが初期診断の基本となります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# デーモンの稼働状態確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl status firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# アクティブなルールおよびゾーン設定の表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --list-all
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="12-サービスの許可と永続化"&gt;1.2. サービスの許可と永続化
+&lt;/h3&gt;&lt;p&gt;HTTPなどの標準的なサービスを許可する場合、&lt;code&gt;--permanent&lt;/code&gt;フラグを使用して再起動後も設定を維持させます。設定変更後はリロード処理を実行することで、ランタイム環境に反映されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# HTTPサービスの永続的な追加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定の反映&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 反映後の確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --list-all
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="13-rich-rulesによる詳細なアクセス制御"&gt;1.3. Rich Rulesによる詳細なアクセス制御
+&lt;/h3&gt;&lt;p&gt;特定のソースIPアドレスからのアクセスのみを許可するなど、複雑な条件が必要な場合はRich Rulesを使用します。これにより、サービス単位よりも細かい粒度でのフィルタリングが可能になります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のIP (192.168.0.100) からのHTTPアクセスのみを許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-rich-rule&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;rule family=&amp;#34;ipv4&amp;#34; source address=&amp;#34;192.168.0.100&amp;#34; service name=&amp;#34;http&amp;#34; accept&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# リロード後に適用を確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-ufw-uncomplicated-firewall-ubuntu系"&gt;2. UFW: Uncomplicated Firewall (Ubuntu系)
+&lt;/h2&gt;&lt;p&gt;UFWはiptablesの複雑な構文を抽象化し、簡潔なインターフェースを提供することを目的としています。主にデスクトップや小規模なサーバー環境において、迅速な設定展開を支援します。&lt;/p&gt;
+&lt;h3 id="21-インストールと初期有効化"&gt;2.1. インストールと初期有効化
+&lt;/h3&gt;&lt;p&gt;Ubuntu環境では、リモートアクセス（SSH）を事前に許可してから有効化することが推奨されます。これを怠ると、有効化した瞬間にSSHセッションが切断されるリスクがあります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# インストール&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt install ufw -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SSHの許可と有効化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow ssh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw enable
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-ポートおよびサービス管理"&gt;2.2. ポートおよびサービス管理
+&lt;/h3&gt;&lt;p&gt;ポート番号やプロトコルを直接指定してルールを定義します。シンプルながらも、特定のサブネットからのアクセス制限など、必要な機能は網羅されています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# HTTP (80番ポート) の許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のTCPポート (8080) の許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow 8080/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 詳細なステータス表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw status verbose
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-iptables-カーネルレベルのパケットフィルタリング"&gt;3. iptables: カーネルレベルのパケットフィルタリング
+&lt;/h2&gt;&lt;p&gt;iptablesはnetfilterフレームワークと直接対話し、パケットの連鎖（Chains）に基づいて処理を決定します。長年標準として利用されており、多くのレガシーシステムや特定のネットワークアプライアンスで現役の技術です。&lt;/p&gt;
+&lt;h3 id="31-ルールの優先順位と挿入"&gt;3.1. ルールの優先順位と挿入
+&lt;/h3&gt;&lt;p&gt;iptablesはルールを上から順に評価するため、挿入位置（インデックス）が重要です。&lt;code&gt;-A&lt;/code&gt;（追加）と&lt;code&gt;-I&lt;/code&gt;（挿入）を使い分けることで、評価順序を厳密に制御します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 全ルールの詳細表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -L -v -n
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# INPUTチェーンの先頭にDROPルールを挿入 (ポート8080を遮断)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -I INPUT &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; -p tcp --dport &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt; -j DROP
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のルールの削除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -D INPUT &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-rocky-linuxでのiptables-services運用"&gt;3.2. Rocky Linuxでのiptables-services運用
+&lt;/h3&gt;&lt;p&gt;firewalldを無効化し、iptablesを直接管理する場合の手順です。静的なルールファイルを直接編集する運用スタイルに適しています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# パッケージのインストールとfirewalldの停止&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dnf install iptables-services -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービス有効化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl start iptables
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable iptables
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="33-ルールの定義と永続化"&gt;3.3. ルールの定義と永続化
+&lt;/h3&gt;&lt;p&gt;コマンドラインで追加したルールは、明示的に保存しない限り再起動時に消失します。&lt;code&gt;iptables-save&lt;/code&gt;コマンドを利用して、設定をファイルに書き出す必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Webサーバー用ポートの開放&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -A INPUT -p tcp --dport &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt; -j ACCEPT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のソースIPからのパケットを破棄&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -A INPUT -s 1.2.3.4 -j DROP
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定の保存 (RHEL系)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;service iptables save
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-nftables-モダンな後継ツール"&gt;4. nftables: モダンな後継ツール
+&lt;/h2&gt;&lt;p&gt;nftablesはiptablesの後継として開発され、パフォーマンスの向上と構文の柔軟性が強化されています。テーブル、チェーン、ルールの階層構造を持ち、単一のルールで複数のアクションを処理できる効率性を備えています。&lt;/p&gt;
+&lt;h3 id="41-テーブルとチェーンの構築"&gt;4.1. テーブルとチェーンの構築
+&lt;/h3&gt;&lt;p&gt;nftablesでは、まずアドレスファミリー（ip, ip6, inetなど）を指定してテーブルを作成し、その中にフックポイントを定義したチェーンを構築します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# inetファミリーにfilterテーブルを作成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add table inet filter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# inputチェーンの定義 (優先度0)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add chain inet filter input &lt;span style="color:#f92672"&gt;{&lt;/span&gt; type filter hook input priority &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\;&lt;/span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ポート80の許可ルール追加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add rule inet filter input tcp dport &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt; accept
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ルールセットの表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft list ruleset
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-ハンドルを使用したルール管理"&gt;4.2. ハンドルを使用したルール管理
+&lt;/h3&gt;&lt;p&gt;nftablesでは各ルールに付与された「ハンドル」を使用して操作を行います。これにより、特定のルールを正確に削除または置換することが容易になります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ハンドル番号を含めたリスト表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft --handle list ruleset
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のハンドル番号を指定して削除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft delete rule inet filter input handle &lt;span style="color:#f92672"&gt;[&lt;/span&gt;NUMBER&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;💡 競合の回避&lt;/b&gt;: 同一システム上で複数のファイアウォール管理ツール（例：firewalldとiptables）を同時に有効にすると、ルールの競合や予期しないパケットドロップが発生する可能性があります。必ず一方を無効化してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;⚠️ SSHアクセスの確保&lt;/b&gt;: ルールを適用する際は、常に管理用セッション（SSH）が維持されることを確認してください。特に&lt;code&gt;ufw enable&lt;/code&gt;や&lt;code&gt;iptables -F&lt;/code&gt;（全ルール消去）を実行する際は注意が必要です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;🛠️ 永続化の確認&lt;/b&gt;: 各ツールで永続化の手法が異なるため（&lt;code&gt;--permanent&lt;/code&gt;, &lt;code&gt;service save&lt;/code&gt;, &lt;code&gt;nftables.conf&lt;/code&gt;など）、設定変更後は必ず再起動試験または設定ファイルの確認を実施してください。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>GitHub ActionsとSelf-Hosted RunnerによるKubernetesデプロイ自動化の実装</title><link>https://klifehack.com/p/github-actions-k8s-self-hosted-runner/</link><pubDate>Thu, 04 Jun 2026 18:02:34 +0900</pubDate><guid>https://klifehack.com/p/github-actions-k8s-self-hosted-runner/</guid><description>&lt;h2 id="1-概要と目的"&gt;1. 概要と目的
 &lt;/h2&gt;&lt;p&gt;GitHub ActionsとローカルのKubernetes環境を統合し、ソースコードのプッシュからデプロイまでを完全に自動化するCI/CDパイプラインを構築します。手動介入を排除し、ローリングアップデートを自動的に実行するワークフローの確立を目的とします。&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;ターゲットワークフロー:&lt;/b&gt;&lt;/p&gt;
 &lt;ol&gt;
