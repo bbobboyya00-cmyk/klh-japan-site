@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Systemd on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/systemd/</link><description>Recent content in Systemd on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 05 Jun 2026 14:14:35 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/systemd/index.xml" rel="self" type="application/rss+xml"/><item><title>FRPを用いたNAT内ローカルサービスの外部公開とSTCPセキュアトンネリングの実装</title><link>https://klifehack.com/p/frp-reverse-proxy-stcp-setup/</link><pubDate>Fri, 05 Jun 2026 14:14:35 +0900</pubDate><guid>https://klifehack.com/p/frp-reverse-proxy-stcp-setup/</guid><description>&lt;h3 id="1-はじめに"&gt;1. はじめに
+&lt;/h3&gt;&lt;p&gt;ソフトウェアの開発およびテストフェーズにおいて、プライベートIPアドレス配下で動作するローカルサーバーのサービスを外部ネットワークからアクセス可能にする必要が生じることがあります。この課題に対して、&lt;b&gt;FRP (Fast Reverse Proxy)&lt;/b&gt; は、設定が容易で高いパフォーマンスを持つリバースプロキシソリューションを提供します。&lt;/p&gt;
+&lt;p&gt;FRPは、アクティブなトンネル接続、トラフィック統計、およびシステムヘルスをリアルタイムで監視するためのWebベースのダッシュボードを内蔵しています。本稿では、FRPを開発・検証環境へ導入し、安全に運用するための設定明細およびシステム構成について解説します。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="2-frp-fast-reverse-proxy-の概要"&gt;2. FRP (Fast Reverse Proxy) の概要
+&lt;/h3&gt;&lt;h4 id="21-定義"&gt;2.1 定義
+&lt;/h4&gt;&lt;p&gt;FRPは、NAT（Network Address Translation）や制限の厳しいファイアウォールの背後にあるローカルサーバーを、パブリックインターネットに安全に公開するために設計されたリバースプロキシアプリケーションです。パブリック静的IPアドレスを持たないマシン上のローカルサービスに対して、外部ユーザーからのアクセスを中継する役割を果たします。&lt;/p&gt;
+&lt;h4 id="22-コアコンポーネント"&gt;2.2 コアコンポーネント
+&lt;/h4&gt;&lt;p&gt;FRPは、以下の2つのバイナリから構成されるクライアント・サーバーアーキテクチャで動作します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;&lt;code&gt;frps&lt;/code&gt; (FRP Server):&lt;/b&gt; パブリックIPアドレスを持つクラウドサーバー等で実行されます。クライアントおよび外部ユーザーからの接続要求を待ち受けるリスナーとして機能します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;&lt;code&gt;frpc&lt;/code&gt; (FRP Client):&lt;/b&gt; 実際のターゲットサービス（SSH、Webサーバー、データベース等）が動作しているプライベートネットワーク内のローカルサーバーで実行されます。&lt;code&gt;frps&lt;/code&gt;に対してアウトバウンド接続を確立し、セキュアなトンネルを構築します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Local Server | | Public Server | | External User |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (FRP Client) | --[Outbound]--&amp;amp;gt; | (FRP Server) | &amp;amp;lt;---[Inbound]--- | (SSH/Browser) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| [frpc] | | [frps] | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="23-動作原理とワークフロー"&gt;2.3 動作原理とワークフロー
+&lt;/h4&gt;&lt;p&gt;FRPを経由するトラフィックのルーティングは、以下の4つのステップで実行されます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;接続確立:&lt;/b&gt; プライベートネットワーク内の &lt;code&gt;frpc&lt;/code&gt; が、パブリッククラウド上の &lt;code&gt;frps&lt;/code&gt; に対してアウトバウンド接続を開始します。アウトバウンド接続であるため、多くのインバウンドファイアウォール規則やNAT制限をバイパスできます。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;ポートバインディング:&lt;/b&gt; &lt;code&gt;frps&lt;/code&gt; は接続を受け取ると、指定されたポート（例: ポート &lt;code&gt;3500&lt;/code&gt;）をバインドし、そのポートへのインバウンドトラフィックをアクティブなトンネル経由で &lt;code&gt;frpc&lt;/code&gt; に転送する準備を整えます。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;データ転送:&lt;/b&gt; 外部ユーザーがパブリックサーバーの &lt;code&gt;CLOUD_PUBLIC_IP:3500&lt;/code&gt; に接続を試みると、&lt;code&gt;frps&lt;/code&gt; はそのトラフィックをインターセプトし、確立されたトンネルを通じて &lt;code&gt;frpc&lt;/code&gt; に転送します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;レスポンス返送:&lt;/b&gt; &lt;code&gt;frpc&lt;/code&gt; は転送されたデータを受信し、ローカルサービス（ポート &lt;code&gt;22&lt;/code&gt; のSSHデーモンなど）に渡します。サービスからの応答を回収し、トンネルを通じて &lt;code&gt;frps&lt;/code&gt; に送り返し、最終的に外部ユーザーへ届けられます。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="24-主な機能"&gt;2.4 主な機能
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;マルチプロトコル対応:&lt;/b&gt; TCP、UDP、HTTP、HTTPS、およびドメインベースのバーチャルホストルーティングをサポートします。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;P2P接続 (&lt;code&gt;xtcp&lt;/code&gt;):&lt;/b&gt; 帯域幅を節約するため、初期ハンドシェイク後にリレーサーバーを介さず、クライアント間で直接ピアツーピア通信を行うモードをサポートします。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;セキュリティ機能:&lt;/b&gt; トンネル内の暗号化、データ圧縮、およびトークンベースの認証をサポートします。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;管理ダッシュボード:&lt;/b&gt; トンネルの状態や帯域幅の使用状況を可視化するWeb UIを提供します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="3-インストール手順"&gt;3. インストール手順
+&lt;/h3&gt;&lt;p&gt;ターゲットシステムのアーキテクチャに応じたリリースパッケージを公式リポジトリから取得します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;参照ソース:&lt;/b&gt; &lt;a href="https://github.com/fatedier/frp/releases" style="color: inherit; text-decoration: underline;"&gt;FRP GitHub Releases&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;検証バージョン:&lt;/b&gt; &lt;code&gt;0.67.0&lt;/code&gt; (Linux 64bit環境を想定)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;パブリックサーバー（&lt;code&gt;frps&lt;/code&gt;）およびプライベートクライアント（&lt;code&gt;frpc&lt;/code&gt;）の両方で以下のコマンドを実行し、バイナリを抽出します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FRPパッケージのダウンロードと展開&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wget https://github.com/fatedier/frp/releases/download/v0.67.0/frp_0.67.0_linux_amd64.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tar -zxvf frp_0.67.0_linux_amd64.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd frp_0.67.0_linux_amd64
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="4-サーバー側の設定-frps--ダッシュボード"&gt;4. サーバー側の設定 (&lt;code&gt;frps&lt;/code&gt; &amp;amp; ダッシュボード)
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;対象ホスト:&lt;/b&gt; パブリックIPアドレスを持つクラウドサーバー&lt;/p&gt;
+&lt;h4 id="41-設定ファイルの編集-frpstoml"&gt;4.1 設定ファイルの編集 (&lt;code&gt;frps.toml&lt;/code&gt;)
+&lt;/h4&gt;&lt;p&gt;FRP v0.52.0以降で採用されているTOML形式を用いて、サーバー設定ファイルを編集します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定ファイルの配置ディレクトリ作成と編集&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /etc/frp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp frps.toml /etc/frp/frps.toml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vi /etc/frp/frps.toml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以下のパラメータを設定ファイルに記述します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frps.toml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;bindPort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;auth&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;your_secure_token&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 管理ダッシュボードの設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;webServer&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;addr&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;0.0.0.0&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;webServer&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;port&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;7500&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;webServer&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;user&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;admin&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;webServer&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;password&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;admin_password&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="42-ファイアウォールの設定"&gt;4.2 ファイアウォールの設定
+&lt;/h4&gt;&lt;p&gt;クラウドプロバイダーのセキュリティグループおよびローカルファイアウォール（&lt;code&gt;ufw&lt;/code&gt; や &lt;code&gt;firewalld&lt;/code&gt;）において、以下のポートへのインバウンドトラフィックを許可してください。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ポート &lt;code&gt;7000&lt;/code&gt;:&lt;/b&gt; &lt;code&gt;frpc&lt;/code&gt; と &lt;code&gt;frps&lt;/code&gt; 間の制御用接続に必要。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ポート &lt;code&gt;7500&lt;/code&gt;:&lt;/b&gt; 管理ダッシュボードへのアクセスに必要。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;サービスポート:&lt;/b&gt; 外部公開用に &lt;code&gt;frpc&lt;/code&gt; が要求する任意のポート（例: &lt;code&gt;6000&lt;/code&gt;, &lt;code&gt;6500&lt;/code&gt; など）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="43-systemd-によるバックグラウンド実行設定"&gt;4.3 &lt;code&gt;systemd&lt;/code&gt; によるバックグラウンド実行設定
+&lt;/h4&gt;&lt;p&gt;サーバーの再起動時やプロセス異常終了時に自動復旧させるため、&lt;code&gt;systemd&lt;/code&gt; サービスとして登録します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# systemdサービスファイルの作成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo vi /etc/systemd/system/frps.service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以下のサービス定義を入力します。環境の実態に合わせて、バイナリおよび設定ファイルのパスを適切に調整してください（以下は &lt;code&gt;0.54.0&lt;/code&gt; 構成時のパスを基準とした例です）。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Unit]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Description&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;FRP Server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;After&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;network.target&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Service]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Type&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;simple&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ExecStart&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/usr/local/bin/frps -c /etc/frp/frps.toml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Restart&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;on-failure&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;RestartSec&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Install]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;WantedBy&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;multi-user.target&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;サービスを有効化し、起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# バイナリのシステムパスへの配置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo cp frps /usr/local/bin/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスの有効化および起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl daemon-reload
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl enable frps
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl start frps
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl status frps
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="44-ダッシュボードの確認"&gt;4.4 ダッシュボードの確認
+&lt;/h4&gt;&lt;p&gt;ブラウザから以下のURLにアクセスし、設定した認証情報でログインできるか確認します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;URL:&lt;/b&gt; &lt;code&gt;http://CLOUD_PUBLIC_IP:7500&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Username:&lt;/b&gt; &lt;code&gt;admin&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Password:&lt;/b&gt; &lt;code&gt;admin_password&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="5-クライアント側の設定-frpc"&gt;5. クライアント側の設定 (&lt;code&gt;frpc&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;対象ホスト:&lt;/b&gt; プライベートIPアドレスを持つローカルサーバー&lt;/p&gt;
+&lt;h4 id="51-設定ファイルの編集-frpctoml"&gt;5.1 設定ファイルの編集 (&lt;code&gt;frpc.toml&lt;/code&gt;)
+&lt;/h4&gt;&lt;p&gt;クライアント設定ファイルを編集し、接続先サーバーの情報と公開するローカルサービスを定義します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定ファイルの配置ディレクトリ作成と編集&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /etc/frp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp frpc.toml /etc/frp/frpc.toml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vi /etc/frp/frpc.toml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以下の構成を記述します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frpc.toml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;serverAddr&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;CLOUD_PUBLIC_IP&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;serverPort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;auth&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;your_secure_token&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[[&lt;span style="color:#a6e22e"&gt;proxies&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;ssh&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;type&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;tcp&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localIP&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;127.0.0.1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localPort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;22&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;remotePort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;6000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="52-systemd-によるバックグラウンド実行設定"&gt;5.2 &lt;code&gt;systemd&lt;/code&gt; によるバックグラウンド実行設定
+&lt;/h4&gt;&lt;p&gt;クライアントプロセスを常時稼働させるため、同様に &lt;code&gt;systemd&lt;/code&gt; サービスを構築します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# systemdサービスファイルの作成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo vi /etc/systemd/system/frpc.service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Unit]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Description&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;FRP Client&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;After&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;network.target&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Service]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Type&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;simple&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ExecStart&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/usr/local/bin/frpc -c /etc/frp/frpc.toml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Restart&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;on-failure&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;RestartSec&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Install]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;WantedBy&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;multi-user.target&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;クライアントサービスを有効化して起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# バイナリのシステムパスへの配置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo cp frpc /usr/local/bin/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスの有効化および起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl daemon-reload
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl enable frpc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl start frpc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl status frpc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="6-高度な設定とセキュリティ対策"&gt;6. 高度な設定とセキュリティ対策
+&lt;/h3&gt;&lt;h4 id="61-安全な認証トークンの生成"&gt;6.1 安全な認証トークンの生成
+&lt;/h4&gt;&lt;p&gt;FRPの制御ポートに対する不正アクセスを防ぐため、暗号論的に安全なランダムトークンを使用することを推奨します。OpenSSLを用いて24文字のBase64エンコード文字列を生成する例を以下に示します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 安全なランダムトークンの生成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openssl rand -base64 &lt;span style="color:#ae81ff"&gt;24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="62-複数ポート複数サービスの公開"&gt;6.2 複数ポート・複数サービスの公開
+&lt;/h4&gt;&lt;p&gt;同一のプライベートサーバー上で複数のサービスを公開する場合、&lt;code&gt;frpc.toml&lt;/code&gt; に複数の &lt;code&gt;[[proxies]]&lt;/code&gt; ブロックを定義します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frpc.toml (複数サービス構成例)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;serverAddr&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;CLOUD_PUBLIC_IP&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;serverPort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;auth&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;your_secure_token&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[[&lt;span style="color:#a6e22e"&gt;proxies&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;ssh&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;type&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;tcp&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localIP&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;127.0.0.1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localPort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;22&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;remotePort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;6000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[[&lt;span style="color:#a6e22e"&gt;proxies&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;web&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;type&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;tcp&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localIP&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;127.0.0.1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localPort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;remotePort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;6500&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;設定変更後、クライアントサービスを再起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# クライアントサービスの再起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl restart frpc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠️ &lt;b&gt;注意:&lt;/b&gt; パブリックサーバー側のファイアウォールで、公開するすべての &lt;code&gt;remotePort&lt;/code&gt;（例: &lt;code&gt;6000&lt;/code&gt;, &lt;code&gt;6500&lt;/code&gt;）のインバウンド通信を許可する必要があります。&lt;/p&gt;
+&lt;h4 id="63-ポート範囲の一括指定"&gt;6.3 ポート範囲の一括指定
+&lt;/h4&gt;&lt;p&gt;複数の連続するポートを個別に定義せず、カンマ区切りやハイフンを用いた範囲指定で一括公開することが可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frpc.toml (ポート範囲指定例)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[[&lt;span style="color:#a6e22e"&gt;proxies&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;range_ports&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;type&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;tcp&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localIP&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;127.0.0.1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localPort&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;8000-8080&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;remotePort&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;8000-8080&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="64-サーバー側でのバインドポート制限"&gt;6.4 サーバー側でのバインドポート制限
+&lt;/h4&gt;&lt;p&gt;セキュリティ向上のため、クライアントが要求できるポート範囲をサーバー側で制限することができます。&lt;code&gt;frps.toml&lt;/code&gt; に以下の設定を追加します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frps.toml (ポート制限設定)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;allowPorts&lt;/span&gt; = [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; { &lt;span style="color:#a6e22e"&gt;start&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;6000&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;end&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="65-接続トラブルシューティング"&gt;6.5 接続トラブルシューティング
+&lt;/h4&gt;&lt;p&gt;設定に問題がないにもかかわらず接続できない場合、パブリックサーバー側のパケットフィルタリングが原因である可能性があります。&lt;/p&gt;
+&lt;h5 id="ステップ-1-iptables-によるポート-7000-の明示的許可"&gt;ステップ 1: &lt;code&gt;iptables&lt;/code&gt; によるポート 7000 の明示的許可
+&lt;/h5&gt;&lt;p&gt;&lt;code&gt;frps&lt;/code&gt; が動作するサーバー上で、入力チェーンの最上部にルールを挿入します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ポート7000の通信を許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo iptables -I INPUT -p tcp --dport &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt; -j ACCEPT
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id="ステップ-2-ルールの永続化"&gt;ステップ 2: ルールの永続化
+&lt;/h5&gt;&lt;p&gt;OS再起動後も設定を維持するため、&lt;code&gt;iptables-persistent&lt;/code&gt; を用いて現在のルールセットを保存します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ルールの永続化保存&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo DEBIAN_FRONTEND&lt;span style="color:#f92672"&gt;=&lt;/span&gt;noninteractive apt-get install -y iptables-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo netfilter-persistent save
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id="ステップ-3-外部からの疎通確認"&gt;ステップ 3: 外部からの疎通確認
+&lt;/h5&gt;&lt;p&gt;外部の作業端末から &lt;code&gt;netcat&lt;/code&gt; (&lt;code&gt;nc&lt;/code&gt;) を用いて、対象ポートへの疎通を確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 外部端末からの疎通テスト&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nc -zv CLOUD_PUBLIC_IP &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="7-stcp-secure-tcp-の構成"&gt;7. STCP (Secure TCP) の構成
+&lt;/h3&gt;&lt;p&gt;通常のTCPプロキシは、パブリックサーバー側でポートをグローバルに公開するため、ポートスキャンや不正アクセスの標的になりやすい性質があります。&lt;b&gt;STCP (Secure TCP)&lt;/b&gt; 構成では、パブリックサーバー上に公開ポートを露出させず、暗号化されたトンネルを経由して通信を行います。アクセスする側のクライアント端末（Visitor）でも &lt;code&gt;frpc&lt;/code&gt; を動作させ、ローカルポートにバインドして中継します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Service Host | | Public Server | | Visitor Host |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (FRP Client) | --[STCP Tunnel]-&amp;amp;gt;| (FRP Server) | &amp;amp;lt;-[STCP Tunnel]- | (FRP Client) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| [frpc (service)]| | [frps] | | [frpc (visitor)]|
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="71-アーキテクチャ構成"&gt;7.1 アーキテクチャ構成
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Service (プライベートサーバー):&lt;/b&gt; 公開対象 of サービスと、STCPプロバイダーとして動作する &lt;code&gt;frpc&lt;/code&gt; を実行します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;frps (中継サーバー):&lt;/b&gt; パブリックIP上で動作し、ポートを外部に直接露出させることなく通信を中継します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Visitor (アクセス元端末):&lt;/b&gt; 開発者のローカルPCなどで動作し、STCPビジターとして &lt;code&gt;frpc&lt;/code&gt; を実行してローカルポートをバインドします。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="72-設定ファイル-ini形式による実装例"&gt;7.2 設定ファイル (INI形式による実装例)
+&lt;/h4&gt;&lt;p&gt;※FRPで広く使われているINI形式での設定例を示します。&lt;/p&gt;
+&lt;h5 id="1-サービス提供側設定-frpc_serviceini"&gt;1. サービス提供側設定 (&lt;code&gt;frpc_service.ini&lt;/code&gt;)
+&lt;/h5&gt;&lt;p&gt;プライベートサーバー側に配置します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frpc_service.ini&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[common]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;server_addr&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;CLOUD_PUBLIC_IP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;server_port&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;7000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;your_secure_token&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[ssh_stcp]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;type&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;stcp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sk&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;secret_key_here&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;local_ip&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;127.0.0.1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;local_port&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;22&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠️ &lt;b&gt;セキュリティ上の注意:&lt;/b&gt; 秘密鍵（&lt;code&gt;sk&lt;/code&gt;）はトンネルの事前共有鍵として機能します。サービスごとに固有の複雑な文字列を設定してください。&lt;/p&gt;
+&lt;h5 id="2-中継サーバー設定-frpsini"&gt;2. 中継サーバー設定 (&lt;code&gt;frps.ini&lt;/code&gt;)
+&lt;/h5&gt;&lt;p&gt;パブリックサーバー側に配置します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frps.ini&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[common]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;bind_port&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;7000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;your_secure_token&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id="3-ビジター側設定-frpc_visitorini"&gt;3. ビジター側設定 (&lt;code&gt;frpc_visitor.ini&lt;/code&gt;)
+&lt;/h5&gt;&lt;p&gt;アクセス元のローカルPC側に配置します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frpc_visitor.ini&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[common]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;server_addr&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;CLOUD_PUBLIC_IP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;server_port&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;7000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;your_secure_token&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[ssh_stcp_visitor]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;type&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;stcp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;role&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;visitor&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;server_name&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;ssh_stcp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sk&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;secret_key_here&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;bind_addr&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;127.0.0.1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;bind_port&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;6000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="73-接続の確立"&gt;7.3 接続の確立
+&lt;/h4&gt;&lt;p&gt;STCP構成が有効な状態において、ビジター端末からリモートサービスにアクセスする際は、自身のループバックアドレスに対して接続を行います。&lt;/p&gt;
+&lt;p&gt;例えば、ポート &lt;code&gt;4000&lt;/code&gt; で動作しているリモートアプリケーションにアクセスする場合、開発者はローカルPC上の以下のアドレスに接続します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ビジター端末からの接続実行例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh -p &lt;span style="color:#ae81ff"&gt;6000&lt;/span&gt; user@127.0.0.1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（※ネットワーク環境のバインド設定に応じて、&lt;code&gt;127.0.0.1:6001&lt;/code&gt; など適切なループバックアドレスを指定してください）&lt;/p&gt;
+&lt;h4 id="74-起動シーケンス"&gt;7.4 起動シーケンス
+&lt;/h4&gt;&lt;p&gt;ネットワークの不安定さによるハンドシェイク遅延や接続エラーを最小限に抑えるため、以下の順序でバイナリを起動することを推奨します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;中継サーバー (&lt;code&gt;frps&lt;/code&gt;) の起動:&lt;/b&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./frps -c ./frps.ini
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
+&lt;li&gt;&lt;b&gt;サービス提供側クライアント (&lt;code&gt;frpc&lt;/code&gt; - プライベートサーバー) の起動:&lt;/b&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./frpc -c ./frpc_service.ini
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;&lt;b&gt;ビジター側クライアント (&lt;code&gt;frpc&lt;/code&gt; - ローカルPC) の起動:&lt;/b&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./frpc -c ./frpc_visitor.ini
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="4"&gt;
+&lt;li&gt;&lt;b&gt;ローカルアプリケーションの実行:&lt;/b&gt; SSHクライアントやブラウザ等から、ビジターがバインドしたローカルポート（例: &lt;code&gt;127.0.0.1:6000&lt;/code&gt;）へ接続を開始します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="8-operational-notes"&gt;8. Operational Notes
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;トークン管理の徹底:&lt;/b&gt; &lt;code&gt;auth.token&lt;/code&gt; および STCP の &lt;code&gt;sk&lt;/code&gt; は平文で設定ファイルに保存されるため、設定ファイルのパーミッションを適切に制限（例: &lt;code&gt;chmod 600&lt;/code&gt;）し、リポジトリ等への誤コミットを防ぐ対策を講じてください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;接続維持とタイムアウト:&lt;/b&gt; NAT配下のルーターの仕様により、無通信状態が続くとTCPコネクションが切断される場合があります。必要に応じて &lt;code&gt;frpc&lt;/code&gt; 側の設定に &lt;code&gt;keepalive_interval&lt;/code&gt; などのキープアライブ設定を追加し、トンネルの維持を図ってください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ログの監視:&lt;/b&gt; 接続障害発生時は、&lt;code&gt;systemctl status frps&lt;/code&gt; および &lt;code&gt;systemctl status frpc&lt;/code&gt; を用いて、認証エラー（&lt;code&gt;token is invalid&lt;/code&gt;）やポート競合（&lt;code&gt;port already in use&lt;/code&gt;）が発生していないか確認してください。&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
