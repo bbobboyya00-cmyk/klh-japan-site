@@ -1,4 +1,140 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 06 Jun 2026 09:50:48 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring Boot 3.xにおけるJakarta PersistenceとLombokを用いたデータ永続化レイヤーの構築</title><link>https://klifehack.com/p/spring-jpa-lombok-h2-setup/</link><pubDate>Sat, 06 Jun 2026 09:50:48 +0900</pubDate><guid>https://klifehack.com/p/spring-jpa-lombok-h2-setup/</guid><description>&lt;p&gt;現代のWebアプリケーションアーキテクチャにおいて、データのライフサイクル管理は極めて重要な要素です。MVCパターンやRESTful APIはHTTPリクエストを処理しレスポンスを返しますが、メモリ上のみで処理されるデータはアプリケーションの終了やシステム障害によって消失します。永続性を確保するためには、リレーショナルデータベース（RDBMS）などの永続化ストレージとの連携が不可欠です。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 06 Jun 2026 10:13:37 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>AWSインフラのプロビジョニングとDockerベースCI/CDパイプラインの実装</title><link>https://klifehack.com/p/aws-ec2-docker-cicd-pipeline/</link><pubDate>Sat, 06 Jun 2026 10:13:37 +0900</pubDate><guid>https://klifehack.com/p/aws-ec2-docker-cicd-pipeline/</guid><description>&lt;p&gt;本稿では、コマース決済アプリケーションのデプロイメントにおける、手動のAWSインフラ構築からDockerおよびGitHub Actionsを用いた完全自動化CI/CDパイプラインへの移行プロセスについて記述します。ネットワーク環境の構成、HTTPS実装の変遷、Spring Bootエコシステム内での依存関係の競合解決、およびコンテナ化によるクラウドデプロイメントの実装詳細を網羅します。&lt;/p&gt;
+&lt;h2 id="1-awsインフラストラクチャの構成"&gt;1. AWSインフラストラクチャの構成
+&lt;/h2&gt;&lt;h3 id="11-ネットワークアーキテクチャ"&gt;1.1 ネットワークアーキテクチャ
+&lt;/h3&gt;&lt;p&gt;カスタムVPC（Virtual Private Cloud）内に基礎となるインフラを構築しました。リソースの分離を目的として、パブリックおよびプライベートサブネットを実装し、インターネットゲートウェイ（IGW）とルートテーブルを構成してトラフィックフローを制御しています。&lt;/p&gt;
+&lt;h3 id="12-コンピュートレイヤー-ec2"&gt;1.2 コンピュートレイヤー (EC2)
+&lt;/h3&gt;&lt;p&gt;アプリケーションは、コスト効率とパフォーマンスを考慮し、ARMアーキテクチャを採用したAmazon EC2 &lt;b&gt;t4g.small&lt;/b&gt; インスタンス上で稼働しています。ランタイムには Amazon Corretto 17 (OpenJDK 17.0.19) を採用しました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf install java-17-amazon-corretto -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;java -version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Output: openjdk version &amp;#34;17.0.19&amp;#34; 2026-04-21 LTS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="13-データベースレイヤー-rds"&gt;1.3 データベースレイヤー (RDS)
+&lt;/h3&gt;&lt;p&gt;永続データ管理のために、マネージドMySQLインスタンスをプロビジョニングしました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Engine:&lt;/b&gt; MySQL 8.0.43&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Instance Class:&lt;/b&gt; db.t4g.micro&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Provisioning Script:&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws rds create-db-instance &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --db-instance-identifier commerce-db &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --db-instance-class db.t4g.micro &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --engine mysql &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --engine-version 8.0.43 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --master-username admin &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --master-user-password &lt;span style="color:#f92672"&gt;[&lt;/span&gt;PASSWORD_REDACTED&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --allocated-storage &lt;span style="color:#ae81ff"&gt;20&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --db-subnet-group-name commerce-subnet-group &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --publicly-accessible &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --region ap-northeast-2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-https構成とドメイン管理"&gt;2. HTTPS構成とドメイン管理
+&lt;/h2&gt;&lt;h3 id="21-初期実装-caddy--nipio"&gt;2.1 初期実装: Caddy &amp;amp; nip.io
+&lt;/h3&gt;&lt;p&gt;プロトタイプ段階では、自動TLS機能を備えたCaddyとnip.ioワイルドカードDNSサービスを組み合わせてHTTPSを実装しました。ARM64環境への対応のため、バイナリを直接取得する手法をとっています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -L &lt;span style="color:#e6db74"&gt;&amp;#34;https://github.com/caddyserver/caddy/releases/download/v2.8.4/caddy_2.8.4_linux_arm64.tar.gz&amp;#34;&lt;/span&gt; -o caddy.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tar -xzf caddy.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mv caddy /usr/local/bin/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-本番環境実装-acm--alb"&gt;2.2 本番環境実装: ACM &amp;amp; ALB
+&lt;/h3&gt;&lt;p&gt;本番環境への移行に伴い、AWS Certificate Manager (ACM) と Application Load Balancer (ALB) を用いた構成にアップグレードしました。Route 53でドメイン管理を行い、ALBでHTTPSトラフィックを終端してEC2ターゲットグループへ転送する構造です。&lt;/p&gt;
+&lt;h2 id="3-spring-cloud-awsの互換性問題と解決"&gt;3. Spring Cloud AWSの互換性問題と解決
+&lt;/h2&gt;&lt;h3 id="31-技術的競合の分析"&gt;3.1 技術的競合の分析
+&lt;/h3&gt;&lt;p&gt;AWS Parameter Storeによる環境変数管理を目的として spring-cloud-aws 依存関係を導入した際、Spring Boot 4.xとの間で深刻な互換性問題が発生しました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Error Log:&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;java.lang.NoSuchMethodError: &amp;#39;org.springframework.boot.ConfigurableBootstrapContext 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;org.springframework.boot.context.config.ConfigDataLocationResolverContext.getBootstrapContext()&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-回避策の実装"&gt;3.2 回避策の実装
+&lt;/h3&gt;&lt;p&gt;依存関係のバージョンを 3.1.1 から 3.3.0 へ更新しても NoSuchMethodError が解消されなかったため、当該依存関係を削除し、JAR実行時に環境変数を直接注入する戦略に切り替えました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nohup java -jar commerce-payment-application-0.0.1-SNAPSHOT.jar &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --spring.profiles.active&lt;span style="color:#f92672"&gt;=&lt;/span&gt;prod &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_DB_URL&lt;span style="color:#f92672"&gt;=&lt;/span&gt;jdbc:mysql://&lt;span style="color:#f92672"&gt;[&lt;/span&gt;RDS_ENDPOINT&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:3306/commerce_db &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_DB_USERNAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;admin &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_DB_PASSWORD&lt;span style="color:#f92672"&gt;=[&lt;/span&gt;PASSWORD_REDACTED&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_JWT_SECRET&lt;span style="color:#f92672"&gt;=[&lt;/span&gt;SECRET_KEY_REDACTED&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &amp;amp;gt; ~/app.log 2&amp;amp;gt;&amp;amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &amp;amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-docker-cicd-パイプラインの構築"&gt;4. Docker CI/CD パイプラインの構築
+&lt;/h2&gt;&lt;h3 id="41-コンテナ化-dockerfile"&gt;4.1 コンテナ化 (Dockerfile)
+&lt;/h3&gt;&lt;p&gt;Amazon Corretto 17をベースイメージとし、AWS環境に最適化したコンテナイメージを作成しました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;amazoncorretto:17&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WORKDIR&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/app&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; commerce-payment-application-0.0.1-SNAPSHOT.jar app.jar&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ENTRYPOINT&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;java&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-jar&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;app.jar&amp;#34;&lt;/span&gt;]&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-github-actionsによる自動ワークフロー"&gt;4.2 GitHub Actionsによる自動ワークフロー
+&lt;/h3&gt;&lt;p&gt;dev ブランチへのプッシュをトリガーに、ビルド、Docker Hubへのプッシュ、EC2へのデプロイを自動化するパイプラインを構築しました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy to EC2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;: [ &lt;span style="color:#ae81ff"&gt;dev ]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set up JDK 17&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/setup-java@v3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;java-version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;17&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;distribution&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;corretto&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build with Gradle&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./gradlew build -x test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Docker Build &amp;amp;amp; Push&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker build -t ${{ secrets.DOCKER_USERNAME }}/commerce-payment:latest .
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker push ${{ secrets.DOCKER_USERNAME }}/commerce-payment:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy on EC2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;appleboy/ssh-action@master&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;host&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.EC2_HOST }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;username&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ec2-user&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.EC2_KEY }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker pull ${{ secrets.DOCKER_USERNAME }}/commerce-payment:latest
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker stop commerce-app || true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker rm commerce-app || true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker run -d --name commerce-app --restart=always -p 8080:8080 \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -e SPRING_PROFILES_ACTIVE=prod \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -e PROD_DB_URL=${{ secrets.PROD_DB_URL }} \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -e PROD_DB_USERNAME=${{ secrets.PROD_DB_USERNAME }} \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -e PROD_DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }} \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -e PROD_JWT_SECRET=${{ secrets.PROD_JWT_SECRET }} \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ${{ secrets.DOCKER_USERNAME }}/commerce-payment:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-トラブルシューティングログ"&gt;5. トラブルシューティング・ログ
+&lt;/h2&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;事象&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;原因&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;解決策&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Spring Cloud AWS 競合&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Spring Boot 4.xとの互換性欠如&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;依存関係を削除し、環境変数の直接注入を採用&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;RDS 接続失敗&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;エンドポイントのタイポ&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;DNSエンドポイント文字列の修正&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Hibernate テーブルエラー&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ddl-auto: validate の失敗&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;初回起動時に ddl-auto: create を適用&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Caddy インストール失敗&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ARMアーキテクチャの不一致&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;arm64用バイナリを明示的にダウンロード&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Docker 権限エラー&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;デーモンへのアクセス権限不足&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;sudo実行またはユーザーグループの調整&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;本プロジェクトを通じて、環境設定の分離とセキュリティの重要性が再確認されました。application-local.yaml を .gitignore で除外し、機密情報を GitHub Secrets で管理することで、ソースコードへの露出を防止しています。また、インフラ構築においては RDS を EC2 より先にプロビジョニングし、同一 VPC 内でのセキュリティグループ制御を厳格に行うことが、安定したクラウドアーキテクチャ構築の要諦です。&lt;/p&gt;</description></item><item><title>Spring Boot 3.xにおけるJakarta PersistenceとLombokを用いたデータ永続化レイヤーの構築</title><link>https://klifehack.com/p/spring-jpa-lombok-h2-setup/</link><pubDate>Sat, 06 Jun 2026 09:50:48 +0900</pubDate><guid>https://klifehack.com/p/spring-jpa-lombok-h2-setup/</guid><description>&lt;p&gt;現代のWebアプリケーションアーキテクチャにおいて、データのライフサイクル管理は極めて重要な要素です。MVCパターンやRESTful APIはHTTPリクエストを処理しレスポンスを返しますが、メモリ上のみで処理されるデータはアプリケーションの終了やシステム障害によって消失します。永続性を確保するためには、リレーショナルデータベース（RDBMS）などの永続化ストレージとの連携が不可欠です。&lt;/p&gt;
 &lt;p&gt;しかし、Javaのオブジェクト指向パラダイム（クラス、カプセル化、関連性）と、リレーショナルデータベースのパラダイム（テーブル、行、列、外部キー制約）の間には、「オブジェクト関係のインピーダンスミスマッチ」と呼ばれる構造的な不一致が存在します。従来、このミスマッチを解消するためには、冗長でエラーの発生しやすいSQLクエリを手動で記述する必要がありました。&lt;/p&gt;
 &lt;p&gt;この課題を解決するために標準化されたのが &lt;b&gt;Jakarta Persistence (旧 Java Persistence API: JPA)&lt;/b&gt; です。JPAはオブジェクト関係マッピング (ORM) フレームワークとして機能し、Javaオブジェクトをデータベースのテーブルに直接マッピングすることで、開発者がSQLを意識することなく直感的にデータを操作できる環境を提供します。&lt;/p&gt;
 &lt;h2 id="2-h2データベースの特性と動作モード"&gt;2. H2データベースの特性と動作モード

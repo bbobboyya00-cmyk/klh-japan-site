@@ -1,4 +1,140 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 06 Jun 2026 09:50:49 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Data Persistence Layer Using Jakarta Persistence and Lombok in Spring Boot 3.x</title><link>https://klifehack.com/en/p/spring-jpa-lombok-h2-setup/</link><pubDate>Sat, 06 Jun 2026 09:50:49 +0900</pubDate><guid>https://klifehack.com/en/p/spring-jpa-lombok-h2-setup/</guid><description>&lt;h1 id="1-database-persistence-and-object-relational-mapping"&gt;1. Database Persistence and Object-Relational Mapping
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 06 Jun 2026 10:13:39 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Provisioning AWS Infrastructure and Implementing a Docker-based CI/CD Pipeline</title><link>https://klifehack.com/en/p/aws-ec2-docker-cicd-pipeline/</link><pubDate>Sat, 06 Jun 2026 10:13:39 +0900</pubDate><guid>https://klifehack.com/en/p/aws-ec2-docker-cicd-pipeline/</guid><description>&lt;p&gt;This article describes the migration process from manual AWS infrastructure construction to a fully automated CI/CD pipeline using Docker and GitHub Actions for the deployment of a commerce payment application. It covers network environment configuration, the transition of HTTPS implementation, dependency conflict resolution within the Spring Boot ecosystem, and implementation details of cloud deployment via containerization.&lt;/p&gt;
+&lt;h2 id="1-aws-infrastructure-configuration"&gt;1. AWS Infrastructure Configuration
+&lt;/h2&gt;&lt;h3 id="11-network-architecture"&gt;1.1 Network Architecture
+&lt;/h3&gt;&lt;p&gt;The underlying infrastructure was built within a custom Virtual Private Cloud (VPC). For the purpose of resource isolation, public and private subnets were implemented, and an Internet Gateway (IGW) and route tables were configured to control traffic flow.&lt;/p&gt;
+&lt;h3 id="12-compute-layer-ec2"&gt;1.2 Compute Layer (EC2)
+&lt;/h3&gt;&lt;p&gt;The application runs on an Amazon EC2 &lt;b&gt;t4g.small&lt;/b&gt; instance employing ARM architecture, considering cost efficiency and performance. Amazon Corretto 17 (OpenJDK 17.0.19) was adopted as the runtime.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf install java-17-amazon-corretto -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;java -version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Output: openjdk version &amp;#34;17.0.19&amp;#34; 2026-04-21 LTS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="13-database-layer-rds"&gt;1.3 Database Layer (RDS)
+&lt;/h3&gt;&lt;p&gt;A managed MySQL instance was provisioned for persistent data management.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Engine:&lt;/b&gt; MySQL 8.0.43&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Instance Class:&lt;/b&gt; db.t4g.micro&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Provisioning Script:&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws rds create-db-instance &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --db-instance-identifier commerce-db &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --db-instance-class db.t4g.micro &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --engine mysql &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --engine-version 8.0.43 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --master-username admin &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --master-user-password &lt;span style="color:#f92672"&gt;[&lt;/span&gt;PASSWORD_REDACTED&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --allocated-storage &lt;span style="color:#ae81ff"&gt;20&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --db-subnet-group-name commerce-subnet-group &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --publicly-accessible &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --region ap-northeast-2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-https-configuration-and-domain-management"&gt;2. HTTPS Configuration and Domain Management
+&lt;/h2&gt;&lt;h3 id="21-initial-implementation-caddy--nipio"&gt;2.1 Initial Implementation: Caddy &amp;amp; nip.io
+&lt;/h3&gt;&lt;p&gt;During the prototyping stage, HTTPS was implemented by combining Caddy, which features automatic TLS, with the nip.io wildcard DNS service. To support the ARM64 environment, a method of directly obtaining the binary was used.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -L &lt;span style="color:#e6db74"&gt;&amp;#34;https://github.com/caddyserver/caddy/releases/download/v2.8.4/caddy_2.8.4_linux_arm64.tar.gz&amp;#34;&lt;/span&gt; -o caddy.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tar -xzf caddy.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mv caddy /usr/local/bin/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-production-environment-implementation-acm--alb"&gt;2.2 Production Environment Implementation: ACM &amp;amp; ALB
+&lt;/h3&gt;&lt;p&gt;With the migration to the production environment, the configuration was upgraded to use AWS Certificate Manager (ACM) and Application Load Balancer (ALB). Domain management is handled by Route 53, and the structure terminates HTTPS traffic at the ALB and forwards it to the EC2 target group.&lt;/p&gt;
+&lt;h2 id="3-spring-cloud-aws-compatibility-issues-and-resolution"&gt;3. Spring Cloud AWS Compatibility Issues and Resolution
+&lt;/h2&gt;&lt;h3 id="31-analysis-of-technical-conflicts"&gt;3.1 Analysis of Technical Conflicts
+&lt;/h3&gt;&lt;p&gt;When the spring-cloud-aws dependency was introduced for the purpose of environment variable management via AWS Parameter Store, a serious compatibility issue occurred with Spring Boot 4.x.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Error Log:&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;java.lang.NoSuchMethodError: &amp;#39;org.springframework.boot.ConfigurableBootstrapContext 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;org.springframework.boot.context.config.ConfigDataLocationResolverContext.getBootstrapContext()&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-implementation-of-workaround"&gt;3.2 Implementation of Workaround
+&lt;/h3&gt;&lt;p&gt;Since the NoSuchMethodError was not resolved even after updating the dependency version from 3.1.1 to 3.3.0, the dependency was removed, and the strategy was switched to directly injecting environment variables during JAR execution.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nohup java -jar commerce-payment-application-0.0.1-SNAPSHOT.jar &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --spring.profiles.active&lt;span style="color:#f92672"&gt;=&lt;/span&gt;prod &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_DB_URL&lt;span style="color:#f92672"&gt;=&lt;/span&gt;jdbc:mysql://&lt;span style="color:#f92672"&gt;[&lt;/span&gt;RDS_ENDPOINT&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:3306/commerce_db &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_DB_USERNAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;admin &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_DB_PASSWORD&lt;span style="color:#f92672"&gt;=[&lt;/span&gt;PASSWORD_REDACTED&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_JWT_SECRET&lt;span style="color:#f92672"&gt;=[&lt;/span&gt;SECRET_KEY_REDACTED&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &amp;amp;gt; ~/app.log 2&amp;amp;gt;&amp;amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &amp;amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-docker-cicd-pipeline-construction"&gt;4. Docker CI/CD Pipeline Construction
+&lt;/h2&gt;&lt;h3 id="41-containerization-dockerfile"&gt;4.1 Containerization (Dockerfile)
+&lt;/h3&gt;&lt;p&gt;Created a container image optimized for the AWS environment using Amazon Corretto 17 as the base image.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;amazoncorretto:17&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WORKDIR&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/app&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; commerce-payment-application-0.0.1-SNAPSHOT.jar app.jar&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ENTRYPOINT&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;java&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-jar&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;app.jar&amp;#34;&lt;/span&gt;]&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-automated-workflow-via-github-actions"&gt;4.2 Automated Workflow via GitHub Actions
+&lt;/h3&gt;&lt;p&gt;A pipeline was constructed to automate the build, push to Docker Hub, and deployment to EC2, triggered by a push to the dev branch.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy to EC2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;: [ &lt;span style="color:#ae81ff"&gt;dev ]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set up JDK 17&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/setup-java@v3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;java-version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;17&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;distribution&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;corretto&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build with Gradle&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./gradlew build -x test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Docker Build &amp;amp;amp; Push&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker build -t ${{ secrets.DOCKER_USERNAME }}/commerce-payment:latest .
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker push ${{ secrets.DOCKER_USERNAME }}/commerce-payment:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy on EC2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;appleboy/ssh-action@master&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;host&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.EC2_HOST }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;username&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ec2-user&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.EC2_KEY }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker pull ${{ secrets.DOCKER_USERNAME }}/commerce-payment:latest
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker stop commerce-app || true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker rm commerce-app || true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker run -d --name commerce-app --restart=always -p 8080:8080 \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -e SPRING_PROFILES_ACTIVE=prod \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -e PROD_DB_URL=${{ secrets.PROD_DB_URL }} \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -e PROD_DB_USERNAME=${{ secrets.PROD_DB_USERNAME }} \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -e PROD_DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }} \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -e PROD_JWT_SECRET=${{ secrets.PROD_JWT_SECRET }} \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ${{ secrets.DOCKER_USERNAME }}/commerce-payment:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-troubleshooting-logs"&gt;5. Troubleshooting Logs
+&lt;/h2&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Event&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Cause&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Solution&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Spring Cloud AWS Conflict&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Lack of compatibility with Spring Boot 4.x&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Removed dependency and adopted direct injection of environment variables&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;RDS Connection Failure&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Typo in endpoint&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Corrected DNS endpoint string&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Hibernate Table Error&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ddl-auto: validate failure&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Applied ddl-auto: create on first startup&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Caddy Installation Failure&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ARM architecture mismatch&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Explicitly downloaded binary for arm64&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Docker Permission Error&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Insufficient access rights to the daemon&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Executed with sudo or adjusted user groups&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;Through this project, the importance of environment configuration separation and security was reaffirmed. Exposure to source code is prevented by excluding application-local.yaml via .gitignore and managing sensitive information with GitHub Secrets. Furthermore, in infrastructure construction, provisioning RDS before EC2 and strictly controlling security groups within the same VPC are key to building a stable cloud architecture.&lt;/p&gt;</description></item><item><title>Building a Data Persistence Layer Using Jakarta Persistence and Lombok in Spring Boot 3.x</title><link>https://klifehack.com/en/p/spring-jpa-lombok-h2-setup/</link><pubDate>Sat, 06 Jun 2026 09:50:49 +0900</pubDate><guid>https://klifehack.com/en/p/spring-jpa-lombok-h2-setup/</guid><description>&lt;h1 id="1-database-persistence-and-object-relational-mapping"&gt;1. Database Persistence and Object-Relational Mapping
 &lt;/h1&gt;&lt;p&gt;In modern web application architecture, data lifecycle management is an extremely critical element. While MVC patterns and RESTful APIs process HTTP requests and return responses, data processed only in memory is lost upon application termination or system failure. To ensure persistence, integration with persistent storage such as relational databases (RDBMS) is indispensable.&lt;/p&gt;
 &lt;p&gt;However, a structural mismatch known as the &amp;ldquo;object-relational impedance mismatch&amp;rdquo; exists between the object-oriented paradigm of Java (classes, encapsulation, relationships) and the relational database paradigm (tables, rows, columns, foreign key constraints). Traditionally, resolving this mismatch required manually writing redundant and error-prone SQL queries.&lt;/p&gt;
 &lt;p&gt;To address this challenge, &lt;b&gt;Jakarta Persistence (formerly Java Persistence API: JPA)&lt;/b&gt; was standardized. JPA functions as an object-relational mapping (ORM) framework, mapping Java objects directly to database tables, thereby providing an environment where developers can intuitively manipulate data without having to be conscious of SQL.&lt;/p&gt;
