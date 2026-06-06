@@ -1,4 +1,111 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 04 Jun 2026 18:02:35 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Kubernetes Deployment Automation with GitHub Actions and Self-Hosted Runners</title><link>https://klifehack.com/en/p/github-actions-k8s-self-hosted-runner/</link><pubDate>Thu, 04 Jun 2026 18:02:35 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-k8s-self-hosted-runner/</guid><description>&lt;h2 id="1-overview-and-purpose"&gt;1. Overview and Purpose
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 06 Jun 2026 14:12:53 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>Workflow Automation Using Custom Commands and Skills in Claude Code</title><link>https://klifehack.com/en/p/claude-code-custom-commands-skills/</link><pubDate>Sat, 06 Jun 2026 14:12:53 +0900</pubDate><guid>https://klifehack.com/en/p/claude-code-custom-commands-skills/</guid><description>&lt;h1 id="custom-command-and-skill-design-in-claude-code-automating-development-workflows"&gt;Custom Command and Skill Design in Claude Code: Automating Development Workflows
+&lt;/h1&gt;&lt;p&gt;When introducing Claude Code into daily development workflows, repeatedly entering complex prompts causes a drop in work efficiency and leads to input errors. Manually instructing code reviews that comply with team standard rules or checking for specific security vulnerabilities every time is inefficient. By codifying these boilerplate prompts as version-controlled assets and registering them as slash commands (/commands) or autonomously executable &amp;ldquo;Skills,&amp;rdquo; you can automate the development process. This article explains how to implement and design these features.&lt;/p&gt;
+&lt;h2 id="1-basics-of-custom-slash-commands"&gt;1. Basics of Custom Slash Commands
+&lt;/h2&gt;&lt;p&gt;The simplest automation method is to define custom slash commands using Markdown files. The file name is registered directly as the command name (e.g., &lt;code&gt;/review-pr&lt;/code&gt; for &lt;code&gt;review-pr.md&lt;/code&gt;). Custom commands can be placed in either a project-specific scope or a global scope across the user&amp;rsquo;s environment.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Project-specific scope:&lt;/b&gt; Saved in &lt;code&gt;.claude/commands/&lt;/code&gt; directly under the project root.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Global scope:&lt;/b&gt; Saved in &lt;code&gt;~/.claude/commands/&lt;/code&gt; under the user&amp;rsquo;s home directory.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Implementation of a custom command to retrieve Pull Request diffs and perform a review:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: PRの差分をレビューし、改善案を提示します
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;!git diff main...HEAD
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;上記の差分を確認し、以下の観点でレビューを行ってください：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;1.&lt;/span&gt; パフォーマンス上の懸念点
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;2.&lt;/span&gt; セキュリティ脆弱性
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;3.&lt;/span&gt; コーディング規約の遵守
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After saving this file, typing &lt;code&gt;/&lt;/code&gt; in a Claude Code interactive session will display &lt;code&gt;/review-pr&lt;/code&gt; in the completion suggestions. Execution with arguments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/review-pr
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This eliminates the hassle of manually retrieving diffs and pasting prompts.&lt;/p&gt;
+&lt;h2 id="2-advanced-command-features-arguments-namespaces-and-frontmatter"&gt;2. Advanced Command Features: Arguments, Namespaces, and Frontmatter
+&lt;/h2&gt;&lt;p&gt;To achieve more flexible automation, custom commands support dynamic arguments, organization via namespaces, and metadata configuration using YAML frontmatter.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Dynamic Arguments ($ARGUMENTS)&lt;/b&gt;: The &lt;code&gt;$ARGUMENTS&lt;/code&gt; placeholder captures any text entered after the slash command. For example, if you run &lt;code&gt;/fix-issue 1234&lt;/code&gt;, you can define it to be processed internally as &amp;ldquo;Find and fix issue #1234&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Namespaces (Subdirectories)&lt;/b&gt;: When the number of commands increases, you can organize them by creating subdirectories. A file placed in &lt;code&gt;.claude/commands/frontend/component.md&lt;/code&gt; is executed via the namespace path:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/frontend/component &lt;span style="color:#e6db74"&gt;&amp;#34;Button&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;Control via YAML Frontmatter&lt;/b&gt;: By adding YAML frontmatter to the beginning of a Markdown file, you can control the execution environment, the model used, and access permissions to tools.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;コミットメッセージを自動生成します&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;argument-hint&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;追加のコンテキスト（任意）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;allowed-tools&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;shell&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;model&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;claude-3-5-haiku-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&amp;lt;git_diff&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;!&lt;span style="color:#ae81ff"&gt;git diff --cached&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&amp;lt;/git_diff&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;上記の差分に基づき、Conventional Commits形式でコミットメッセージを生成してください。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;$ARGUMENTS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The specifications of the main parameters are as follows. &lt;code&gt;description&lt;/code&gt; indicates the purpose of the command, and &lt;code&gt;allowed-tools&lt;/code&gt; restricts the tools permitted to run. In the &lt;code&gt;model&lt;/code&gt; specification, specifying &lt;b&gt;haiku&lt;/b&gt; for lightweight tasks such as commit message generation can improve response speed and suppress token consumption. The backtick syntax starting with an exclamation mark (&lt;code&gt;!&lt;/code&gt;) executes a command in the local shell and directly injects its output into the prompt.&lt;/p&gt;
+&lt;h2 id="3-extending-to-skills"&gt;3. Extending to Skills
+&lt;/h2&gt;&lt;p&gt;With updates to Claude Code, custom commands and &amp;ldquo;Skills&amp;rdquo; have been organized into an integrated execution framework. Both &lt;code&gt;.claude/commands/review.md&lt;/code&gt; and &lt;code&gt;.claude/skills/review/SKILL.md&lt;/code&gt; are registered as the &lt;code&gt;/review&lt;/code&gt; command, but the Skill format is recommended for new implementations. If the same name exists, the Skill takes precedence.&lt;/p&gt;
+&lt;p&gt;Skills are managed as folder-level assets and have the structure &lt;code&gt;.claude/skills/&amp;lt;name&amp;gt;/SKILL.md&lt;/code&gt;. They support Autonomous Triggering, allowing Claude to automatically launch a Skill based on context without the user explicitly executing a command. Additionally, because of the folder structure, they have the advantage of being able to bundle related documents and templates.&lt;/name&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: プロジェクトのセキュリティ脆弱性をスキャンし、修正案を提示します
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;disable-model-invocation: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;プロジェクト全体のソースコードを静的解析し、OWASP Top 10に該当する脆弱性がないか確認してください。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 &lt;b&gt;Important Parameters&lt;/b&gt;: &lt;code&gt;description&lt;/code&gt; is a semantic description that serves as a trigger for autonomous execution. Claude analyzes this description to determine the application scenario. &lt;code&gt;disable-model-invocation: true&lt;/code&gt; is used to prevent autonomous execution and restrict it to manual execution only for processes with side effects, such as infrastructure changes or database operations.&lt;/p&gt;
+&lt;h2 id="4-architectural-comparison-distinguishing-claudemd-and-commandsskills"&gt;4. Architectural Comparison: Distinguishing CLAUDE.md and Commands/Skills
+&lt;/h2&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Item&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;CLAUDE.md&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Slash Commands &amp;amp; Skills&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Essential Role&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Persistent guidelines, rules, and context&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Executable procedures and workflows&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Application Timing&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Always applied across all tasks&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Explicit invocation or specific context&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Concrete Examples&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Coding conventions, architectural patterns&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Code reviews, deployment procedures&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Positioning&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Team development handbook&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Executable automation macros&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="5-practical-example-building-a-pipeline-from-review-to-fix"&gt;5. Practical Example: Building a Pipeline from Review to Fix
+&lt;/h2&gt;&lt;p&gt;Automating code reviews specialized for a specific technology stack is effective for maintaining quality. Implementation of a custom code review Skill for a Flutter project:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: Flutterのベストプラクティスに基づきコードをレビューします
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model: claude-3-5-sonnet-latest
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;以下のFlutter/Dartの観点でコードを精査してください：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Widgetの肥大化（抽出の必要性）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Riverpod等の状態管理の適切な利用
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; const修飾子の不足
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 非同期処理の例外ハンドリング
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As an execution flow, you can build a pipeline where you first run &lt;code&gt;/flutter-review lib/src/features/&lt;/code&gt; to retrieve issues, and then apply fixes using commands like &lt;code&gt;/fix&lt;/code&gt;. This automates consistent quality control.&lt;/p&gt;
+&lt;h2 id="6-considerations-in-command-and-skill-design"&gt;6. Considerations in Command and Skill Design
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Description Optimization&lt;/b&gt;: For Skills that allow autonomous execution, place clear trigger keywords at the beginning of the &lt;code&gt;description&lt;/code&gt; to suppress model misjudgments.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Thorough Safety Measures&lt;/b&gt;: ⚠️ If the process includes destructive operations that affect the system, always set &lt;code&gt;disable-model-invocation: true&lt;/code&gt; to force manual execution.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Leveraging Lightweight Models&lt;/b&gt;: 🛠️ For tasks that do not require complex reasoning, specify &lt;code&gt;model: haiku&lt;/code&gt; to improve execution speed and reduce costs.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Version Control&lt;/b&gt;: Include the &lt;code&gt;.claude/&lt;/code&gt; directory in your Git repository to share automation workflows across the entire team.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Suppressing Token Consumption&lt;/b&gt;: Consolidating instructions into structured command files prevents the context window from becoming congested during sessions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Efficiency via Commands&lt;/b&gt;: Save frequently used prompts in &lt;code&gt;.claude/commands/&lt;/code&gt; to execute them instantly with arguments.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Dynamic Context&lt;/b&gt;: You can leverage shell execution result injection via the &lt;code&gt;!&lt;/code&gt; syntax and dynamic processing via &lt;code&gt;$ARGUMENTS&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Autonomous Skills&lt;/b&gt;: You can define Skills that can be automatically launched based on context using &lt;code&gt;.claude/skills/&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Separation of Concerns&lt;/b&gt;: Maintain a clean configuration by defining persistent rules in &lt;code&gt;CLAUDE.md&lt;/code&gt; and execution procedures in commands or Skills.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Implementation of Kubernetes Deployment Automation with GitHub Actions and Self-Hosted Runners</title><link>https://klifehack.com/en/p/github-actions-k8s-self-hosted-runner/</link><pubDate>Thu, 04 Jun 2026 18:02:35 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-k8s-self-hosted-runner/</guid><description>&lt;h2 id="1-overview-and-purpose"&gt;1. Overview and Purpose
 &lt;/h2&gt;&lt;p&gt;The objective is to construct a CI/CD pipeline integrating GitHub Actions with a local Kubernetes environment to automate the transition from source code push to deployment. This workflow eliminates manual intervention and executes automated rolling updates.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Target Workflow:&lt;/b&gt;&lt;/p&gt;
 &lt;ol&gt;

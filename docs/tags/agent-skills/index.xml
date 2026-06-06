@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agent-Skills on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/agent-skills/</link><description>Recent content in Agent-Skills on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 06 Jun 2026 14:12:52 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/agent-skills/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude CodeにおけるカスタムコマンドとSkillを用いたワークフロー自動化</title><link>https://klifehack.com/p/claude-code-custom-commands-skills/</link><pubDate>Sat, 06 Jun 2026 14:12:52 +0900</pubDate><guid>https://klifehack.com/p/claude-code-custom-commands-skills/</guid><description>&lt;h1 id="claude-codeにおけるカスタムコマンドとskillの設計開発ワークフローの自動化"&gt;Claude CodeにおけるカスタムコマンドとSkillの設計：開発ワークフローの自動化
+&lt;/h1&gt;&lt;p&gt;Claude Codeを日常の開発ワークフローに導入する際、複雑なプロンプトを繰り返し入力することは、作業効率の低下や入力ミスの原因となります。チームの標準ルールに準拠したコードレビューや、特定のセキュリティ脆弱性のチェックを毎回手動で指示する運用は非効率的です。これらの定型プロンプトをバージョン管理可能なアセットとしてコード化し、スラッシュコマンド（/command）や自律的に実行可能な「Skill」として登録することで、開発プロセスの自動化が可能になります。本稿では、これらの実装方法と設計手法について解説します。&lt;/p&gt;
+&lt;h2 id="1-カスタムスラッシュコマンドの基礎"&gt;1. カスタムスラッシュコマンドの基礎
+&lt;/h2&gt;&lt;p&gt;最もシンプルな自動化手法は、Markdownファイルを用いてカスタムスラッシュコマンドを定義することです。ファイル名がそのままコマンド名（例: review-pr.md の場合は /review-pr）として登録されます。カスタムコマンドは、プロジェクト個別、またはユーザー環境全体のグローバルスコープのいずれかに配置できます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;プロジェクト個別スコープ:&lt;/b&gt; プロジェクトルート直下の &lt;code&gt;.claude/commands/&lt;/code&gt; に保存します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;グローバルスコープ:&lt;/b&gt; ユーザーのホームディレクトリ配下の &lt;code&gt;~/.claude/commands/&lt;/code&gt; に保存します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以下は、Pull Requestの差分を取得してレビューを実行するカスタムコマンドの実装例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: PRの差分をレビューし、改善案を提示します
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;!git diff main...HEAD
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;上記の差分を確認し、以下の観点でレビューを行ってください：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;1.&lt;/span&gt; パフォーマンス上の懸念点
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;2.&lt;/span&gt; セキュリティ脆弱性
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;3.&lt;/span&gt; コーディング規約の遵守
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;このファイルを保存した後、Claude Codeのインタラクティブセッションで &lt;code&gt;/&lt;/code&gt; を入力すると、補完候補に &lt;code&gt;/review-pr&lt;/code&gt; が表示されます。以下のように引数を渡して実行することも可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/review-pr
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;これにより、手動で差分を取得してプロンプトを貼り付ける手間が排除されます。&lt;/p&gt;
+&lt;h2 id="2-高度なコマンド機能引数名前空間フロントマター"&gt;2. 高度なコマンド機能：引数、名前空間、フロントマター
+&lt;/h2&gt;&lt;p&gt;より柔軟な自動化を実現するため、カスタムコマンドでは動的引数、名前空間による整理、およびYAMLフロントマターによるメタデータ設定がサポートされています。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;動的引数（$ARGUMENTS）&lt;/b&gt;: &lt;code&gt;$ARGUMENTS&lt;/code&gt; プレースホルダーは、スラッシュコマンドの後ろに入力された任意のテキストをキャプチャします。&lt;code&gt;/fix-issue 1234&lt;/code&gt; と実行した場合、内部で &lt;code&gt;&amp;quot;Find and fix issue #1234&amp;quot;&lt;/code&gt; として処理されるよう定義できます。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;名前空間（サブディレクトリ）&lt;/b&gt;: コマンドの数が増えた場合、サブディレクトリを作成して整理できます。例えば、&lt;code&gt;.claude/commands/frontend/component.md&lt;/code&gt; に配置したファイルは、以下のように呼び出せます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/frontend/component &lt;span style="color:#e6db74"&gt;&amp;#34;Button&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;YAMLフロントマターによる制御&lt;/b&gt;: Markdownファイルの先頭にYAMLフロントマターを付与することで、実行環境、使用モデル、ツールへのアクセス権限を制御できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;コミットメッセージを自動生成します&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;argument-hint&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;追加のコンテキスト（任意）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;allowed-tools&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;shell&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;model&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;claude-3-5-haiku-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&amp;lt;git_diff&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;!&lt;span style="color:#ae81ff"&gt;git diff --cached&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&amp;lt;/git_diff&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;上記の差分に基づき、Conventional Commits形式でコミットメッセージを生成してください。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;$ARGUMENTS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;主要パラメータの仕様は以下の通りです。&lt;code&gt;description&lt;/code&gt; はコマンドの用途を示し、&lt;code&gt;allowed-tools&lt;/code&gt; は実行を許可するツールを制限します。&lt;code&gt;model&lt;/code&gt; 指定において、コミットメッセージ生成のような軽量タスクには &lt;b&gt;haiku&lt;/b&gt; を指定することで、応答速度の向上とトークン消費の抑制が可能です。感嘆符（&lt;code&gt;!&lt;/code&gt;）で始まるバックティック構文は、ローカルシェルでコマンドを実行し、その出力をプロンプトに直接注入します。&lt;/p&gt;
+&lt;h2 id="3-skillへの拡張"&gt;3. Skillへの拡張
+&lt;/h2&gt;&lt;p&gt;Claude Codeのアップデートにより、カスタムコマンドと「Skill」は統合された実行フレームワークとして整理されました。&lt;code&gt;.claude/commands/review.md&lt;/code&gt; と &lt;code&gt;.claude/skills/review/SKILL.md&lt;/code&gt; は、どちらも &lt;code&gt;/review&lt;/code&gt; コマンドとして登録されますが、新規実装ではSkill形式が推奨されます。同一名称が存在する場合、Skillが優先されます。&lt;/p&gt;
+&lt;p&gt;Skillはフォルダ単位のアセットとして管理され、&lt;code&gt;.claude/skills/&amp;lt;name&amp;gt;/SKILL.md&lt;/code&gt; の構造を持ちます。自律的な呼び出し（Autonomous Triggering）が可能であり、ユーザーが明示的にコマンドを実行しなくても、Claudeがコンテキストから判断して自動的にSkillを起動できます。また、フォルダ構造であるため、関連するドキュメントやテンプレートを同梱できる利点があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: プロジェクトのセキュリティ脆弱性をスキャンし、修正案を提示します
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;disable-model-invocation: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;プロジェクト全体のソースコードを静的解析し、OWASP Top 10に該当する脆弱性がないか確認してください。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 &lt;b&gt;重要なパラメータ&lt;/b&gt;: &lt;code&gt;description&lt;/code&gt; は自律起動のトリガーとなるセマンティックな説明文です。Claudeはこの記述を解析し、適用シーンを判断します。&lt;code&gt;disable-model-invocation: true&lt;/code&gt; は、インフラ変更やデータベース操作など、副作用を伴う処理において自律実行を防ぎ、手動実行のみに制限するために使用します。&lt;/p&gt;
+&lt;h2 id="4-アーキテクチャ比較claudemd-と-コマンドskill-の使い分け"&gt;4. アーキテクチャ比較：CLAUDE.md と コマンド/Skill の使い分け
+&lt;/h2&gt;&lt;p&gt;プロジェクトの設定を整理された状態に保つためには、&lt;code&gt;CLAUDE.md&lt;/code&gt; とカスタムコマンド/Skillの役割の違いを理解し、適切に使い分ける必要があります。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;項目&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;CLAUDE.md&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;スラッシュコマンド &amp;amp; Skill&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;本質的な役割&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;永続的なガイドライン、ルール、コンテキスト&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;実行可能な手順、ワークフロー&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;適用タイミング&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;すべてのタスクにおいて常に適用される&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;明示的な呼び出し、または特定の文脈&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;具体例&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;コーディング規約、アーキテクチャパターン&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;コードレビュー、デプロイ手順&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;位置づけ&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;チームの開発ハンドブック&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;実行可能な自動化マクロ&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="5-実践例レビューから修正へのパイプライン構築"&gt;5. 実践例：レビューから修正へのパイプライン構築
+&lt;/h2&gt;&lt;p&gt;特定の技術スタックに特化したコードレビューを自動化することは、品質維持に有効です。以下は、Flutterプロジェクト向けのカスタムコードレビューSkillの実装例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: Flutterのベストプラクティスに基づきコードをレビューします
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model: claude-3-5-sonnet-latest
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;以下のFlutter/Dartの観点でコードを精査してください：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Widgetの肥大化（抽出の必要性）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Riverpod等の状態管理の適切な利用
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; const修飾子の不足
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 非同期処理の例外ハンドリング
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実行フローとして、まず &lt;code&gt;/flutter-review lib/src/features/&lt;/code&gt; を実行して指摘事項を取得し、続けて &lt;code&gt;/fix&lt;/code&gt; コマンド等で修正を適用するパイプラインが構築できます。これにより、一貫した品質管理が自動化されます。&lt;/p&gt;
+&lt;h2 id="6-コマンドおよびskill設計における留意事項"&gt;6. コマンドおよびSkill設計における留意事項
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;説明文の最適化&lt;/b&gt;: 自動起動を許可するSkillでは、&lt;code&gt;description&lt;/code&gt; の冒頭にトリガーとなる明確なキーワードを配置し、モデルの誤判定を抑制します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;安全対策の徹底&lt;/b&gt;: ⚠️ システムに影響を与える破壊的な処理を含む場合は、必ず &lt;code&gt;disable-model-invocation: true&lt;/code&gt; を設定し、手動実行を強制してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;軽量モデルの活用&lt;/b&gt;: 🛠️ 複雑な推論を必要としないタスクには &lt;code&gt;model: haiku&lt;/code&gt; を指定し、実行速度の向上とコスト削減を図ります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;バージョン管理&lt;/b&gt;: &lt;code&gt;.claude/&lt;/code&gt; ディレクトリをGitリポジトリに含めることで、チーム全体で自動化ワークフローを共有します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;トークン消費の抑制&lt;/b&gt;: 構造化されたコマンドファイルに指示を集約することで、セッション中のコンテキストウィンドウの逼迫を防ぎます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;コマンドによる効率化&lt;/b&gt;: 頻出プロンプトを &lt;code&gt;.claude/commands/&lt;/code&gt; に保存し、引数付きで即座に実行可能です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;動的コンテキスト&lt;/b&gt;: &lt;code&gt;!&lt;/code&gt; 構文によるシェル実行結果の注入や &lt;code&gt;$ARGUMENTS&lt;/code&gt; による動的処理が活用できます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;自律的なSkill&lt;/b&gt;: &lt;code&gt;.claude/skills/&lt;/code&gt; を用いて、コンテキストに応じた自動起動が可能なSkillを定義できます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;役割の分離&lt;/b&gt;: 永続的なルールは &lt;code&gt;CLAUDE.md&lt;/code&gt; に、実行手順はコマンドやSkillに定義することで、クリーンな構成を維持します。&lt;/name&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
