@@ -68,44 +68,39 @@ hasCJKLanguage = true
         enabled = true
         type = "disqus"
 
-
 # =============================================================================
-# [4. 다국어 아키텍처 및 로컬라이징 제어 벨트 - v2606.044 TA]
+# [4. 다국어 아키텍처 및 로컬라이징 제어 벨트 - v2606.150 TA]
 # =============================================================================
 [languages]
   # ---------------------------------------------------------------------------
-  # 일본어 독립 매거진 섹션 (기존 순정 프로필 완벽 보존)
+  # 일본어 독립 매거진 섹션 (Hugo 최신 표준 동기화 완벽 보존)
   # ---------------------------------------------------------------------------
   [languages.ja]
-    languageCode = 'ja'
-    languageName = '日本語'
+    locale = 'ja'              # 👈 구형 languageCode 대치 (v0.158.0+ 표준 명세)
+    label = '日本語'            # 👈 구형 languageName 대치 (v0.158.0+ 표준 명세)
     weight = 1
     title = 'K-Life Hack | システムアーキテクチャ & DevOps'
     
     [languages.ja.params]
-        locale = "ja"             # 👈 구글 봇에게 명확한 일본어 사이트임을 선언 (languageCode 대체)
         [languages.ja.params.sidebar]
             avatar = "img/persona_k_ambient.webp" 
             name = "K-Life Hack"
             subtitle = "ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。"
 
   # ---------------------------------------------------------------------------
-  # 영어 독립 매거진 섹션 (글로벌 멸균 트랙 전용 명세 구축)
+  # 영어 독립 매거진 섹션 (글로벌 멸균 트랙 최신 동기화 구축)
   # ---------------------------------------------------------------------------
   [languages.en]
-    languageCode = 'en'
-    languageName = 'English'
+    locale = 'en'              # 👈 구형 languageCode 대치 (v0.158.0+ 표준 명세)
+    label = 'English'          # 👈 구형 languageName 대치 (v0.158.0+ 표준 명세)
     weight = 2
     title = 'K-Life Hack | Systems Architecture & DevOps'
     
     [languages.en.params]
-        locale = "en"             # 👈 글로벌 구글 봇 독립 언어 지표 주입
         [languages.en.params.sidebar]
             avatar = "img/persona_k_ambient.webp" 
             name = "K-Life Hack (Global)"
             subtitle = "Latest Korean trends and refined daily life decoded with data by Seoul-based IT Architect 'K'."
-
-
 # =============================================================================
 # [5. 다국어 독립 메뉴 분리 시스템]
 # =============================================================================
