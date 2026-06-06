@@ -1,4 +1,189 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 05 Jun 2026 12:45:41 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Design and Operational Practices for Distributed Job Scheduling Using Celery</title><link>https://klifehack.com/en/p/celery-distributed-job-scheduling-architecture/</link><pubDate>Fri, 05 Jun 2026 12:45:41 +0900</pubDate><guid>https://klifehack.com/en/p/celery-distributed-job-scheduling-architecture/</guid><description>&lt;p&gt;In distributed systems, reliably executing periodic batch processing and asynchronous background tasks is a critical requirement for maintaining system reliability. Celery, which is widely adopted in the Python ecosystem, provides a powerful mechanism for executing tasks in a distributed manner via a message broker.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 06 Jun 2026 09:50:49 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Data Persistence Layer Using Jakarta Persistence and Lombok in Spring Boot 3.x</title><link>https://klifehack.com/en/p/spring-jpa-lombok-h2-setup/</link><pubDate>Sat, 06 Jun 2026 09:50:49 +0900</pubDate><guid>https://klifehack.com/en/p/spring-jpa-lombok-h2-setup/</guid><description>&lt;h1 id="1-database-persistence-and-object-relational-mapping"&gt;1. Database Persistence and Object-Relational Mapping
+&lt;/h1&gt;&lt;p&gt;In modern web application architecture, data lifecycle management is an extremely critical element. While MVC patterns and RESTful APIs process HTTP requests and return responses, data processed only in memory is lost upon application termination or system failure. To ensure persistence, integration with persistent storage such as relational databases (RDBMS) is indispensable.&lt;/p&gt;
+&lt;p&gt;However, a structural mismatch known as the &amp;ldquo;object-relational impedance mismatch&amp;rdquo; exists between the object-oriented paradigm of Java (classes, encapsulation, relationships) and the relational database paradigm (tables, rows, columns, foreign key constraints). Traditionally, resolving this mismatch required manually writing redundant and error-prone SQL queries.&lt;/p&gt;
+&lt;p&gt;To address this challenge, &lt;b&gt;Jakarta Persistence (formerly Java Persistence API: JPA)&lt;/b&gt; was standardized. JPA functions as an object-relational mapping (ORM) framework, mapping Java objects directly to database tables, thereby providing an environment where developers can intuitively manipulate data without having to be conscious of SQL.&lt;/p&gt;
+&lt;h2 id="2-h2-database-characteristics-and-operating-modes"&gt;2. H2 Database Characteristics and Operating Modes
+&lt;/h2&gt;&lt;p&gt;During the development, testing, and prototyping phases, setting up production databases (such as PostgreSQL or Oracle) in a local environment increases infrastructure overhead. To address this challenge, &lt;b&gt;H2 Database&lt;/b&gt;, a lightweight Java-based open-source relational database, is widely used.&lt;/p&gt;
+&lt;p&gt;Because the H2 database operates as a lightweight JAR file embedded within the application runtime, it requires no installation hassle. Two operating modes are provided: &amp;ldquo;Embedded Mode,&amp;rdquo; where the database runs within the same JVM as the application, and &amp;ldquo;Server Mode,&amp;rdquo; where it runs as an independent process and allows simultaneous connections from multiple external applications. It also features an in-memory capability ideal for fast integration testing where data does not need to be retained beyond the application&amp;rsquo;s execution lifecycle, as well as a Web Console feature to manipulate the database via a browser. By default, it is accessible from the following URL:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;http://localhost:8081/h2-console
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-evolution-of-database-access-from-jdbc-to-jpa"&gt;3. Evolution of Database Access: From JDBC to JPA
+&lt;/h2&gt;&lt;p&gt;Before ORM frameworks became widespread, Java applications communicated with databases using &lt;b&gt;Java Database Connectivity (JDBC)&lt;/b&gt;. With JDBC, it was necessary to manually manage low-level database resources, construct SQL strings, and map result sets to Java objects.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Connection conn &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PreparedStatement pstmt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ResultSet rs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; conn &lt;span style="color:#f92672"&gt;=&lt;/span&gt; DriverManager.&lt;span style="color:#a6e22e"&gt;getConnection&lt;/span&gt;(URL, USER, PASSWORD);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; String sql &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT id, name, email FROM students WHERE id = ?&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pstmt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; conn.&lt;span style="color:#a6e22e"&gt;prepareStatement&lt;/span&gt;(sql);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pstmt.&lt;span style="color:#a6e22e"&gt;setLong&lt;/span&gt;(1, 1L);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; rs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pstmt.&lt;span style="color:#a6e22e"&gt;executeQuery&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (rs.&lt;span style="color:#a6e22e"&gt;next&lt;/span&gt;()) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Student student &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Student();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; student.&lt;span style="color:#a6e22e"&gt;setId&lt;/span&gt;(rs.&lt;span style="color:#a6e22e"&gt;getLong&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; student.&lt;span style="color:#a6e22e"&gt;setName&lt;/span&gt;(rs.&lt;span style="color:#a6e22e"&gt;getString&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; student.&lt;span style="color:#a6e22e"&gt;setEmail&lt;/span&gt;(rs.&lt;span style="color:#a6e22e"&gt;getString&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;email&amp;#34;&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;} &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (SQLException e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; e.&lt;span style="color:#a6e22e"&gt;printStackTrace&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;} &lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (rs &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; { rs.&lt;span style="color:#a6e22e"&gt;close&lt;/span&gt;(); } &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (SQLException e) {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (pstmt &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; { pstmt.&lt;span style="color:#a6e22e"&gt;close&lt;/span&gt;(); } &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (SQLException e) {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (conn &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; { conn.&lt;span style="color:#a6e22e"&gt;close&lt;/span&gt;(); } &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (SQLException e) {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The main challenges of JDBC include the fact that non-essential boilerplate code—such as establishing connections, handling exceptions, and releasing resources—comprises the majority of the code; SQL queries are hardcoded as strings, meaning no compile-time type checking is performed; and the task of extracting values from a &lt;code&gt;ResultSet&lt;/code&gt; and manually mapping them to domain objects is highly prone to errors like typos.&lt;/p&gt;
+&lt;p&gt;JPA abstracts these low-level JDBC operations. Instead of writing imperative SQL, developers use annotations to declare mappings on domain objects. The JPA provider (primarily Hibernate) automatically generates and executes the appropriate SQL at runtime.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@PersistenceContext&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; EntityManager em;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; Student &lt;span style="color:#a6e22e"&gt;findStudent&lt;/span&gt;(Long id) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; em.&lt;span style="color:#a6e22e"&gt;find&lt;/span&gt;(Student.&lt;span style="color:#a6e22e"&gt;class&lt;/span&gt;, id);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;saveStudent&lt;/span&gt;(Student student) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; em.&lt;span style="color:#a6e22e"&gt;persist&lt;/span&gt;(student);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;By introducing JPA, common CRUD operations are abstracted, and the Java class structure is automatically converted into a relational schema, thereby resolving the impedance mismatch.&lt;/p&gt;
+&lt;h2 id="4-dependency-definition-and-environment-setup"&gt;4. Dependency Definition and Environment Setup
+&lt;/h2&gt;&lt;p&gt;This is a configuration example of a Gradle build definition file for using JPA and the H2 database in a Spring Boot application.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-groovy" data-lang="groovy"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dependencies &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; implementation &lt;span style="color:#e6db74"&gt;&amp;#39;org.springframework.boot:spring-boot-starter-data-jpa&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; runtimeOnly &lt;span style="color:#e6db74"&gt;&amp;#39;com.h2database:h2&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; compileOnly &lt;span style="color:#e6db74"&gt;&amp;#39;org.projectlombok:lombok&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; annotationProcessor &lt;span style="color:#e6db74"&gt;&amp;#39;org.projectlombok:lombok&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; testImplementation &lt;span style="color:#e6db74"&gt;&amp;#39;org.springframework.boot:spring-boot-starter-test&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-entity-mapping-specifications-with-jakarta-persistence-jpa"&gt;5. Entity Mapping Specifications with Jakarta Persistence (JPA)
+&lt;/h2&gt;&lt;p&gt;Entities are lightweight domain objects mapped to database tables. Since Spring Boot 3.x, the persistence specification has migrated from the traditional Java EE namespace (&lt;code&gt;javax.persistence.&lt;em&gt;&lt;/code&gt;) to the Jakarta EE namespace (&lt;code&gt;jakarta.persistence.&lt;/em&gt;&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;A key JPA mapping annotation is &lt;code&gt;@Entity&lt;/code&gt;, which indicates that the target class is a JPA entity and is mapped to a database table. By default, the class name becomes the table name, but it can be explicitly specified using the &lt;code&gt;@Table&lt;/code&gt; annotation.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Entity&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Table&lt;/span&gt;(name &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;students&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Student&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;All JPA entities must define a primary key (PK) to uniquely identify records. &lt;code&gt;@Id&lt;/code&gt; designates a field as the primary key, and &lt;code&gt;@GeneratedValue&lt;/code&gt; configures the primary key generation strategy. Specifying &lt;code&gt;GenerationType.IDENTITY&lt;/code&gt; delegates generation to the database&amp;rsquo;s auto-increment feature.&lt;/p&gt;
+&lt;p&gt;Additionally, the mapping between fields and database columns can be customized using the &lt;code&gt;@Column&lt;/code&gt; annotation.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Column&lt;/span&gt;(name &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;email&amp;#34;&lt;/span&gt;, nullable &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;, length &lt;span style="color:#f92672"&gt;=&lt;/span&gt; 50, unique &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; String email;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Setting &lt;code&gt;nullable&lt;/code&gt; to &lt;code&gt;false&lt;/code&gt; applies a &lt;code&gt;NOT NULL&lt;/code&gt; constraint to the generated DDL. &lt;code&gt;length&lt;/code&gt; defines the maximum length of a string column, and &lt;code&gt;unique&lt;/code&gt; applies a unique constraint to the column.&lt;/p&gt;
+&lt;h2 id="6-lombok-integration-and-anti-patterns-in-entity-design"&gt;6. Lombok Integration and Anti-Patterns in Entity Design
+&lt;/h2&gt;&lt;p&gt;In standard Java encapsulation patterns, fields are set to &lt;code&gt;private&lt;/code&gt;, and public Getters/Setters are provided. Additionally, JPA requires a default constructor for instantiation via reflection. Writing these manually bloats the code, so Lombok is introduced to automatically generate them at compile time.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Entity&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Table&lt;/span&gt;(name &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;students&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Getter&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Setter&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@NoArgsConstructor&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Student&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Id&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@GeneratedValue&lt;/span&gt;(strategy &lt;span style="color:#f92672"&gt;=&lt;/span&gt; GenerationType.&lt;span style="color:#a6e22e"&gt;IDENTITY&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; Long id;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Column&lt;/span&gt;(nullable &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;, length &lt;span style="color:#f92672"&gt;=&lt;/span&gt; 50)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; String name;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Column&lt;/span&gt;(nullable &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;, length &lt;span style="color:#f92672"&gt;=&lt;/span&gt; 50, unique &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; String email;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠️ &lt;b&gt;Critical Warning: Avoiding @Data in JPA Entities&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;While Lombok&amp;rsquo;s &lt;code&gt;@Data&lt;/code&gt; annotation is convenient because it applies &lt;code&gt;@Getter&lt;/code&gt;, &lt;code&gt;@Setter&lt;/code&gt;, &lt;code&gt;@ToString&lt;/code&gt;, &lt;code&gt;@EqualsAndHashCode&lt;/code&gt;, and &lt;code&gt;@RequiredArgsConstructor&lt;/code&gt; all at once, its application to JPA entities should be avoided.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;@ToString&lt;/code&gt; and &lt;code&gt;@EqualsAndHashCode&lt;/code&gt; evaluate all fields within the class. If bidirectional associations (such as &lt;code&gt;@OneToMany&lt;/code&gt; and &lt;code&gt;@ManyToOne&lt;/code&gt;) exist between entities, calling &lt;code&gt;toString()&lt;/code&gt; or &lt;code&gt;hashCode()&lt;/code&gt; triggers mutual references, ultimately causing a &lt;code&gt;StackOverflowError&lt;/code&gt;. For this reason, it is recommended to explicitly declare &lt;code&gt;@Getter&lt;/code&gt;, &lt;code&gt;@Setter&lt;/code&gt;, and &lt;code&gt;@NoArgsConstructor&lt;/code&gt; individually on entity classes.&lt;/p&gt;
+&lt;h2 id="7-automatic-ddl-generation-ddl-auto-and-application-configuration"&gt;7. Automatic DDL Generation (ddl-auto) and Application Configuration
+&lt;/h2&gt;&lt;p&gt;In Spring Boot, database connections, the H2 console, and Hibernate&amp;rsquo;s DDL generation behavior can be controlled via &lt;code&gt;application.yaml&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spring&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;datasource&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;url&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;driver-class-name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;org.h2.Driver&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;username&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;sa&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;password&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;h2&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;console&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;enabled&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;path&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/h2-console&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;jpa&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;hibernate&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ddl-auto&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;update&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;show-sql&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;properties&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;hibernate&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;format_sql&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The configuration values for &lt;code&gt;spring.jpa.hibernate.ddl-auto&lt;/code&gt; and their safety in production environments are as follows:&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Option&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Description&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Safety in Production&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;create&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Drops existing tables and creates new tables upon startup.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Extremely Dangerous&lt;/b&gt; (Data Loss)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;create-drop&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Similar to &lt;code&gt;create&lt;/code&gt;, but drops all tables when the application terminates.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Extremely Dangerous&lt;/b&gt; (Data Loss)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;update&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Detects changes in entities and alters the table structure. Existing data and columns are not deleted.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Dangerous&lt;/b&gt; (Causes table locks or inconsistencies)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;validate&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Validates the database schema against entity definitions and halts startup if there are mismatches.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Safe&lt;/b&gt; (Recommended for Production)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;none&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Does not perform automatic generation.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Safe&lt;/b&gt; (Recommended for Production)&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;While &lt;code&gt;create&lt;/code&gt; or &lt;code&gt;update&lt;/code&gt; are convenient in local development environments, to prevent unexpected data loss in production environments, always set it to &lt;code&gt;validate&lt;/code&gt; or &lt;code&gt;none&lt;/code&gt;, and manage the schema using dedicated migration tools such as Flyway or Liquibase.&lt;/p&gt;
+&lt;h2 id="8-api-verification-and-cors-avoidance"&gt;8. API Verification and CORS Avoidance
+&lt;/h2&gt;&lt;p&gt;To verify the operation of the constructed persistence layer and REST API, use an API client such as Postman.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST http://localhost:8081/api/students &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -H &lt;span style="color:#e6db74"&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -d &lt;span style="color:#e6db74"&gt;&amp;#39;{&amp;#34;name&amp;#34;: &amp;#34;John Doe&amp;#34;, &amp;#34;email&amp;#34;: &amp;#34;john.doe@example.com&amp;#34;}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When using the browser version of Postman, requests to the local server (&lt;code&gt;localhost&lt;/code&gt;) may be blocked by CORS restrictions due to the Same-Origin Policy. In this case, installing and running the &lt;b&gt;Postman Agent&lt;/b&gt; on your local machine bypasses browser restrictions and routes requests directly to the local Spring Boot server.&lt;/p&gt;
+&lt;p&gt;The main HTTP request verification steps are as follows:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Data Registration (POST)&lt;/b&gt;
+URL: &lt;code&gt;http://localhost:8081/api/students&lt;/code&gt;
+Headers: &lt;code&gt;Content-Type: application/json&lt;/code&gt;
+Body (raw JSON):&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;John Doe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;email&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;john.doe@example.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
+&lt;li&gt;&lt;b&gt;Data Retrieval (GET)&lt;/b&gt;
+URL: &lt;code&gt;http://localhost:8081/api/students&lt;/code&gt;
+Verify that the registered data is returned as a JSON array.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="9-configuration-notes"&gt;9. Configuration Notes
+&lt;/h2&gt;&lt;p&gt;💡 To maintain a robust data persistence layer, apply the following checklist as your design criteria.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Required Entity Components&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;@Entity&lt;/code&gt; must be applied at the class level.&lt;/li&gt;
+&lt;li&gt;A primary key definition using &lt;code&gt;@Id&lt;/code&gt; must exist.&lt;/li&gt;
+&lt;li&gt;A default constructor complying with JPA specifications (&lt;code&gt;@NoArgsConstructor&lt;/code&gt;) must be defined.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;b&gt;Lombok Application Criteria&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Avoid using &lt;code&gt;@Data&lt;/code&gt;, and apply &lt;code&gt;@Getter&lt;/code&gt; and &lt;code&gt;@Setter&lt;/code&gt; individually.&lt;/li&gt;
+&lt;li&gt;If bidirectional associations exist, the design must prevent &lt;code&gt;StackOverflowError&lt;/code&gt; caused by circular references.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;b&gt;Database Schema Management&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Column constraints (&lt;code&gt;nullable&lt;/code&gt;, &lt;code&gt;length&lt;/code&gt;) must be explicitly specified with &lt;code&gt;@Column&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The production &lt;code&gt;ddl-auto&lt;/code&gt; configuration must be set to &lt;code&gt;validate&lt;/code&gt; or &lt;code&gt;none&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Design and Operational Practices for Distributed Job Scheduling Using Celery</title><link>https://klifehack.com/en/p/celery-distributed-job-scheduling-architecture/</link><pubDate>Fri, 05 Jun 2026 12:45:41 +0900</pubDate><guid>https://klifehack.com/en/p/celery-distributed-job-scheduling-architecture/</guid><description>&lt;p&gt;In distributed systems, reliably executing periodic batch processing and asynchronous background tasks is a critical requirement for maintaining system reliability. Celery, which is widely adopted in the Python ecosystem, provides a powerful mechanism for executing tasks in a distributed manner via a message broker.&lt;/p&gt;
 &lt;p&gt;This article explains the architecture of job scheduling using Celery, specific configuration methods, lifecycle control in container environments, and operational considerations.&lt;/p&gt;
 &lt;h2 id="1-cooperative-architecture-of-celery-beat-and-celery-worker"&gt;1. Cooperative Architecture of Celery Beat and Celery Worker
 &lt;/h2&gt;&lt;p&gt;The scheduling functionality in Celery is designed to physically and logically separate task &amp;ldquo;schedule management (triggering)&amp;rdquo; and &amp;ldquo;execution.&amp;rdquo; To achieve this, two distinct components, &lt;b&gt;Celery Beat&lt;/b&gt; and &lt;b&gt;Celery Worker&lt;/b&gt;, operate in coordination.&lt;/p&gt;
