@@ -1,4 +1,103 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux-Security on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/linux-security/</link><description>Recent content in Linux-Security on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 29 May 2026 09:40:32 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/linux-security/index.xml" rel="self" type="application/rss+xml"/><item><title>Architectural Design of Linux Process Security and System Log Analysis</title><link>https://klifehack.com/en/p/linux-process-security-log-analysis/</link><pubDate>Fri, 29 May 2026 09:40:32 +0900</pubDate><guid>https://klifehack.com/en/p/linux-process-security-log-analysis/</guid><description>&lt;h1 id="technical-considerations-for-linux-process-security-and-log-analysis-architecture"&gt;Technical Considerations for Linux Process Security and Log Analysis Architecture
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux-Security on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/linux-security/</link><description>Recent content in Linux-Security on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 06 Jun 2026 18:07:48 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/linux-security/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation Specifications for Linux Firewall Management Tools: firewalld, UFW, iptables, nftables</title><link>https://klifehack.com/en/p/linux-firewall-management-implementation-note/</link><pubDate>Sat, 06 Jun 2026 18:07:48 +0900</pubDate><guid>https://klifehack.com/en/p/linux-firewall-management-implementation-note/</guid><description>&lt;h1 id="title-technical-specifications-and-implementation-of-linux-firewall-management-systems-control-logic-of-four-major-tools"&gt;Title: Technical Specifications and Implementation of Linux Firewall Management Systems: Control Logic of Four Major Tools
+&lt;/h1&gt;&lt;h1 id="meta-description-operational-management-and-packet-filtering-optimization-methods-for-firewalld-ufw-iptables-and-nftables-in-linux-environments"&gt;Meta Description: Operational management and packet filtering optimization methods for firewalld, UFW, iptables, and nftables in Linux environments.
+&lt;/h1&gt;&lt;p&gt;This document outlines the implementation specifications of four major tools (firewalld, UFW, iptables, and nftables) for firewall management systems, which form the foundation of network security in Linux operating systems. It describes specific operational procedures and control logic for Rocky Linux and Ubuntu environments.&lt;/p&gt;
+&lt;h2 id="1-firewalld-rocky-linux"&gt;1. firewalld (Rocky Linux)
+&lt;/h2&gt;&lt;p&gt;firewalld is a dynamic firewall management tool standard in RHEL-based distributions. It manages rules using abstracted concepts called &amp;ldquo;zones&amp;rdquo; and &amp;ldquo;services.&amp;rdquo;&lt;/p&gt;
+&lt;h3 id="11-checking-daemon-status-and-referencing-rules"&gt;1.1 Checking Daemon Status and Referencing Rules
+&lt;/h3&gt;&lt;p&gt;As the first step of management, verify the operational status of the background daemon and the current configuration values.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# デーモンの稼働状態を確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl status firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 現在適用されているすべてのルールを表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --list-all
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="12-service-permission-settings"&gt;1.2 Service Permission Settings
+&lt;/h3&gt;&lt;p&gt;When allowing specific services such as HTTP traffic, permanent configuration (&amp;ndash;permanent) and runtime application (&amp;ndash;reload) are required.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# HTTPサービスを永続的に追加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定をリロードして反映&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 反映結果の確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --list-all
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="13-detailed-access-control-via-rich-rules"&gt;1.3 Detailed Access Control via Rich Rules
+&lt;/h3&gt;&lt;p&gt;For finer-grained control, such as allowing communication only from specific source IP addresses, &amp;ldquo;Rich Rules&amp;rdquo; are used.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のIP（192.168.0.100）からのHTTPアクセスを許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-rich-rule&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;rule family=&amp;#34;ipv4&amp;#34; source address=&amp;#34;192.168.0.100&amp;#34; service name=&amp;#34;http&amp;#34; accept&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定のリロード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-ufw-ubuntu"&gt;2. UFW (Ubuntu)
+&lt;/h2&gt;&lt;p&gt;UFW (Uncomplicated Firewall) is the default management tool in Ubuntu, designed to simplify iptables operations.&lt;/p&gt;
+&lt;h3 id="21-initial-activation-and-ssh-protection"&gt;2.1 Initial Activation and SSH Protection
+&lt;/h3&gt;&lt;p&gt;When enabling UFW, SSH must be allowed beforehand to prevent remote connections from being cut off.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# UFWのインストール&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update &amp;amp;amp;&amp;amp;amp; apt install ufw -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SSHを許可してから有効化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow ssh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw enable
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-allowing-port-and-service-specifications"&gt;2.2 Allowing Port and Service Specifications
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# HTTP（80番ポート）の許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のTCPポート（8080）の許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow 8080/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 詳細なステータス確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw status verbose
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-iptables"&gt;3. iptables
+&lt;/h2&gt;&lt;p&gt;iptables is a low-layer utility that directly manipulates the Linux kernel&amp;rsquo;s netfilter hooks. It filters packets based on the concepts of tables and chains.&lt;/p&gt;
+&lt;h3 id="31-rule-priority-and-insertion"&gt;3.1 Rule Priority and Insertion
+&lt;/h3&gt;&lt;p&gt;By using the -I (Insert) option, specific rules can be inserted at the beginning of existing rules to ensure they are applied with priority.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 現在のルールを詳細表示（行番号付き）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -L -v -n
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 8080番ポートへの通信を最優先でドロップするテストルールを挿入&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -I INPUT &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; -p tcp --dport &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt; -j DROP
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# テストルールの削除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -D INPUT &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-switching-to-iptables-in-rocky-linux"&gt;3.2 Switching to iptables in Rocky Linux
+&lt;/h3&gt;&lt;p&gt;To avoid conflicts with firewalld, firewalld must be disabled when using iptables directly.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスのインストールとfirewalldの停止&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dnf install iptables-services -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SSH（22番）の許可設定が /etc/sysconfig/iptables に存在することを確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 例: -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスの起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl start iptables
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable iptables
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="33-rule-persistence"&gt;3.3 Rule Persistence
+&lt;/h3&gt;&lt;p&gt;Since iptables rules are held in memory, a save process is required to maintain them after a reboot.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ルールの保存&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;service iptables save
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-nftables"&gt;4. nftables
+&lt;/h2&gt;&lt;p&gt;nftables was developed as the successor to iptables, featuring more efficient data structures and syntax. It is characterized by a structure where tables and chains are explicitly created.&lt;/p&gt;
+&lt;h3 id="41-defining-basic-structures-and-adding-rules"&gt;4.1 Defining Basic Structures and Adding Rules
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# inetファミリー（IPv4/IPv6両対応）のテーブル作成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add table inet filter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 入力チェインの作成（フックとプライオリティの定義）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add chain inet filter input &lt;span style="color:#f92672"&gt;{&lt;/span&gt; type filter hook input priority &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\;&lt;/span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 80番ポートの許可ルール追加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add rule inet filter input tcp dport &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt; accept
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ルールセットの確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft list ruleset
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-rule-management-using-handles"&gt;4.2 Rule Management Using Handles
+&lt;/h3&gt;&lt;p&gt;In nftables, deletion and modification are performed using &amp;ldquo;handle&amp;rdquo; numbers assigned to each rule.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ハンドル番号を含めてルールセットを表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft --handle list ruleset
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のハンドル番号（例: 5）を指定してルールを削除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft delete rule inet filter input handle &lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="closing-notes"&gt;Closing Notes
+&lt;/h2&gt;&lt;p&gt;Linux firewall management must be selected according to the application, ranging from high-abstraction layers like firewalld/UFW to kernel-proximate tools like iptables/nftables. In particular, when operating iptables directly in an existing firewalld environment, care must be taken regarding unintended communication blockages due to service conflicts. In modern system design, migration to nftables, which offers superior performance and scalability, is recommended.&lt;/p&gt;</description></item><item><title>Architectural Design of Linux Process Security and System Log Analysis</title><link>https://klifehack.com/en/p/linux-process-security-log-analysis/</link><pubDate>Fri, 29 May 2026 09:40:32 +0900</pubDate><guid>https://klifehack.com/en/p/linux-process-security-log-analysis/</guid><description>&lt;h1 id="technical-considerations-for-linux-process-security-and-log-analysis-architecture"&gt;Technical Considerations for Linux Process Security and Log Analysis Architecture
 &lt;/h1&gt;&lt;p&gt;Linux security architecture extends beyond static file permissions to the control and monitoring of active process behaviors. This analysis examines process identity, isolation mechanisms, and log analysis structures required for forensic integrity.&lt;/p&gt;
 &lt;h2 id="1-definition-and-boundaries-of-process-security"&gt;1. Definition and Boundaries of Process Security
 &lt;/h2&gt;&lt;p&gt;Processes are dynamic entities residing in RAM, unlike static disk data. Conventional file permissions are insufficient against specific modern threats.&lt;/p&gt;

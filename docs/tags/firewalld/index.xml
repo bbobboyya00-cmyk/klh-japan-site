@@ -1,4 +1,103 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Firewalld on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/firewalld/</link><description>Recent content in Firewalld on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 05 Jun 2026 12:01:00 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/firewalld/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux環境における各種ファイアウォール管理ツールの技術仕様と実装</title><link>https://klifehack.com/p/linux-firewall-management-systems-analysis/</link><pubDate>Fri, 05 Jun 2026 12:01:00 +0900</pubDate><guid>https://klifehack.com/p/linux-firewall-management-systems-analysis/</guid><description>&lt;h1 id="linuxファイアウォール管理ツールの実装と運用比較"&gt;Linuxファイアウォール管理ツールの実装と運用比較
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Firewalld on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/firewalld/</link><description>Recent content in Firewalld on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 06 Jun 2026 18:07:48 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/firewalld/index.xml" rel="self" type="application/rss+xml"/><item><title>Linuxファイアウォール管理ツールの実装仕様：firewalld, UFW, iptables, nftables</title><link>https://klifehack.com/p/linux-firewall-management-implementation-note/</link><pubDate>Sat, 06 Jun 2026 18:07:48 +0900</pubDate><guid>https://klifehack.com/p/linux-firewall-management-implementation-note/</guid><description>&lt;h1 id="title-linuxファイアウォール管理システムの技術仕様と実装主要4ツールの制御ロジック"&gt;Title: Linuxファイアウォール管理システムの技術仕様と実装：主要4ツールの制御ロジック
+&lt;/h1&gt;&lt;h1 id="meta-description-linux環境におけるfirewalldufwiptablesnftablesの運用管理とパケットフィルタリングの最適化手法"&gt;Meta Description: Linux環境におけるfirewalld、UFW、iptables、nftablesの運用管理とパケットフィルタリングの最適化手法。
+&lt;/h1&gt;&lt;p&gt;Linuxオペレーティングシステムにおけるネットワークセキュリティの基盤となるファイアウォール管理システムについて、主要な4つのツール（firewalld, UFW, iptables, nftables）の実装仕様を整理します。本稿では、Rocky LinuxおよびUbuntu環境を対象とした具体的な操作手順と、それぞれの制御ロジックについて記述します。&lt;/p&gt;
+&lt;h2 id="1-firewalld-rocky-linux"&gt;1. firewalld (Rocky Linux)
+&lt;/h2&gt;&lt;p&gt;firewalldは、RHEL系のディストリビューションで標準的に採用されている動的ファイアウォール管理ツールです。「ゾーン」と「サービス」という抽象化された概念を用いてルールを管理します。&lt;/p&gt;
+&lt;h3 id="11-デーモンの状態確認とルール参照"&gt;1.1 デーモンの状態確認とルール参照
+&lt;/h3&gt;&lt;p&gt;管理の第一段階として、バックグラウンドデーモンの稼働状況と現在の設定値を確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# デーモンの稼働状態を確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl status firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 現在適用されているすべてのルールを表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --list-all
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="12-サービスの許可設定"&gt;1.2 サービスの許可設定
+&lt;/h3&gt;&lt;p&gt;HTTPトラフィックなどの特定のサービスを許可する場合、永続的な設定（&amp;ndash;permanent）とランタイムへの反映（&amp;ndash;reload）が必要です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# HTTPサービスを永続的に追加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定をリロードして反映&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 反映結果の確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --list-all
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="13-rich-rulesによる詳細なアクセス制御"&gt;1.3 Rich Rulesによる詳細なアクセス制御
+&lt;/h3&gt;&lt;p&gt;特定のソースIPアドレスからの通信のみを許可するなど、より細粒度な制御には「Rich Rules」を使用します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のIP（192.168.0.100）からのHTTPアクセスを許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-rich-rule&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;rule family=&amp;#34;ipv4&amp;#34; source address=&amp;#34;192.168.0.100&amp;#34; service name=&amp;#34;http&amp;#34; accept&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定のリロード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-ufw-ubuntu"&gt;2. UFW (Ubuntu)
+&lt;/h2&gt;&lt;p&gt;UFW (Uncomplicated Firewall)は、Ubuntuにおけるデフォルトの管理ツールであり、iptablesの操作を簡略化することを目的としています。&lt;/p&gt;
+&lt;h3 id="21-初期有効化とsshの保護"&gt;2.1 初期有効化とSSHの保護
+&lt;/h3&gt;&lt;p&gt;UFWを有効化する際、リモート接続が遮断されないようSSHの許可を先行させる必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# UFWのインストール&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update &amp;amp;amp;&amp;amp;amp; apt install ufw -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SSHを許可してから有効化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow ssh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw enable
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-ポートおよびサービス指定の許可"&gt;2.2 ポートおよびサービス指定の許可
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# HTTP（80番ポート）の許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のTCPポート（8080）の許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow 8080/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 詳細なステータス確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw status verbose
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-iptables"&gt;3. iptables
+&lt;/h2&gt;&lt;p&gt;iptablesは、Linuxカーネルのnetfilterフックを直接操作する低レイヤーのユーティリティです。テーブルとチェインの概念に基づいてパケットをフィルタリングします。&lt;/p&gt;
+&lt;h3 id="31-ルールの優先順位と挿入"&gt;3.1 ルールの優先順位と挿入
+&lt;/h3&gt;&lt;p&gt;-I（Insert）オプションを使用することで、既存のルールの先頭に特定のルールを挿入し、優先的に適用させることが可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 現在のルールを詳細表示（行番号付き）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -L -v -n
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 8080番ポートへの通信を最優先でドロップするテストルールを挿入&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -I INPUT &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; -p tcp --dport &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt; -j DROP
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# テストルールの削除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -D INPUT &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-rocky-linuxにおけるiptablesへの切り替え"&gt;3.2 Rocky Linuxにおけるiptablesへの切り替え
+&lt;/h3&gt;&lt;p&gt;firewalldとの競合を避けるため、iptablesを直接使用する場合はfirewalldを無効化する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスのインストールとfirewalldの停止&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dnf install iptables-services -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable firewalld
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SSH（22番）の許可設定が /etc/sysconfig/iptables に存在することを確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 例: -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスの起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl start iptables
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable iptables
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="33-ルールの永続化"&gt;3.3 ルールの永続化
+&lt;/h3&gt;&lt;p&gt;iptablesのルールはメモリ上に保持されるため、再起動後も維持するには保存処理が必要です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ルールの保存&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;service iptables save
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-nftables"&gt;4. nftables
+&lt;/h2&gt;&lt;p&gt;nftablesはiptablesの後継として開発され、より効率的なデータ構造と構文を備えています。テーブルやチェインを明示的に作成する構造が特徴です。&lt;/p&gt;
+&lt;h3 id="41-基本構造の定義とルール追加"&gt;4.1 基本構造の定義とルール追加
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# inetファミリー（IPv4/IPv6両対応）のテーブル作成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add table inet filter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 入力チェインの作成（フックとプライオリティの定義）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add chain inet filter input &lt;span style="color:#f92672"&gt;{&lt;/span&gt; type filter hook input priority &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\;&lt;/span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 80番ポートの許可ルール追加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add rule inet filter input tcp dport &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt; accept
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ルールセットの確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft list ruleset
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-ハンドルを使用したルール管理"&gt;4.2 ハンドルを使用したルール管理
+&lt;/h3&gt;&lt;p&gt;nftablesでは、各ルールに割り当てられた「ハンドル」番号を使用して削除や修正を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ハンドル番号を含めてルールセットを表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft --handle list ruleset
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のハンドル番号（例: 5）を指定してルールを削除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft delete rule inet filter input handle &lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="closing-notes"&gt;Closing Notes
+&lt;/h2&gt;&lt;p&gt;Linuxのファイアウォール管理は、抽象化レイヤーの高いfirewalld/UFWから、カーネルに近いiptables/nftablesまで、用途に応じて選択する必要があります。特に、既存のfirewalld環境でiptablesを直接操作する場合は、サービス間の競合による意図しない通信遮断に注意を払う必要があります。最新のシステム設計においては、パフォーマンスと拡張性に優れたnftablesへの移行が推奨されます。&lt;/p&gt;</description></item><item><title>Linux環境における各種ファイアウォール管理ツールの技術仕様と実装</title><link>https://klifehack.com/p/linux-firewall-management-systems-analysis/</link><pubDate>Fri, 05 Jun 2026 12:01:00 +0900</pubDate><guid>https://klifehack.com/p/linux-firewall-management-systems-analysis/</guid><description>&lt;h1 id="linuxファイアウォール管理ツールの実装と運用比較"&gt;Linuxファイアウォール管理ツールの実装と運用比較
 &lt;/h1&gt;&lt;p&gt;Linuxカーネルのnetfilterフレームワークを制御するためのフロントエンドツールは、ディストリビューションや運用要件によって異なります。本稿では、Rocky Linux (RHEL系) で標準的なfirewalld、Ubuntuで採用されるUFW、低レイヤー制御を可能にするiptables、そしてモダンな後継であるnftablesの各実装仕様について記述します。&lt;/p&gt;
 &lt;h2 id="1-firewalld-rocky-linux--rhel系"&gt;1. firewalld (Rocky Linux / RHEL系)
 &lt;/h2&gt;&lt;p&gt;firewalldは「ゾーン」と「サービス」という概念を用いてネットワークトラフィックを動的に管理します。ランタイム設定と永続設定を分離して管理する点が特徴であり、システム稼働中に接続を遮断することなくルールを更新できる利点があります。&lt;/p&gt;
