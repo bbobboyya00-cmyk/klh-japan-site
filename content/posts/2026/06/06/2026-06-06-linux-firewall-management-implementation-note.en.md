@@ -1,0 +1,198 @@
+---
+title: "Implementation Specifications for Linux Firewall Management Tools: firewalld, UFW, iptables, nftables"
+slug: "linux-firewall-management-implementation-note"
+date: 2026-06-06T18:07:48+09:00
+draft: false
+image: ""
+description: "This article explains the specific configuration procedures and architectural differences of major firewall management tools (firewalld, UFW, iptables, nftables) in Rocky Linux and Ubuntu, focusing on practical command structures."
+categories: ["Linux System Admin"]
+tags: ["firewalld", "ufw", "iptables", "nftables", "linux-security"]
+author: "K-Life Hack"
+---
+
+# Title: Technical Specifications and Implementation of Linux Firewall Management Systems: Control Logic of Four Major Tools
+# Meta Description: Operational management and packet filtering optimization methods for firewalld, UFW, iptables, and nftables in Linux environments.
+
+This document outlines the implementation specifications of four major tools (firewalld, UFW, iptables, and nftables) for firewall management systems, which form the foundation of network security in Linux operating systems. It describes specific operational procedures and control logic for Rocky Linux and Ubuntu environments.
+
+
+
+## 1. firewalld (Rocky Linux)
+
+firewalld is a dynamic firewall management tool standard in RHEL-based distributions. It manages rules using abstracted concepts called "zones" and "services."
+
+
+
+### 1.1 Checking Daemon Status and Referencing Rules
+
+As the first step of management, verify the operational status of the background daemon and the current configuration values.
+
+
+
+```bash
+# デーモンの稼働状態を確認
+systemctl status firewalld
+
+# 現在適用されているすべてのルールを表示
+firewall-cmd --list-all
+```
+
+### 1.2 Service Permission Settings
+
+When allowing specific services such as HTTP traffic, permanent configuration (--permanent) and runtime application (--reload) are required.
+
+
+
+```bash
+# HTTPサービスを永続的に追加
+firewall-cmd --permanent --add-service=http
+
+# 設定をリロードして反映
+firewall-cmd --reload
+
+# 反映結果の確認
+firewall-cmd --list-all
+```
+
+### 1.3 Detailed Access Control via Rich Rules
+
+For finer-grained control, such as allowing communication only from specific source IP addresses, "Rich Rules" are used.
+
+
+
+```bash
+# 特定のIP（192.168.0.100）からのHTTPアクセスを許可
+firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="192.168.0.100" service name="http" accept'
+
+# 設定のリロード
+firewall-cmd --reload
+```
+
+## 2. UFW (Ubuntu)
+
+UFW (Uncomplicated Firewall) is the default management tool in Ubuntu, designed to simplify iptables operations.
+
+
+
+### 2.1 Initial Activation and SSH Protection
+
+When enabling UFW, SSH must be allowed beforehand to prevent remote connections from being cut off.
+
+
+
+```bash
+# UFWのインストール
+apt update &amp;&amp; apt install ufw -y
+
+# SSHを許可してから有効化
+ufw allow ssh
+ufw enable
+```
+
+### 2.2 Allowing Port and Service Specifications
+
+```bash
+# HTTP（80番ポート）の許可
+ufw allow http
+
+# 特定のTCPポート（8080）の許可
+ufw allow 8080/tcp
+
+# 詳細なステータス確認
+ufw status verbose
+```
+
+## 3. iptables
+
+iptables is a low-layer utility that directly manipulates the Linux kernel's netfilter hooks. It filters packets based on the concepts of tables and chains.
+
+
+
+### 3.1 Rule Priority and Insertion
+
+By using the -I (Insert) option, specific rules can be inserted at the beginning of existing rules to ensure they are applied with priority.
+
+
+
+```bash
+# 現在のルールを詳細表示（行番号付き）
+iptables -L -v -n
+
+# 8080番ポートへの通信を最優先でドロップするテストルールを挿入
+iptables -I INPUT 1 -p tcp --dport 8080 -j DROP
+
+# テストルールの削除
+iptables -D INPUT 1
+```
+
+### 3.2 Switching to iptables in Rocky Linux
+
+To avoid conflicts with firewalld, firewalld must be disabled when using iptables directly.
+
+
+
+```bash
+# サービスのインストールとfirewalldの停止
+dnf install iptables-services -y
+systemctl stop firewalld
+systemctl disable firewalld
+
+# SSH（22番）の許可設定が /etc/sysconfig/iptables に存在することを確認
+# 例: -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+
+# サービスの起動
+systemctl start iptables
+systemctl enable iptables
+```
+
+### 3.3 Rule Persistence
+
+Since iptables rules are held in memory, a save process is required to maintain them after a reboot.
+
+
+
+```bash
+# ルールの保存
+service iptables save
+```
+
+## 4. nftables
+
+nftables was developed as the successor to iptables, featuring more efficient data structures and syntax. It is characterized by a structure where tables and chains are explicitly created.
+
+
+
+### 4.1 Defining Basic Structures and Adding Rules
+
+```bash
+# inetファミリー（IPv4/IPv6両対応）のテーブル作成
+nft add table inet filter
+
+# 入力チェインの作成（フックとプライオリティの定義）
+nft add chain inet filter input { type filter hook input priority 0 \; }
+
+# 80番ポートの許可ルール追加
+nft add rule inet filter input tcp dport 80 accept
+
+# ルールセットの確認
+nft list ruleset
+```
+
+### 4.2 Rule Management Using Handles
+
+In nftables, deletion and modification are performed using "handle" numbers assigned to each rule.
+
+
+
+```bash
+# ハンドル番号を含めてルールセットを表示
+nft --handle list ruleset
+
+# 特定のハンドル番号（例: 5）を指定してルールを削除
+nft delete rule inet filter input handle 5
+```
+
+## Closing Notes
+
+Linux firewall management must be selected according to the application, ranging from high-abstraction layers like firewalld/UFW to kernel-proximate tools like iptables/nftables. In particular, when operating iptables directly in an existing firewalld environment, care must be taken regarding unintended communication blockages due to service conflicts. In modern system design, migration to nftables, which offers superior performance and scalability, is recommended.
+
