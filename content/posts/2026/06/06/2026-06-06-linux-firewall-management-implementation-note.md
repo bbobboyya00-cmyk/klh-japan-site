@@ -10,9 +10,6 @@ tags: ["firewalld", "ufw", "iptables", "nftables", "linux-security"]
 author: "K-Life Hack"
 ---
 
-# Title: Linuxファイアウォール管理システムの技術仕様と実装：主要4ツールの制御ロジック
-# Meta Description: Linux環境におけるfirewalld、UFW、iptables、nftablesの運用管理とパケットフィルタリングの最適化手法。
-
 Linuxオペレーティングシステムにおけるネットワークセキュリティの基盤となるファイアウォール管理システムについて、主要な4つのツール（firewalld, UFW, iptables, nftables）の実装仕様を整理します。本稿では、Rocky LinuxおよびUbuntu環境を対象とした具体的な操作手順と、それぞれの制御ロジックについて記述します。
 
 ## 1. firewalld (Rocky Linux)

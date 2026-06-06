@@ -10,8 +10,6 @@ tags: ["firewalld", "ufw", "iptables", "nftables", "linux-security"]
 author: "K-Life Hack"
 ---
 
-# Title: Technical Specifications and Implementation of Linux Firewall Management Systems: Control Logic of Four Major Tools
-# Meta Description: Operational management and packet filtering optimization methods for firewalld, UFW, iptables, and nftables in Linux environments.
 
 This document outlines the implementation specifications of four major tools (firewalld, UFW, iptables, and nftables) for firewall management systems, which form the foundation of network security in Linux operating systems. It describes specific operational procedures and control logic for Rocky Linux and Ubuntu environments.
 
