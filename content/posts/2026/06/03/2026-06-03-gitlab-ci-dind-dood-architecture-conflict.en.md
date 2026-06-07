@@ -10,9 +10,6 @@ tags: ["gitlab-ci", "docker-in-docker", "dood", "container-security", "buildkit"
 author: "K-Life Hack"
 ---
 
-title: Docker Build Strategies in GitLab CI/CD: Technical Comparison and Selection Criteria for DinD and DooD
-meta_description: Explains the architecture, security, and implementation constraints of DinD (Docker-in-Docker) and DooD (Docker-out-of-Docker) for building Docker containers in GitLab CI/CD pipelines from a technical perspective.
-
 In GitLab CI/CD pipelines, the requirement to execute docker build or docker push within a containerized runner is common. Two main architectural patterns exist for achieving this "container-in-container" approach: Docker-in-Docker (DinD) and Docker-out-of-Docker (DooD). This article analyzes their respective technical structures, security implications, and fatal conflict issues that occur during implementation.
 
 
