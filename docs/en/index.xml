@@ -1,4 +1,132 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 06 Jun 2026 18:07:48 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation Specifications for Linux Firewall Management Tools: firewalld, UFW, iptables, nftables</title><link>https://klifehack.com/en/p/linux-firewall-management-implementation-note/</link><pubDate>Sat, 06 Jun 2026 18:07:48 +0900</pubDate><guid>https://klifehack.com/en/p/linux-firewall-management-implementation-note/</guid><description>&lt;p&gt;This document outlines the implementation specifications of four major tools (firewalld, UFW, iptables, and nftables) for firewall management systems, which form the foundation of network security in Linux operating systems. It describes specific operational procedures and control logic for Rocky Linux and Ubuntu environments.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 07 Jun 2026 10:06:30 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Let's Encrypt Installation and Auto-Renewal Configuration for Apache and Nginx on Ubuntu 22.04 LTS</title><link>https://klifehack.com/en/p/ubuntu-letsencrypt-apache-ssl/</link><pubDate>Sun, 07 Jun 2026 10:06:30 +0900</pubDate><guid>https://klifehack.com/en/p/ubuntu-letsencrypt-apache-ssl/</guid><description>&lt;p&gt;Physical server migrations or network line switchovers can sometimes cause temporary omissions in SSL/TLS configurations. Continuing operations over unencrypted HTTP (port 80) triggers &amp;ldquo;Not Secure&amp;rdquo; warnings in browsers, risking a loss of user trust, lower search engine rankings, and a significant drop in traffic.&lt;/p&gt;
+&lt;p&gt;This article explains the procedures for installing Let&amp;rsquo;s Encrypt SSL/TLS certificates using Certbot, configuring auto-renewal, and troubleshooting for Apache 2.4 and Nginx web servers on Ubuntu 22.04 LTS.&lt;/p&gt;
+&lt;h2 id="1-prerequisites-and-network-requirements"&gt;1. Prerequisites and Network Requirements
+&lt;/h2&gt;&lt;p&gt;Before starting the certificate issuance process, the target environment must meet the following requirements.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Administrative Privileges&lt;/b&gt;: SSH access to the server and sudo execution privileges.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;DNS Settings&lt;/b&gt;: Registered domain names (A or AAAA records) must correctly point to the public IP address of the target server.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Firewall Settings&lt;/b&gt;: Ports 80 (HTTP) and 443 (HTTPS) must be open to the outside, with traffic routed to the web server.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;⚠️ In cloud environments such as AWS, you must explicitly allow these ports in the security group inbound rules. Omitting this configuration is a common cause of certificate validation errors.&lt;/p&gt;
+&lt;h2 id="2-installing-certbot-and-issuing-certificates"&gt;2. Installing Certbot and Issuing Certificates
+&lt;/h2&gt;&lt;p&gt;This section covers the installation steps on Ubuntu 22.04 LTS. Install the appropriate plugin depending on your Apache or Nginx environment.&lt;/p&gt;
+&lt;h3 id="21-updating-system-packages"&gt;2.1. Updating System Packages
+&lt;/h3&gt;&lt;p&gt;Update the local package index to prevent dependency conflicts.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-installing-certbot-and-plugins"&gt;2.2. Installing Certbot and Plugins
+&lt;/h3&gt;&lt;p&gt;Select and install the appropriate package for the web server you are using.&lt;/p&gt;
+&lt;p&gt;For Apache environments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install certbot python3-certbot-apache -y
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For Nginx environments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install certbot python3-certbot-nginx -y
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="23-running-the-certificate-issuance-command"&gt;2.3. Running the Certificate Issuance Command
+&lt;/h3&gt;&lt;p&gt;Run Certbot to obtain the certificate and automatically apply it to the web server. Specifying both the root domain and the www subdomain prevents certificate errors based on the access path.&lt;/p&gt;
+&lt;p&gt;For Apache environments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot --apache -d yourdomain.com -d www.yourdomain.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For Nginx environments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 The interactive prompt during execution will request the following inputs:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Enter Email Address&lt;/b&gt;: Enter an address to receive certificate expiration notices and important announcements from Let&amp;rsquo;s Encrypt.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Agree to Terms of Service (ToS)&lt;/b&gt;: You will be asked to agree, so accept by following the on-screen instructions.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Newsletter Subscription&lt;/b&gt;: Choose whether to receive information updates from the Electronic Frontier Foundation (EFF) (optional).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="3-configuring-auto-renewal-and-zero-downtime-reload"&gt;3. Configuring Auto-Renewal and Zero-Downtime Reload
+&lt;/h2&gt;&lt;p&gt;Let&amp;rsquo;s Encrypt certificates are valid for 90 days. Configure auto-renewal to prevent service disruptions due to expiration.&lt;/p&gt;
+&lt;h3 id="31-testing-the-renewal-process-dry-run"&gt;3.1. Testing the Renewal Process (Dry Run)
+&lt;/h3&gt;&lt;p&gt;Verify that the validation process functions correctly without actually reissuing the certificate.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot renew --dry-run
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-scheduling-auto-renewal-with-cron"&gt;3.2. Scheduling Auto-Renewal with Cron
+&lt;/h3&gt;&lt;p&gt;Add a task to the root user&amp;rsquo;s crontab to execute the renewal process periodically.&lt;/p&gt;
+&lt;p&gt;Open the crontab editor.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo crontab -e
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Append the following configuration line to the end of the file.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;0 3 * * * certbot renew --post-hook &amp;#34;systemctl reload apache2&amp;#34; --quiet
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;💡 This job runs daily at 3:00 AM. The &lt;code&gt;--quiet&lt;/code&gt; flag ensures logs are output only when an error occurs. Using &lt;code&gt;--post-hook&lt;/code&gt; (or &lt;code&gt;--deploy-hook&lt;/code&gt;) reloads the web server only when the certificate is actually renewed, applying the new certificate without disconnecting active connections (for Nginx, specify &lt;code&gt;systemctl reload nginx&lt;/code&gt;).&lt;/p&gt;
+&lt;h2 id="4-troubleshooting"&gt;4. Troubleshooting
+&lt;/h2&gt;&lt;p&gt;If you access &lt;code&gt;https://yourdomain.com&lt;/code&gt; in a browser after applying the certificate and the lock icon does not appear, or if a connection error occurs, check the following items.&lt;/p&gt;
+&lt;h3 id="41-port-443-https-traffic-blocked"&gt;4.1. Port 443 (HTTPS) Traffic Blocked
+&lt;/h3&gt;&lt;p&gt;⚠️ If a timeout occurs during an HTTPS connection, check the host-side firewall (such as UFW) or the cloud infrastructure security settings.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ufw status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ufw allow 80/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ufw allow 443/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-domain-name-mismatch"&gt;4.2. Domain Name Mismatch
+&lt;/h3&gt;&lt;p&gt;⚠️ If &lt;code&gt;Common Name Invalid&lt;/code&gt; or &lt;code&gt;SSL_ERROR_BAD_CERT_DOMAIN&lt;/code&gt; is displayed in the browser, double-check that the domain name specified when running Certbot exactly matches the domain registered in the DNS A record.&lt;/p&gt;
+&lt;h3 id="43-virtual-host-configuration-conflicts"&gt;4.3. Virtual Host Configuration Conflicts
+&lt;/h3&gt;&lt;p&gt;⚠️ If the web server fails to start, or if the default unencrypted page is displayed during HTTPS access, the automatic rewriting by Certbot may be conflicting with existing configurations. Open the configuration file (&lt;code&gt;/etc/apache2/sites-enabled/&lt;/code&gt; or &lt;code&gt;/etc/nginx/sites-enabled/&lt;/code&gt;) and verify that the certificate paths are correctly specified.&lt;/p&gt;
+&lt;p&gt;Configuration example in Apache:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-apache" data-lang="apache"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;virtualhost&lt;/span&gt; &lt;span style="color:#e6db74"&gt;*:443=&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ServerName yourdomain.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ServerAlias www.yourdomain.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; DocumentRoot &lt;span style="color:#e6db74"&gt;/var/www/html&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SSLEngine &lt;span style="color:#66d9ef"&gt;on&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SSLCertificateFile &lt;span style="color:#e6db74"&gt;/etc/letsencrypt/live/yourdomain.com/fullchain.pem&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SSLCertificateKeyFile &lt;span style="color:#e6db74"&gt;/etc/letsencrypt/live/yourdomain.com/privkey.pem&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/virtualhost&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Configuration example in Nginx:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nginx" data-lang="nginx"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;listen&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;443&lt;/span&gt; &lt;span style="color:#e6db74"&gt;ssl&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server_name&lt;/span&gt; &lt;span style="color:#e6db74"&gt;yourdomain.com&lt;/span&gt; &lt;span style="color:#e6db74"&gt;www.yourdomain.com&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ssl_certificate&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/etc/letsencrypt/live/yourdomain.com/fullchain.pem&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ssl_certificate_key&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/etc/letsencrypt/live/yourdomain.com/privkey.pem&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;try_files&lt;/span&gt; $uri $uri/ =&lt;span style="color:#ae81ff"&gt;404&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-configuring-multi-domain-san-certificates"&gt;5. Configuring Multi-Domain (SAN) Certificates
+&lt;/h2&gt;&lt;p&gt;When operating multiple subdomains or different domains on the same server, you can issue a &amp;ldquo;Subject Alternative Name (SAN)&amp;rdquo; certificate that consolidates multiple hostnames into a single certificate.&lt;/p&gt;
+&lt;p&gt;Run the command using additional &lt;code&gt;-d&lt;/code&gt; flags.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot --expand -d yourdomain.com -d www.yourdomain.com -d otherdomain.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="operational-considerations"&gt;Operational Considerations
+&lt;/h3&gt;&lt;p&gt;⚠️ Although Let&amp;rsquo;s Encrypt supports up to 100 names per certificate, it is recommended to limit the number of domains in a single certificate to 10 or fewer to avoid complex validation processes and risks during DNS issues.&lt;/p&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;p&gt;The following is a summary of the key configuration parameters and recommended actions for this setup.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Item / Task&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Specification / Recommended Action&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Target OS&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Ubuntu 22.04 LTS&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Web Server&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Apache 2.4 or Nginx&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Certificate Validity Period&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;90 days&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Auto-Renewal Threshold&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;When less than 30 days remain until expiration&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Auto-Renewal Schedule&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Cron execution daily at 3:00 AM (&lt;code&gt;0 3 * * *&lt;/code&gt;)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Reload Process&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Zero-downtime reload execution via &lt;code&gt;--post-hook&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Multi-Domain Limit&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;10 domains or fewer per certificate recommended&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Required Ports&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Port 80 (for HTTP validation) and Port 443 (for HTTPS traffic)&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;</description></item><item><title>Implementation Specifications for Linux Firewall Management Tools: firewalld, UFW, iptables, nftables</title><link>https://klifehack.com/en/p/linux-firewall-management-implementation-note/</link><pubDate>Sat, 06 Jun 2026 18:07:48 +0900</pubDate><guid>https://klifehack.com/en/p/linux-firewall-management-implementation-note/</guid><description>&lt;p&gt;This document outlines the implementation specifications of four major tools (firewalld, UFW, iptables, and nftables) for firewall management systems, which form the foundation of network security in Linux operating systems. It describes specific operational procedures and control logic for Rocky Linux and Ubuntu environments.&lt;/p&gt;
 &lt;h2 id="1-firewalld-rocky-linux"&gt;1. firewalld (Rocky Linux)
 &lt;/h2&gt;&lt;p&gt;firewalld is a dynamic firewall management tool standard in RHEL-based distributions. It manages rules using abstracted concepts called &amp;ldquo;zones&amp;rdquo; and &amp;ldquo;services.&amp;rdquo;&lt;/p&gt;
 &lt;h3 id="11-checking-daemon-status-and-referencing-rules"&gt;1.1 Checking Daemon Status and Referencing Rules

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Apache on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/apache/</link><description>Recent content in Apache on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 07 Jun 2026 10:06:29 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/apache/index.xml" rel="self" type="application/rss+xml"/><item><title>Ubuntu 22.04 LTSにおけるApacheおよびNginxのLet's Encrypt導入と自動更新設定</title><link>https://klifehack.com/p/ubuntu-letsencrypt-apache-ssl/</link><pubDate>Sun, 07 Jun 2026 10:06:29 +0900</pubDate><guid>https://klifehack.com/p/ubuntu-letsencrypt-apache-ssl/</guid><description>&lt;p&gt;物理的なサーバー移行やネットワーク回線の切り替えに伴い、SSL/TLS設定の一時的な欠落が発生することがあります。暗号化されていないHTTP（ポート80）での運用を継続した場合、ブラウザ上に「保護されていない通信」という警告が表示され、ユーザーの信頼性低下や検索エンジン評価の降下、さらにはトラフィックの大幅な減少を招くリスクがあります。&lt;/p&gt;
+&lt;p&gt;本稿では、Ubuntu 22.04 LTS環境において、Apache 2.4およびNginxウェブサーバーを対象に、Certbotを用いたLet&amp;rsquo;s Encrypt SSL/TLS証明書の導入、自動更新の設定、およびトラブルシューティングの手順を解説します。&lt;/p&gt;
+&lt;h2 id="1-前提条件とネットワーク要件"&gt;1. 前提条件とネットワーク要件
+&lt;/h2&gt;&lt;p&gt;証明書の発行手続きを開始する前に、対象環境が以下の要件を満たしている必要があります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;管理者権限&lt;/b&gt;: サーバーへのSSHアクセスおよびsudo実行権限。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;DNS設定&lt;/b&gt;: 登録済みのドメイン名（AレコードまたはAAAAレコード）が、対象サーバーのパブリックIPアドレスを正しく指していること。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;ファイアウォール設定&lt;/b&gt;: ポート80（HTTP）および443（HTTPS）が外部に開放され、ウェブサーバーへトラフィックがルーティングされていること。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;⚠️ AWSなどのクラウド環境では、セキュリティグループのインバウンドルールでこれらのポートを明示的に許可する必要があります。この設定漏れは、証明書検証エラーの代表的な原因となります。&lt;/p&gt;
+&lt;h2 id="2-certbotのインストールと証明書発行"&gt;2. Certbotのインストールと証明書発行
+&lt;/h2&gt;&lt;p&gt;Ubuntu 22.04 LTS環境におけるインストール手順です。ApacheとNginxそれぞれの環境に応じたプラグインを導入します。&lt;/p&gt;
+&lt;h3 id="21-システムパッケージの更新"&gt;2.1. システムパッケージの更新
+&lt;/h3&gt;&lt;p&gt;依存関係の競合を防ぐため、ローカルのパッケージインデックスを更新します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-certbotおよびプラグインのインストール"&gt;2.2. Certbotおよびプラグインのインストール
+&lt;/h3&gt;&lt;p&gt;使用しているウェブサーバーに合わせて、適切なパッケージを選択してインストールします。&lt;/p&gt;
+&lt;p&gt;Apache環境の場合：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install certbot python3-certbot-apache -y
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nginx環境の場合：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install certbot python3-certbot-nginx -y
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="23-証明書発行コマンドの実行"&gt;2.3. 証明書発行コマンドの実行
+&lt;/h3&gt;&lt;p&gt;Certbotを実行し、証明書の取得とウェブサーバーへの自動適用を行います。ルートドメインとwwwサブドメインの両方を指定することで、アクセス経路による証明書エラーを防ぎます。&lt;/p&gt;
+&lt;p&gt;Apache環境の場合：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot --apache -d yourdomain.com -d www.yourdomain.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nginx環境の場合：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 実行時のインタラクティブプロンプトでは、以下の入力が求められます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;メールアドレスの入力&lt;/b&gt;: Let&amp;rsquo;s Encryptからの証明書期限切れ通知や重要なお知らせを受け取るためのアドレスを入力します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;利用規約（ToS）への同意&lt;/b&gt;: 同意を求められるため、画面の指示に従い承諾します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;メールマガジンの購読&lt;/b&gt;: Electronic Frontier Foundation（EFF）からの情報配信を希望するかどうかを選択します（任意）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="3-証明書の自動更新と無停止リロードの設定"&gt;3. 証明書の自動更新と無停止リロードの設定
+&lt;/h2&gt;&lt;p&gt;Let&amp;rsquo;s Encrypt証明書の有効期限は90日間です。期限切れによるサービス停止を防ぐため、自動更新を設定します。&lt;/p&gt;
+&lt;h3 id="31-更新処理のテストドライラン"&gt;3.1. 更新処理のテスト（ドライラン）
+&lt;/h3&gt;&lt;p&gt;実際に証明書を再発行することなく、検証プロセスが正常に機能するかを確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot renew --dry-run
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-cronによる自動更新のスケジュール化"&gt;3.2. Cronによる自動更新のスケジュール化
+&lt;/h3&gt;&lt;p&gt;定期的に更新処理を実行するため、rootユーザーのcrontabにタスクを追加します。&lt;/p&gt;
+&lt;p&gt;crontabエディタを起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo crontab -e
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ファイルの末尾に以下の設定行を追記します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;0 3 * * * certbot renew --post-hook &amp;#34;systemctl reload apache2&amp;#34; --quiet
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;💡 このジョブは毎日午前3時に実行されます。&amp;ndash;quietフラグにより、エラー発生時のみログが出力されます。&amp;ndash;post-hook（または&amp;ndash;deploy-hook）を使用することで、証明書が実際に更新されたタイミングでのみウェブサーバーをリロードし、アクティブなコネクションを切断することなく新しい証明書を反映させます（Nginxの場合はsystemctl reload nginxを指定します）。&lt;/p&gt;
+&lt;h2 id="4-トラブルシューティング"&gt;4. トラブルシューティング
+&lt;/h2&gt;&lt;p&gt;証明書適用後にブラウザでhttps://yourdomain.comにアクセスし、鍵マークが表示されない、または接続エラーが発生する場合は、以下の項目を確認します。&lt;/p&gt;
+&lt;h3 id="41-ポート443httpsの通信遮断"&gt;4.1. ポート443（HTTPS）の通信遮断
+&lt;/h3&gt;&lt;p&gt;⚠️ HTTPS接続時にタイムアウトが発生する場合は、ホスト側のファイアウォール（UFW等）やクラウドインフラのセキュリティ設定を確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ufw status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ufw allow 80/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ufw allow 443/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-ドメイン名の不一致"&gt;4.2. ドメイン名の不一致
+&lt;/h3&gt;&lt;p&gt;⚠️ ブラウザにCommon Name InvalidやSSL_ERROR_BAD_CERT_DOMAINが表示される場合は、Certbot実行時に指定したドメイン名が、DNSのAレコードに登録されているドメインと完全に一致しているか再確認してください。&lt;/p&gt;
+&lt;h3 id="43-バーチャルホスト設定の競合"&gt;4.3. バーチャルホスト設定の競合
+&lt;/h3&gt;&lt;p&gt;⚠️ ウェブサーバーが起動しない、またはHTTPSアクセス時にデフォルトの暗号化されていないページが表示される場合は、Certbotによる自動書き換えが既存の設定と競合している可能性があります。設定ファイル（/etc/apache2/sites-enabled/ または /etc/nginx/sites-enabled/）を開き、証明書パスが正しく指定されているか確認します。&lt;/p&gt;
+&lt;p&gt;Apacheにおける設定例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-apache" data-lang="apache"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;virtualhost&lt;/span&gt; &lt;span style="color:#e6db74"&gt;*:443=&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ServerName yourdomain.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ServerAlias www.yourdomain.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; DocumentRoot &lt;span style="color:#e6db74"&gt;/var/www/html&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SSLEngine &lt;span style="color:#66d9ef"&gt;on&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SSLCertificateFile &lt;span style="color:#e6db74"&gt;/etc/letsencrypt/live/yourdomain.com/fullchain.pem&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SSLCertificateKeyFile &lt;span style="color:#e6db74"&gt;/etc/letsencrypt/live/yourdomain.com/privkey.pem&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/virtualhost&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nginxにおける設定例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nginx" data-lang="nginx"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;listen&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;443&lt;/span&gt; &lt;span style="color:#e6db74"&gt;ssl&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server_name&lt;/span&gt; &lt;span style="color:#e6db74"&gt;yourdomain.com&lt;/span&gt; &lt;span style="color:#e6db74"&gt;www.yourdomain.com&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ssl_certificate&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/etc/letsencrypt/live/yourdomain.com/fullchain.pem&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ssl_certificate_key&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/etc/letsencrypt/live/yourdomain.com/privkey.pem&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;try_files&lt;/span&gt; $uri $uri/ =&lt;span style="color:#ae81ff"&gt;404&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-複数ドメインsan証明書の構成"&gt;5. 複数ドメイン（SAN）証明書の構成
+&lt;/h2&gt;&lt;p&gt;同一サーバー上で複数のサブドメインや別ドメインを運用する場合、1つの証明書に複数のホスト名を統合する「Subject Alternative Name (SAN)」証明書を発行できます。&lt;/p&gt;
+&lt;p&gt;追加の-dフラグを使用してコマンドを実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot --expand -d yourdomain.com -d www.yourdomain.com -d otherdomain.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="運用の注意点"&gt;運用の注意点
+&lt;/h3&gt;&lt;p&gt;⚠️ Let&amp;rsquo;s Encryptは1つの証明書につき最大100個の名前をサポートしていますが、検証処理の複雑化やDNSトラブル時のリスクを避けるため、1つの証明書に含めるドメイン数は10個以下に抑えることが推奨されます。&lt;/p&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;p&gt;本構築における主要な設定パラメータと推奨アクションのまとめは以下の通りです。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;項目 / タスク&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;指定内容 / 推奨アクション&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;対象OS&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Ubuntu 22.04 LTS&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;ウェブサーバー&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Apache 2.4 または Nginx&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;証明書有効期間&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;90日間&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;自動更新の閾値&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;有効期限まで30日未満となった時点&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;自動更新スケジュール&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;毎日午前3:00にCron実行 (&lt;code&gt;0 3 * * *&lt;/code&gt;)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;リロード処理&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;--post-hook&lt;/code&gt; による無停止リロードの実行&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;複数ドメイン制限&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;1証明書あたり10ドメイン以下を推奨&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;必要ポート&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ポート80（HTTP検証用）およびポート443（HTTPS通信用）&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;</description></item></channel></rss>
