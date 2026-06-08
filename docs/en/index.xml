@@ -1,4 +1,146 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 08 Jun 2026 10:02:31 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Resource Isolation and Migration Using Docker Compose in Multi-tenant Web Hosting</title><link>https://klifehack.com/en/p/docker-multi-tenant-resource-isolation/</link><pubDate>Mon, 08 Jun 2026 10:02:31 +0900</pubDate><guid>https://klifehack.com/en/p/docker-multi-tenant-resource-isolation/</guid><description>&lt;h1 id="improving-resource-isolation-and-operational-stability-in-multi-tenant-environments-through-docker-containerization"&gt;Improving Resource Isolation and Operational Stability in Multi-tenant Environments through Docker Containerization
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 08 Jun 2026 14:15:57 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Design Patterns for Skipping Specific Jobs While Maintaining Required Status Checks in GitHub Actions</title><link>https://klifehack.com/en/p/github-actions-conditional-job-skip/</link><pubDate>Mon, 08 Jun 2026 14:15:57 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-conditional-job-skip/</guid><description>&lt;p&gt;In collaborative development, setting &amp;ldquo;Required Status Checks&amp;rdquo; for pull requests (PRs) to protect the quality of the main branch (such as &lt;code&gt;main&lt;/code&gt;) is a standard practice. This prevents unverified code from being merged.&lt;/p&gt;
+&lt;p&gt;However, PRs that do not require running builds or tests, such as documentation updates, comment typo fixes, or minor configuration file changes, occur frequently. Especially in environments operating self-hosted runners, occupying limited infrastructure resources with unnecessary CI jobs directly leads to queue congestion and deployment delays.&lt;/p&gt;
+&lt;p&gt;This article explains GitHub Actions design patterns to safely skip unnecessary CI jobs while satisfying the security requirements of required status checks.&lt;/p&gt;
+&lt;h2 id="1-issues-caused-by-skipping-the-entire-workflow"&gt;1. Issues Caused by Skipping the Entire Workflow
+&lt;/h2&gt;&lt;p&gt;As an approach to lower CI execution costs, path filtering (&lt;code&gt;paths-ignore&lt;/code&gt;) or suppressing the entire workflow trigger via commit messages is often considered first.&lt;/p&gt;
+&lt;h3 id="configuration-example-using-path-filtering"&gt;Configuration Example Using Path Filtering
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pull_request&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;paths-ignore&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;**.md&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;docs/**&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="resulting-issue"&gt;Resulting Issue
+&lt;/h3&gt;&lt;p&gt;If &amp;ldquo;Required Status Checks&amp;rdquo; are enabled in GitHub&amp;rsquo;s branch protection rules, configuring the workflow itself not to trigger prevents GitHub from detecting the initialization of the corresponding status check. As a result, the status check remains in a &amp;ldquo;&lt;b&gt;Pending&lt;/b&gt;&amp;rdquo; state indefinitely on the PR screen, locking the merge button.&lt;/p&gt;
+&lt;h3 id="solution"&gt;Solution
+&lt;/h3&gt;&lt;p&gt;💡 To avoid this issue, the &lt;b&gt;workflow itself must always be triggered&lt;/b&gt; so that GitHub recognizes the status check. Then, you can dynamically skip heavy test jobs using conditional branching (&lt;code&gt;if&lt;/code&gt;) inside the workflow. In GitHub Actions, even if a job ends with a &amp;ldquo;&lt;code&gt;skipped&lt;/code&gt;&amp;rdquo; status, it still satisfies the &amp;ldquo;Success&amp;rdquo; condition of the required status check, allowing you to safely proceed with the merge.&lt;/p&gt;
+&lt;h2 id="2-implementation-patterns-for-conditional-job-skipping"&gt;2. Implementation Patterns for Conditional Job Skipping
+&lt;/h2&gt;&lt;h3 id="pattern-1-simple-evaluation-by-pr-title"&gt;Pattern 1: Simple Evaluation by PR Title
+&lt;/h3&gt;&lt;p&gt;The simplest implementation is to determine whether the PR title contains a specific keyword (e.g., &lt;code&gt;ci skip&lt;/code&gt;).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ !contains(github.event.pull_request.title, &amp;#39;[ci skip]&amp;#39;) }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Run Tests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;npm test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;contains&lt;/code&gt; function in GitHub Actions is case-insensitive. Therefore, it works without additional normalization processing even for variations such as &lt;code&gt;[ci skip]&lt;/code&gt;, &lt;code&gt;[CI SKIP]&lt;/code&gt;, or &lt;code&gt;Ci Skip&lt;/code&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="pattern-2-separating-evaluation-logic-and-execution-jobs"&gt;Pattern 2: Separating Evaluation Logic and Execution Jobs
+&lt;/h3&gt;&lt;p&gt;While Pattern 1 is concise, it has the drawback that when the entire job is skipped, it is difficult to leave logs explaining &amp;ldquo;why it was skipped.&amp;rdquo; To resolve this, we separate the evaluation job and the execution job.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;check-skip&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;outputs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;should-skip&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ steps.skip-eval.outputs.should-skip }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;id&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;skip-eval&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [[ &amp;#34;${{ github.event.pull_request.title }}&amp;#34; =~ &amp;#34;\[ci skip\]&amp;#34; ]]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;should-skip=true&amp;#34; &amp;amp;gt;&amp;amp;gt; $GITHUB_OUTPUT
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;should-skip=false&amp;#34; &amp;amp;gt;&amp;amp;gt; $GITHUB_OUTPUT
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;needs&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;check-skip&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ needs.check-skip.outputs.should-skip != &amp;#39;true&amp;#39; }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Run Tests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;npm test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="pattern-3-robust-configuration-with-a-dedicated-status-check-job-ci-result"&gt;Pattern 3: Robust Configuration with a Dedicated Status Check Job (ci-result)
+&lt;/h3&gt;&lt;p&gt;🛠️ In production operations, rewriting GitHub&amp;rsquo;s branch protection rules (the target name of the required status check) every time you rename or split test jobs incurs high operational overhead and invites configuration errors.&lt;/p&gt;
+&lt;p&gt;To prevent this, we recommend a configuration that defines a lightweight static job &lt;code&gt;ci-result&lt;/code&gt; that only performs the final pass/fail evaluation, and registering only this &lt;code&gt;ci-result&lt;/code&gt; in the branch protection rules.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pr-test&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ !contains(github.event.pull_request.title, &amp;#39;[ci skip]&amp;#39;) }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Run Tests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;npm test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ci-result&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;needs&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pr-test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;always()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Check test result&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; RESULT=&amp;#34;${{ needs.pr-test.result }}&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [ &amp;#34;$RESULT&amp;#34; = &amp;#34;success&amp;#34; ] || [ &amp;#34;$RESULT&amp;#34; = &amp;#34;skipped&amp;#34; ]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;CI passed or skipped successfully.&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; exit 0
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;CI failed.&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; exit 1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="benefits-of-this-configuration"&gt;Benefits of This Configuration
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Immutable Status Check Name&lt;/b&gt;: Since the branch protection rule only needs to monitor &lt;code&gt;ci-result&lt;/code&gt;, there is no need to change the protection rule even if you split or rename internal test jobs (&lt;code&gt;pr-test&lt;/code&gt;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Deterministic Error Handling&lt;/b&gt;: If a test fails, it is reliably blocked with &lt;code&gt;exit 1&lt;/code&gt;, and if skipped, it safely allows merging with &lt;code&gt;exit 0&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="3-selection-criteria-for-skip-triggers"&gt;3. Selection Criteria for Skip Triggers
+&lt;/h2&gt;&lt;p&gt;When introducing conditional skipping, which trigger to adopt depends on the organization&amp;rsquo;s operational policy.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Skip Strategy&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Implementation Mechanism&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Pros&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Cons&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Path-based (&lt;code&gt;paths-ignore&lt;/code&gt;)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Skip when specific extensions or directories are modified&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・Fully automated&lt;br/&gt;・No manual operation required by developers&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・Conflicts with required status checks occur&lt;br/&gt;・Cannot handle modifications of only comments in code&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;PR Title-based&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Include phrases like &lt;code&gt;[ci skip]&lt;/code&gt; in the PR title&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・Skip intent is clearly visible from the PR list&lt;br/&gt;・Easy to configure&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・Risk of skipping due to developer misoperation&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Label-based&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Add a &lt;code&gt;ci-skip&lt;/code&gt; label to the PR&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・Permission management is possible (e.g., allowing only reviewers to add labels)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・Incurs the effort of adding labels&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="4-operational-governance-and-impact-on-production-cd"&gt;4. Operational Governance and Impact on Production CD
+&lt;/h2&gt;&lt;p&gt;⚠️ While CI skipping is a powerful feature, its abuse increases the risk of unverified code mixing into the main branch. We recommend establishing the following guidelines.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Definition of Targets Prohibited from Skipping&lt;/b&gt;: For PRs that modify the following files, CI skipping is prohibited regardless of the title.
+&lt;ul&gt;
+&lt;li&gt;Authentication and authorization logic&lt;/li&gt;
+&lt;li&gt;Database migration scripts (DDL/DML)&lt;/li&gt;
+&lt;li&gt;Infrastructure definition files (Terraform, CloudFormation, etc.)&lt;/li&gt;
+&lt;li&gt;Dockerfile and container orchestration configurations&lt;/li&gt;
+&lt;li&gt;CI/CD definitions themselves under &lt;code&gt;.github/workflows/&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Separation from Production CD Pipelines&lt;/b&gt;: Even if CI skipping is allowed during the PR phase, design the deployment (CD) pipeline after merging into the main branch to &lt;b&gt;never allow skipping&lt;/b&gt;. By always running full tests and builds during post-merge artifact creation and deployment to staging environments, you ensure final safety.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;When required status checks are enabled, you must control skipping at the job level inside the workflow, rather than stopping the trigger of the workflow itself.&lt;/li&gt;
+&lt;li&gt;By placing an aggregating job like &lt;code&gt;ci-result&lt;/code&gt; at the end, you can build a flexible conditional branching pipeline while keeping the branch protection rule configuration fixed.&lt;/li&gt;
+&lt;li&gt;While improving development efficiency and security often tend to be in a trade-off relationship, combining the formulation of appropriate skip rules with strict verification in post-merge CD allows you to optimize self-hosted runner resources without compromising safety.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Implementation of Resource Isolation and Migration Using Docker Compose in Multi-tenant Web Hosting</title><link>https://klifehack.com/en/p/docker-multi-tenant-resource-isolation/</link><pubDate>Mon, 08 Jun 2026 10:02:31 +0900</pubDate><guid>https://klifehack.com/en/p/docker-multi-tenant-resource-isolation/</guid><description>&lt;h1 id="improving-resource-isolation-and-operational-stability-in-multi-tenant-environments-through-docker-containerization"&gt;Improving Resource Isolation and Operational Stability in Multi-tenant Environments through Docker Containerization
 &lt;/h1&gt;&lt;p&gt;In traditional single-server virtual machine (VM) environments where multiple web services share resources, the &amp;ldquo;Noisy Neighbor&amp;rdquo; problem—where a traffic spike on a specific site degrades the performance of the entire server—frequently occurs. This article describes the migration procedure to an independent Docker-based container infrastructure to eliminate this operational risk and improve service stability and visibility.&lt;/p&gt;
 &lt;h2 id="challenges-of-the-traditional-environment-and-background-of-the-migration"&gt;Challenges of the Traditional Environment and Background of the Migration
 &lt;/h2&gt;&lt;p&gt;In the traditional VM environment, 10 different websites were operating within a single VM. This configuration contained the following technical debt:&lt;/p&gt;

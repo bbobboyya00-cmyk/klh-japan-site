@@ -1,4 +1,161 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Self-Hosted-Runner on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/self-hosted-runner/</link><description>Recent content in Self-Hosted-Runner on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 04 Jun 2026 18:02:34 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/self-hosted-runner/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub ActionsとSelf-Hosted RunnerによるKubernetesデプロイ自動化の実装</title><link>https://klifehack.com/p/github-actions-k8s-self-hosted-runner/</link><pubDate>Thu, 04 Jun 2026 18:02:34 +0900</pubDate><guid>https://klifehack.com/p/github-actions-k8s-self-hosted-runner/</guid><description>&lt;h2 id="1-概要と目的"&gt;1. 概要と目的
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Self-Hosted-Runner on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/self-hosted-runner/</link><description>Recent content in Self-Hosted-Runner on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 08 Jun 2026 14:15:57 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/self-hosted-runner/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub Actionsの必須ステータスチェックを維持しつつ特定ジョブをスキップする設計手法</title><link>https://klifehack.com/p/github-actions-conditional-job-skip/</link><pubDate>Mon, 08 Jun 2026 14:15:57 +0900</pubDate><guid>https://klifehack.com/p/github-actions-conditional-job-skip/</guid><description>&lt;p&gt;共同開発において、メインブランチ（&lt;code&gt;main&lt;/code&gt;など）の品質を保護するためにプルリクエスト（PR）に対する「必須ステータスチェック（Required Status Checks）」を設定することは標準的なプラクティスです。これにより、検証されていないコードのマージを防ぐことができます。&lt;/p&gt;
+&lt;p&gt;しかし、ドキュメントの修正、コメントのタイポ修正、軽微な設定ファイルの変更など、ビルドやテストを実行する必要がないPRも頻繁に発生します。特にセルフホストランナー（Self-Hosted Runner）を運用している環境では、限られたインフラリソースを無駄なCIジョブで占有することは、キューの滞留やデプロイの遅延に直結します。&lt;/p&gt;
+&lt;p&gt;本稿では、必須ステータスチェックのセキュリティ要件を満たしつつ、不要なCIジョブを安全にスキップするためのGitHub Actions設計パターンについて解説します。&lt;/p&gt;
+&lt;h2 id="1-ワークフロー全体のスキップが引き起こす問題点"&gt;1. ワークフロー全体のスキップが引き起こす問題点
+&lt;/h2&gt;&lt;p&gt;CIの実行コストを下げるためのアプローチとして、最初に検討されがちなのがパスフィルタリング（&lt;code&gt;paths-ignore&lt;/code&gt;）やコミットメッセージによるワークフロー全体の起動抑止です。&lt;/p&gt;
+&lt;h3 id="パスフィルタリングによる設定例"&gt;パスフィルタリングによる設定例
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pull_request&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;paths-ignore&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;**.md&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;docs/**&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="発生する不具合"&gt;発生する不具合
+&lt;/h3&gt;&lt;p&gt;GitHubのブランチ保護ルールで「必須ステータスチェック」が有効化されている場合、上記のようにワークフロー自体が起動しない設定にすると、GitHubは該当ステータスチェックの初期化を検知できません。その結果、PR画面上でステータスチェックが永久に「&lt;b&gt;Pending（保留中）&lt;/b&gt;」状態となり、マージボタンがロックされます。&lt;/p&gt;
+&lt;h3 id="解決策"&gt;解決策
+&lt;/h3&gt;&lt;p&gt;💡 この問題を回避するためには、&lt;b&gt;ワークフロー自体は常に起動&lt;/b&gt;させ、GitHubにステータスチェックを認識させる必要があります。その上で、ワークフロー内部の条件分岐（&lt;code&gt;if&lt;/code&gt;）を用いて重いテストジョブを動的にスキップします。GitHub Actionsでは、ジョブが「&lt;code&gt;skipped&lt;/code&gt;」状態で終了した場合でも、必須ステータスチェックの「パス（Success）」条件を満たす仕様になっているため、安全にマージを進めることが可能になります。&lt;/p&gt;
+&lt;h2 id="2-条件付きジョブスキップの実装パターン"&gt;2. 条件付きジョブスキップの実装パターン
+&lt;/h2&gt;&lt;h3 id="パターン1prタイトルによる簡易判定"&gt;パターン1：PRタイトルによる簡易判定
+&lt;/h3&gt;&lt;p&gt;最もシンプルな実装は、PRのタイトルに特定のキーワード（例: &lt;code&gt;ci skip&lt;/code&gt;）が含まれているかを判定する方法です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ !contains(github.event.pull_request.title, &amp;#39;[ci skip]&amp;#39;) }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Run Tests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;npm test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;GitHub Actionsの &lt;code&gt;contains&lt;/code&gt; 関数は、大文字と小文字を区別しません。そのため、&lt;code&gt;[ci skip]&lt;/code&gt; や &lt;code&gt;[CI SKIP]&lt;/code&gt;、&lt;code&gt;Ci Skip&lt;/code&gt; といった表記揺れに対しても追加の正規化処理なしで動作します。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="パターン2判定ロジックと実行ジョブの分離"&gt;パターン2：判定ロジックと実行ジョブの分離
+&lt;/h3&gt;&lt;p&gt;パターン1は簡潔ですが、ジョブ全体がスキップされた際に「なぜスキップされたのか」のログが残りにくいという欠点があります。これを解消するために、判定ジョブと実行ジョブを分離します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;check-skip&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;outputs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;should-skip&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ steps.skip-eval.outputs.should-skip }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;id&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;skip-eval&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [[ &amp;#34;${{ github.event.pull_request.title }}&amp;#34; =~ &amp;#34;\[ci skip\]&amp;#34; ]]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;should-skip=true&amp;#34; &amp;amp;gt;&amp;amp;gt; $GITHUB_OUTPUT
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;should-skip=false&amp;#34; &amp;amp;gt;&amp;amp;gt; $GITHUB_OUTPUT
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;needs&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;check-skip&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ needs.check-skip.outputs.should-skip != &amp;#39;true&amp;#39; }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Run Tests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;npm test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="パターン3ステータスチェック専用ジョブci-resultを設ける堅牢な構成"&gt;パターン3：ステータスチェック専用ジョブ（ci-result）を設ける堅牢な構成
+&lt;/h3&gt;&lt;p&gt;🛠️ 本番運用において、テストジョブの名前変更や分割を行うたびにGitHubのブランチ保護ルール（必須ステータスチェックの対象名）を書き換えるのは運用負荷が高く、設定ミスを誘発します。&lt;/p&gt;
+&lt;p&gt;これを防ぐため、最終的な合否判定のみを行う軽量な静的ジョブ &lt;code&gt;ci-result&lt;/code&gt; を定義し、ブランチ保護ルールにはこの &lt;code&gt;ci-result&lt;/code&gt; のみを登録する構成を推奨します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pr-test&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ !contains(github.event.pull_request.title, &amp;#39;[ci skip]&amp;#39;) }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Run Tests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;npm test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ci-result&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;needs&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pr-test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;always()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Check test result&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; RESULT=&amp;#34;${{ needs.pr-test.result }}&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [ &amp;#34;$RESULT&amp;#34; = &amp;#34;success&amp;#34; ] || [ &amp;#34;$RESULT&amp;#34; = &amp;#34;skipped&amp;#34; ]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;CI passed or skipped successfully.&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; exit 0
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;CI failed.&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; exit 1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="この構成のメリット"&gt;この構成のメリット
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;不変のステータスチェック名&lt;/b&gt;: ブランチ保護ルールは &lt;code&gt;ci-result&lt;/code&gt; のみを監視すればよいため、内部のテストジョブ（&lt;code&gt;pr-test&lt;/code&gt;）を分割・リネームしても保護ルールを変更する必要がありません。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;決定論的なエラーハンドリング&lt;/b&gt;: テストが失敗した場合は &lt;code&gt;exit 1&lt;/code&gt; で確実にブロックし、スキップされた場合は &lt;code&gt;exit 0&lt;/code&gt; で安全にマージを許可します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="3-スキップトリガーの選定基準"&gt;3. スキップトリガーの選定基準
+&lt;/h2&gt;&lt;p&gt;条件付きスキップを導入する際、どのトリガーを採用すべきかは組織の運用ポリシーに依存します。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;スキップ戦略&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;実装メカニズム&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;メリット&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;デメリット&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;パスベース (&lt;code&gt;paths-ignore&lt;/code&gt;)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;特定の拡張子やディレクトリの変更時にスキップ&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・完全自動化が可能&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;・開発者の手動操作が不要&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・必須ステータスチェックとの競合が発生する&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;・コード内のコメントのみの修正に対応できない&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;PRタイトルベース&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;PRタイトルに &lt;code&gt;[ci skip]&lt;/code&gt; などの文言を含める&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・PR一覧からスキップ意図が明確にわかる&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;・設定が容易&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・開発者の誤操作によるスキップリスクがある&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;ラベルベース&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;PRに &lt;code&gt;ci-skip&lt;/code&gt; ラベルを付与&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・権限管理が可能（レビュー担当者のみラベル付与を許可など）&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;・ラベル付与の手間が発生する&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="4-運用ガバナンスと本番cdへの影響"&gt;4. 運用ガバナンスと本番CDへの影響
+&lt;/h2&gt;&lt;p&gt;⚠️ CIスキップは強力な機能ですが、乱用されると未検証のコードがメインブランチに混入するリスクを高めます。以下のガイドラインを策定することを推奨します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;スキップ禁止対象の定義&lt;/b&gt;: 以下のファイルを変更するPRでは、タイトルに関わらずCIスキップを禁止します。&lt;/li&gt;
+&lt;li&gt;認証・認可ロジック&lt;/li&gt;
+&lt;li&gt;データベースマイグレーションスクリプト（DDL/DML）&lt;/li&gt;
+&lt;li&gt;インフラ定義ファイル（Terraform, CloudFormationなど）&lt;/li&gt;
+&lt;li&gt;Dockerfileおよびコンテナオーケストレーション設定&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.github/workflows/&lt;/code&gt; 以下のCI/CD定義自体&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;本番CDパイプラインとの分離&lt;/b&gt;: PRフェーズでのCIスキップは許容しても、メインブランチマージ後のデプロイ（CD）パイプラインでは&lt;b&gt;絶対にスキップを許可しない&lt;/b&gt;設計にします。マージ後の成果物作成およびステージング環境へのデプロイ時には、常にフルテストとビルドを実行することで、最終的な安全性を担保します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;必須ステータスチェックを有効にしている場合、ワークフロー自体の起動を止めるのではなく、ワークフロー内部のジョブレベルでスキップを制御する必要があります。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ci-result&lt;/code&gt; のような集約用ジョブを末尾に配置することで、ブランチ保護ルールの設定を固定したまま、柔軟な条件分岐パイプラインを構築できます。&lt;/li&gt;
+&lt;li&gt;開発効率の向上とセキュリティはトレードオフの関係になりがちですが、適切なスキップルールの策定とマージ後CDでの厳格な検証を組み合わせることで、安全性を損なわずにセルフホストランナーのリソースを最適化できます。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>GitHub ActionsとSelf-Hosted RunnerによるKubernetesデプロイ自動化の実装</title><link>https://klifehack.com/p/github-actions-k8s-self-hosted-runner/</link><pubDate>Thu, 04 Jun 2026 18:02:34 +0900</pubDate><guid>https://klifehack.com/p/github-actions-k8s-self-hosted-runner/</guid><description>&lt;h2 id="1-概要と目的"&gt;1. 概要と目的
 &lt;/h2&gt;&lt;p&gt;GitHub ActionsとローカルのKubernetes環境を統合し、ソースコードのプッシュからデプロイまでを完全に自動化するCI/CDパイプラインを構築します。手動介入を排除し、ローリングアップデートを自動的に実行するワークフローの確立を目的とします。&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;ターゲットワークフロー:&lt;/b&gt;&lt;/p&gt;
 &lt;ol&gt;
