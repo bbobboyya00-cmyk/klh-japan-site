@@ -1,4 +1,116 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 08 Jun 2026 14:15:57 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub Actionsの必須ステータスチェックを維持しつつ特定ジョブをスキップする設計手法</title><link>https://klifehack.com/p/github-actions-conditional-job-skip/</link><pubDate>Mon, 08 Jun 2026 14:15:57 +0900</pubDate><guid>https://klifehack.com/p/github-actions-conditional-job-skip/</guid><description>&lt;p&gt;共同開発において、メインブランチ（&lt;code&gt;main&lt;/code&gt;など）の品質を保護するためにプルリクエスト（PR）に対する「必須ステータスチェック（Required Status Checks）」を設定することは標準的なプラクティスです。これにより、検証されていないコードのマージを防ぐことができます。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 08 Jun 2026 18:03:25 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude CodeによるKubernetesマニフェ生成とHelm移行の自動化</title><link>https://klifehack.com/p/claude-code-k8s-helm-migration/</link><pubDate>Mon, 08 Jun 2026 18:03:25 +0900</pubDate><guid>https://klifehack.com/p/claude-code-k8s-helm-migration/</guid><description>&lt;p&gt;Kubernetesの運用において、手動によるマニフェスト（YAML）の作成と管理は、ヒューマンエラーの温床となりやすく、多くの時間を消費します。本稿では、AIエージェントであるClaude Codeを活用し、Google Kubernetes Engine（GKE）環境を対象としたマニフェスト生成の自動化、および静的なYAMLからHelmチャートへの移行プロセスを技術的に分析します。&lt;/p&gt;
+&lt;h2 id="1-コンテキストの永続化claudemdの定義"&gt;1. コンテキストの永続化：CLAUDE.mdの定義
+&lt;/h2&gt;&lt;p&gt;AIによる生成の精度を維持し、セッションごとに同一の制約を適用するためには、プロジェクトルートに&lt;b&gt;CLAUDE.md&lt;/b&gt;を配置することが不可欠です。これにより、クラスタ固有の規約や命名規則、デプロイメント戦略をAIに事前学習させ、一貫性のある出力を担保します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# CLAUDE.md Configuration for GKE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Cluster Provider: GKE (Google Kubernetes Engine)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Region: asia-northeast3 (Seoul)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Namespace Convention: {app}-{environment}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Resource Management: Always define both requests and limits.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Image Registry: gcr.io/my-project/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Mandatory Labels: app, env, version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Health Checks: Liveness and Readiness probes are mandatory.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; High Availability: Pod anti-affinity for multi-AZ distribution.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-自動化されたデプロイメント生成"&gt;2. 自動化されたデプロイメント生成
+&lt;/h2&gt;&lt;p&gt;Claude Codeに対し、具体的なリソース要件や環境変数を指示することで、本番環境のワークロードに耐えうるマニフェストを生成します。例えば、Node.js APIサービスの場合、リソース制限（Requests/Limits）、Liveness/Readinessプローブ、ポッド間のアフィニティ設定を含む高度なYAMLが即座に構成されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;apps/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;api-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;payments-prod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;api&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;env&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;production&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1.2.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;replicas&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;matchLabels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;api&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;api&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;affinity&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;podAntiAffinity&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;preferredDuringSchedulingIgnoredDuringExecution&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;weight&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;podAffinityTerm&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;labelSelector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;matchExpressions&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;operator&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;In&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;values&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;api&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;topologyKey&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;topology.kubernetes.io/zone&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;api-container&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;gcr.io/my-project/api:v1.2.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;containerPort&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;requests&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;cpu&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;250m&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;memory&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;256Mi&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;limits&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;cpu&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;500m&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;memory&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;512Mi&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;livenessProbe&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;httpGet&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;path&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/health&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;initialDelaySeconds&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;periodSeconds&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;内部的な検証によれば、このような生成プロセスを導入することで、手動作成と比較してマニフェスト構築時間を大幅に短縮可能です。また、&lt;code&gt;kubectl apply &amp;ndash;dry-run=client&lt;/code&gt;による事前バリデーションにおいて、構文エラーの発生率を極限まで低減できることが確認されています。&lt;/p&gt;
+&lt;h2 id="3-helmチャートへの移行ワークフロー"&gt;3. Helmチャートへの移行ワークフロー
+&lt;/h2&gt;&lt;p&gt;静的なYAMLファイルを再利用可能なHelmチャートへ変換するプロセスは、以下のステップで構造化されます。Claude Codeは既存のYAMLを解析し、環境ごとに動的な変更が必要なパラメータを特定します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;パラメータ化&lt;/b&gt;: イメージタグ、レプリカ数、リソース制限などの可変要素を&lt;code&gt;values.yaml&lt;/code&gt;に抽出します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ディレクトリ構造の構築&lt;/b&gt;: &lt;code&gt;Chart.yaml&lt;/code&gt;および&lt;code&gt;templates/&lt;/code&gt;ディレクトリを自動生成し、標準的なHelmレイアウトを構成します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ヘルパー関数の定義&lt;/b&gt;: 共通ラベルや命名規則を統一管理するための&lt;code&gt;_helpers.tpl&lt;/code&gt;を作成し、保守性を向上させます。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;生成される標準的なディレクトリ構造の構成例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;helm/api/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── Chart.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── values.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── values-prod.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── values-staging.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── templates/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── deployment.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── service.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── hpa.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; └── _helpers.tpl
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-クラスタのトラブルシューティングと最適化"&gt;4. クラスタのトラブルシューティングと最適化
+&lt;/h2&gt;&lt;p&gt;Claude Codeは、単なるコード生成にとどまらず、実行中のクラスタに対する診断エージェントとしても機能します。&lt;code&gt;kubectl&lt;/code&gt;の実行結果をコンテキストとして渡すことにより、障害の根本原因分析と修正案の提示を迅速に実行します。&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;CrashLoopBackOffの解析&lt;/b&gt;: &lt;code&gt;kubectl describe pod&lt;/code&gt;のイベントログから、OOMKilled（メモリ不足）やシークレットの参照エラーを特定し、修正パッチを生成します。
+💡 &lt;b&gt;リソースの最適化&lt;/b&gt;: &lt;code&gt;kubectl top pods&lt;/code&gt;のメトリクスを基に、実際のCPU/メモリ使用率に適合した&lt;code&gt;requests&lt;/code&gt;の調整案を提示し、クラスタのコスト効率を最大化します。&lt;/p&gt;
+&lt;h2 id="5-セキュリティとネットワーク制御"&gt;5. セキュリティとネットワーク制御
+&lt;/h2&gt;&lt;p&gt;セキュリティの担保として、Claude Codeは最小特権の原則（Principle of Least Privilege）に基づいた&lt;code&gt;NetworkPolicy&lt;/code&gt;を生成します。これにより、特定のNamespaceやラベルを持つポッド間のみの通信を許可するゼロトラストなネットワーク構成が容易に実装可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;networking.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;NetworkPolicy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;api-allow-ingress&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;payments-prod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;podSelector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;matchLabels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;api&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;policyTypes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;Ingress&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;Egress&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ingress&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;from&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;namespaceSelector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;matchLabels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;kubernetes.io/metadata.name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ingress-nginx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;egress&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;to&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;protocol&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TCP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5432&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;p&gt;AIによる自動生成は極めて強力なツールですが、本番環境への適用前には必ず&lt;code&gt;&amp;ndash;dry-run&lt;/code&gt;による検証と、生成されたマニフェストに対するエンジニアのピアレビューが必須となります。また、&lt;code&gt;CLAUDE.md&lt;/code&gt;に記述する制約（例：特定のIngressコントローラーの使用、アノテーションの必須化）が具体的であるほど、生成物の精度と環境適合性は向上します。マルチクラウド環境（EKS, AKS等）への対応が必要な場合は、クラウドプロバイダー固有のアノテーション設定をコンテキストに追加することで、柔軟なマルチプラットフォーム展開が可能になります。&lt;/p&gt;</description></item><item><title>GitHub Actionsの必須ステータスチェックを維持しつつ特定ジョブをスキップする設計手法</title><link>https://klifehack.com/p/github-actions-conditional-job-skip/</link><pubDate>Mon, 08 Jun 2026 14:15:57 +0900</pubDate><guid>https://klifehack.com/p/github-actions-conditional-job-skip/</guid><description>&lt;p&gt;共同開発において、メインブランチ（&lt;code&gt;main&lt;/code&gt;など）の品質を保護するためにプルリクエスト（PR）に対する「必須ステータスチェック（Required Status Checks）」を設定することは標準的なプラクティスです。これにより、検証されていないコードのマージを防ぐことができます。&lt;/p&gt;
 &lt;p&gt;しかし、ドキュメントの修正、コメントのタイポ修正、軽微な設定ファイルの変更など、ビルドやテストを実行する必要がないPRも頻繁に発生します。特にセルフホストランナー（Self-Hosted Runner）を運用している環境では、限られたインフラリソースを無駄なCIジョブで占有することは、キューの滞留やデプロイの遅延に直結します。&lt;/p&gt;
 &lt;p&gt;本稿では、必須ステータスチェックのセキュリティ要件を満たしつつ、不要なCIジョブを安全にスキップするためのGitHub Actions設計パターンについて解説します。&lt;/p&gt;
 &lt;h2 id="1-ワークフロー全体のスキップが引き起こす問題点"&gt;1. ワークフロー全体のスキップが引き起こす問題点
