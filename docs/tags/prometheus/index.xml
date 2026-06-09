@@ -35,7 +35,7 @@
 &lt;h2 id="2-アラートルールの構成要素と状態遷移"&gt;2. アラートルールの構成要素と状態遷移
 &lt;/h2&gt;&lt;p&gt;Prometheusにおけるアラートルールは、YAML形式で定義されます。GPUの温度上昇を検知するルールの定義例を以下に示します。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;alert&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;GpuHighTemperature&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;expr&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;gpu_temperature_celsius &amp;amp;gt; 80&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;expr&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;gpu_temperature_celsius &amp;gt; 80&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;for&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5m&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;severity&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;warning&lt;/span&gt;
@@ -43,7 +43,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;annotations&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;summary&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;GPU temp on {{ $labels.host }}/{{ $labels.gpu }} = {{ $value }}°C&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;description&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; GPU {{ $labels.gpu }} on {{ $labels.host }} has been &amp;amp;gt; 80°C for 5 minutes.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; GPU {{ $labels.gpu }} on {{ $labels.host }} has been &amp;gt; 80°C for 5 minutes.
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; Threshold: 80°C / Critical: 85°C.
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; Check: nvidia-smi -q -d TEMPERATURE&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;コアパラメータの機能は以下の通りです。&lt;/p&gt;
@@ -55,9 +55,9 @@
 &lt;/ul&gt;
 &lt;p&gt;アラートの状態遷移ライフサイクルは、&lt;code&gt;for&lt;/code&gt;パラメータの存在により、以下の3つの状態を遷移します。&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt; [ expr がデータを返した時 ]
- +------------+ --------------------&amp;amp;gt; +------------+
+ +------------+ --------------------&amp;gt; +------------+
  | inactive | | pending |
- +------------+ &amp;amp;lt;-------------------- +------------+
+ +------------+ &amp;lt;-------------------- +------------+
  ^ [ expr の結果が空になった時 ] |
  | | [ &amp;#39;for&amp;#39; で指定した時間が経過 ]
  | v
@@ -235,8 +235,8 @@ stages: [
 { duration: &amp;#34;30s&amp;#34;, target: 0 } // 0 VUまでクールダウン
 ],
 thresholds: {
-http_req_duration: [&amp;#34;p(95)&amp;amp;lt;2000&amp;#34;], // 95%のリクエストが2秒以内に完了すること
-http_req_failed: [&amp;#34;rate&amp;amp;lt;0.01&amp;#34;] // エラー率が1%未満であること
+http_req_duration: [&amp;#34;p(95)&amp;lt;2000&amp;#34;], // 95%のリクエストが2秒以内に完了すること
+http_req_failed: [&amp;#34;rate&amp;lt;0.01&amp;#34;] // エラー率が1%未満であること
 },
 summaryTrendStats: [&amp;#34;avg&amp;#34;, &amp;#34;min&amp;#34;, &amp;#34;med&amp;#34;, &amp;#34;max&amp;#34;, &amp;#34;p(90)&amp;#34;, &amp;#34;p(95)&amp;#34;, &amp;#34;p(99)&amp;#34;]
 };
@@ -267,7 +267,7 @@ tags: { endpoint: item.name } // Grafanaでの集計用タグ
 });
 
 check(res, { 
-[`${item.name} no server crash`]: (r) =&amp;amp;gt; r.status &amp;amp;gt; 0 &amp;amp;amp;&amp;amp;amp; r.status &amp;amp;lt; 500
+[`${item.name} no server crash`]: (r) =&amp;gt; r.status &amp;gt; 0 &amp;amp;amp;&amp;amp;amp; r.status &amp;lt; 500
 });
 
 sleep(0.1); // ローカルソケットの枯渇を防ぐためのウェイト

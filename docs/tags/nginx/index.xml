@@ -257,13 +257,13 @@
 &lt;hr&gt;
 &lt;h2 id="dns-domain-name-system-の解決フローとレコード設計"&gt;DNS (Domain Name System) の解決フローとレコード設計
 &lt;/h2&gt;&lt;p&gt;DNSは、人間が理解しやすいドメイン名を、マシンが理解できるIPアドレスに変換する分散型データベースシステムです。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; (1) Local DNS Cache / Resolver
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; (1) Local DNS Cache / Resolver
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (2) Root DNS Server (.)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;gt; (2) Root DNS Server (.)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (3) TLD DNS Server (.com)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;gt; (3) TLD DNS Server (.com)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (4) Authoritative DNS Server (example.com)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;gt; (4) Authoritative DNS Server (example.com)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-dnsクエリ解決プロセス"&gt;1. DNSクエリ解決プロセス
 &lt;/h3&gt;&lt;p&gt;ユーザーがブラウザに &lt;code&gt;https://example.com&lt;/code&gt; と入力した際、システムは以下の階層的なルックアッププロセスを経てIPアドレスを解決します。&lt;/p&gt;
 &lt;ol&gt;
@@ -305,11 +305,11 @@
 &lt;/h2&gt;&lt;p&gt;プロキシサーバーは、クライアントとサーバーの間で通信を中継する中間サーバーです。通信のどちら側に位置するかによって、フォワードプロキシとリバースプロキシに分類されます。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Forward Proxy]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 1] --+
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 2] --+--&amp;amp;gt; [Forward Proxy] ---&amp;amp;gt; [Internet] ---&amp;amp;gt; [Target Server]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 2] --+--&amp;gt; [Forward Proxy] ---&amp;gt; [Internet] ---&amp;gt; [Target Server]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Reverse Proxy]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [Internet] ---&amp;amp;gt; [Reverse Proxy (Nginx)] ---&amp;amp;gt; [WAS 1]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; [WAS 2]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; [Internet] ---&amp;gt; [Reverse Proxy (Nginx)] ---&amp;gt; [WAS 1]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;gt; [WAS 2]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-フォワードプロキシとリバースプロキシの比較"&gt;1. フォワードプロキシとリバースプロキシの比較
 &lt;/h3&gt;&lt;h4 id="フォワードプロキシ"&gt;フォワードプロキシ
 &lt;/h4&gt;&lt;ul&gt;
@@ -359,12 +359,12 @@
 &lt;h2 id="l4l7-ロードバランサーとトラフィック分散アルゴリズム"&gt;L4/L7 ロードバランサーとトラフィック分散アルゴリズム
 &lt;/h2&gt;&lt;p&gt;ロードバランサーは、高可用性と耐障害性を確保するために、複数のサーバーにトラフィックを分散させるコンポーネントです。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L4 Load Balancer]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [L4 LB (IP/Port-based)] ---&amp;amp;gt; [Server A (10.0.0.1:80)]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; [Server B (10.0.0.2:80)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; [L4 LB (IP/Port-based)] ---&amp;gt; [Server A (10.0.0.1:80)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;gt; [Server B (10.0.0.2:80)]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [L7 LB (URL/Header-based)] ---&amp;amp;gt; /api/users ---&amp;amp;gt; [User Service]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; /api/orders ---&amp;amp;gt; [Order Service]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; [L7 LB (URL/Header-based)] ---&amp;gt; /api/users ---&amp;gt; [User Service]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;gt; /api/orders ---&amp;gt; [Order Service]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-l4とl7ロードバランサーの技術的差異"&gt;1. L4とL7ロードバランサーの技術的差異
 &lt;/h3&gt;&lt;h4 id="l4ロードバランサートランスポート層"&gt;L4ロードバランサー（トランスポート層）
 &lt;/h4&gt;&lt;ul&gt;
@@ -449,15 +449,15 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="エンドツーエンドリクエストライフサイクル"&gt;エンドツーエンド・リクエストライフサイクル
 &lt;/h2&gt;&lt;p&gt;ユーザーがブラウザにURLを入力してから、画面にデータが表示されるまでの通信の流れをステップごとに追跡します。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Browser] --(1. DNS Query)--&amp;amp;gt; [DNS Server]
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Browser] --(1. DNS Query)--&amp;gt; [DNS Server]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(2. TCP/QUIC Handshake &amp;amp;amp; HTTPS Request)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer (ALB)] --(3. SSL Termination &amp;amp;amp; Route)--&amp;amp;gt; [Nginx (Reverse Proxy)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer (ALB)] --(3. SSL Termination &amp;amp;amp; Route)--&amp;gt; [Nginx (Reverse Proxy)]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (4. Forward Request)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Database] &amp;amp;lt;--(6. SQL Query / Connection Pool)-- [WAS (Spring Boot / Node.js)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Database] &amp;lt;--(6. SQL Query / Connection Pool)-- [WAS (Spring Boot / Node.js)]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ステップ-1-ネームサーバーの解決-dns-query"&gt;ステップ 1: ネームサーバーの解決 (DNS Query)
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;&lt;b&gt;アドレス入力:&lt;/b&gt; ユーザーがブラウザに &lt;code&gt;https://example.com/v1/users&lt;/code&gt; と入力します。&lt;/li&gt;

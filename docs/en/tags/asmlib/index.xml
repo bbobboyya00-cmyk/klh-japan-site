@@ -213,7 +213,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="122-disk-partitioning-node-1-only"&gt;12.2. Disk Partitioning (Node 1 Only)
 &lt;/h3&gt;&lt;p&gt;Partition the added shared disks on &lt;b&gt;Node 1 only&lt;/b&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fdisk /dev/sdb
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# n -&amp;amp;gt; p -&amp;amp;gt; 1 -&amp;amp;gt; default -&amp;amp;gt; default -&amp;amp;gt; w&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# n -&amp;gt; p -&amp;gt; 1 -&amp;gt; default -&amp;gt; default -&amp;gt; w&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="123-creating-asm-disks-node-1-only"&gt;12.3. Creating ASM Disks (Node 1 Only)
 &lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm createdisk ASMDISK01 /dev/sdb1
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="124-scanning-disks-on-node-2"&gt;12.4. Scanning Disks on Node 2

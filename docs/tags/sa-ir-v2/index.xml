@@ -51,7 +51,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 重心移動の許容範囲を定義&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cm_shift_limit &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0.15&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# アンカーポイントの拘束条件をプロンプトに注入&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;[Skeletal Anchor: Fixed, CM_Shift: &amp;amp;lt;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;cm_shift_limit&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, No_Collapse: True]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;[Skeletal Anchor: Fixed, CM_Shift: &amp;lt;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;cm_shift_limit&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, No_Collapse: True]&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;[Skeletal Anchor: Standard]&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この修正により、低重心の戦闘ポーズやローアングルの「ヒーローショット」においても、骨格が崩壊する確率を0.1%未満に抑えることに成功しました。&lt;/p&gt;
 &lt;h2 id="光学物理パラメータとポストプロセッシングの検証"&gt;光学物理パラメータとポストプロセッシングの検証
@@ -60,8 +60,8 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./analyze_optics --input generated_sample_01.png --mode rembrandt-check
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 出力結果&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# &amp;amp;gt; Shadow Density: 0.82 (Target: 0.80-0.85) - PASS&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# &amp;amp;gt; Light Angle: 45.2 deg (Target: 45.0 deg) - PASS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# &amp;gt; Shadow Density: 0.82 (Target: 0.80-0.85) - PASS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# &amp;gt; Light Angle: 45.2 deg (Target: 45.0 deg) - PASS&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;また、Level 12（Post-Render Processing）において、キアロスクーロ（Chiaroscuro）の強度を0.0から1.0のスケールで制御するノードを最終段階に配置しました。これにより、フィルムグレインの重畳やカラーグレーディング（ティール＆オレンジ等）が、元のテクスチャを破壊することなく適用されるようになりました。&lt;/p&gt;
 &lt;h2 id="運用への影響と最終確認"&gt;運用への影響と最終確認
 &lt;/h2&gt;&lt;p&gt;本修正の適用後、P99におけるレンダリング品質の合格率は98.4%まで向上しました。特に、以前のバージョンで問題となっていた「AI特有の不自然な笑顔」についても、Level 02における口輪筋（orbicularis oris）周辺のシェーディング調整により、大幅に改善されました。&lt;/p&gt;

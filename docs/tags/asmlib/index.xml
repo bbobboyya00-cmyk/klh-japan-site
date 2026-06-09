@@ -207,7 +207,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="122-ディスクパーティショニング-ノード1のみ"&gt;12.2. ディスクパーティショニング (ノード1のみ)
 &lt;/h3&gt;&lt;p&gt;追加した共有ディスクを、&lt;b&gt;ノード1のみ&lt;/b&gt;でパーティショニングします。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fdisk /dev/sdb
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# n -&amp;amp;gt; p -&amp;amp;gt; 1 -&amp;amp;gt; default -&amp;amp;gt; default -&amp;amp;gt; w&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# n -&amp;gt; p -&amp;gt; 1 -&amp;gt; default -&amp;gt; default -&amp;gt; w&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="123-asmディスクの作成-ノード1のみ"&gt;12.3. ASMディスクの作成 (ノード1のみ)
 &lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm createdisk ASMDISK01 /dev/sdb1
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="124-ノード2でのディスクスキャン"&gt;12.4. ノード2でのディスクスキャン

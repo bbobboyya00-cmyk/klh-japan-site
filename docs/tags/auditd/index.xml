@@ -17,7 +17,7 @@
 &lt;h3 id="ruidとeuidの分離メカニズム"&gt;RUIDとEUIDの分離メカニズム
 &lt;/h3&gt;&lt;p&gt;SUID (Set-user-ID) ビットが設定されたバイナリの動作を理解するには、RUIDとEUIDの区別が不可欠です。RUID (Real UID) はプロセスを開始した実際のユーザーIDであり、EUID (Effective UID) はプロセスが実行中に実際に行使する権限を決定するIDです。攻撃者はこの仕組みを悪用して権限昇格を狙うため、システム内のSUIDバイナリの監査は必須です。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# システム内のSUIDバイナリを検索し、権限昇格のリスクを特定する&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -4000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -4000 -type f 2&amp;gt;/dev/null
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-カーネルレベルの隔離技術namespacesとcgroups"&gt;3. カーネルレベルの隔離技術：Namespacesとcgroups
 &lt;/h2&gt;&lt;p&gt;コンテナ技術の基盤でもあるこれらの機能は、プロセス間の干渉を物理的に遮断します。&lt;/p&gt;
 &lt;h3 id="namespaces-名前空間"&gt;Namespaces (名前空間)

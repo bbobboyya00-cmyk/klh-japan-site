@@ -27,7 +27,7 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;user_activity_logs
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;created_at &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt; DATE_SUB(NOW(), INTERVAL &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;MONTH&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;created_at &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; DATE_SUB(NOW(), INTERVAL &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;MONTH&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;GROUP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DATE(created_at), campaign_id;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="a-performance-bottleneck"&gt;A. Performance Bottleneck
@@ -39,10 +39,10 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;h2 id="3-architectural-design"&gt;3. Architectural Design
 &lt;/h2&gt;&lt;p&gt;To solve these challenges, we shift the design policy from &amp;ldquo;on-demand calculation at request time&amp;rdquo; to &amp;ldquo;&lt;b&gt;prior asynchronous calculation and cache storage&lt;/b&gt;.&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;The ingestion, aggregation, and serving layers are separated as follows:&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;[Event Source] ──&amp;amp;gt; [Message Queue] ──&amp;amp;gt; [Consumer Service]
+&lt;pre tabindex="0"&gt;&lt;code&gt;[Event Source] ──&amp;gt; [Message Queue] ──&amp;gt; [Consumer Service]
 │
 ▼ (Async Update)
-[User Request] ──&amp;amp;gt; [API Gateway / FastAPI] ──&amp;amp;gt; [Redis Cache]
+[User Request] ──&amp;gt; [API Gateway / FastAPI] ──&amp;gt; [Redis Cache]
 │ (Cache Miss) ▲
 └───────────────────┘ (Write Back)
 │

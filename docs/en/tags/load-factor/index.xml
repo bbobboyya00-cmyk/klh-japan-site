@@ -11,7 +11,7 @@
 &lt;/h2&gt;&lt;p&gt;To maintain system performance, it is essential to select a hash function that is computationally efficient, distributes keys uniformly, and minimizes collisions.&lt;/p&gt;
 &lt;h3 id="21-division-method"&gt;2.1 Division Method
 &lt;/h3&gt;&lt;p&gt;This is the most common method and is represented by the following formula:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// 除算方式の実装例
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Example implementation of division method
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;hash_division&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; key, &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; m) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; key &lt;span style="color:#f92672"&gt;%&lt;/span&gt; m;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}

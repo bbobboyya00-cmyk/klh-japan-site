@@ -129,7 +129,7 @@
 &lt;/h3&gt;&lt;p&gt;証明書データの整合性を保つため、kubeconfigファイルをBase64でエンコードしてからGitHub Secretsに登録する手法を採用します。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Windows PowerShell環境での実行例&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#66d9ef"&gt;Convert&lt;/span&gt;]::ToBase64String([&lt;span style="color:#66d9ef"&gt;IO.File&lt;/span&gt;]::ReadAllBytes(&lt;span style="color:#e6db74"&gt;&amp;#34;C:\Users\Administrator\.kube\config&amp;#34;&lt;/span&gt;))
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;取得した文字列をGitHubリポジトリの &lt;code&gt;Settings &amp;amp;gt; Secrets and variables &amp;amp;gt; Actions&lt;/code&gt; に &lt;code&gt;KUBE_CONFIG&lt;/code&gt; という名前で保存します。💡 &lt;b&gt;Base64エンコード&lt;/b&gt;は、CI環境におけるバイナリデータの破損を防ぐための標準的なプラクティスです。&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;取得した文字列をGitHubリポジトリの &lt;code&gt;Settings &amp;gt; Secrets and variables &amp;gt; Actions&lt;/code&gt; に &lt;code&gt;KUBE_CONFIG&lt;/code&gt; という名前で保存します。💡 &lt;b&gt;Base64エンコード&lt;/b&gt;は、CI環境におけるバイナリデータの破損を防ぐための標準的なプラクティスです。&lt;/p&gt;
 &lt;h2 id="3-ワークフローの定義とトラブルシューティング"&gt;3. ワークフローの定義とトラブルシューティング
 &lt;/h2&gt;&lt;h3 id="31-初期ワークフロー構成-githubworkflowsdocker-buildyml"&gt;3.1 初期ワークフロー構成 (&lt;code&gt;.github/workflows/docker-build.yml&lt;/code&gt;)
 &lt;/h3&gt;&lt;p&gt;イメージのビルド、プッシュ、およびデプロイを一貫して実行する初期の定義を構成します。&lt;/p&gt;
@@ -163,7 +163,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; mkdir -p ~/.kube
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34; | base64 -d &amp;amp;gt; ~/.kube/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34; | base64 -d &amp;gt; ~/.kube/config&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy to Kubernetes&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
@@ -176,7 +176,7 @@
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Unable to connect to the server: dial tcp: lookup kubernetes.docker.internal: no such host
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この課題を解決するため、ローカルネットワーク内で動作する &lt;b&gt;Self-Hosted Runner&lt;/b&gt; を導入し、内部リソースへの直接アクセスを可能にします。&lt;/p&gt;
 &lt;h3 id="42-windows環境へのインストール手順"&gt;4.2 Windows環境へのインストール手順
-&lt;/h3&gt;&lt;p&gt;GitHubリポジトリの &lt;code&gt;Settings &amp;amp;gt; Actions &amp;amp;gt; Runners&lt;/code&gt; から「New self-hosted runner」を選択します。OSに「Windows」を指定し、提供されるPowerShellスクリプトを実行してランナーを構成します。&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;GitHubリポジトリの &lt;code&gt;Settings &amp;gt; Actions &amp;gt; Runners&lt;/code&gt; から「New self-hosted runner」を選択します。OSに「Windows」を指定し、提供されるPowerShellスクリプトを実行してランナーを構成します。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ランナーの配置と設定&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir actions-runner; cd actions-runner
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# (GitHubから提供されるトークンを使用して設定を実行)&lt;/span&gt;
@@ -292,7 +292,7 @@ Error: Process completed with exit code 1.
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; mkdir -p ~/.kube
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo \&amp;#34;${{ secrets.KUBE_CONFIG }}\&amp;#34; | base64 -d &amp;amp;gt; ~/.kube/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo \&amp;#34;${{ secrets.KUBE_CONFIG }}\&amp;#34; | base64 -d &amp;gt; ~/.kube/config&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="-クラウドラナーからのdns解決失敗kubernetesdockerinternal6443-no-such-hostの解決"&gt;🛠️ クラウドラナーからのDNS解決失敗（kubernetes.docker.internal:6443: no such host）の解決
 &lt;/h2&gt;&lt;p&gt;証明書エラーの解決後、デプロイステップで以下のネットワークタイムアウトおよびDNS解決エラーが発生しました。&lt;/p&gt;

@@ -55,8 +55,8 @@ stages: [
 { duration: &#34;30s&#34;, target: 0 }   // 0 VUまでクールダウン
 ],
 thresholds: {
-http_req_duration: [&#34;p(95)&amp;lt;2000&#34;], // 95%のリクエストが2秒以内に完了すること
-http_req_failed: [&#34;rate&amp;lt;0.01&#34;]     // エラー率が1%未満であること
+http_req_duration: [&#34;p(95)&lt;2000&#34;], // 95%のリクエストが2秒以内に完了すること
+http_req_failed: [&#34;rate&lt;0.01&#34;]     // エラー率が1%未満であること
 },
 summaryTrendStats: [&#34;avg&#34;, &#34;min&#34;, &#34;med&#34;, &#34;max&#34;, &#34;p(90)&#34;, &#34;p(95)&#34;, &#34;p(99)&#34;]
 };
@@ -87,7 +87,7 @@ tags: { endpoint: item.name } // Grafanaでの集計用タグ
 });
 
 check(res, { 
-[`${item.name} no server crash`]: (r) =&amp;gt; r.status &amp;gt; 0 &amp;amp;&amp;amp; r.status &amp;lt; 500
+[`${item.name} no server crash`]: (r) =&gt; r.status &gt; 0 &amp;amp;&amp;amp; r.status &lt; 500
 });
 
 sleep(0.1); // ローカルソケットの枯渇を防ぐためのウェイト

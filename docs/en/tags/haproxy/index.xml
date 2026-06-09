@@ -68,7 +68,7 @@ backend http_back_1
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ELAPSED_TIME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$((&lt;/span&gt;CURRENT_TIME &lt;span style="color:#f92672"&gt;-&lt;/span&gt; START_TIME&lt;span style="color:#66d9ef"&gt;))&lt;/span&gt;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; $ELAPSED_TIME -ge &lt;span style="color:#ae81ff"&gt;60&lt;/span&gt; &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Error: Server did not start within 60 seconds.&amp;#34;&lt;/span&gt; &amp;amp;gt;&amp;amp;amp;2;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Error: Server did not start within 60 seconds.&amp;#34;&lt;/span&gt; &amp;gt;&amp;amp;amp;2;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; exit 1;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
@@ -76,7 +76,7 @@ backend http_back_1
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Delete old container after startup confirmation&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker rm -f app1_1 2&amp;amp;gt; /dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker rm -f app1_1 2&amp;gt; /dev/null
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-multi-layer-proxy-architecture-integration-of-npm-and-haproxy"&gt;5. Multi-layer Proxy Architecture: Integration of NPM and HAProxy
 &lt;/h2&gt;&lt;p&gt;To streamline SSL/TLS termination and certificate management, a configuration is adopted where Nginx Proxy Manager (NPM) is placed at the front end. HTTPS requests from clients are decrypted by NPM and forwarded to HAProxy (port 80) through the internal network. This multi-layer structure allows for the separation of application-layer load balancing and security management.&lt;/p&gt;
 &lt;h2 id="6-haproxy-health-check-mechanism-details"&gt;6. HAProxy Health Check Mechanism Details

@@ -266,96 +266,96 @@
 &lt;/h2&gt;&lt;p&gt;firewalld is a dynamic firewall management tool standard in RHEL-based distributions. It manages rules using abstracted concepts called &amp;ldquo;zones&amp;rdquo; and &amp;ldquo;services.&amp;rdquo;&lt;/p&gt;
 &lt;h3 id="11-checking-daemon-status-and-referencing-rules"&gt;1.1 Checking Daemon Status and Referencing Rules
 &lt;/h3&gt;&lt;p&gt;As the first step of management, verify the operational status of the background daemon and the current configuration values.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# デーモンの稼働状態を確認&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Determine the Operational Status of the Daemon&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl status firewalld
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 現在適用されているすべてのルールを表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# View all currently applied rules&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --list-all
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="12-service-permission-settings"&gt;1.2 Service Permission Settings
 &lt;/h3&gt;&lt;p&gt;When allowing specific services such as HTTP traffic, permanent configuration (&amp;ndash;permanent) and runtime application (&amp;ndash;reload) are required.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# HTTPサービスを永続的に追加&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Permanent addition of HTTP services&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;http
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定をリロードして反映&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Reload and reflect configuration&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --reload
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 反映結果の確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# confirmation of reflection results&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --list-all
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="13-detailed-access-control-via-rich-rules"&gt;1.3 Detailed Access Control via Rich Rules
 &lt;/h3&gt;&lt;p&gt;For finer-grained control, such as allowing communication only from specific source IP addresses, &amp;ldquo;Rich Rules&amp;rdquo; are used.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のIP（192.168.0.100）からのHTTPアクセスを許可&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Allow HTTP access from a specific IP (192.168.0.100)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-rich-rule&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;rule family=&amp;#34;ipv4&amp;#34; source address=&amp;#34;192.168.0.100&amp;#34; service name=&amp;#34;http&amp;#34; accept&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定のリロード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Reloading the Configuration&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --reload
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-ufw-ubuntu"&gt;2. UFW (Ubuntu)
 &lt;/h2&gt;&lt;p&gt;UFW (Uncomplicated Firewall) is the default management tool in Ubuntu, designed to simplify iptables operations.&lt;/p&gt;
 &lt;h3 id="21-initial-activation-and-ssh-protection"&gt;2.1 Initial Activation and SSH Protection
 &lt;/h3&gt;&lt;p&gt;When enabling UFW, SSH must be allowed beforehand to prevent remote connections from being cut off.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# UFWのインストール&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# UFW Installation&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update &amp;amp;amp;&amp;amp;amp; apt install ufw -y
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SSHを許可してから有効化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Allow SSH before enabling&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow ssh
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw enable
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-allowing-port-and-service-specifications"&gt;2.2 Allowing Port and Service Specifications
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# HTTP（80番ポート）の許可&lt;/span&gt;
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Allow HTTP (port 80)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow http
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のTCPポート（8080）の許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Allowing a Specific TCP Port (8080)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw allow 8080/tcp
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 詳細なステータス確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Detailed status check&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ufw status verbose
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-iptables"&gt;3. iptables
 &lt;/h2&gt;&lt;p&gt;iptables is a low-layer utility that directly manipulates the Linux kernel&amp;rsquo;s netfilter hooks. It filters packets based on the concepts of tables and chains.&lt;/p&gt;
 &lt;h3 id="31-rule-priority-and-insertion"&gt;3.1 Rule Priority and Insertion
 &lt;/h3&gt;&lt;p&gt;By using the -I (Insert) option, specific rules can be inserted at the beginning of existing rules to ensure they are applied with priority.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 現在のルールを詳細表示（行番号付き）&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Detailed view of current rules (line numbered)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -L -v -n
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 8080番ポートへの通信を最優先でドロップするテストルールを挿入&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Insert test rule to drop communication to port 8080 first&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -I INPUT &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; -p tcp --dport &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt; -j DROP
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# テストルールの削除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Deleting a Test Rule&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;iptables -D INPUT &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="32-switching-to-iptables-in-rocky-linux"&gt;3.2 Switching to iptables in Rocky Linux
 &lt;/h3&gt;&lt;p&gt;To avoid conflicts with firewalld, firewalld must be disabled when using iptables directly.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスのインストールとfirewalldの停止&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Installing Services and Stopping Firewall&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dnf install iptables-services -y
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop firewalld
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable firewalld
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SSH（22番）の許可設定が /etc/sysconfig/iptables に存在することを確認&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 例: -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Verify that SSH (number 22) authorization settings exist in /etc/sysconfig/iptables&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# example: -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスの起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Launch Services&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl start iptables
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable iptables
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="33-rule-persistence"&gt;3.3 Rule Persistence
 &lt;/h3&gt;&lt;p&gt;Since iptables rules are held in memory, a save process is required to maintain them after a reboot.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ルールの保存&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Saving Rules&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;service iptables save
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-nftables"&gt;4. nftables
 &lt;/h2&gt;&lt;p&gt;nftables was developed as the successor to iptables, featuring more efficient data structures and syntax. It is characterized by a structure where tables and chains are explicitly created.&lt;/p&gt;
 &lt;h3 id="41-defining-basic-structures-and-adding-rules"&gt;4.1 Defining Basic Structures and Adding Rules
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# inetファミリー（IPv4/IPv6両対応）のテーブル作成&lt;/span&gt;
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Creating a table for the inet family (both IPv4 and IPv6)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add table inet filter
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 入力チェインの作成（フックとプライオリティの定義）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Creating an Input Chain (Defining Hooks and Priorities)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add chain inet filter input &lt;span style="color:#f92672"&gt;{&lt;/span&gt; type filter hook input priority &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\;&lt;/span&gt; &lt;span style="color:#f92672"&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 80番ポートの許可ルール追加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Adding Authorization Rules for Port 80&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft add rule inet filter input tcp dport &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt; accept
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ルールセットの確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Verifying the Rule Set&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft list ruleset
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-rule-management-using-handles"&gt;4.2 Rule Management Using Handles
 &lt;/h3&gt;&lt;p&gt;In nftables, deletion and modification are performed using &amp;ldquo;handle&amp;rdquo; numbers assigned to each rule.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ハンドル番号を含めてルールセットを表示&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Show rule set including handle number&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft --handle list ruleset
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特定のハンドル番号（例: 5）を指定してルールを削除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Delete a rule by specifying a specific handle number (for example, 5)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nft delete rule inet filter input handle &lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="closing-notes"&gt;Closing Notes
 &lt;/h2&gt;&lt;p&gt;Linux firewall management must be selected according to the application, ranging from high-abstraction layers like firewalld/UFW to kernel-proximate tools like iptables/nftables. In particular, when operating iptables directly in an existing firewalld environment, care must be taken regarding unintended communication blockages due to service conflicts. In modern system design, migration to nftables, which offers superior performance and scalability, is recommended.&lt;/p&gt;</description></item><item><title>Provisioning AWS Infrastructure and Implementing a Docker-based CI/CD Pipeline</title><link>https://klifehack.com/en/p/aws-ec2-docker-cicd-pipeline/</link><pubDate>Sat, 06 Jun 2026 10:13:39 +0900</pubDate><guid>https://klifehack.com/en/p/aws-ec2-docker-cicd-pipeline/</guid><description>&lt;p&gt;This article describes the migration process from manual AWS infrastructure construction to a fully automated CI/CD pipeline using Docker and GitHub Actions for the deployment of a commerce payment application. It covers network environment configuration, the transition of HTTPS implementation, dependency conflict resolution within the Spring Boot ecosystem, and implementation details of cloud deployment via containerization.&lt;/p&gt;
@@ -408,7 +408,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_DB_URL&lt;span style="color:#f92672"&gt;=&lt;/span&gt;jdbc:mysql://&lt;span style="color:#f92672"&gt;[&lt;/span&gt;RDS_ENDPOINT&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:3306/commerce_db &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_DB_USERNAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;admin &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_DB_PASSWORD&lt;span style="color:#f92672"&gt;=[&lt;/span&gt;PASSWORD_REDACTED&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_JWT_SECRET&lt;span style="color:#f92672"&gt;=[&lt;/span&gt;SECRET_KEY_REDACTED&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &amp;amp;gt; ~/app.log 2&amp;amp;gt;&amp;amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &amp;amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --PROD_JWT_SECRET&lt;span style="color:#f92672"&gt;=[&lt;/span&gt;SECRET_KEY_REDACTED&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &amp;gt; ~/app.log 2&amp;gt;&amp;amp;amp;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &amp;amp;amp;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-docker-cicd-pipeline-construction"&gt;4. Docker CI/CD Pipeline Construction
 &lt;/h2&gt;&lt;h3 id="41-containerization-dockerfile"&gt;4.1 Containerization (Dockerfile)
 &lt;/h3&gt;&lt;p&gt;Created a container image optimized for the AWS environment using Amazon Corretto 17 as the base image.&lt;/p&gt;
@@ -709,7 +709,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="122-disk-partitioning-node-1-only"&gt;12.2. Disk Partitioning (Node 1 Only)
 &lt;/h3&gt;&lt;p&gt;Partition the added shared disks on &lt;b&gt;Node 1 only&lt;/b&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fdisk /dev/sdb
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# n -&amp;amp;gt; p -&amp;amp;gt; 1 -&amp;amp;gt; default -&amp;amp;gt; default -&amp;amp;gt; w&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# n -&amp;gt; p -&amp;gt; 1 -&amp;gt; default -&amp;gt; default -&amp;gt; w&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="123-creating-asm-disks-node-1-only"&gt;12.3. Creating ASM Disks (Node 1 Only)
 &lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oracleasm createdisk ASMDISK01 /dev/sdb1
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="124-scanning-disks-on-node-2"&gt;12.4. Scanning Disks on Node 2
@@ -754,7 +754,7 @@
 &lt;/ul&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Local Server | | Public Server | | External User |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (FRP Client) | --[Outbound]--&amp;amp;gt; | (FRP Server) | &amp;amp;lt;---[Inbound]--- | (SSH/Browser) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (FRP Client) | --[Outbound]--&amp;gt; | (FRP Server) | &amp;lt;---[Inbound]--- | (SSH/Browser) |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| [frpc] | | [frps] | | |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="23-operating-principle-and-workflow"&gt;2.3 Operating Principle and Workflow
@@ -781,7 +781,7 @@
 &lt;li&gt;&lt;b&gt;Verified Version:&lt;/b&gt; &lt;code&gt;0.67.0&lt;/code&gt; (Assuming a Linux 64-bit environment)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Binary extraction commands for server and client:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FRPパッケージのダウンロードと展開&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Downloading and Deploying FRP Packages&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wget https://github.com/fatedier/frp/releases/download/v0.67.0/frp_0.67.0_linux_amd64.tar.gz
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tar -zxvf frp_0.67.0_linux_amd64.tar.gz
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd frp_0.67.0_linux_amd64
@@ -790,7 +790,7 @@
 &lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;Target Host:&lt;/b&gt; Cloud server with a public IP address&lt;/p&gt;
 &lt;h4 id="41-editing-the-configuration-file-frpstoml"&gt;4.1 Editing the Configuration File (&lt;code&gt;frps.toml&lt;/code&gt;)
 &lt;/h4&gt;&lt;p&gt;Server configuration using TOML format (v0.52.0 and later):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定ファイルの配置ディレクトリ作成と編集&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Creating and Editing a Configuration File Placement Directory&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /etc/frp
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp frps.toml /etc/frp/frps.toml
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vi /etc/frp/frps.toml
@@ -799,7 +799,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;bindPort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;auth&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;your_secure_token&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 管理ダッシュボードの設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Administration Dashboard Settings&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;webServer&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;addr&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;0.0.0.0&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;webServer&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;port&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;7500&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;webServer&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;user&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;admin&amp;#34;&lt;/span&gt;
@@ -813,7 +813,7 @@
 &lt;/ul&gt;
 &lt;h4 id="43-background-execution-configuration-with-systemd"&gt;4.3 Background Execution Configuration with &lt;code&gt;systemd&lt;/code&gt;
 &lt;/h4&gt;&lt;p&gt;Register as a &lt;code&gt;systemd&lt;/code&gt; service to enable automatic recovery upon server reboot or abnormal process termination.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# systemdサービスファイルの作成&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Create systemd service file&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo vi /etc/systemd/system/frps.service
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Service definition for systemd:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Unit]&lt;/span&gt;
@@ -829,10 +829,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Install]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;WantedBy&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;multi-user.target&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Enable and start the service.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# バイナリのシステムパスへの配置&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Place the Binary in the System Path&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo cp frps /usr/local/bin/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスの有効化および起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Enabling and Launching Services&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl daemon-reload
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl enable frps
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl start frps
@@ -849,7 +849,7 @@
 &lt;/h3&gt;&lt;p&gt;💡 &lt;b&gt;Target Host:&lt;/b&gt; Local server with a private IP address&lt;/p&gt;
 &lt;h4 id="51-editing-the-configuration-file-frpctoml"&gt;5.1 Editing the Configuration File (&lt;code&gt;frpc.toml&lt;/code&gt;)
 &lt;/h4&gt;&lt;p&gt;Client configuration for destination server and local services:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定ファイルの配置ディレクトリ作成と編集&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Creating and Editing a Configuration File Placement Directory&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /etc/frp
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp frpc.toml /etc/frp/frpc.toml
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vi /etc/frp/frpc.toml
@@ -867,7 +867,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;remotePort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;6000&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="52-background-execution-configuration-with-systemd"&gt;5.2 Background Execution Configuration with &lt;code&gt;systemd&lt;/code&gt;
 &lt;/h4&gt;&lt;p&gt;Systemd service construction for the client:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# systemdサービスファイルの作成&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Create systemd service file&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo vi /etc/systemd/system/frpc.service
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Unit]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Description&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;FRP Client&lt;/span&gt;
@@ -882,10 +882,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Install]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;WantedBy&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;multi-user.target&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Enable and start the client service.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# バイナリのシステムパスへの配置&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Place the Binary in the System Path&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo cp frpc /usr/local/bin/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスの有効化および起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Enabling and Launching Services&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl daemon-reload
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl enable frpc
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl start frpc
@@ -894,11 +894,11 @@
 &lt;h3 id="6-advanced-configuration-and-security"&gt;6. Advanced Configuration and Security
 &lt;/h3&gt;&lt;h4 id="61-generating-a-secure-authentication-token"&gt;6.1 Generating a Secure Authentication Token
 &lt;/h4&gt;&lt;p&gt;To prevent unauthorized access to the FRP control port, it is recommended to use a cryptographically secure random token. Generation of a 24-character Base64 encoded string using OpenSSL:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 安全なランダムトークンの生成&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Generating Secure Random Tokens&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openssl rand -base64 &lt;span style="color:#ae81ff"&gt;24&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="62-exposing-multiple-ports-and-services"&gt;6.2 Exposing Multiple Ports and Services
 &lt;/h4&gt;&lt;p&gt;Definition of multiple &lt;code&gt;[[proxies]]&lt;/code&gt; blocks in &lt;code&gt;frpc.toml&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frpc.toml (複数サービス構成例)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frpc.tml (multiple service configuration example)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;serverAddr&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;CLOUD_PUBLIC_IP&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;serverPort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;auth&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;your_secure_token&amp;#34;&lt;/span&gt;
@@ -917,12 +917,12 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;localPort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;remotePort&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;6500&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After changing the configuration, restart the client service.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# クライアントサービスの再起動&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Restarting Client Services&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl restart frpc
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠️ &lt;b&gt;Note:&lt;/b&gt; You must allow inbound communication for all exposed &lt;code&gt;remotePort&lt;/code&gt;s (e.g., &lt;code&gt;6000&lt;/code&gt;, &lt;code&gt;6500&lt;/code&gt;) on the public server&amp;rsquo;s firewall.&lt;/p&gt;
 &lt;h4 id="63-specifying-port-ranges-in-bulk"&gt;6.3 Specifying Port Ranges in Bulk
 &lt;/h4&gt;&lt;p&gt;Bulk port exposure using ranges or commas:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frpc.toml (ポート範囲指定例)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frpc.toml (example port range)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[[&lt;span style="color:#a6e22e"&gt;proxies&lt;/span&gt;]]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;range_ports&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;type&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;tcp&amp;#34;&lt;/span&gt;
@@ -931,7 +931,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;remotePort&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;8000-8080&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="64-restricting-bind-ports-on-the-server-side"&gt;6.4 Restricting Bind Ports on the Server Side
 &lt;/h4&gt;&lt;p&gt;Server-side bind port restrictions:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frps.toml (ポート制限設定)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# frps.toml (Port Limit Settings)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;allowPorts&lt;/span&gt; = [
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; { &lt;span style="color:#a6e22e"&gt;start&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;6000&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;end&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
@@ -939,23 +939,23 @@
 &lt;/h4&gt;&lt;p&gt;If you cannot connect despite having no issues with the configuration, packet filtering on the public server side may be the cause.&lt;/p&gt;
 &lt;h5 id="step-1-explicitly-allowing-port-7000-with-iptables"&gt;Step 1: Explicitly Allowing Port 7000 with &lt;code&gt;iptables&lt;/code&gt;
 &lt;/h5&gt;&lt;p&gt;Insertion of a rule at the top of the input chain:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ポート7000の通信を許可&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Allow port 7000 to communicate&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo iptables -I INPUT -p tcp --dport &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt; -j ACCEPT
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id="step-2-persisting-the-rules"&gt;Step 2: Persisting the Rules
 &lt;/h5&gt;&lt;p&gt;Persistence of rules using &lt;code&gt;iptables-persistent&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ルールの永続化保存&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Persistent saving of rules&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo DEBIAN_FRONTEND&lt;span style="color:#f92672"&gt;=&lt;/span&gt;noninteractive apt-get install -y iptables-persistent
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo netfilter-persistent save
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id="step-3-verifying-connectivity-from-the-outside"&gt;Step 3: Verifying Connectivity from the Outside
 &lt;/h5&gt;&lt;p&gt;Connectivity verification using &lt;code&gt;netcat&lt;/code&gt; (&lt;code&gt;nc&lt;/code&gt;):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 外部端末からの疎通テスト&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# communication test from an external terminal&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nc -zv CLOUD_PUBLIC_IP &lt;span style="color:#ae81ff"&gt;7000&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h3 id="7-stcp-secure-tcp-configuration"&gt;7. STCP (Secure TCP) Configuration
 &lt;/h3&gt;&lt;p&gt;Standard TCP proxies globally expose ports on the public server side, making them susceptible to port scanning and unauthorized access. In an &lt;b&gt;STCP (Secure TCP)&lt;/b&gt; configuration, no public ports are exposed on the public server; instead, communication is routed through an encrypted tunnel. The accessing client terminal (Visitor) also runs &lt;code&gt;frpc&lt;/code&gt; and binds to a local port to relay the traffic.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Service Host | | Public Server | | Visitor Host |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (FRP Client) | --[STCP Tunnel]-&amp;amp;gt;| (FRP Server) | &amp;amp;lt;-[STCP Tunnel]- | (FRP Client) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (FRP Client) | --[STCP Tunnel]-&amp;gt;| (FRP Server) | &amp;lt;-[STCP Tunnel]- | (FRP Client) |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| [frpc (service)]| | [frps] | | [frpc (visitor)]|
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="71-stcp-architectural-configuration"&gt;7.1 STCP Architectural Configuration
@@ -1004,7 +1004,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="73-connection-establishment"&gt;7.3 Connection Establishment
 &lt;/h4&gt;&lt;p&gt;When the STCP configuration is active, you connect to your own loopback address to access the remote service from the visitor terminal.&lt;/p&gt;
 &lt;p&gt;Connection address for a remote application on port &lt;code&gt;4000&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ビジター端末からの接続実行例&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Example of Performing a Connection from a Visitor Terminal&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh -p &lt;span style="color:#ae81ff"&gt;6000&lt;/span&gt; user@127.0.0.1
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;(*Please specify an appropriate loopback address, such as &lt;code&gt;127.0.0.1:6001&lt;/code&gt;, depending on your network environment&amp;rsquo;s bind settings.)&lt;/p&gt;
 &lt;h4 id="74-binary-startup-sequence"&gt;7.4 Binary Startup Sequence
@@ -1178,11 +1178,11 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GID_MIN&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;[Scanning for orphaned GIDs (Threshold: &amp;amp;gt;= &lt;/span&gt;$GID_MIN&lt;span style="color:#e6db74"&gt;)]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;[Scanning for orphaned GIDs (Threshold: &amp;gt;= &lt;/span&gt;$GID_MIN&lt;span style="color:#e6db74"&gt;)]&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Identify GIDs in /etc/group not present as primary GID in /etc/passwd&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# and having no members listed in /etc/group&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;awk -F: -v min&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$GID_MIN &lt;span style="color:#e6db74"&gt;&amp;#39;$3 &amp;amp;gt;= min {print $3}&amp;#39;&lt;/span&gt; /etc/group | &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; read gid; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;awk -F: -v min&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$GID_MIN &lt;span style="color:#e6db74"&gt;&amp;#39;$3 &amp;gt;= min {print $3}&amp;#39;&lt;/span&gt; /etc/group | &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; read gid; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; group_info&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;grep &lt;span style="color:#e6db74"&gt;&amp;#34;:&lt;/span&gt;$gid&lt;span style="color:#e6db74"&gt;:&amp;#34;&lt;/span&gt; /etc/group&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; group_name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$group_info&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; | cut -d: -f1&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; group_members&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$group_info&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; | cut -d: -f4&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
@@ -1191,7 +1191,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; user_exists&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;awk -F: -v gid&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$gid &lt;span style="color:#e6db74"&gt;&amp;#39;$4 == gid {print $1}&amp;#39;&lt;/span&gt; /etc/passwd&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$user_exists&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt; &amp;amp;amp;&amp;amp;amp; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$group_members&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Vulnerable: Orphaned GID detected -&amp;amp;gt; Group: &lt;/span&gt;$group_name&lt;span style="color:#e6db74"&gt; (GID: &lt;/span&gt;$gid&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Vulnerable: Orphaned GID detected -&amp;gt; Group: &lt;/span&gt;$group_name&lt;span style="color:#e6db74"&gt; (GID: &lt;/span&gt;$gid&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-remediation-guidelines"&gt;4. Remediation Guidelines
@@ -1199,11 +1199,11 @@
 &lt;h3 id="step-1-identifying-files-associated-with-orphaned-gids"&gt;Step 1: Identifying Files Associated with Orphaned GIDs
 &lt;/h3&gt;&lt;p&gt;Before deleting a group, you must verify whether any files owning that GID exist on the filesystem. Failure to do so may result in unintended privilege assignment if the same GID is reused in the future.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Replace [GID] with the identified orphaned GID value&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -gid &lt;span style="color:#f92672"&gt;[&lt;/span&gt;GID&lt;span style="color:#f92672"&gt;]&lt;/span&gt; 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -gid &lt;span style="color:#f92672"&gt;[&lt;/span&gt;GID&lt;span style="color:#f92672"&gt;]&lt;/span&gt; 2&amp;gt;/dev/null
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-2-reassigning-file-ownership"&gt;Step 2: Reassigning File Ownership
 &lt;/h3&gt;&lt;p&gt;If files are found, change their ownership to an appropriate active group (e.g., root or a specific service group).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Reassign group ownership to a secure administrative group&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -gid &lt;span style="color:#f92672"&gt;[&lt;/span&gt;GID&lt;span style="color:#f92672"&gt;]&lt;/span&gt; -exec chgrp root &lt;span style="color:#f92672"&gt;{}&lt;/span&gt; + 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -gid &lt;span style="color:#f92672"&gt;[&lt;/span&gt;GID&lt;span style="color:#f92672"&gt;]&lt;/span&gt; -exec chgrp root &lt;span style="color:#f92672"&gt;{}&lt;/span&gt; + 2&amp;gt;/dev/null
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-3-removing-unnecessary-groups"&gt;Step 3: Removing Unnecessary Groups
 &lt;/h3&gt;&lt;p&gt;After confirming that no associated files exist, remove the group using the groupdel command.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Remove the group entry from /etc/group&lt;/span&gt;
@@ -1396,7 +1396,7 @@ backend http_back_1
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ELAPSED_TIME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$((&lt;/span&gt;CURRENT_TIME &lt;span style="color:#f92672"&gt;-&lt;/span&gt; START_TIME&lt;span style="color:#66d9ef"&gt;))&lt;/span&gt;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; $ELAPSED_TIME -ge &lt;span style="color:#ae81ff"&gt;60&lt;/span&gt; &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Error: Server did not start within 60 seconds.&amp;#34;&lt;/span&gt; &amp;amp;gt;&amp;amp;amp;2;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Error: Server did not start within 60 seconds.&amp;#34;&lt;/span&gt; &amp;gt;&amp;amp;amp;2;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; exit 1;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
@@ -1404,7 +1404,7 @@ backend http_back_1
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Delete old container after startup confirmation&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker rm -f app1_1 2&amp;amp;gt; /dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker rm -f app1_1 2&amp;gt; /dev/null
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-multi-layer-proxy-architecture-integration-of-npm-and-haproxy"&gt;5. Multi-layer Proxy Architecture: Integration of NPM and HAProxy
 &lt;/h2&gt;&lt;p&gt;To streamline SSL/TLS termination and certificate management, a configuration is adopted where Nginx Proxy Manager (NPM) is placed at the front end. HTTPS requests from clients are decrypted by NPM and forwarded to HAProxy (port 80) through the internal network. This multi-layer structure allows for the separation of application-layer load balancing and security management.&lt;/p&gt;
 &lt;h2 id="6-haproxy-health-check-mechanism-details"&gt;6. HAProxy Health Check Mechanism Details
@@ -1437,7 +1437,7 @@ backend http_back_1
 &lt;h3 id="ruid-and-euid-separation-mechanism"&gt;RUID and EUID Separation Mechanism
 &lt;/h3&gt;&lt;p&gt;Distinguishing between RUID and EUID is critical for analyzing SUID (Set-user-ID) binaries. RUID (Real UID) identifies the process initiator, while EUID (Effective UID) determines the actual operational privileges. Attackers target this mechanism for privilege escalation, necessitating regular audits of SUID binaries.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Search for SUID binaries to identify privilege escalation risks&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -4000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -4000 -type f 2&amp;gt;/dev/null
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-kernel-level-isolation-techniques-namespaces-and-cgroups"&gt;3. Kernel-Level Isolation Techniques: Namespaces and cgroups
 &lt;/h2&gt;&lt;p&gt;These features provide the foundation for containerization by physically isolating process environments and resource consumption.&lt;/p&gt;
 &lt;h3 id="namespaces"&gt;Namespaces
@@ -1939,8 +1939,8 @@ Developers should not rely solely on SDK-level security. An independent validati
 &lt;/h2&gt;&lt;p&gt;The detected bounding box center (u, v) is correlated with the RealSense depth frame. Since single-pixel depth values are susceptible to noise, filtering is implemented to average a 5x5 pixel area around the center.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_filtered_depth&lt;/span&gt;(depth_frame, x, y, window_size&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;):
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; depth_roi &lt;span style="color:#f92672"&gt;=&lt;/span&gt; depth_frame[y&lt;span style="color:#f92672"&gt;-&lt;/span&gt;window_size:y&lt;span style="color:#f92672"&gt;+&lt;/span&gt;window_size, x&lt;span style="color:#f92672"&gt;-&lt;/span&gt;window_size:x&lt;span style="color:#f92672"&gt;+&lt;/span&gt;window_size]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; valid_depths &lt;span style="color:#f92672"&gt;=&lt;/span&gt; depth_roi[depth_roi &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; np&lt;span style="color:#f92672"&gt;.&lt;/span&gt;mean(valid_depths) &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; len(valid_depths) &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; valid_depths &lt;span style="color:#f92672"&gt;=&lt;/span&gt; depth_roi[depth_roi &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; np&lt;span style="color:#f92672"&gt;.&lt;/span&gt;mean(valid_depths) &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; len(valid_depths) &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This coordinate data is packed into a MAVLink message after applying a rotation matrix that accounts for the camera&amp;rsquo;s mounting angle (pitch).&lt;/p&gt;
 &lt;img alt="System operational pipeline topology flow description" decoding="async" loading="lazy" src="https://raw.githubusercontent.com/bbobboyya00-cmyk/k-life-assets/main/assets/2026/05/31/jetson-nano-d435i-precision-landing/khack_1780198278_5.webp" style="width:auto;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:35px auto;display:block;box-shadow:0 4px 15px rgba(0,0,0,0.1);"/&gt;
 &lt;h2 id="sending-landing_target-via-mavlink"&gt;Sending LANDING_TARGET via MAVLink

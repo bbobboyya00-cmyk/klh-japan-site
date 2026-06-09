@@ -25,13 +25,13 @@
 </span></span><span style=display:flex><span><span style=color:#66d9ef>FROM</span> 
 </span></span><span style=display:flex><span>user_activity_logs
 </span></span><span style=display:flex><span><span style=color:#66d9ef>WHERE</span> 
-</span></span><span style=display:flex><span>created_at <span style=color:#f92672>&amp;</span>gt;<span style=color:#f92672>=</span> DATE_SUB(NOW(), INTERVAL <span style=color:#ae81ff>3</span> <span style=color:#66d9ef>MONTH</span>)
+</span></span><span style=display:flex><span>created_at <span style=color:#f92672>&gt;=</span> DATE_SUB(NOW(), INTERVAL <span style=color:#ae81ff>3</span> <span style=color:#66d9ef>MONTH</span>)
 </span></span><span style=display:flex><span><span style=color:#66d9ef>GROUP</span> <span style=color:#66d9ef>BY</span> 
 </span></span><span style=display:flex><span>DATE(created_at), campaign_id;
-</span></span></code></pre></div><h3 id=a-パフォーマンスのボトルネック>A. パフォーマンスのボトルネック</h3><p>数億行のデータをオンザフライでスキャン・集計することは、CPUおよびI/Oの深刻なボトルネックを引き起こします。単純なDAU算出クエリであっても10秒以上を要し、複雑な多次元フィルタを適用した場合には、レスポンスが数十秒から数分にまで悪化します。</p><h3 id=b-データベースリソースの枯渇>B. データベースリソースの枯渇</h3><p>複数の管理者が同時にレポートを要求した場合、分析クエリがデータベースの接続プールとCPU容量を占有します。これにより、トランザクションを処理するメインデータベースの性能が低下し、ユーザー向けサービスの安定性が脅かされます。</p><h3 id=c-スキーマの柔軟性の欠如>C. スキーマの柔軟性の欠如</h3><p>新たなフィルタリング次元や分析メトリクスが追加されるたびに、複雑なSQLクエリの書き直し、インデックスの再設計、最適化作業が発生し、機能開発のサイクルが遅延します。</p><h2 id=3-アーキテクチャ設計>3. アーキテクチャ設計</h2><p>これらの課題を解決するため、設計方針を「リクエスト時のオンデマンド計算」から「<b>事前の非同期計算とキャッシュ格納</b>」へと移行します。</p><p>インジェクション、集計、サービングの各レイヤーを以下のように分離します。</p><pre tabindex=0><code>[Event Source] ──&amp;gt; [Message Queue] ──&amp;gt; [Consumer Service]
+</span></span></code></pre></div><h3 id=a-パフォーマンスのボトルネック>A. パフォーマンスのボトルネック</h3><p>数億行のデータをオンザフライでスキャン・集計することは、CPUおよびI/Oの深刻なボトルネックを引き起こします。単純なDAU算出クエリであっても10秒以上を要し、複雑な多次元フィルタを適用した場合には、レスポンスが数十秒から数分にまで悪化します。</p><h3 id=b-データベースリソースの枯渇>B. データベースリソースの枯渇</h3><p>複数の管理者が同時にレポートを要求した場合、分析クエリがデータベースの接続プールとCPU容量を占有します。これにより、トランザクションを処理するメインデータベースの性能が低下し、ユーザー向けサービスの安定性が脅かされます。</p><h3 id=c-スキーマの柔軟性の欠如>C. スキーマの柔軟性の欠如</h3><p>新たなフィルタリング次元や分析メトリクスが追加されるたびに、複雑なSQLクエリの書き直し、インデックスの再設計、最適化作業が発生し、機能開発のサイクルが遅延します。</p><h2 id=3-アーキテクチャ設計>3. アーキテクチャ設計</h2><p>これらの課題を解決するため、設計方針を「リクエスト時のオンデマンド計算」から「<b>事前の非同期計算とキャッシュ格納</b>」へと移行します。</p><p>インジェクション、集計、サービングの各レイヤーを以下のように分離します。</p><pre tabindex=0><code>[Event Source] ──&gt; [Message Queue] ──&gt; [Consumer Service]
 │
 ▼ (Async Update)
-[User Request] ──&amp;gt; [API Gateway / FastAPI] ──&amp;gt; [Redis Cache]
+[User Request] ──&gt; [API Gateway / FastAPI] ──&gt; [Redis Cache]
 │ (Cache Miss)      ▲
 └───────────────────┘ (Write Back)
 │

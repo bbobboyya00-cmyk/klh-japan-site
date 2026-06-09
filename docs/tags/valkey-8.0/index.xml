@@ -95,7 +95,7 @@ cluster-enabled yes
 &lt;h3 id="解決策"&gt;解決策
 &lt;/h3&gt;&lt;p&gt;クライアント側のライブラリを、2026年標準の &lt;code&gt;valkey-py&lt;/code&gt; または最新の &lt;code&gt;redis-py&lt;/code&gt; 5.5.0 以上にアップデートすることで解決しました。また、&lt;code&gt;uv&lt;/code&gt; を使用してプロジェクト全体の依存関係を強制的に同期しました。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 依存関係の更新&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv add valkey&amp;amp;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;8.0.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv add valkey&amp;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;8.0.0
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv lock
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="最終確認とシステムへの影響評価"&gt;最終確認とシステムへの影響評価
 &lt;/h2&gt;&lt;p&gt;本移行により、AIエージェントからのバースト的なリクエストに対しても、キャッシュ層がボトルネックになることなく、安定したレスポンスを提供可能となりました。2026年5月31日現在の本番環境において、エラー率は 0.01% 未満に抑制されています。&lt;/p&gt;

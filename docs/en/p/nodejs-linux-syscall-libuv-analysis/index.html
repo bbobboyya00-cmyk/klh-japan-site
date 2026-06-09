@@ -22,7 +22,7 @@
 </span></span><span style=display:flex><span>  <span style=color:#a6e22e>highWaterMark</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>64</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1024</span> <span style=color:#75715e>// Buffering in 64KB units
 </span></span></span><span style=display:flex><span>});
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>reader</span>.<span style=color:#a6e22e>on</span>(<span style=color:#e6db74>&#39;data&#39;</span>, (<span style=color:#a6e22e>chunk</span>) <span style=color:#f92672>=&amp;</span><span style=color:#a6e22e>gt</span>; {
+</span></span><span style=display:flex><span><span style=color:#a6e22e>reader</span>.<span style=color:#a6e22e>on</span>(<span style=color:#e6db74>&#39;data&#39;</span>, (<span style=color:#a6e22e>chunk</span>) =&gt; {
 </span></span><span style=display:flex><span>  <span style=color:#75715e>// Process per chunk to suppress memory consumption
 </span></span></span><span style=display:flex><span>});
 </span></span></code></pre></div><p><em>Verification command:</em> <code>strace -f -e trace=openat,read,close node app.js ./large.log</code></p><h3 id=b-managing-network-io-and-backpressure>B. Managing Network I/O and Backpressure</h3><p>Ignoring the return value of socket.write() is a major cause of memory leaks and instability. When the write buffer is full, control logic is required to wait for the drain event. ⚠️</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>safeWrite</span>(<span style=color:#a6e22e>socket</span>, <span style=color:#a6e22e>data</span>) {
@@ -30,7 +30,7 @@
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>canWrite</span>) {
 </span></span><span style=display:flex><span>    <span style=color:#75715e>// If buffer is saturated, wait for drain to control backpressure
-</span></span></span><span style=display:flex><span>    <span style=color:#a6e22e>socket</span>.<span style=color:#a6e22e>once</span>(<span style=color:#e6db74>&#39;drain&#39;</span>, () <span style=color:#f92672>=&amp;</span><span style=color:#a6e22e>gt</span>; {
+</span></span></span><span style=display:flex><span>    <span style=color:#a6e22e>socket</span>.<span style=color:#a6e22e>once</span>(<span style=color:#e6db74>&#39;drain&#39;</span>, () =&gt; {
 </span></span><span style=display:flex><span>      <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#39;Buffer drained, resuming writes...&#39;</span>);
 </span></span><span style=display:flex><span>    });
 </span></span><span style=display:flex><span>  }

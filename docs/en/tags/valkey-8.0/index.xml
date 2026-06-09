@@ -94,7 +94,7 @@ cluster-enabled yes
 &lt;h3 id="solution"&gt;Solution
 &lt;/h3&gt;&lt;p&gt;Resolved by updating client-side libraries to the 2026 standard &lt;code&gt;valkey-py&lt;/code&gt; or the latest &lt;code&gt;redis-py&lt;/code&gt; 5.5.0 or higher. Additionally, project-wide dependencies were forcibly synchronized using &lt;code&gt;uv&lt;/code&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Dependency update&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv add valkey&amp;amp;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;8.0.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv add valkey&amp;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;8.0.0
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv lock
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="final-confirmation-and-system-impact-assessment"&gt;Final Confirmation and System Impact Assessment
 &lt;/h2&gt;&lt;p&gt;Through this migration, the cache layer now provides stable responses without becoming a bottleneck, even against bursty requests from AI agents. As of May 31, 2026, the error rate in the production environment is suppressed to less than 0.01%.&lt;/p&gt;

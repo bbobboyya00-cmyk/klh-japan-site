@@ -86,7 +86,7 @@
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>calculate_position_size</span>(self, atr, entry_price):
 </span></span><span style=display:flex><span>        risk_budget <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>total_capital <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>risk_ratio
 </span></span><span style=display:flex><span>        stop_loss_range <span style=color:#f92672>=</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>*</span> atr
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> stop_loss_range <span style=color:#f92672>&amp;</span>lt;<span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> stop_loss_range <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>0</span>:
 </span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>
 </span></span><span style=display:flex><span>        quantity <span style=color:#f92672>=</span> int(risk_budget <span style=color:#f92672>/</span> stop_loss_range)
 </span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> quantity
@@ -189,25 +189,25 @@
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>        atr <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>atr_provider<span style=color:#f92672>.</span>get_atr(symbol)
 </span></span><span style=display:flex><span>        
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> current_price <span style=color:#f92672>&amp;</span>gt; pos[<span style=color:#e6db74>&#39;highest_price&#39;</span>]:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> current_price <span style=color:#f92672>&gt;</span> pos[<span style=color:#e6db74>&#39;highest_price&#39;</span>]:
 </span></span><span style=display:flex><span>            pos[<span style=color:#e6db74>&#39;highest_price&#39;</span>] <span style=color:#f92672>=</span> current_price
 </span></span><span style=display:flex><span>            new_stop_loss <span style=color:#f92672>=</span> current_price <span style=color:#f92672>-</span> (<span style=color:#ae81ff>2</span> <span style=color:#f92672>*</span> atr)
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> new_stop_loss <span style=color:#f92672>&amp;</span>gt; pos[<span style=color:#e6db74>&#39;stop_loss&#39;</span>]:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> new_stop_loss <span style=color:#f92672>&gt;</span> pos[<span style=color:#e6db74>&#39;stop_loss&#39;</span>]:
 </span></span><span style=display:flex><span>                pos[<span style=color:#e6db74>&#39;stop_loss&#39;</span>] <span style=color:#f92672>=</span> new_stop_loss
 </span></span><span style=display:flex><span>                logging<span style=color:#f92672>.</span>info(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Trailing stop updated for </span><span style=color:#e6db74>{</span>symbol<span style=color:#e6db74>}</span><span style=color:#e6db74> to </span><span style=color:#e6db74>{</span>new_stop_loss<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
 </span></span><span style=display:flex><span>                self<span style=color:#f92672>.</span>position_manager<span style=color:#f92672>.</span>save_positions()
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> current_price <span style=color:#f92672>&amp;</span>lt;<span style=color:#f92672>=</span> pos[<span style=color:#e6db74>&#39;stop_loss&#39;</span>]:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> current_price <span style=color:#f92672>&lt;=</span> pos[<span style=color:#e6db74>&#39;stop_loss&#39;</span>]:
 </span></span><span style=display:flex><span>            logging<span style=color:#f92672>.</span>warning(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Stop loss triggered for </span><span style=color:#e6db74>{</span>symbol<span style=color:#e6db74>}</span><span style=color:#e6db74> at </span><span style=color:#e6db74>{</span>current_price<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
 </span></span><span style=display:flex><span>            <span style=color:#66d9ef>await</span> self<span style=color:#f92672>.</span>order_executor<span style=color:#f92672>.</span>execute_order(symbol, <span style=color:#e6db74>&#34;SELL&#34;</span>, pos[<span style=color:#e6db74>&#39;quantity&#39;</span>], current_price)
 </span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> pos[<span style=color:#e6db74>&#39;unit_count&#39;</span>] <span style=color:#f92672>&amp;</span>lt; <span style=color:#ae81ff>4</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> pos[<span style=color:#e6db74>&#39;unit_count&#39;</span>] <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>4</span>:
 </span></span><span style=display:flex><span>            next_trigger <span style=color:#f92672>=</span> pos[<span style=color:#e6db74>&#39;entry_price&#39;</span>] <span style=color:#f92672>+</span> (pos[<span style=color:#e6db74>&#39;unit_count&#39;</span>] <span style=color:#f92672>*</span> <span style=color:#ae81ff>0.5</span> <span style=color:#f92672>*</span> atr)
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> current_price <span style=color:#f92672>&amp;</span>gt;<span style=color:#f92672>=</span> next_trigger:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> current_price <span style=color:#f92672>&gt;=</span> next_trigger:
 </span></span><span style=display:flex><span>                logging<span style=color:#f92672>.</span>info(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Pyramidding triggered for </span><span style=color:#e6db74>{</span>symbol<span style=color:#e6db74>}</span><span style=color:#e6db74> at </span><span style=color:#e6db74>{</span>current_price<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
 </span></span><span style=display:flex><span>                add_quantity <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>position_manager<span style=color:#f92672>.</span>calculate_position_size(atr, current_price)
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> add_quantity <span style=color:#f92672>&amp;</span>gt; <span style=color:#ae81ff>0</span>:
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> add_quantity <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span>:
 </span></span><span style=display:flex><span>                    <span style=color:#66d9ef>await</span> self<span style=color:#f92672>.</span>order_executor<span style=color:#f92672>.</span>execute_order(symbol, <span style=color:#e6db74>&#34;BUY&#34;</span>, add_quantity, current_price)
 </span></span></code></pre></div><h2 id=4-状態復旧とサーバー同期のライフサイクル>4. 状態復旧とサーバー同期のライフサイクル</h2><p>システム起動時およびシャットダウン時における、ローカルキャッシュと証券会社サーバー間の同期フローは以下の通りです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>[System Startup]
 </span></span><span style=display:flex><span>       │

@@ -260,13 +260,13 @@
 &lt;hr&gt;
 &lt;h2 id="dns-domain-name-system-resolution-flow-and-record-design"&gt;DNS (Domain Name System) Resolution Flow and Record Design
 &lt;/h2&gt;&lt;p&gt;DNS is a distributed database system that translates human-readable domain names into machine-readable IP addresses.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; (1) Local DNS Cache / Resolver
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; (1) Local DNS Cache / Resolver
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (2) Root DNS Server (.)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;gt; (2) Root DNS Server (.)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (3) TLD DNS Server (.com)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;gt; (3) TLD DNS Server (.com)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (4) Authoritative DNS Server (example.com)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;gt; (4) Authoritative DNS Server (example.com)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-dns-query-resolution-process"&gt;1. DNS Query Resolution Process
 &lt;/h3&gt;&lt;p&gt;When a user enters &lt;code&gt;https://example.com&lt;/code&gt; in a browser, the system resolves the IP address through a hierarchical lookup process.&lt;/p&gt;
 &lt;ol&gt;
@@ -323,11 +323,11 @@
 &lt;/h2&gt;&lt;p&gt;A proxy server is an intermediary server that relays communication between a client and a server. It is classified into a forward proxy or a reverse proxy depending on which side of the communication it is positioned.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Forward Proxy]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 1] --+
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 2] --+--&amp;amp;gt; [Forward Proxy] ---&amp;amp;gt; [Internet] ---&amp;amp;gt; [Target Server]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 2] --+--&amp;gt; [Forward Proxy] ---&amp;gt; [Internet] ---&amp;gt; [Target Server]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Reverse Proxy]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [Internet] ---&amp;amp;gt; [Reverse Proxy (Nginx)] ---&amp;amp;gt; [WAS 1]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; [WAS 2]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; [Internet] ---&amp;gt; [Reverse Proxy (Nginx)] ---&amp;gt; [WAS 1]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;gt; [WAS 2]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-comparison-of-forward-proxy-and-reverse-proxy"&gt;1. Comparison of Forward Proxy and Reverse Proxy
 &lt;/h3&gt;&lt;h4 id="forward-proxy"&gt;Forward Proxy
 &lt;/h4&gt;&lt;ul&gt;
@@ -380,12 +380,12 @@
 &lt;h2 id="l4l7-load-balancers-and-traffic-distribution-algorithms"&gt;L4/L7 Load Balancers and Traffic Distribution Algorithms
 &lt;/h2&gt;&lt;p&gt;Load balancers are components that distribute traffic across multiple servers to ensure high availability and fault tolerance.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L4 Load Balancer]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [L4 LB (IP/Port-based)] ---&amp;amp;gt; [Server A (10.0.0.1:80)]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; [Server B (10.0.0.2:80)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; [L4 LB (IP/Port-based)] ---&amp;gt; [Server A (10.0.0.1:80)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;gt; [Server B (10.0.0.2:80)]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [L7 LB (URL/Header-based)] ---&amp;amp;gt; /api/users ---&amp;amp;gt; [User Service]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; /api/orders ---&amp;amp;gt; [Order Service]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; [L7 LB (URL/Header-based)] ---&amp;gt; /api/users ---&amp;gt; [User Service]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;gt; /api/orders ---&amp;gt; [Order Service]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-technical-differences-between-l4-and-l7-load-balancers"&gt;1. Technical Differences Between L4 and L7 Load Balancers
 &lt;/h3&gt;&lt;h4 id="l4-load-balancer-transport-layer"&gt;L4 Load Balancer (Transport Layer)
 &lt;/h4&gt;&lt;ul&gt;
@@ -487,15 +487,15 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="end-to-end-request-lifecycle"&gt;End-to-End Request Lifecycle
 &lt;/h2&gt;&lt;p&gt;Traces the step-by-step flow of communication from when a user enters a URL in a browser to when the data is displayed on the screen.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Browser] --(1. DNS Query)--&amp;amp;gt; [DNS Server]
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Browser] --(1. DNS Query)--&amp;gt; [DNS Server]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(2. TCP/QUIC Handshake &amp;amp;amp; HTTPS Request)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer (ALB)] --(3. SSL Termination &amp;amp;amp; Route)--&amp;amp;gt; [Nginx (Reverse Proxy)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer (ALB)] --(3. SSL Termination &amp;amp;amp; Route)--&amp;gt; [Nginx (Reverse Proxy)]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (4. Forward Request)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Database] &amp;amp;lt;--(6. SQL Query / Connection Pool)-- [WAS (Spring Boot / Node.js)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Database] &amp;lt;--(6. SQL Query / Connection Pool)-- [WAS (Spring Boot / Node.js)]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-1-name-server-resolution-dns-query"&gt;Step 1: Name Server Resolution (DNS Query)
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;&lt;b&gt;Address Input:&lt;/b&gt; A user enters &lt;code&gt;https://example.com/v1/users&lt;/code&gt; in the browser.&lt;/li&gt;

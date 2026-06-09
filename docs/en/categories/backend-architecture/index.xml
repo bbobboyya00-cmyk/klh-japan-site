@@ -11,7 +11,7 @@
 &lt;/h2&gt;&lt;p&gt;To maintain system performance, it is essential to select a hash function that is computationally efficient, distributes keys uniformly, and minimizes collisions.&lt;/p&gt;
 &lt;h3 id="21-division-method"&gt;2.1 Division Method
 &lt;/h3&gt;&lt;p&gt;This is the most common method and is represented by the following formula:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// 除算方式の実装例
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Example implementation of division method
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;hash_division&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; key, &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; m) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; key &lt;span style="color:#f92672"&gt;%&lt;/span&gt; m;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
@@ -146,7 +146,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;calculate_position_size&lt;/span&gt;(self, atr, entry_price):
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; risk_budget &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;total_capital &lt;span style="color:#f92672"&gt;*&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;risk_ratio
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; stop_loss_range &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; atr
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; stop_loss_range &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;lt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; stop_loss_range &lt;span style="color:#f92672"&gt;&amp;lt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; quantity &lt;span style="color:#f92672"&gt;=&lt;/span&gt; int(risk_budget &lt;span style="color:#f92672"&gt;/&lt;/span&gt; stop_loss_range)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; quantity
@@ -255,25 +255,25 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; atr &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;atr_provider&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get_atr(symbol)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; current_price &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;highest_price&amp;#39;&lt;/span&gt;]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; current_price &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;highest_price&amp;#39;&lt;/span&gt;]:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;highest_price&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; current_price
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; new_stop_loss &lt;span style="color:#f92672"&gt;=&lt;/span&gt; current_price &lt;span style="color:#f92672"&gt;-&lt;/span&gt; (&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; atr)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; new_stop_loss &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;stop_loss&amp;#39;&lt;/span&gt;]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; new_stop_loss &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;stop_loss&amp;#39;&lt;/span&gt;]:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;stop_loss&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; new_stop_loss
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; logging&lt;span style="color:#f92672"&gt;.&lt;/span&gt;info(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Trailing stop updated for &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;symbol&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; to &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;new_stop_loss&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;position_manager&lt;span style="color:#f92672"&gt;.&lt;/span&gt;save_positions()
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; current_price &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;lt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;stop_loss&amp;#39;&lt;/span&gt;]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; current_price &lt;span style="color:#f92672"&gt;&amp;lt;=&lt;/span&gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;stop_loss&amp;#39;&lt;/span&gt;]:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; logging&lt;span style="color:#f92672"&gt;.&lt;/span&gt;warning(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Stop loss triggered for &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;symbol&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; at &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;current_price&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;order_executor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;execute_order(symbol, &lt;span style="color:#e6db74"&gt;&amp;#34;SELL&amp;#34;&lt;/span&gt;, pos[&lt;span style="color:#e6db74"&gt;&amp;#39;quantity&amp;#39;&lt;/span&gt;], current_price)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;unit_count&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;lt; &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;unit_count&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; next_trigger &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pos[&lt;span style="color:#e6db74"&gt;&amp;#39;entry_price&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;+&lt;/span&gt; (pos[&lt;span style="color:#e6db74"&gt;&amp;#39;unit_count&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; atr)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; current_price &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt; next_trigger:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; current_price &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; next_trigger:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; logging&lt;span style="color:#f92672"&gt;.&lt;/span&gt;info(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Pyramidding triggered for &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;symbol&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; at &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;current_price&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_quantity &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;position_manager&lt;span style="color:#f92672"&gt;.&lt;/span&gt;calculate_position_size(atr, current_price)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; add_quantity &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; add_quantity &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;order_executor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;execute_order(symbol, &lt;span style="color:#e6db74"&gt;&amp;#34;BUY&amp;#34;&lt;/span&gt;, add_quantity, current_price)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-state-recovery-and-server-synchronization-lifecycle"&gt;4. State Recovery and Server Synchronization Lifecycle
 &lt;/h2&gt;&lt;p&gt;The synchronization flow between the local cache and the brokerage server during system startup and shutdown is as follows:&lt;/p&gt;
@@ -507,21 +507,21 @@ Verify that the registered data is returned as a JSON array.&lt;/li&gt;
 &lt;/h2&gt;&lt;p&gt;The scheduling functionality in Celery is designed to physically and logically separate task &amp;ldquo;schedule management (triggering)&amp;rdquo; and &amp;ldquo;execution.&amp;rdquo; To achieve this, two distinct components, &lt;b&gt;Celery Beat&lt;/b&gt; and &lt;b&gt;Celery Worker&lt;/b&gt;, operate in coordination.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;+-----------------------------------------------------------------+
 | Celery Beat |
-| (スケジューラプロセス: スケジュールを監視し、タスク信号を送信) |
+| (Scheduler Process: Monitor schedule and send task signals) |
 +-------------------------------+---------------------------------+
  |
- | (タスクメッセージのパブリッシュ)
+ | (Publish task message)
  v
 +-----------------------------------------------------------------+
 | Message Broker |
-| (Redis, RabbitMQ など) |
+| (Redis, RabbitMQ, etc.) |
 +-------------------------------+---------------------------------+
  |
- | (タスクメッセージのコンシューム)
+ | (Consume task message)
  v
 +-----------------------------------------------------------------+
 | Celery Worker |
-| (実際のタスクロジックを非同期で実行) |
+| (Actual task logic is performed asynchronously) |
 +-----------------------------------------------------------------+
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id="celery-beat-scheduler"&gt;Celery Beat (Scheduler)
 &lt;/h3&gt;&lt;ul&gt;
@@ -539,24 +539,24 @@ Verify that the registered data is returned as a JSON array.&lt;/li&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; celery &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Celery
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; celery.schedules &lt;span style="color:#f92672"&gt;import&lt;/span&gt; crontab
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Celeryアプリケーションの初期化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Celery application initialization&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Celery(&lt;span style="color:#e6db74"&gt;&amp;#39;tasks&amp;#39;&lt;/span&gt;, broker&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;redis://localhost:6379/0&amp;#39;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# スケジュール構成の定義&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Defining the Scheduling Configuration&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;conf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;beat_schedule &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 例1: 毎週月曜日の午前9:00に週次レポートを生成・送信&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Example 1: Generate and send weekly reports every Monday at 9:00 a.m&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;send-weekly-report-monday-morning&amp;#39;&lt;/span&gt;: {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;tasks.send_weekly_report&amp;#39;&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;schedule&amp;#39;&lt;/span&gt;: crontab(hour&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;9&lt;/span&gt;, minute&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, day_of_week&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;args&amp;#39;&lt;/span&gt;: (),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 例2: 毎日深夜0:00にデータベースのバックアップを実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Example 2: Backing Up the Database Every Day at 0:00 AM&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;daily-midnight-data-backup&amp;#39;&lt;/span&gt;: {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;tasks.execute_database_backup&amp;#39;&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;schedule&amp;#39;&lt;/span&gt;: crontab(hour&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, minute&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;args&amp;#39;&lt;/span&gt;: (),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 例3: 15分（900秒）間隔で保留中のメールを送信&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Example 3: Send pending mail every 15 minutes (900 seconds)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;periodic-email-dispatch&amp;#39;&lt;/span&gt;: {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;tasks.dispatch_pending_emails&amp;#39;&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;schedule&amp;#39;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;900.0&lt;/span&gt;,
@@ -564,7 +564,7 @@ Verify that the registered data is returned as a JSON array.&lt;/li&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# スケジュールのズレを防ぐためのタイムゾーン設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Timezone settings to prevent scheduling deviations&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app&lt;span style="color:#f92672"&gt;.&lt;/span&gt;conf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;timezone &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;Asia/Tokyo&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠️ If the timezone setting (&lt;code&gt;timezone&lt;/code&gt;) is not explicitly specified, it will depend on Coordinated Universal Time (UTC) or the system clock of the execution environment, which can cause tasks to run at unintended times. It must always be explicitly defined.&lt;/p&gt;
 &lt;h2 id="3-lifecycle-control-and-scaling-in-container-environments"&gt;3. Lifecycle Control and Scaling in Container Environments
@@ -595,10 +595,10 @@ To prevent a large number of tasks from starting simultaneously, consider design
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.task&lt;/span&gt;(bind&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, max_retries&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;, default_retry_delay&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;60&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;execute_database_backup&lt;/span&gt;(self):
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# バックアップ処理ロジックをここに記述&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Backup processing logic described here&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;pass&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Exception&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; exc:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 失敗回数に応じてリトライ間隔を段階的に延長（60秒、120秒、180秒...）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Gradually increase retry interval depending on number of failures (60 seconds, 120 seconds, 180 seconds...)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;retry(exc&lt;span style="color:#f92672"&gt;=&lt;/span&gt;exc, countdown&lt;span style="color:#f92672"&gt;=&lt;/span&gt;self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;request&lt;span style="color:#f92672"&gt;.&lt;/span&gt;retries &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;60&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-comparison-between-celery-beat-and-system-cron"&gt;6. Comparison Between Celery Beat and System Cron
 &lt;/h2&gt;&lt;p&gt;When implementing periodic execution tasks, whether to adopt the OS standard &lt;code&gt;cron&lt;/code&gt; or Celery Beat depends on the architectural requirements.&lt;/p&gt;
@@ -646,13 +646,14 @@ To prevent a large number of tasks from starting simultaneously, consider design
 &lt;h2 id="configuration-notes"&gt;Configuration Notes
 &lt;/h2&gt;&lt;p&gt;🛠️ To stably operate job scheduling with Celery in a production environment, please review the following checklist.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;Process Separation&lt;/b&gt;: In production environments, are the scheduler (Beat) and worker (Worker) always started as separate processes (or containers)?
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ワーカープロセスの起動&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;celery -A tasks worker --loglevel&lt;span style="color:#f92672"&gt;=&lt;/span&gt;info
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;Process Separation&lt;/b&gt;: In production environments, are the scheduler (Beat) and worker (Worker) always started as separate processes (or containers)?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Starting the Worker Process&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; celery -A tasks worker --loglevel&lt;span style="color:#f92672"&gt;=&lt;/span&gt;info
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# スケジューラプロセスの起動（単一インスタンスで実行すること）&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;celery -A tasks beat --loglevel&lt;span style="color:#f92672"&gt;=&lt;/span&gt;info
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Starting the Scheduler Process (to run in a single instance)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; celery -A tasks beat --loglevel&lt;span style="color:#f92672"&gt;=&lt;/span&gt;info
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;Timezone Alignment&lt;/b&gt;: Is &lt;code&gt;app.conf.timezone&lt;/code&gt; correctly configured and consistent with the database and OS timezones?&lt;/li&gt;
 &lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;Broker Connection Monitoring&lt;/b&gt;: Is it configured to automatically reconnect in the event of a transient connection loss to the message broker (Redis/RabbitMQ)?&lt;/li&gt;
 &lt;li&gt;&lt;input disabled="" type="checkbox"&gt; &lt;b&gt;Dead Letter Queue Consideration&lt;/b&gt;: Is there a design in place to isolate repeatedly failing tasks and prevent them from blocking other periodic execution tasks?&lt;/li&gt;
@@ -790,13 +791,13 @@ To prevent a large number of tasks from starting simultaneously, consider design
 &lt;hr&gt;
 &lt;h2 id="dns-domain-name-system-resolution-flow-and-record-design"&gt;DNS (Domain Name System) Resolution Flow and Record Design
 &lt;/h2&gt;&lt;p&gt;DNS is a distributed database system that translates human-readable domain names into machine-readable IP addresses.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; (1) Local DNS Cache / Resolver
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; (1) Local DNS Cache / Resolver
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (2) Root DNS Server (.)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;gt; (2) Root DNS Server (.)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (3) TLD DNS Server (.com)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;gt; (3) TLD DNS Server (.com)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;amp;gt; (4) Authoritative DNS Server (example.com)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +---&amp;gt; (4) Authoritative DNS Server (example.com)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-dns-query-resolution-process"&gt;1. DNS Query Resolution Process
 &lt;/h3&gt;&lt;p&gt;When a user enters &lt;code&gt;https://example.com&lt;/code&gt; in a browser, the system resolves the IP address through a hierarchical lookup process.&lt;/p&gt;
 &lt;ol&gt;
@@ -853,11 +854,11 @@ To prevent a large number of tasks from starting simultaneously, consider design
 &lt;/h2&gt;&lt;p&gt;A proxy server is an intermediary server that relays communication between a client and a server. It is classified into a forward proxy or a reverse proxy depending on which side of the communication it is positioned.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Forward Proxy]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 1] --+
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 2] --+--&amp;amp;gt; [Forward Proxy] ---&amp;amp;gt; [Internet] ---&amp;amp;gt; [Target Server]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client 2] --+--&amp;gt; [Forward Proxy] ---&amp;gt; [Internet] ---&amp;gt; [Target Server]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Reverse Proxy]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [Internet] ---&amp;amp;gt; [Reverse Proxy (Nginx)] ---&amp;amp;gt; [WAS 1]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; [WAS 2]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; [Internet] ---&amp;gt; [Reverse Proxy (Nginx)] ---&amp;gt; [WAS 1]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;gt; [WAS 2]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-comparison-of-forward-proxy-and-reverse-proxy"&gt;1. Comparison of Forward Proxy and Reverse Proxy
 &lt;/h3&gt;&lt;h4 id="forward-proxy"&gt;Forward Proxy
 &lt;/h4&gt;&lt;ul&gt;
@@ -910,12 +911,12 @@ To prevent a large number of tasks from starting simultaneously, consider design
 &lt;h2 id="l4l7-load-balancers-and-traffic-distribution-algorithms"&gt;L4/L7 Load Balancers and Traffic Distribution Algorithms
 &lt;/h2&gt;&lt;p&gt;Load balancers are components that distribute traffic across multiple servers to ensure high availability and fault tolerance.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L4 Load Balancer]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [L4 LB (IP/Port-based)] ---&amp;amp;gt; [Server A (10.0.0.1:80)]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; [Server B (10.0.0.2:80)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; [L4 LB (IP/Port-based)] ---&amp;gt; [Server A (10.0.0.1:80)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;gt; [Server B (10.0.0.2:80)]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; [L7 LB (URL/Header-based)] ---&amp;amp;gt; /api/users ---&amp;amp;gt; [User Service]
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;amp;gt; /api/orders ---&amp;amp;gt; [Order Service]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;gt; [L7 LB (URL/Header-based)] ---&amp;gt; /api/users ---&amp;gt; [User Service]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ---&amp;gt; /api/orders ---&amp;gt; [Order Service]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-technical-differences-between-l4-and-l7-load-balancers"&gt;1. Technical Differences Between L4 and L7 Load Balancers
 &lt;/h3&gt;&lt;h4 id="l4-load-balancer-transport-layer"&gt;L4 Load Balancer (Transport Layer)
 &lt;/h4&gt;&lt;ul&gt;
@@ -1017,15 +1018,15 @@ To prevent a large number of tasks from starting simultaneously, consider design
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="end-to-end-request-lifecycle"&gt;End-to-End Request Lifecycle
 &lt;/h2&gt;&lt;p&gt;Traces the step-by-step flow of communication from when a user enters a URL in a browser to when the data is displayed on the screen.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Browser] --(1. DNS Query)--&amp;amp;gt; [DNS Server]
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Browser] --(1. DNS Query)--&amp;gt; [DNS Server]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(2. TCP/QUIC Handshake &amp;amp;amp; HTTPS Request)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer (ALB)] --(3. SSL Termination &amp;amp;amp; Route)--&amp;amp;gt; [Nginx (Reverse Proxy)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[L7 Load Balancer (ALB)] --(3. SSL Termination &amp;amp;amp; Route)--&amp;gt; [Nginx (Reverse Proxy)]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (4. Forward Request)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Database] &amp;amp;lt;--(6. SQL Query / Connection Pool)-- [WAS (Spring Boot / Node.js)]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Database] &amp;lt;--(6. SQL Query / Connection Pool)-- [WAS (Spring Boot / Node.js)]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="step-1-name-server-resolution-dns-query"&gt;Step 1: Name Server Resolution (DNS Query)
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;&lt;b&gt;Address Input:&lt;/b&gt; A user enters &lt;code&gt;https://example.com/v1/users&lt;/code&gt; in the browser.&lt;/li&gt;
@@ -1431,7 +1432,7 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;user_activity_logs
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;created_at &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt; DATE_SUB(NOW(), INTERVAL &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;MONTH&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;created_at &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; DATE_SUB(NOW(), INTERVAL &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;MONTH&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;GROUP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DATE(created_at), campaign_id;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="a-performance-bottleneck"&gt;A. Performance Bottleneck
@@ -1443,10 +1444,10 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;h2 id="3-architectural-design"&gt;3. Architectural Design
 &lt;/h2&gt;&lt;p&gt;To solve these challenges, we shift the design policy from &amp;ldquo;on-demand calculation at request time&amp;rdquo; to &amp;ldquo;&lt;b&gt;prior asynchronous calculation and cache storage&lt;/b&gt;.&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;The ingestion, aggregation, and serving layers are separated as follows:&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;[Event Source] ──&amp;amp;gt; [Message Queue] ──&amp;amp;gt; [Consumer Service]
+&lt;pre tabindex="0"&gt;&lt;code&gt;[Event Source] ──&amp;gt; [Message Queue] ──&amp;gt; [Consumer Service]
 │
 ▼ (Async Update)
-[User Request] ──&amp;amp;gt; [API Gateway / FastAPI] ──&amp;amp;gt; [Redis Cache]
+[User Request] ──&amp;gt; [API Gateway / FastAPI] ──&amp;gt; [Redis Cache]
 │ (Cache Miss) ▲
 └───────────────────┘ (Write Back)
 │
@@ -1653,8 +1654,8 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Batch operations using a transaction block.
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Since there is no network overhead, in-memory WASM execution is fast.
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;db&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;transaction&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;tx&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; (&lt;span style="color:#66d9ef"&gt;let&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;lt&lt;/span&gt;; &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt;&lt;span style="color:#f92672"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;db&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;transaction&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;tx&lt;/span&gt;) =&amp;gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; (&lt;span style="color:#66d9ef"&gt;let&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt;&lt;span style="color:#f92672"&gt;++&lt;/span&gt;) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tx&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;query&lt;/span&gt;(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;INSERT INTO notes (title, content) VALUES ($1, $2)&amp;#34;&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [&lt;span style="color:#e6db74"&gt;`Note #&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;i&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;`This is test note number &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;i&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;.`&lt;/span&gt;]
@@ -1688,7 +1689,7 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// [Read] - Retrieve the 3 most recent records
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;list&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;db&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;query&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM notes ORDER BY created_at DESC LIMIT 3&amp;#34;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;3. Recent Notes Reference (Top 3):&amp;#34;&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;table&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;list&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;rows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;map&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;n&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; ({ &lt;span style="color:#a6e22e"&gt;id&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;n&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;id&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;title&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;n&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;title&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;content&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;n&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;content&lt;/span&gt; })));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;table&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;list&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;rows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;map&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;n&lt;/span&gt; =&amp;gt; ({ &lt;span style="color:#a6e22e"&gt;id&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;n&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;id&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;title&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;n&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;title&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;content&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;n&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;content&lt;/span&gt; })));
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// ---------------------------------------------------------
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 4. Hybrid Synchronization Simulation
@@ -1699,19 +1700,19 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;unsyncedParams&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;db&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;query&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM notes WHERE synced = false&amp;#34;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;unsyncedCount&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;unsyncedParams&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;rows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;length&lt;/span&gt;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;unsyncedCount&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;) {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;` -&amp;amp;gt; Sync Target: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;unsyncedCount&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; items detected`&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;unsyncedCount&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;` -&amp;gt; Sync Target: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;unsyncedCount&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; items detected`&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Simulate network latency (500ms) representing data transmission to a remote server
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Promise(&lt;span style="color:#a6e22e"&gt;r&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;setTimeout&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;));
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34; -&amp;amp;gt; ☁️ Backend transmission completed (Mock Server)&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Promise(&lt;span style="color:#a6e22e"&gt;r&lt;/span&gt; =&amp;gt; &lt;span style="color:#a6e22e"&gt;setTimeout&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34; -&amp;gt; ☁️ Backend transmission completed (Mock Server)&amp;#34;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Update local database state, marking as synced
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ids&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;unsyncedParams&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;rows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;map&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;n&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;n&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;id&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ids&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;unsyncedParams&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;rows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;map&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;n&lt;/span&gt; =&amp;gt; &lt;span style="color:#a6e22e"&gt;n&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;id&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;db&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;query&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;UPDATE notes SET synced = true WHERE id = ANY($1)&amp;#34;&lt;/span&gt;, [&lt;span style="color:#a6e22e"&gt;ids&lt;/span&gt;]);
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34; -&amp;amp;gt; ✅ Local DB status updated to &amp;#39;Synced&amp;#39;&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34; -&amp;gt; ✅ Local DB status updated to &amp;#39;Synced&amp;#39;&amp;#34;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34; -&amp;amp;gt; No data to synchronize.&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34; -&amp;gt; No data to synchronize.&amp;#34;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// ---------------------------------------------------------
@@ -1720,7 +1721,7 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;\n🎉 All demos completed successfully.&amp;#34;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;().&lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;().&lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;) =&amp;gt; {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;❌ Error occurred:&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
@@ -1749,9 +1750,9 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└─────────┴──────────────┴────────────────────────────┘
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;🔄 [Sync] Simulating backend synchronization...
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -&amp;amp;gt; Sync Target: 101 items detected
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -&amp;amp;gt; ☁️ Backend transmission completed (Mock Server)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -&amp;amp;gt; ✅ Local DB status updated to &amp;#39;Synced&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -&amp;gt; Sync Target: 101 items detected
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -&amp;gt; ☁️ Backend transmission completed (Mock Server)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -&amp;gt; ✅ Local DB status updated to &amp;#39;Synced&amp;#39;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;🎉 All demos completed successfully.
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
@@ -1924,7 +1925,7 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Generator
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Depends
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_db_session&lt;/span&gt;() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; Generator:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_db_session&lt;/span&gt;() &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; Generator:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; db &lt;span style="color:#f92672"&gt;=&lt;/span&gt; SessionLocal()
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;yield&lt;/span&gt; db
@@ -2013,11 +2014,11 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;csrf&lt;/span&gt;(AbstractHttpConfigurer::disable)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;formLogin&lt;/span&gt;(AbstractHttpConfigurer::disable)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;httpBasic&lt;/span&gt;(AbstractHttpConfigurer::disable)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;authorizeHttpRequests&lt;/span&gt;(auth &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; auth
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;authorizeHttpRequests&lt;/span&gt;(auth &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; auth
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;requestMatchers&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/login&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;/join&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;permitAll&lt;/span&gt;()
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;requestMatchers&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/admin&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;hasRole&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;ADMIN&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;anyRequest&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;authenticated&lt;/span&gt;())
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;sessionManagement&lt;/span&gt;(session &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; session
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;sessionManagement&lt;/span&gt;(session &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; session
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;sessionCreationPolicy&lt;/span&gt;(SessionCreationPolicy.&lt;span style="color:#a6e22e"&gt;STATELESS&lt;/span&gt;));
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; http.&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;();
@@ -2069,7 +2070,7 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;highWaterMark&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;64&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt; &lt;span style="color:#75715e"&gt;// Buffering in 64KB units
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;reader&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;on&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;data&amp;#39;&lt;/span&gt;, (&lt;span style="color:#a6e22e"&gt;chunk&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;reader&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;on&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;data&amp;#39;&lt;/span&gt;, (&lt;span style="color:#a6e22e"&gt;chunk&lt;/span&gt;) =&amp;gt; {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Process per chunk to suppress memory consumption
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;Verification command:&lt;/em&gt; &lt;code&gt;strace -f -e trace=openat,read,close node app.js ./large.log&lt;/code&gt;&lt;/p&gt;
@@ -2080,7 +2081,7 @@ This requirement highlighted a common architectural bottleneck. Based on this hi
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#f92672"&gt;!&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;canWrite&lt;/span&gt;) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// If buffer is saturated, wait for drain to control backpressure
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;socket&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;once&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;drain&amp;#39;&lt;/span&gt;, () &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;socket&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;once&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;drain&amp;#39;&lt;/span&gt;, () =&amp;gt; {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;Buffer drained, resuming writes...&amp;#39;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; });
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
@@ -2222,7 +2223,7 @@ cluster-enabled yes
 &lt;h3 id="solution"&gt;Solution
 &lt;/h3&gt;&lt;p&gt;Resolved by updating client-side libraries to the 2026 standard &lt;code&gt;valkey-py&lt;/code&gt; or the latest &lt;code&gt;redis-py&lt;/code&gt; 5.5.0 or higher. Additionally, project-wide dependencies were forcibly synchronized using &lt;code&gt;uv&lt;/code&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Dependency update&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv add valkey&amp;amp;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;8.0.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv add valkey&amp;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;8.0.0
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv lock
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="final-confirmation-and-system-impact-assessment"&gt;Final Confirmation and System Impact Assessment
 &lt;/h2&gt;&lt;p&gt;Through this migration, the cache layer now provides stable responses without becoming a bottleneck, even against bursty requests from AI agents. As of May 31, 2026, the error rate in the production environment is suppressed to less than 0.01%.&lt;/p&gt;
@@ -2237,10 +2238,10 @@ cluster-enabled yes
 &lt;/h2&gt;&lt;p&gt;By modifying the local rules configuration file, administrators can replace legacy alert rules with drop directives to secure the &lt;b&gt;&lt;mark&gt;10.10.11.10&lt;/mark&gt;&lt;/b&gt; internal node. In addition, the execution of the Snort binary requires the &lt;b&gt;&lt;mark&gt;-Q&lt;/mark&gt;&lt;/b&gt; parameter to facilitate inline packet processing. When a client attempts to reach the target via ICMP, the inline IPS intercepts the request and returns a destination port unreachable message. Consequently, this mechanism ensures that unauthorized reconnaissance traffic never reaches the backend infrastructure, which is verified by the Snort console logging the drop events with high precision.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Configuration in /etc/snort/rules/local.rules&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Deactivating the passive alert rule&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# alert icmp any any -&amp;amp;gt; 10.10.11.10 any (msg: &amp;#34;ICMP ping Request Inline mode&amp;#34;; sid: 1000001;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# alert icmp any any -&amp;gt; 10.10.11.10 any (msg: &amp;#34;ICMP ping Request Inline mode&amp;#34;; sid: 1000001;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Activating the active drop rule for IPS mode&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drop icmp any any -&amp;amp;gt; 10.10.11.10 any &lt;span style="color:#f92672"&gt;(&lt;/span&gt;msg: &lt;span style="color:#e6db74"&gt;&amp;#34;ICMP ping Request Inline mode&amp;#34;&lt;/span&gt;; sid: 1000001;&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drop icmp any any -&amp;gt; 10.10.11.10 any &lt;span style="color:#f92672"&gt;(&lt;/span&gt;msg: &lt;span style="color:#e6db74"&gt;&amp;#34;ICMP ping Request Inline mode&amp;#34;&lt;/span&gt;; sid: 1000001;&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Starting Snort in Inline Mode with DAQ&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;snort -A console -q -u snort -g snort -c /etc/snort/snort.conf -Q
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="analyzing-nat-packet-transformations-in-multi-tiered-architectures"&gt;Analyzing NAT Packet Transformations in Multi-Tiered Architectures
@@ -2248,8 +2249,8 @@ cluster-enabled yes
 &lt;h2 id="engineering-robust-snort-rules-for-union-based-sql-injection"&gt;Engineering Robust Snort Rules for UNION-Based SQL Injection
 &lt;/h2&gt;&lt;p&gt;Protecting web applications from SQL injection requires deep packet inspection beyond simple string matching. The implementation of &lt;b&gt;&lt;mark&gt;sid:1000002&lt;/mark&gt;&lt;/b&gt; demonstrates the use of Perl Compatible Regular Expressions to identify complex attack patterns like UNION SELECT. By leveraging the http_uri modifier and established flow state tracking, the engine reduces false positives by only inspecting traffic that has completed the TCP three-way handshake. In addition, the use of ungreedy matching in regex patterns optimizes the inspection latency, preventing the security layer from becoming a bottleneck during high-traffic periods.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Advanced SQL Injection Detection Rule&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;alert tcp any any -&amp;amp;gt; $HOME_NET &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt; &lt;span style="color:#f92672"&gt;(&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;msg: &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;amp;gt;&amp;amp;gt;&amp;amp;gt; WEB-Attack SQL injection attempt using UNION SELECT &amp;amp;lt;&amp;amp;lt;&amp;amp;lt;&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;alert tcp any any -&amp;gt; $HOME_NET &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt; &lt;span style="color:#f92672"&gt;(&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;msg: &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;gt;&amp;gt;&amp;gt; WEB-Attack SQL injection attempt using UNION SELECT &amp;lt;&amp;lt;&amp;lt;&amp;#34;&lt;/span&gt;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;flow:to_server,established;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;content:&lt;span style="color:#e6db74"&gt;&amp;#34;UNION&amp;#34;&lt;/span&gt;; nocase; http_uri;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;content:&lt;span style="color:#e6db74"&gt;&amp;#34;SELECT&amp;#34;&lt;/span&gt;; nocase; http_uri;

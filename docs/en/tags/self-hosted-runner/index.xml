@@ -39,9 +39,9 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;id&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;skip-eval&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [[ &amp;#34;${{ github.event.pull_request.title }}&amp;#34; =~ &amp;#34;\[ci skip\]&amp;#34; ]]; then
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;should-skip=true&amp;#34; &amp;amp;gt;&amp;amp;gt; $GITHUB_OUTPUT
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;should-skip=true&amp;#34; &amp;gt;&amp;gt; $GITHUB_OUTPUT
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; else
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;should-skip=false&amp;#34; &amp;amp;gt;&amp;amp;gt; $GITHUB_OUTPUT
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;should-skip=false&amp;#34; &amp;gt;&amp;gt; $GITHUB_OUTPUT
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test&lt;/span&gt;:
@@ -104,20 +104,20 @@
 			&lt;tr&gt;
 					&lt;td style="text-align: left"&gt;&lt;b&gt;Path-based (&lt;code&gt;paths-ignore&lt;/code&gt;)&lt;/b&gt;&lt;/td&gt;
 					&lt;td style="text-align: left"&gt;Skip when specific extensions or directories are modified&lt;/td&gt;
-					&lt;td style="text-align: left"&gt;・Fully automated&lt;br/&gt;・No manual operation required by developers&lt;/td&gt;
-					&lt;td style="text-align: left"&gt;・Conflicts with required status checks occur&lt;br/&gt;・Cannot handle modifications of only comments in code&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;- Fully automated&lt;br/&gt;- No manual operation required by developers&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;- Conflicts with required status checks occur&lt;br/&gt;- Cannot handle modifications of only comments in code&lt;/td&gt;
 			&lt;/tr&gt;
 			&lt;tr&gt;
 					&lt;td style="text-align: left"&gt;&lt;b&gt;PR Title-based&lt;/b&gt;&lt;/td&gt;
 					&lt;td style="text-align: left"&gt;Include phrases like &lt;code&gt;[ci skip]&lt;/code&gt; in the PR title&lt;/td&gt;
-					&lt;td style="text-align: left"&gt;・Skip intent is clearly visible from the PR list&lt;br/&gt;・Easy to configure&lt;/td&gt;
-					&lt;td style="text-align: left"&gt;・Risk of skipping due to developer misoperation&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;- Skip intent is clearly visible from the PR list&lt;br/&gt;- Easy to configure&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;- Risk of skipping due to developer misoperation&lt;/td&gt;
 			&lt;/tr&gt;
 			&lt;tr&gt;
 					&lt;td style="text-align: left"&gt;&lt;b&gt;Label-based&lt;/b&gt;&lt;/td&gt;
 					&lt;td style="text-align: left"&gt;Add a &lt;code&gt;ci-skip&lt;/code&gt; label to the PR&lt;/td&gt;
-					&lt;td style="text-align: left"&gt;・Permission management is possible (e.g., allowing only reviewers to add labels)&lt;/td&gt;
-					&lt;td style="text-align: left"&gt;・Incurs the effort of adding labels&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;- Permission management is possible (e.g., allowing only reviewers to add labels)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;- Incurs the effort of adding labels&lt;/td&gt;
 			&lt;/tr&gt;
 	&lt;/tbody&gt;
 &lt;/table&gt;
@@ -201,7 +201,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; mkdir -p ~/.kube
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34; | base64 -d &amp;amp;gt; ~/.kube/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34; | base64 -d &amp;gt; ~/.kube/config&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deploy to Kubernetes&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
@@ -327,7 +327,7 @@ Error: Process completed with exit code 1.
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set kube config&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; mkdir -p ~/.kube
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34; | base64 -d &amp;amp;gt; ~/.kube/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.KUBE_CONFIG }}&amp;#34; | base64 -d &amp;gt; ~/.kube/config&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="-resolving-dns-resolution-failure-from-cloud-runner-kubernetesdockerinternal6443-no-such-host"&gt;🛠️ Resolving DNS Resolution Failure from Cloud Runner (kubernetes.docker.internal:6443: no such host)
 &lt;/h2&gt;&lt;p&gt;After resolving the certificate error, the following network timeout and DNS resolution error occurred during the deployment step:&lt;/p&gt;

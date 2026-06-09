@@ -4,9 +4,17 @@
 &lt;h3 id="2-node-management-automation-with-eks-auto-mode"&gt;2. Node Management Automation with EKS Auto Mode
 &lt;/h3&gt;&lt;p&gt;EKS Auto Mode is a managed service that adopts &lt;b&gt;Karpenter&lt;/b&gt; as its core engine to automate the entire node lifecycle. It eliminates the need for static node group definitions like the traditional Cluster Autoscaler, achieving Just-In-Time (JIT) provisioning based on Pod resource requests.&lt;/p&gt;
 &lt;p&gt;💡 &lt;b&gt;Key Technical Characteristics&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;・&lt;b&gt;JIT Provisioning&lt;/b&gt;: Analyzes Pod CPU/memory requests, Node Selectors, Taints/Tolerations, and Topology Spread Constraints in real time to immediately launch the optimal EC2 instances.&lt;/p&gt;
-&lt;p&gt;・&lt;b&gt;Native Integration&lt;/b&gt;: VPC CNI, EBS CSI, and ALB Controller are managed by default, eliminating the need for manual driver installation or patching.&lt;/p&gt;
-&lt;p&gt;・&lt;b&gt;Automated Maintenance&lt;/b&gt;: OS patching and Kubernetes version upgrades are automated, significantly reducing operational overhead.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;JIT Provisioning&lt;/b&gt;: Analyzes Pod CPU/memory requests, Node Selectors, Taints/Tolerations, and Topology Spread Constraints in real time to immediately launch the optimal EC2 instances.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Native Integration&lt;/b&gt;: VPC CNI, EBS CSI, and ALB Controller are managed by default, eliminating the need for manual driver installation or patching.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Automated Maintenance&lt;/b&gt;: OS patching and Kubernetes version upgrades are automated, significantly reducing operational overhead.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Pod&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
@@ -45,9 +53,17 @@
 &lt;/ol&gt;
 &lt;h3 id="4-reference-architecture-and-components"&gt;4. Reference Architecture and Components
 &lt;/h3&gt;&lt;p&gt;Modern IDP architectures integrate and operate the following components:&lt;/p&gt;
-&lt;p&gt;・&lt;b&gt;Backstage&lt;/b&gt;: An open-source framework developed by Spotify that serves as an integrated interface for service catalogs, documentation, and CI/CD.&lt;/p&gt;
-&lt;p&gt;・&lt;b&gt;Argo CD&lt;/b&gt;: Based on GitOps, it synchronizes cluster states using a Git repository as the Single Source of Truth (SSoT).&lt;/p&gt;
-&lt;p&gt;・&lt;b&gt;Crossplane&lt;/b&gt;: Uses Kubernetes CRDs to declaratively provision AWS resources such as RDS and S3.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Backstage&lt;/b&gt;: An open-source framework developed by Spotify that serves as an integrated interface for service catalogs, documentation, and CI/CD.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Argo CD&lt;/b&gt;: Based on GitOps, it synchronizes cluster states using a Git repository as the Single Source of Truth (SSoT).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Crossplane&lt;/b&gt;: Uses Kubernetes CRDs to declaratively provision AWS resources such as RDS and S3.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;aws.upbound.io/v1beta1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Bucket&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:

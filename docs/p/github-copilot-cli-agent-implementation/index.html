@@ -38,11 +38,11 @@
 </span></span><span style=display:flex><span>New-Item -ItemType Directory -Force -Path $workdir
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#75715e># Stage 1: Claude Codeによる解析</span>
-</span></span><span style=display:flex><span>npx @anthropic-ai/claude-code --print <span style=color:#e6db74>&#34;Analyze </span>$Target<span style=color:#e6db74> for bugs&#34;</span> &amp;gt; <span style=color:#e6db74>&#34;</span>$workdir<span style=color:#e6db74>/01-analysis.json&#34;</span>
+</span></span><span style=display:flex><span>npx @anthropic-ai/claude-code --print <span style=color:#e6db74>&#34;Analyze </span>$Target<span style=color:#e6db74> for bugs&#34;</span> &gt; <span style=color:#e6db74>&#34;</span>$workdir<span style=color:#e6db74>/01-analysis.json&#34;</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#75715e># Stage 2: セキュリティ監査</span>
 </span></span><span style=display:flex><span>$analysis = Get-Content <span style=color:#e6db74>&#34;</span>$workdir<span style=color:#e6db74>/01-analysis.json&#34;</span> -Raw
-</span></span><span style=display:flex><span>npx @anthropic-ai/claude-code --print <span style=color:#e6db74>&#34;Security audit based on: </span>$analysis<span style=color:#e6db74>&#34;</span> &amp;gt; <span style=color:#e6db74>&#34;</span>$workdir<span style=color:#e6db74>/02-security.json&#34;</span>
+</span></span><span style=display:flex><span>npx @anthropic-ai/claude-code --print <span style=color:#e6db74>&#34;Security audit based on: </span>$analysis<span style=color:#e6db74>&#34;</span> &gt; <span style=color:#e6db74>&#34;</span>$workdir<span style=color:#e6db74>/02-security.json&#34;</span>
 </span></span></code></pre></div><h2 id=6-プロジェクト固有の設定githubcopilot-instructionsmd>6. プロジェクト固有の設定：.github/copilot-instructions.md</h2><p>プロジェクトルートに <code>.github/copilot-instructions.md</code> を配置することで、Copilot CLIの振る舞いを規定します。ここには、使用する技術スタック、アーキテクチャの規約、テスト要件（例：カバレッジ80%以上）を明記します。</p><p>これにより、エージェントはプロジェクトのコンテキストを正確に把握し、一貫性のあるコード生成とレビューを実行可能になります。⚠️ 規約の不一致はデプロイメントエラーの原因となるため、厳格な定義が推奨されます。</p></section><footer class="article-meta article-footer"><section class=article-tags><a href=/tags/github-copilot-cli/>Github-Copilot-Cli</a>
 <a href=/tags/everything-copilot-cli/>Everything-Copilot-Cli</a>
 <a href=/tags/agentic-workflow/>Agentic-Workflow</a>

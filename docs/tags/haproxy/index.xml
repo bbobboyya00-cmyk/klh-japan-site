@@ -68,7 +68,7 @@ backend http_back_1
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ELAPSED_TIME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$((&lt;/span&gt;CURRENT_TIME &lt;span style="color:#f92672"&gt;-&lt;/span&gt; START_TIME&lt;span style="color:#66d9ef"&gt;))&lt;/span&gt;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; $ELAPSED_TIME -ge &lt;span style="color:#ae81ff"&gt;60&lt;/span&gt; &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Error: Server did not start within 60 seconds.&amp;#34;&lt;/span&gt; &amp;amp;gt;&amp;amp;amp;2;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Error: Server did not start within 60 seconds.&amp;#34;&lt;/span&gt; &amp;gt;&amp;amp;amp;2;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; exit 1;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
@@ -76,7 +76,7 @@ backend http_back_1
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 起動確認後に旧コンテナを削除&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker rm -f app1_1 2&amp;amp;gt; /dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker rm -f app1_1 2&amp;gt; /dev/null
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-多層プロキシアーキテクチャ-npmとhaproxyの連携"&gt;5. 多層プロキシアーキテクチャ: NPMとHAProxyの連携
 &lt;/h2&gt;&lt;p&gt;SSL/TLS終端と証明書管理を効率化するため、Nginx Proxy Manager (NPM) を最前段に配置する構成を採用します。クライアントからのHTTPSリクエストはNPMで復号され、内部ネットワークを通じてHAProxy（ポート80）へ転送されます。この多層構造により、アプリケーション層の負荷分散とセキュリティ管理を分離することが可能となります。&lt;/p&gt;
 &lt;h2 id="6-haproxyヘルスチェックのメカニズム詳細"&gt;6. HAProxyヘルスチェックのメカニズム詳細

@@ -48,7 +48,7 @@
 </span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Set kube config</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>run</span>: |<span style=color:#e6db74>
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>          mkdir -p ~/.kube
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>          echo &#34;${{ secrets.KUBE_CONFIG }}&#34; | base64 -d &amp;gt; ~/.kube/config</span>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          echo &#34;${{ secrets.KUBE_CONFIG }}&#34; | base64 -d &gt; ~/.kube/config</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Deploy to Kubernetes</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>run</span>: |<span style=color:#e6db74>

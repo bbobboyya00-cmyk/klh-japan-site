@@ -13,7 +13,7 @@
 &lt;/ul&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Local Server | | Public Server | | External User |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (FRP Client) | --[Outbound]--&amp;amp;gt; | (FRP Server) | &amp;amp;lt;---[Inbound]--- | (SSH/Browser) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (FRP Client) | --[Outbound]--&amp;gt; | (FRP Server) | &amp;lt;---[Inbound]--- | (SSH/Browser) |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| [frpc] | | [frps] | | |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="23-動作原理とワークフロー"&gt;2.3 動作原理とワークフロー
@@ -221,7 +221,7 @@
 &lt;/h3&gt;&lt;p&gt;通常のTCPプロキシは、パブリックサーバー側でポートをグローバルに公開するため、ポートスキャンや不正アクセスの標的になりやすい性質があります。&lt;b&gt;STCP (Secure TCP)&lt;/b&gt; 構成では、パブリックサーバー上に公開ポートを露出させず、暗号化されたトンネルを経由して通信を行います。アクセスする側のクライアント端末（Visitor）でも &lt;code&gt;frpc&lt;/code&gt; を動作させ、ローカルポートにバインドして中継します。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Service Host | | Public Server | | Visitor Host |
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (FRP Client) | --[STCP Tunnel]-&amp;amp;gt;| (FRP Server) | &amp;amp;lt;-[STCP Tunnel]- | (FRP Client) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (FRP Client) | --[STCP Tunnel]-&amp;gt;| (FRP Server) | &amp;lt;-[STCP Tunnel]- | (FRP Client) |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| [frpc (service)]| | [frps] | | [frpc (visitor)]|
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+------------------+ +------------------+ +------------------+
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="71-アーキテクチャ構成"&gt;7.1 アーキテクチャ構成

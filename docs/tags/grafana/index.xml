@@ -56,8 +56,8 @@ stages: [
 { duration: &amp;#34;30s&amp;#34;, target: 0 } // 0 VUまでクールダウン
 ],
 thresholds: {
-http_req_duration: [&amp;#34;p(95)&amp;amp;lt;2000&amp;#34;], // 95%のリクエストが2秒以内に完了すること
-http_req_failed: [&amp;#34;rate&amp;amp;lt;0.01&amp;#34;] // エラー率が1%未満であること
+http_req_duration: [&amp;#34;p(95)&amp;lt;2000&amp;#34;], // 95%のリクエストが2秒以内に完了すること
+http_req_failed: [&amp;#34;rate&amp;lt;0.01&amp;#34;] // エラー率が1%未満であること
 },
 summaryTrendStats: [&amp;#34;avg&amp;#34;, &amp;#34;min&amp;#34;, &amp;#34;med&amp;#34;, &amp;#34;max&amp;#34;, &amp;#34;p(90)&amp;#34;, &amp;#34;p(95)&amp;#34;, &amp;#34;p(99)&amp;#34;]
 };
@@ -88,7 +88,7 @@ tags: { endpoint: item.name } // Grafanaでの集計用タグ
 });
 
 check(res, { 
-[`${item.name} no server crash`]: (r) =&amp;amp;gt; r.status &amp;amp;gt; 0 &amp;amp;amp;&amp;amp;amp; r.status &amp;amp;lt; 500
+[`${item.name} no server crash`]: (r) =&amp;gt; r.status &amp;gt; 0 &amp;amp;amp;&amp;amp;amp; r.status &amp;lt; 500
 });
 
 sleep(0.1); // ローカルソケットの枯渇を防ぐためのウェイト

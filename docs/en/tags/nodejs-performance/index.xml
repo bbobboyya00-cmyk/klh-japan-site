@@ -29,7 +29,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;highWaterMark&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;64&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt; &lt;span style="color:#75715e"&gt;// Buffering in 64KB units
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;reader&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;on&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;data&amp;#39;&lt;/span&gt;, (&lt;span style="color:#a6e22e"&gt;chunk&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;reader&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;on&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;data&amp;#39;&lt;/span&gt;, (&lt;span style="color:#a6e22e"&gt;chunk&lt;/span&gt;) =&amp;gt; {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Process per chunk to suppress memory consumption
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;Verification command:&lt;/em&gt; &lt;code&gt;strace -f -e trace=openat,read,close node app.js ./large.log&lt;/code&gt;&lt;/p&gt;
@@ -40,7 +40,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#f92672"&gt;!&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;canWrite&lt;/span&gt;) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// If buffer is saturated, wait for drain to control backpressure
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;socket&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;once&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;drain&amp;#39;&lt;/span&gt;, () &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;socket&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;once&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;drain&amp;#39;&lt;/span&gt;, () =&amp;gt; {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;Buffer drained, resuming writes...&amp;#39;&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; });
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
