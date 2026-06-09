@@ -1,4 +1,73 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 08 Jun 2026 18:03:25 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Automating Kubernetes Manifest Generation and Helm Migration with Claude Code</title><link>https://klifehack.com/en/p/claude-code-k8s-helm-migration/</link><pubDate>Mon, 08 Jun 2026 18:03:25 +0900</pubDate><guid>https://klifehack.com/en/p/claude-code-k8s-helm-migration/</guid><description>&lt;h1 id="gke-manifest-automation-and-helm-migration-via-claude-code"&gt;GKE Manifest Automation and Helm Migration via Claude Code
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 09 Jun 2026 10:06:48 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Performance Improvement and Automation for NAS-Google Drive Synchronization Using rclone</title><link>https://klifehack.com/en/p/rclone-gdrive-api-performance-optimization/</link><pubDate>Tue, 09 Jun 2026 10:06:48 +0900</pubDate><guid>https://klifehack.com/en/p/rclone-gdrive-api-performance-optimization/</guid><description>&lt;p&gt;In the synchronization operation between NAS and Google Drive (Google Workspace Shared Drive), a serious performance bottleneck was identified from operational data after the initial setup. This article describes the process of introducing a dedicated API key and optimizing the synchronization cycle to improve transfer speeds and eliminate synchronization delays.&lt;/p&gt;
+&lt;h2 id="1-current-status-analysis-and-issue-identification"&gt;1. Current Status Analysis and Issue Identification
+&lt;/h2&gt;&lt;p&gt;As a result of conducting an operational test for approximately two weeks in an environment synchronizing 1.1 TB of ipTIME NAS data to Google Drive, the following two constraints were identified.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Stagnant Transfer Speeds&lt;/b&gt;: Despite being in a gigabit network environment, the speed during rclone copy execution hovered around 1 MB/s to 3 MB/s. Especially in directories containing tens of thousands of small files, it took a significant amount of time to complete synchronization.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Business Impact due to Sync Delays&lt;/b&gt;: With the initially configured schedule of &amp;ldquo;once a day (2:00 AM),&amp;rdquo; documents created in the morning were not reflected in the cloud until the following day, leading to situations where users requiring immediacy manually transferred files.&lt;/p&gt;
+&lt;h2 id="2-technical-root-cause-shared-api-quota-limits"&gt;2. Technical Root Cause: Shared API Quota Limits
+&lt;/h2&gt;&lt;p&gt;In rclone&amp;rsquo;s default configuration, the &amp;ldquo;Global Default OAuth Client ID&amp;rdquo; shared by users worldwide is used. Google APIs have per-second and per-day request limits (quotas) set for each client ID, and using a shared ID easily leads to reaching these limits due to the influence of other users.&lt;/p&gt;
+&lt;p&gt;When limits are reached, Google returns errors such as &lt;code&gt;API rate exceeded&lt;/code&gt; or &lt;code&gt;userRateLimitExceeded&lt;/code&gt;, and rclone enters a backoff (waiting) state. This is the direct cause of the extreme drop in effective throughput. To resolve this issue, it is necessary to issue an organization-specific OAuth client ID/secret in the Google Cloud Console to secure a dedicated quota.&lt;/p&gt;
+&lt;h2 id="3-issuing-and-configuring-a-dedicated-api-key"&gt;3. Issuing and Configuring a Dedicated API Key
+&lt;/h2&gt;&lt;h3 id="31-configuration-in-google-cloud-console"&gt;3.1 Configuration in Google Cloud Console
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Project Creation&lt;/b&gt;: Create a new project (e.g., rclone-sync-project) in the Google Cloud Console (&lt;a class="link" href="https://console.cloud.google.com" target="_blank" rel="noopener"
+ &gt;https://console.cloud.google.com&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Enabling the API&lt;/b&gt;: Search for and enable &amp;ldquo;Google Drive API&amp;rdquo; from &amp;ldquo;APIs &amp;amp; Services &amp;gt; Library&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;OAuth Consent Screen Configuration&lt;/b&gt;: Set the user type to &amp;ldquo;Internal&amp;rdquo; on the &amp;ldquo;OAuth consent screen&amp;rdquo;. This restricts usage to users within the Google Workspace domain and avoids token expiration issues.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Creating Credentials&lt;/b&gt;: Select &amp;ldquo;Credentials &amp;gt; Create Credentials &amp;gt; OAuth client ID&amp;rdquo;. Specify &amp;ldquo;Desktop app&amp;rdquo; as the application type.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Saving the ID and Secret&lt;/b&gt;: Record the generated &amp;ldquo;Client ID&amp;rdquo; and &amp;ldquo;Client Secret&amp;rdquo; in a secure location.&lt;/p&gt;
+&lt;h3 id="32-updating-rclone-configuration"&gt;3.2 Updating rclone Configuration
+&lt;/h3&gt;&lt;p&gt;Apply the new credentials to the existing remote configuration.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[gdrive]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;type&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;drive&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;client_id&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;your_own_client_id.apps.googleusercontent.com&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;client_secret&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;your_own_client_secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;scope&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;drive&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-optimization-of-synchronization-automation-2-hour-cycle"&gt;4. Optimization of Synchronization Automation (2-Hour Cycle)
+&lt;/h2&gt;&lt;p&gt;Considering the balance between data freshness and system load, the synchronization frequency is set to a 2-hour cycle. The bisync command, which maintains bidirectional consistency, is adopted for synchronization.&lt;/p&gt;
+&lt;h3 id="41-creating-the-synchronization-batch-file"&gt;4.1 Creating the Synchronization Batch File
+&lt;/h3&gt;&lt;p&gt;Configure the following script as C:\rclone\sync.bat. By applying the dedicated API key, throttling is less likely to occur even if &amp;ndash;transfers (number of concurrent transfers) is increased to 8.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bat" data-lang="bat"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;@&lt;span style="color:#66d9ef"&gt;echo&lt;/span&gt; off
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rclone bisync C:\nas_data gdrive:shared_drive --transfers 8 --log-file C:\rclone\rclone.log --verbose
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-windows-task-scheduler-configuration"&gt;4.2 Windows Task Scheduler Configuration
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;General&lt;/b&gt;: Select &amp;ldquo;Run whether user is logged on or not&amp;rdquo; and &amp;ldquo;Run with highest privileges&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Triggers&lt;/b&gt;: Set to run daily, repeat task every &amp;ldquo;2 hours&amp;rdquo;, for a duration of &amp;ldquo;1 day&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Actions&lt;/b&gt;: Specify C:\rclone\sync.bat and enter C:\rclone in &amp;ldquo;Start in (optional)&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Settings&lt;/b&gt;: Set &amp;ldquo;If the task is already running, then the following rule applies&amp;rdquo; to &amp;ldquo;Do not start a new instance&amp;rdquo; to prevent overlapping processes.&lt;/p&gt;
+&lt;h2 id="5-post-implementation-performance-comparison"&gt;5. Post-Implementation Performance Comparison
+&lt;/h2&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Metric&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Phase 1 (Default API + Once a Day)&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Phase 2 (Dedicated API + 2-Hour Cycle)&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Average Transfer Speed&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;1–3 MB/s&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;15–30 MB/s&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Sync Delay (Max)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;24 hours&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;2 hours&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Throttling Occurrence&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Frequent&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Almost resolved&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;System Load&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Concentrated at midnight (high burst)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Distributed execution (low load)&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;&lt;b&gt;Token Expiration&lt;/b&gt;: If the OAuth consent screen is in the &amp;ldquo;External&amp;rdquo; and &amp;ldquo;Testing&amp;rdquo; state, the token will expire in 7 days. Be sure to verify that it is in the &amp;ldquo;Internal&amp;rdquo; or &amp;ldquo;In production&amp;rdquo; state.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Log Management&lt;/b&gt;: Log output via &amp;ndash;log-file is mandatory. It serves as the sole diagnostic means when synchronization errors or conflicts occur.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;bisync Characteristics&lt;/b&gt;: Since bisync checks path consistency during the initial run, it takes time only for the first execution in large directories. Once in stable operation, it scans only the changed deltas, completing in a few minutes.&lt;/p&gt;</description></item><item><title>Automating Kubernetes Manifest Generation and Helm Migration with Claude Code</title><link>https://klifehack.com/en/p/claude-code-k8s-helm-migration/</link><pubDate>Mon, 08 Jun 2026 18:03:25 +0900</pubDate><guid>https://klifehack.com/en/p/claude-code-k8s-helm-migration/</guid><description>&lt;h1 id="gke-manifest-automation-and-helm-migration-via-claude-code"&gt;GKE Manifest Automation and Helm Migration via Claude Code
 &lt;/h1&gt;&lt;h2 id="1-context-persistence-defining-claudemd"&gt;1. Context Persistence: Defining CLAUDE.md
 &lt;/h2&gt;&lt;p&gt;To maintain AI generation accuracy and apply consistent constraints across sessions, a &lt;b&gt;CLAUDE.md&lt;/b&gt; file must be placed in the project root. This enables the AI to pre-learn cluster-specific conventions, naming rules, and deployment strategies, ensuring consistent output.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# CLAUDE.md Configuration for GKE
