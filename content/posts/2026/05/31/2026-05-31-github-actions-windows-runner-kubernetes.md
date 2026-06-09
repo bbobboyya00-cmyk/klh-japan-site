@@ -43,7 +43,7 @@ GitHub Secretsにローカルの <b><mark>kubeconfig</mark></b> ファイルのY
       - name: Set kube config
         run: |
           mkdir -p ~/.kube
-          echo \"${{ secrets.KUBE_CONFIG }}\" | base64 -d &gt; ~/.kube/config
+          echo \"${{ secrets.KUBE_CONFIG }}\" | base64 -d > ~/.kube/config
 ```
 
 ---

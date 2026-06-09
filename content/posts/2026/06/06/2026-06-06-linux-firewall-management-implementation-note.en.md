@@ -28,10 +28,10 @@ As the first step of management, verify the operational status of the background
 
 
 ```bash
-# デーモンの稼働状態を確認
+# Determine the Operational Status of the Daemon
 systemctl status firewalld
 
-# 現在適用されているすべてのルールを表示
+# View all currently applied rules
 firewall-cmd --list-all
 ```
 
@@ -42,13 +42,13 @@ When allowing specific services such as HTTP traffic, permanent configuration (-
 
 
 ```bash
-# HTTPサービスを永続的に追加
+# Permanent addition of HTTP services
 firewall-cmd --permanent --add-service=http
 
-# 設定をリロードして反映
+# Reload and reflect configuration
 firewall-cmd --reload
 
-# 反映結果の確認
+# confirmation of reflection results
 firewall-cmd --list-all
 ```
 
@@ -59,10 +59,10 @@ For finer-grained control, such as allowing communication only from specific sou
 
 
 ```bash
-# 特定のIP（192.168.0.100）からのHTTPアクセスを許可
+# Allow HTTP access from a specific IP (192.168.0.100)
 firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="192.168.0.100" service name="http" accept'
 
-# 設定のリロード
+# Reloading the Configuration
 firewall-cmd --reload
 ```
 
@@ -79,10 +79,10 @@ When enabling UFW, SSH must be allowed beforehand to prevent remote connections 
 
 
 ```bash
-# UFWのインストール
+# UFW Installation
 apt update &amp;&amp; apt install ufw -y
 
-# SSHを許可してから有効化
+# Allow SSH before enabling
 ufw allow ssh
 ufw enable
 ```
@@ -90,13 +90,13 @@ ufw enable
 ### 2.2 Allowing Port and Service Specifications
 
 ```bash
-# HTTP（80番ポート）の許可
+# Allow HTTP (port 80)
 ufw allow http
 
-# 特定のTCPポート（8080）の許可
+# Allowing a Specific TCP Port (8080)
 ufw allow 8080/tcp
 
-# 詳細なステータス確認
+# Detailed status check
 ufw status verbose
 ```
 
@@ -113,13 +113,13 @@ By using the -I (Insert) option, specific rules can be inserted at the beginning
 
 
 ```bash
-# 現在のルールを詳細表示（行番号付き）
+# Detailed view of current rules (line numbered)
 iptables -L -v -n
 
-# 8080番ポートへの通信を最優先でドロップするテストルールを挿入
+# Insert test rule to drop communication to port 8080 first
 iptables -I INPUT 1 -p tcp --dport 8080 -j DROP
 
-# テストルールの削除
+# Deleting a Test Rule
 iptables -D INPUT 1
 ```
 
@@ -130,15 +130,15 @@ To avoid conflicts with firewalld, firewalld must be disabled when using iptable
 
 
 ```bash
-# サービスのインストールとfirewalldの停止
+# Installing Services and Stopping Firewall
 dnf install iptables-services -y
 systemctl stop firewalld
 systemctl disable firewalld
 
-# SSH（22番）の許可設定が /etc/sysconfig/iptables に存在することを確認
-# 例: -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+# Verify that SSH (number 22) authorization settings exist in /etc/sysconfig/iptables
+# example: -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
 
-# サービスの起動
+# Launch Services
 systemctl start iptables
 systemctl enable iptables
 ```
@@ -150,7 +150,7 @@ Since iptables rules are held in memory, a save process is required to maintain 
 
 
 ```bash
-# ルールの保存
+# Saving Rules
 service iptables save
 ```
 
@@ -163,16 +163,16 @@ nftables was developed as the successor to iptables, featuring more efficient da
 ### 4.1 Defining Basic Structures and Adding Rules
 
 ```bash
-# inetファミリー（IPv4/IPv6両対応）のテーブル作成
+# Creating a table for the inet family (both IPv4 and IPv6)
 nft add table inet filter
 
-# 入力チェインの作成（フックとプライオリティの定義）
+# Creating an Input Chain (Defining Hooks and Priorities)
 nft add chain inet filter input { type filter hook input priority 0 \; }
 
-# 80番ポートの許可ルール追加
+# Adding Authorization Rules for Port 80
 nft add rule inet filter input tcp dport 80 accept
 
-# ルールセットの確認
+# Verifying the Rule Set
 nft list ruleset
 ```
 
@@ -183,10 +183,10 @@ In nftables, deletion and modification are performed using "handle" numbers assi
 
 
 ```bash
-# ハンドル番号を含めてルールセットを表示
+# Show rule set including handle number
 nft --handle list ruleset
 
-# 特定のハンドル番号（例: 5）を指定してルールを削除
+# Delete a rule by specifying a specific handle number (for example, 5)
 nft delete rule inet filter input handle 5
 ```
 

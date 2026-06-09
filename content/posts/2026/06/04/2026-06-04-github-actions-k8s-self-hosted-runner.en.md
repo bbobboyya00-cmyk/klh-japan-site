@@ -60,7 +60,7 @@ To maintain the integrity of certificate data, the kubeconfig file is encoded in
 [Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\Users\Administrator\.kube\config"))
 ```
 
-The resulting string is stored in the GitHub repository under Settings &gt; Secrets and variables &gt; Actions as KUBE_CONFIG. <b>Base64 encoding</b> prevents binary data corruption in CI environments.
+The resulting string is stored in the GitHub repository under Settings > Secrets and variables > Actions as KUBE_CONFIG. <b>Base64 encoding</b> prevents binary data corruption in CI environments.
 
 
 
@@ -103,7 +103,7 @@ jobs:
       - name: Set kube config
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d &gt; ~/.kube/config
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
 
       - name: Deploy to Kubernetes
         run: |
@@ -134,7 +134,7 @@ A <b>Self-Hosted Runner</b> operating within the local network enables direct ac
 
 ### 4.2 Installation Steps for Windows
 
-Select New self-hosted runner from Settings &gt; Actions &gt; Runners. Specify Windows as the OS and execute the PowerShell script to configure the runner.
+Select New self-hosted runner from Settings > Actions > Runners. Specify Windows as the OS and execute the PowerShell script to configure the runner.
 
 
 

@@ -31,13 +31,13 @@ Implementation of a custom command to retrieve Pull Request diffs and perform a 
 
 ```markdown
 ---
-description: PRの差分をレビューし、改善案を提示します
+description: Review PR differences and provide suggestions for improvement
 ---
 !git diff main...HEAD
-上記の差分を確認し、以下の観点でレビューを行ってください：
-1. パフォーマンス上の懸念点
-2. セキュリティ脆弱性
-3. コーディング規約の遵守
+Review the differences above and review them from the following perspectives:
+1. Performance Concerns
+2. security vulnerability
+3. compliance with coding conventions
 ```
 
 After saving this file, typing `/` in a Claude Code interactive session will display `/review-pr` in the completion suggestions. Execution with arguments:
@@ -71,11 +71,10 @@ To achieve more flexible automation, custom commands support dynamic arguments, 
 <b>Control via YAML Frontmatter</b>: By adding YAML frontmatter to the beginning of a Markdown file, you can control the execution environment, the model used, and access permissions to tools.
 
 
-
 ```yaml
 ---
-description: コミットメッセージを自動生成します
-argument-hint: 追加のコンテキスト（任意）
+description—Automatically generates a commit message
+argument-hint—Additional contexts (optional)
 allowed-tools:
   - shell
 model: claude-3-5-haiku-latest
@@ -84,7 +83,7 @@ model: claude-3-5-haiku-latest
 !git diff --cached
 </git_diff>
 
-上記の差分に基づき、Conventional Commits形式でコミットメッセージを生成してください。
+Generate a commit message in Conventional Commits format based on the differences above.
 $ARGUMENTS
 ```
 
@@ -100,13 +99,12 @@ With updates to Claude Code, custom commands and "Skills" have been organized in
 Skills are managed as folder-level assets and have the structure `.claude/skills/<name>/SKILL.md`. They support Autonomous Triggering, allowing Claude to automatically launch a Skill based on context without the user explicitly executing a command. Additionally, because of the folder structure, they have the advantage of being able to bundle related documents and templates.</name>
 
 
-
 ```markdown
 ---
-description: プロジェクトのセキュリティ脆弱性をスキャンし、修正案を提示します
+description: Scan for project security vulnerabilities and provide remediation proposals
 disable-model-invocation: true
 ---
-プロジェクト全体のソースコードを静的解析し、OWASP Top 10に該当する脆弱性がないか確認してください。
+Static analysis of the project-wide source code for vulnerabilities in OWASP Top 10.
 ```
 
 💡 <b>Important Parameters</b>: `description` is a semantic description that serves as a trigger for autonomous execution. Claude analyzes this description to determine the application scenario. `disable-model-invocation: true` is used to prevent autonomous execution and restrict it to manual execution only for processes with side effects, such as infrastructure changes or database operations.
@@ -127,17 +125,16 @@ disable-model-invocation: true
 Automating code reviews specialized for a specific technology stack is effective for maintaining quality. Implementation of a custom code review Skill for a Flutter project:
 
 
-
 ```markdown
 ---
-description: Flutterのベストプラクティスに基づきコードをレビューします
+description: Review code based on Flutter best practices
 model: claude-3-5-sonnet-latest
 ---
-以下のFlutter/Dartの観点でコードを精査してください：
-- Widgetの肥大化（抽出の必要性）
-- Riverpod等の状態管理の適切な利用
-- const修飾子の不足
-- 非同期処理の例外ハンドリング
+Examine the code from the Flutter/Dart perspective below:
+- Widget hypertrophy (need extraction)
+- Appropriate use of state management such as Riverpod
+- const modifier deficiency
+- Asynchronous exception handling
 ```
 
 As an execution flow, you can build a pipeline where you first run `/flutter-review lib/src/features/` to retrieve issues, and then apply fixes using commands like `/fix`. This automates consistent quality control.

@@ -40,7 +40,7 @@ FRP client-server architecture binaries:
 ```text
 +------------------+                  +------------------+                  +------------------+
 |  Local Server    |                  |  Public Server   |                  |   External User  |
-|  (FRP Client)    | --[Outbound]--&gt;  |  (FRP Server)    | &lt;---[Inbound]--- |   (SSH/Browser)  |
+|  (FRP Client)    | --[Outbound]-->  |  (FRP Server)    | <---[Inbound]--- |   (SSH/Browser)  |
 |  [frpc]          |                  |  [frps]          |                  |                  |
 +------------------+                  +------------------+                  +------------------+
 ```
@@ -79,7 +79,7 @@ Binary extraction commands for server and client:
 
 
 ```bash
-# FRPパッケージのダウンロードと展開
+# Downloading and Deploying FRP Packages
 wget https://github.com/fatedier/frp/releases/download/v0.67.0/frp_0.67.0_linux_amd64.tar.gz
 tar -zxvf frp_0.67.0_linux_amd64.tar.gz
 cd frp_0.67.0_linux_amd64
@@ -100,7 +100,7 @@ Server configuration using TOML format (v0.52.0 and later):
 
 
 ```bash
-# 設定ファイルの配置ディレクトリ作成と編集
+# Creating and Editing a Configuration File Placement Directory
 mkdir -p /etc/frp
 cp frps.toml /etc/frp/frps.toml
 vi /etc/frp/frps.toml
@@ -115,7 +115,7 @@ Configuration parameters for the server:
 bindPort = 7000
 auth.token = "your_secure_token"
 
-# 管理ダッシュボードの設定
+# Administration Dashboard Settings
 webServer.addr = "0.0.0.0"
 webServer.port = 7500
 webServer.user = "admin"
@@ -139,7 +139,7 @@ Register as a `systemd` service to enable automatic recovery upon server reboot 
 
 
 ```bash
-# systemdサービスファイルの作成
+# Create systemd service file
 sudo vi /etc/systemd/system/frps.service
 ```
 
@@ -167,10 +167,10 @@ Enable and start the service.
 
 
 ```bash
-# バイナリのシステムパスへの配置
+# Place the Binary in the System Path
 sudo cp frps /usr/local/bin/
 
-# サービスの有効化および起動
+# Enabling and Launching Services
 sudo systemctl daemon-reload
 sudo systemctl enable frps
 sudo systemctl start frps
@@ -202,7 +202,7 @@ Client configuration for destination server and local services:
 
 
 ```bash
-# 設定ファイルの配置ディレクトリ作成と編集
+# Creating and Editing a Configuration File Placement Directory
 mkdir -p /etc/frp
 cp frpc.toml /etc/frp/frpc.toml
 vi /etc/frp/frpc.toml
@@ -233,7 +233,7 @@ Systemd service construction for the client:
 
 
 ```bash
-# systemdサービスファイルの作成
+# Create systemd service file
 sudo vi /etc/systemd/system/frpc.service
 ```
 
@@ -257,10 +257,10 @@ Enable and start the client service.
 
 
 ```bash
-# バイナリのシステムパスへの配置
+# Place the Binary in the System Path
 sudo cp frpc /usr/local/bin/
 
-# サービスの有効化および起動
+# Enabling and Launching Services
 sudo systemctl daemon-reload
 sudo systemctl enable frpc
 sudo systemctl start frpc
@@ -278,7 +278,7 @@ To prevent unauthorized access to the FRP control port, it is recommended to use
 
 
 ```bash
-# 安全なランダムトークンの生成
+# Generating Secure Random Tokens
 openssl rand -base64 24
 ```
 
@@ -289,7 +289,7 @@ Definition of multiple `[[proxies]]` blocks in `frpc.toml`:
 
 
 ```toml
-# frpc.toml (複数サービス構成例)
+# frpc.tml (multiple service configuration example)
 serverAddr = "CLOUD_PUBLIC_IP"
 serverPort = 7000
 auth.token = "your_secure_token"
@@ -314,7 +314,7 @@ After changing the configuration, restart the client service.
 
 
 ```bash
-# クライアントサービスの再起動
+# Restarting Client Services
 sudo systemctl restart frpc
 ```
 
@@ -329,7 +329,7 @@ Bulk port exposure using ranges or commas:
 
 
 ```toml
-# frpc.toml (ポート範囲指定例)
+# frpc.toml (example port range)
 [[proxies]]
 name = "range_ports"
 type = "tcp"
@@ -345,7 +345,7 @@ Server-side bind port restrictions:
 
 
 ```toml
-# frps.toml (ポート制限設定)
+# frps.toml (Port Limit Settings)
 allowPorts = [
     { start = 6000, end = 7000 }
 ]
@@ -364,7 +364,7 @@ Insertion of a rule at the top of the input chain:
 
 
 ```bash
-# ポート7000の通信を許可
+# Allow port 7000 to communicate
 sudo iptables -I INPUT -p tcp --dport 7000 -j ACCEPT
 ```
 
@@ -375,7 +375,7 @@ Persistence of rules using `iptables-persistent`:
 
 
 ```bash
-# ルールの永続化保存
+# Persistent saving of rules
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iptables-persistent
 sudo netfilter-persistent save
 ```
@@ -387,7 +387,7 @@ Connectivity verification using `netcat` (`nc`):
 
 
 ```bash
-# 外部端末からの疎通テスト
+# communication test from an external terminal
 nc -zv CLOUD_PUBLIC_IP 7000
 ```
 
@@ -402,7 +402,7 @@ Standard TCP proxies globally expose ports on the public server side, making the
 ```text
 +------------------+                  +------------------+                  +------------------+
 |  Service Host    |                  |  Public Server   |                  |   Visitor Host   |
-|  (FRP Client)    | --[STCP Tunnel]-&gt;|  (FRP Server)    | &lt;-[STCP Tunnel]- |   (FRP Client)   |
+|  (FRP Client)    | --[STCP Tunnel]->|  (FRP Server)    | <-[STCP Tunnel]- |   (FRP Client)   |
 |  [frpc (service)]|                  |  [frps]          |                  |   [frpc (visitor)]|
 +------------------+                  +------------------+                  +------------------+
 ```
@@ -488,7 +488,7 @@ Connection address for a remote application on port `4000`:
 
 
 ```bash
-# ビジター端末からの接続実行例
+# Example of Performing a Connection from a Visitor Terminal
 ssh -p 6000 user@127.0.0.1
 ```
 

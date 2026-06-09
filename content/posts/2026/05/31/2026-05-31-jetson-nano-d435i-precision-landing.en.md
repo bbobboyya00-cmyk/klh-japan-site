@@ -102,8 +102,8 @@ The detected bounding box center (u, v) is correlated with the RealSense depth f
 ```python
 def get_filtered_depth(depth_frame, x, y, window_size=5):
     depth_roi = depth_frame[y-window_size:y+window_size, x-window_size:x+window_size]
-    valid_depths = depth_roi[depth_roi &gt; 0]
-    return np.mean(valid_depths) if len(valid_depths) &gt; 0 else 0
+    valid_depths = depth_roi[depth_roi > 0]
+    return np.mean(valid_depths) if len(valid_depths) > 0 else 0
 ```
 
 This coordinate data is packed into a MAVLink message after applying a rotation matrix that accounts for the camera's mounting angle (pitch).

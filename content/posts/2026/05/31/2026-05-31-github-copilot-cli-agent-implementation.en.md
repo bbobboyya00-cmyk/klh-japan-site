@@ -121,11 +121,11 @@ $workdir = ".pipeline/$(Get-Date -Format 'yyyyMMdd-HHmmss')"
 New-Item -ItemType Directory -Force -Path $workdir
 
 # Stage 1: Analysis via Claude Code
-npx @anthropic-ai/claude-code --print "Analyze $Target for bugs" &gt; "$workdir/01-analysis.json"
+npx @anthropic-ai/claude-code --print "Analyze $Target for bugs" > "$workdir/01-analysis.json"
 
 # Stage 2: Security Audit
 $analysis = Get-Content "$workdir/01-analysis.json" -Raw
-npx @anthropic-ai/claude-code --print "Security audit based on: $analysis" &gt; "$workdir/02-security.json"
+npx @anthropic-ai/claude-code --print "Security audit based on: $analysis" > "$workdir/02-security.json"
 ```
 
 ## 6. Project-Specific Settings: .github/copilot-instructions.md

@@ -51,7 +51,7 @@ SUM(CASE WHEN is_bounce THEN 1 ELSE 0 END) / COUNT(*) AS bounce_rate
 FROM 
 user_activity_logs
 WHERE 
-created_at &gt;= DATE_SUB(NOW(), INTERVAL 3 MONTH)
+created_at >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
 GROUP BY 
 DATE(created_at), campaign_id;
 ```
@@ -75,10 +75,10 @@ DATE(created_at), campaign_id;
 インジェクション、集計、サービングの各レイヤーを以下のように分離します。
 
 ```
-[Event Source] ──&gt; [Message Queue] ──&gt; [Consumer Service]
+[Event Source] ──> [Message Queue] ──> [Consumer Service]
 │
 ▼ (Async Update)
-[User Request] ──&gt; [API Gateway / FastAPI] ──&gt; [Redis Cache]
+[User Request] ──> [API Gateway / FastAPI] ──> [Redis Cache]
 │ (Cache Miss)      ▲
 └───────────────────┘ (Write Back)
 │

@@ -47,7 +47,7 @@ Alert rules in Prometheus are defined in YAML format. Example of a rule definiti
 
 ```yaml
 - alert: GpuHighTemperature
-  expr: gpu_temperature_celsius &gt; 80
+  expr: gpu_temperature_celsius > 80
   for: 5m
   labels:
     severity: warning
@@ -55,7 +55,7 @@ Alert rules in Prometheus are defined in YAML format. Example of a rule definiti
   annotations:
     summary: "GPU temp on {{ $labels.host }}/{{ $labels.gpu }} = {{ $value }}°C"
     description: |
-      GPU {{ $labels.gpu }} on {{ $labels.host }} has been &gt; 80°C for 5 minutes.
+      GPU {{ $labels.gpu }} on {{ $labels.host }} has been > 80°C for 5 minutes.
       Threshold: 80°C / Critical: 85°C.
       Check: nvidia-smi -q -d TEMPERATURE
 ```
@@ -74,17 +74,17 @@ Due to the presence of the `for` parameter, the alert state transition lifecycle
 
 
 ```
-                  [ expr がデータを返した時 ]
-  +------------+  --------------------&gt;  +------------+
-  |  inactive  |                         |  pending   |
-  +------------+  &lt;--------------------  +------------+
-        ^         [ expr の結果が空になった時 ]    |
-        |                                      | [ 'for' で指定した時間が経過 ]
+                  [ When expr returned data ]
+  +------------+  -------------------->  +------------+
+  |  inactive  |                            |  pending   |
+  +------------+  <--------------------  +------------+
+        ^         [ When the expr result is empty ]   |
+        |                                      | [ Time specified in 'for' elapses ]
         |                                      v
         |                                +------------+
         +--------------------------------|   firing   |
-              [ expr の結果が空になった時 ]     +------------+
-                (RESOLVED 通知の送信)
+       [ When the expr result is empty ] +------------+
+                (Sending RESOLVED Notifications)
 ```
 
 * <b>`inactive`</b>: Normal state. The PromQL evaluation result is empty.
@@ -108,8 +108,8 @@ Aggregates similar alerts into a single notification. For example, if multiple c
 ```yaml
 route:
   group_by: ['alertname', 'severity']
-  group_wait: 30s        # 最初のアラート受信後、バッファリングする時間
-  group_interval: 5m     # 同一グループ内の新規アラートを通知するまでの間隔
+  group_wait: 30s        # Time to Buffer After First Alert Received
+  group_interval: 5m     # Interval between notification of new alerts in the same group
 ```
 
 ### ② Inhibition (`inhibit_rules`)
@@ -137,7 +137,7 @@ Controls the interval for repeating the same notification for unresolved alerts.
 
 ```yaml
 route:
-  repeat_interval: 4h    # 解決していないアラートの再送間隔
+  repeat_interval: 4h    # Resend interval for unresolved alerts
 ```
 
 ---

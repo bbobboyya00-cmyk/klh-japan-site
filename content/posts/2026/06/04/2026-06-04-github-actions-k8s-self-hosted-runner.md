@@ -43,7 +43,7 @@ kubectl config view
 [Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\Users\Administrator\.kube\config"))
 ```
 
-取得した文字列をGitHubリポジトリの `Settings &gt; Secrets and variables &gt; Actions` に `KUBE_CONFIG` という名前で保存します。💡 <b>Base64エンコード</b>は、CI環境におけるバイナリデータの破損を防ぐための標準的なプラクティスです。
+取得した文字列をGitHubリポジトリの `Settings > Secrets and variables > Actions` に `KUBE_CONFIG` という名前で保存します。💡 <b>Base64エンコード</b>は、CI環境におけるバイナリデータの破損を防ぐための標準的なプラクティスです。
 
 ## 3. ワークフローの定義とトラブルシューティング
 
@@ -82,7 +82,7 @@ jobs:
       - name: Set kube config
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d &gt; ~/.kube/config
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
 
       - name: Deploy to Kubernetes
         run: |
@@ -107,7 +107,7 @@ Unable to connect to the server: dial tcp: lookup kubernetes.docker.internal: no
 
 ### 4.2 Windows環境へのインストール手順
 
-GitHubリポジトリの `Settings &gt; Actions &gt; Runners` から「New self-hosted runner」を選択します。OSに「Windows」を指定し、提供されるPowerShellスクリプトを実行してランナーを構成します。
+GitHubリポジトリの `Settings > Actions > Runners` から「New self-hosted runner」を選択します。OSに「Windows」を指定し、提供されるPowerShellスクリプトを実行してランナーを構成します。
 
 ```powershell
 # ランナーの配置と設定

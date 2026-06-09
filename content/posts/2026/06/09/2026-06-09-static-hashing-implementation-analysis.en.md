@@ -38,7 +38,7 @@ This is the most common method and is represented by the following formula:
 
 
 ```c
-// 除算方式の実装例
+// Example implementation of division method
 int hash_division(int key, int m) {
   return key % m;
 }
@@ -56,7 +56,7 @@ This method has low dependency on the distribution of keys.
 
 $$h(k) = \lfloor m(kA \pmod 1) \rfloor$$
 
-Here, $A$ is a constant such that $0 &lt; A &lt; 1$, and the golden ratio ($\approx 0.618033$) is frequently adopted.
+Here, $A$ is a constant such that $0 < A < 1$, and the golden ratio ($\approx 0.618033$) is frequently adopted.
 
 
 

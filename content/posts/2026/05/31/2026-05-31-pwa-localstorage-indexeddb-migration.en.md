@@ -22,7 +22,7 @@ The developer tools console log recorded the following exceptions and empty data
 ```javascript
 // Console Log
 Uncaught DOMException: Failed to execute 'setItem' on 'Storage': Setting the value of 'routine_activity_log' exceeded the quota.
-localStorage.getItem('routine_app_user_data') -&gt; null
+localStorage.getItem('routine_app_user_data') -> null
 ```
 
 This state is identical to a fresh application installation, indicating that the client-side data store was completely wiped.
@@ -115,7 +115,7 @@ const limitTime = thresholdDate.getTime();
 
 try {
 const logs = await localforage.getItem('routine_activity_log') || [];
-const filteredLogs = logs.filter(log =&gt; new Date(log.timestamp).getTime() &gt;= limitTime);
+const filteredLogs = logs.filter(log => new Date(log.timestamp).getTime() >= limitTime);
 await localforage.setItem('routine_activity_log', filteredLogs);
 } catch (error) {
 console.error("Pruning failed:", error);
@@ -137,7 +137,7 @@ Execute `navigator.storage.estimate()` from the console to check the allocated q
 
 ```javascript
 if (navigator.storage &amp;&amp; navigator.storage.estimate) {
-navigator.storage.estimate().then(estimate =&gt; {
+navigator.storage.estimate().then(estimate => {
 console.log(`Quota: ${estimate.quota} bytes`);
 console.log(`Usage: ${estimate.usage} bytes`);
 });
@@ -167,7 +167,7 @@ Explicitly request the browser to exclude the storage from automatic deletion ta
 
 ```javascript
 if (navigator.storage &amp;&amp; navigator.storage.persist) {
-navigator.storage.persist().then(granted =&gt; {
+navigator.storage.persist().then(granted => {
 console.log(`Persistent storage granted: ${granted}`);
 });
 }

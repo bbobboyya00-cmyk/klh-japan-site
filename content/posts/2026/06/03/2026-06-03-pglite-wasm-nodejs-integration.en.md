@@ -85,8 +85,8 @@ async function main() {
 
   // Batch operations using a transaction block.
   // Since there is no network overhead, in-memory WASM execution is fast.
-  await db.transaction(async (tx) =&gt; {
-    for (let i = 0; i &lt; 100; i++) {
+  await db.transaction(async (tx) => {
+    for (let i = 0; i < 100; i++) {
       await tx.query(
         "INSERT INTO notes (title, content) VALUES ($1, $2)",
         [`Note #${i}`, `This is test note number ${i}.`]
@@ -120,7 +120,7 @@ async function main() {
   // [Read] - Retrieve the 3 most recent records
   const list = await db.query("SELECT * FROM notes ORDER BY created_at DESC LIMIT 3");
   console.log("3. Recent Notes Reference (Top 3):");
-  console.table(list.rows.map(n =&gt; ({ id: n.id, title: n.title, content: n.content })));
+  console.table(list.rows.map(n => ({ id: n.id, title: n.title, content: n.content })));
 
   // ---------------------------------------------------------
   // 4. Hybrid Synchronization Simulation
@@ -131,19 +131,19 @@ async function main() {
   const unsyncedParams = await db.query("SELECT * FROM notes WHERE synced = false");
   const unsyncedCount = unsyncedParams.rows.length;
 
-  if (unsyncedCount &gt; 0) {
-    console.log(`   -&gt; Sync Target: ${unsyncedCount} items detected`);
+  if (unsyncedCount > 0) {
+    console.log(`   -> Sync Target: ${unsyncedCount} items detected`);
     
     // Simulate network latency (500ms) representing data transmission to a remote server
-    await new Promise(r =&gt; setTimeout(r, 500));
-    console.log("   -&gt; ☁️ Backend transmission completed (Mock Server)");
+    await new Promise(r => setTimeout(r, 500));
+    console.log("   -> ☁️ Backend transmission completed (Mock Server)");
 
     // Update local database state, marking as synced
-    const ids = unsyncedParams.rows.map(n =&gt; n.id);
+    const ids = unsyncedParams.rows.map(n => n.id);
     await db.query("UPDATE notes SET synced = true WHERE id = ANY($1)", [ids]);
-    console.log("   -&gt; ✅ Local DB status updated to 'Synced'");
+    console.log("   -> ✅ Local DB status updated to 'Synced'");
   } else {
-    console.log("   -&gt; No data to synchronize.");
+    console.log("   -> No data to synchronize.");
   }
 
   // ---------------------------------------------------------
@@ -152,7 +152,7 @@ async function main() {
   console.log("\n🎉 All demos completed successfully.");
 }
 
-main().catch((err) =&gt; {
+main().catch((err) => {
   console.error("❌ Error occurred:", err);
 });
 ```
@@ -193,9 +193,9 @@ node index.js
 └─────────┴──────────────┴────────────────────────────┘
 
 🔄 [Sync] Simulating backend synchronization...
-   -&gt; Sync Target: 101 items detected
-   -&gt; ☁️ Backend transmission completed (Mock Server)
-   -&gt; ✅ Local DB status updated to 'Synced'
+   -> Sync Target: 101 items detected
+   -> ☁️ Backend transmission completed (Mock Server)
+   -> ✅ Local DB status updated to 'Synced'
 
 🎉 All demos completed successfully.
 ```

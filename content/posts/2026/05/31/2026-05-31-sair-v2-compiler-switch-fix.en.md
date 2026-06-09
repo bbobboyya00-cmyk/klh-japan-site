@@ -96,7 +96,7 @@ def apply_skeletal_lock(pose_type):
         # Define tolerance for CoM shift
         cm_shift_limit = 0.15
         # Inject anchor point constraints into the prompt
-        return f"[Skeletal Anchor: Fixed, CM_Shift: &lt;{cm_shift_limit}, No_Collapse: True]"
+        return f"[Skeletal Anchor: Fixed, CM_Shift: <{cm_shift_limit}, No_Collapse: True]"
     return "[Skeletal Anchor: Standard]"
 ```
 
@@ -111,8 +111,8 @@ Verification was conducted for the synchronization of Level 08 (Spatiotemporal L
 ./analyze_optics --input generated_sample_01.png --mode rembrandt-check
 
 # Output results
-# &gt; Shadow Density: 0.82 (Target: 0.80-0.85) - PASS
-# &gt; Light Angle: 45.2 deg (Target: 45.0 deg) - PASS
+# > Shadow Density: 0.82 (Target: 0.80-0.85) - PASS
+# > Light Angle: 45.2 deg (Target: 45.0 deg) - PASS
 ```
 
 ## Operational Impact and Final Confirmation

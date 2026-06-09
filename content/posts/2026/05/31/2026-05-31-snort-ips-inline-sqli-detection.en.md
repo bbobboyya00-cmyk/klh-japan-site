@@ -21,10 +21,10 @@ By modifying the local rules configuration file, administrators can replace lega
 ```bash
 # Configuration in /etc/snort/rules/local.rules
 # Deactivating the passive alert rule
-# alert icmp any any -&gt; 10.10.11.10 any (msg: "ICMP ping Request Inline mode"; sid: 1000001;)
+# alert icmp any any -> 10.10.11.10 any (msg: "ICMP ping Request Inline mode"; sid: 1000001;)
 
 # Activating the active drop rule for IPS mode
-drop icmp any any -&gt; 10.10.11.10 any (msg: "ICMP ping Request Inline mode"; sid: 1000001;)
+drop icmp any any -> 10.10.11.10 any (msg: "ICMP ping Request Inline mode"; sid: 1000001;)
 ```
 
 ```bash
@@ -42,8 +42,8 @@ Protecting web applications from SQL injection requires deep packet inspection b
 
 ```bash
 # Advanced SQL Injection Detection Rule
-alert tcp any any -&gt; $HOME_NET 80 (
-msg: "&gt;&gt;&gt; WEB-Attack SQL injection attempt using UNION SELECT &lt;&lt;&lt;";
+alert tcp any any -> $HOME_NET 80 (
+msg: ">>> WEB-Attack SQL injection attempt using UNION SELECT <<<";
 flow:to_server,established;
 content:"UNION"; nocase; http_uri;
 content:"SELECT"; nocase; http_uri;

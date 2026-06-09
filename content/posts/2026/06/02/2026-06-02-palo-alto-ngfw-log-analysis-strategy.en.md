@@ -58,7 +58,7 @@ When connectivity issues occur, administrators filter logs using the following s
 
 
 
-1. Navigate to <b>Monitor &gt; Logs &gt; Traffic</b>.
+1. Navigate to <b>Monitor > Logs > Traffic</b>.
 2. <b>Execute Filtering</b>: Extract logs related to a specific source IP address (e.g., 10.10.10.100).
 3. <b>Verify Action</b>: Check the `Action` column to determine if the traffic is being rejected (Deny) by a policy or permitted (Allow).
 

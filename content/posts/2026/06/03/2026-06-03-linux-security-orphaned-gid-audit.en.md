@@ -68,11 +68,11 @@ else
     GID_MIN=1000
 fi
 
-echo "[Scanning for orphaned GIDs (Threshold: &gt;= $GID_MIN)]"
+echo "[Scanning for orphaned GIDs (Threshold: >= $GID_MIN)]"
 
 # Identify GIDs in /etc/group not present as primary GID in /etc/passwd
 # and having no members listed in /etc/group
-awk -F: -v min=$GID_MIN '$3 &gt;= min {print $3}' /etc/group | while read gid; do
+awk -F: -v min=$GID_MIN '$3 >= min {print $3}' /etc/group | while read gid; do
     group_info=$(grep ":$gid:" /etc/group)
     group_name=$(echo "$group_info" | cut -d: -f1)
     group_members=$(echo "$group_info" | cut -d: -f4)
@@ -81,7 +81,7 @@ awk -F: -v min=$GID_MIN '$3 &gt;= min {print $3}' /etc/group | while read gid; d
     user_exists=$(awk -F: -v gid=$gid '$4 == gid {print $1}' /etc/passwd)
     
     if [ -z "$user_exists" ] &amp;&amp; [ -z "$group_members" ]; then
-        echo "Vulnerable: Orphaned GID detected -&gt; Group: $group_name (GID: $gid)"
+        echo "Vulnerable: Orphaned GID detected -> Group: $group_name (GID: $gid)"
     fi
 done
 ```
@@ -100,7 +100,7 @@ Before deleting a group, you must verify whether any files owning that GID exist
 
 ```bash
 # Replace [GID] with the identified orphaned GID value
-find / -gid [GID] 2&gt;/dev/null
+find / -gid [GID] 2>/dev/null
 ```
 
 ### Step 2: Reassigning File Ownership
@@ -111,7 +111,7 @@ If files are found, change their ownership to an appropriate active group (e.g.,
 
 ```bash
 # Reassign group ownership to a secure administrative group
-find / -gid [GID] -exec chgrp root {} + 2&gt;/dev/null
+find / -gid [GID] -exec chgrp root {} + 2>/dev/null
 ```
 
 ### Step 3: Removing Unnecessary Groups

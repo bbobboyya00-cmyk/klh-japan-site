@@ -40,13 +40,13 @@ When limits are reached, Google returns errors such as `API rate exceeded` or `u
 <b>Project Creation</b>: Create a new project (e.g., rclone-sync-project) in the Google Cloud Console (https://console.cloud.google.com).
 
 
-<b>Enabling the API</b>: Search for and enable "Google Drive API" from "APIs &amp; Services &gt; Library".
+<b>Enabling the API</b>: Search for and enable "Google Drive API" from "APIs &amp; Services > Library".
 
 
 <b>OAuth Consent Screen Configuration</b>: Set the user type to "Internal" on the "OAuth consent screen". This restricts usage to users within the Google Workspace domain and avoids token expiration issues.
 
 
-<b>Creating Credentials</b>: Select "Credentials &gt; Create Credentials &gt; OAuth client ID". Specify "Desktop app" as the application type.
+<b>Creating Credentials</b>: Select "Credentials > Create Credentials > OAuth client ID". Specify "Desktop app" as the application type.
 
 
 <b>Saving the ID and Secret</b>: Record the generated "Client ID" and "Client Secret" in a secure location.

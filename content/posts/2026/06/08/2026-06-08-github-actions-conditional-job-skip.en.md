@@ -91,9 +91,9 @@ jobs:
       - id: skip-eval
         run: |
           if [[ "${{ github.event.pull_request.title }}" =~ "\[ci skip\]" ]]; then
-            echo "should-skip=true" &gt;&gt; $GITHUB_OUTPUT
+            echo "should-skip=true" >> $GITHUB_OUTPUT
           else
-            echo "should-skip=false" &gt;&gt; $GITHUB_OUTPUT
+            echo "should-skip=false" >> $GITHUB_OUTPUT
           fi
 
   test:
@@ -161,9 +161,9 @@ When introducing conditional skipping, which trigger to adopt depends on the org
 
 | Skip Strategy | Implementation Mechanism | Pros | Cons |
 | :--- | :--- | :--- | :--- |
-| <b>Path-based (`paths-ignore`)</b> | Skip when specific extensions or directories are modified | ・Fully automated<br/>・No manual operation required by developers | ・Conflicts with required status checks occur<br/>・Cannot handle modifications of only comments in code |
-| <b>PR Title-based</b> | Include phrases like `[ci skip]` in the PR title | ・Skip intent is clearly visible from the PR list<br/>・Easy to configure | ・Risk of skipping due to developer misoperation |
-| <b>Label-based</b> | Add a `ci-skip` label to the PR | ・Permission management is possible (e.g., allowing only reviewers to add labels) | ・Incurs the effort of adding labels |
+| <b>Path-based (`paths-ignore`)</b> | Skip when specific extensions or directories are modified | - Fully automated<br/>- No manual operation required by developers | - Conflicts with required status checks occur<br/>- Cannot handle modifications of only comments in code |
+| <b>PR Title-based</b> | Include phrases like `[ci skip]` in the PR title | - Skip intent is clearly visible from the PR list<br/>- Easy to configure | - Risk of skipping due to developer misoperation |
+| <b>Label-based</b> | Add a `ci-skip` label to the PR | - Permission management is possible (e.g., allowing only reviewers to add labels) | - Incurs the effort of adding labels |
 
 ## 4. Operational Governance and Impact on Production CD
 

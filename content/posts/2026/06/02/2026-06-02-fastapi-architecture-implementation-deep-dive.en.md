@@ -125,7 +125,7 @@ FastAPI's DI system is designed to modularize authentication, database session m
 from typing import Generator
 from fastapi import Depends
 
-def get_db_session() -&gt; Generator:
+def get_db_session() -> Generator:
     db = SessionLocal()
     try:
         yield db

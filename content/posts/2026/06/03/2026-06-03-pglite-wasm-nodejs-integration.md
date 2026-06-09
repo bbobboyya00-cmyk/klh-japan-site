@@ -80,8 +80,8 @@ async function main() {
 
   // トランザクションブロックを使用して操作をバッチ処理します。
   // ネットワークオーバーヘッドがないため、メモリ内のWASM実行は高速です。
-  await db.transaction(async (tx) =&gt; {
-    for (let i = 0; i &lt; 100; i++) {
+  await db.transaction(async (tx) => {
+    for (let i = 0; i < 100; i++) {
       await tx.query(
         "INSERT INTO notes (title, content) VALUES ($1, $2)",
         [`メモ #${i}`, `これは ${i} 回目のテストメモです。`]
@@ -115,7 +115,7 @@ async function main() {
   // [Read] - 直近のレコードを3件取得
   const list = await db.query("SELECT * FROM notes ORDER BY created_at DESC LIMIT 3");
   console.log("3. 直近のメモ参照 (Top 3):");
-  console.table(list.rows.map(n =&gt; ({ id: n.id, title: n.title, content: n.content })));
+  console.table(list.rows.map(n => ({ id: n.id, title: n.title, content: n.content })));
 
   // ---------------------------------------------------------
   // 4. ハイブリッド同期のシミュレーション
@@ -126,19 +126,19 @@ async function main() {
   const unsyncedParams = await db.query("SELECT * FROM notes WHERE synced = false");
   const unsyncedCount = unsyncedParams.rows.length;
 
-  if (unsyncedCount &gt; 0) {
-    console.log(`   -&gt; 同期対象: ${unsyncedCount}件検出`);
+  if (unsyncedCount > 0) {
+    console.log(`   -> 同期対象: ${unsyncedCount}件検出`);
     
     // リモートサーバーへのデータ送信を模したネットワーク遅延 (500ms) のシミュレーション
-    await new Promise(r =&gt; setTimeout(r, 500));
-    console.log("   -&gt; ☁️ バックエンド送信完了 (Mock Server)");
+    await new Promise(r => setTimeout(r, 500));
+    console.log("   -> ☁️ バックエンド送信完了 (Mock Server)");
 
     // ローカルデータベースの状態を更新し、同期済みとしてマーク
-    const ids = unsyncedParams.rows.map(n =&gt; n.id);
+    const ids = unsyncedParams.rows.map(n => n.id);
     await db.query("UPDATE notes SET synced = true WHERE id = ANY($1)", [ids]);
-    console.log("   -&gt; ✅ ローカルDBステータスを 'Synced' に更新完了");
+    console.log("   -> ✅ ローカルDBステータスを 'Synced' に更新完了");
   } else {
-    console.log("   -&gt; 同期するデータはありません。");
+    console.log("   -> 同期するデータはありません。");
   }
 
   // ---------------------------------------------------------
@@ -147,7 +147,7 @@ async function main() {
   console.log("\n🎉 すべてのデモが正常に完了しました。");
 }
 
-main().catch((err) =&gt; {
+main().catch((err) => {
   console.error("❌ エラー発生:", err);
 });
 ```
@@ -186,9 +186,9 @@ node index.js
 └─────────┴──────────────┴────────────────────────────┘
 
 🔄 [同期] バックエンド同期シミュレーション...
-   -&gt; 同期対象: 101件検出
-   -&gt; ☁️ バックエンド送信完了 (Mock Server)
-   -&gt; ✅ ローカルDBステータスを 'Synced' に更新完了
+   -> 同期対象: 101件検出
+   -> ☁️ バックエンド送信完了 (Mock Server)
+   -> ✅ ローカルDBステータスを 'Synced' に更新完了
 
 🎉 すべてのデモが正常に完了しました。
 ```

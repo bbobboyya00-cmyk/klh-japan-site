@@ -65,7 +65,7 @@ const reader = fs.createReadStream('./large.log', {
   highWaterMark: 64 * 1024 // Buffering in 64KB units
 });
 
-reader.on('data', (chunk) =&gt; {
+reader.on('data', (chunk) => {
   // Process per chunk to suppress memory consumption
 });
 ```
@@ -86,7 +86,7 @@ function safeWrite(socket, data) {
 
   if (!canWrite) {
     // If buffer is saturated, wait for drain to control backpressure
-    socket.once('drain', () =&gt; {
+    socket.once('drain', () => {
       console.log('Buffer drained, resuming writes...');
     });
   }

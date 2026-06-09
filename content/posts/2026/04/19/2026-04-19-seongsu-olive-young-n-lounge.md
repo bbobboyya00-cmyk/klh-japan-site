@@ -28,25 +28,25 @@ author: "K-Life Hack"
 
 地下鉄2号線の聖水駅からほど近い場所に現れたその建物は、圧倒的な存在感を放っています。モダンな建築美とダイナミックなファサードは、ここが韓国ビューティーの聖地であることを物語っています。ガラス張りの外壁には街の活気が映り込み、一歩足を踏み入れる前から期待感が高まります。
 
-<p><img alt="聖水洞のオリーブヤングN聖水、その雄大でダイナミックな外観&lt;/p - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" fetchpriority="high" height="423" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560628_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="752"/>
+<p><img alt="聖水洞のオリーブヤングN聖水、その雄大でダイナミックな外観</p - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" fetchpriority="high" height="423" loading="eager" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560628_0.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" width="752"/>
 
 建物の細部に目を向けると、繊細なデザインのオーニングやガラスの透明感が、聖水洞らしいインダストリアルな雰囲気と見事に調和しています。この場所は単に製品を売る場所ではなく、美しさを体験し、文化を共有するプラットフォームとして設計されていることがよく分かります。
 
-<p><img alt="モダンなガラス張りとセンス溢れるオーニングが際立つ外観のディテール&lt;/p - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560630_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<p><img alt="モダンなガラス張りとセンス溢れるオーニングが際立つ外観のディテール</p - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560630_1.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 選ばれし者だけが許される、特別なエントランス 💎
 
 エスカレーターで3階へ上がり、さらに階段を進んだ先に、その特別なラウンジは存在します。入り口には、ここが「ゴールドオリーブ」や特定のカード所有者のみが入場できる場所であることを示す案内板が静かに掲げられています。一般の喧騒から切り離された、静謐な時間がここから始まります。
 
-<div class="psImg"><img alt="ゴールドオリーブおよびメンバーシップ専用ラウンジへの案内板 - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560633_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="ラウンジの利用時間と詳細な運営ガイド&lt;/div - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560636_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div><p>利用方法は非常にスマートです。オリーブヤングの公式アプリで自身の等級を確認し、専用のイベントバナーを提示するだけで、スタッフが温かく迎え入れてくれます。ウェイティングが必要な場合でも、専用のキオスクでスムーズに予約ができるシステムが整っており、ストレスを感じさせない配慮が随所に見られます。
+<div class="psImg"><img alt="ゴールドオリーブおよびメンバーシップ専用ラウンジへの案内板 - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560633_2.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/><img alt="ラウンジの利用時間と詳細な運営ガイド</div - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560636_3.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/></div><p>利用方法は非常にスマートです。オリーブヤングの公式アプリで自身の等級を確認し、専用のイベントバナーを提示するだけで、スタッフが温かく迎え入れてくれます。ウェイティングが必要な場合でも、専用のキオスクでスムーズに予約ができるシステムが整っており、ストレスを感じさせない配慮が随所に見られます。
 
 ## 'The Beauty Picnic'が奏でる、緑豊かな都会のオアシス ✨
 
-ラウンジの扉を開けると、そこには「The Beauty Picnic」というコンセプトを象徴する、瑞々しい空間が広がっています。店内の至る所に配置されたプラントと、モダンで温かみのある家具が調和し、まるで都会の真ん中でピクニックを楽しんでいるかのような開放感を与えてくれます。</p><p><img alt="「The Beauty Picnic」を象徴するオブジェと爽やかな観葉植物&lt;/p - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560638_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+ラウンジの扉を開けると、そこには「The Beauty Picnic」というコンセプトを象徴する、瑞々しい空間が広がっています。店内の至る所に配置されたプラントと、モダンで温かみのある家具が調和し、まるで都会の真ん中でピクニックを楽しんでいるかのような開放感を与えてくれます。</p><p><img alt="「The Beauty Picnic」を象徴するオブジェと爽やかな観葉植物</p - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560638_4.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 柔らかな自然光が差し込む窓際の席からは、聖水洞特有の街並みを眺めることができます。高級ホテルのラウンジを彷彿とさせる洗練された雰囲気の中に、オリーブヤングらしいフレッシュな感性が加えられており、訪れる人々に心からのリラックスを提供してくれます。細部にまでこだわった照明や、清潔に整えられたアメニティコーナーも印象的です。
 
-<p><img alt="緑とモダンな家具が調和する、ゆとりある聖スラウンジの内部&lt;/p - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560640_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<p><img alt="緑とモダンな家具が調和する、ゆとりある聖スラウンジの内部</p - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560640_5.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 五感で楽しむ、ホテルクオリティのデザートとドリンク ☕
 
@@ -66,7 +66,7 @@ author: "K-Life Hack"
 - **ウェイティングの活用**: 満席の場合は、現地に設置されたタブレットで受付を済ませ、下の階でショッピングを楽しみながら待つのが効率的です。
 - **テイクアウト**: 時間がない場合は、一部のドリンクメニューをテイクアウトして、聖水の街を散策しながら楽しむことも可能です。
 
-<p><img alt="ウェイティングシステムを案内するキオスクの様子&lt;/p - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560642_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
+<p><img alt="ウェイティングシステムを案内するキオスクの様子</p - 聖水の新たなランドマーク「オリーブヤングN 聖水」で楽しむ、選ばれし者のためのプレミアムな休息" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/bbobboyya00-cmyk/k-life-assets@main/assets/2026/seongsu-olive-young-n-lounge/khack_1776560642_6.webp" style="width: auto; max-width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin: 35px auto; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"/>
 
 ## 聖水洞で見つける、新しい美しさの休息 ✨
 

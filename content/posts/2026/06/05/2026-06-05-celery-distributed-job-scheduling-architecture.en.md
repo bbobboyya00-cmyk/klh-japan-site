@@ -26,21 +26,21 @@ The scheduling functionality in Celery is designed to physically and logically s
 ```
 +-----------------------------------------------------------------+
 |                          Celery Beat                            |
-|  (スケジューラプロセス: スケジュールを監視し、タスク信号を送信) |
+|  (Scheduler Process: Monitor schedule and send task signals)    |
 +-------------------------------+---------------------------------+
                                 |
-                                | (タスクメッセージのパブリッシュ)
+                                | (Publish task message)
                                 v
 +-----------------------------------------------------------------+
 |                         Message Broker                          |
-|                    (Redis, RabbitMQ など)                       |
+|                    (Redis, RabbitMQ, etc.)                      |
 +-------------------------------+---------------------------------+
                                 |
-                                | (タスクメッセージのコンシューム)
+                                | (Consume task message)
                                 v
 +-----------------------------------------------------------------+
 |                         Celery Worker                           |
-|             (実際のタスクロジックを非同期で実行)                |
+|             (Actual task logic is performed asynchronously)     |
 +-----------------------------------------------------------------+
 ```
 
@@ -60,29 +60,28 @@ The scheduling functionality in Celery is designed to physically and logically s
 Celery flexibly supports everything from simple interval specifications in seconds to advanced Unix cron-compatible schedule specifications. Typical schedule configurations in production environments:
 
 
-
 ```python
 from celery import Celery
 from celery.schedules import crontab
 
-# Celeryアプリケーションの初期化
+# Celery application initialization
 app = Celery('tasks', broker='redis://localhost:6379/0')
 
-# スケジュール構成の定義
+# Defining the Scheduling Configuration
 app.conf.beat_schedule = {
-    # 例1: 毎週月曜日の午前9:00に週次レポートを生成・送信
+    # Example 1: Generate and send weekly reports every Monday at 9:00 a.m
     'send-weekly-report-monday-morning': {
         'task': 'tasks.send_weekly_report',
         'schedule': crontab(hour=9, minute=0, day_of_week=1),
         'args': (),
     },
-    # 例2: 毎日深夜0:00にデータベースのバックアップを実行
+    # Example 2: Backing Up the Database Every Day at 0:00 AM
     'daily-midnight-data-backup': {
         'task': 'tasks.execute_database_backup',
         'schedule': crontab(hour=0, minute=0),
         'args': (),
     },
-    # 例3: 15分（900秒）間隔で保留中のメールを送信
+    # Example 3: Send pending mail every 15 minutes (900 seconds)
     'periodic-email-dispatch': {
         'task': 'tasks.dispatch_pending_emails',
         'schedule': 900.0,
@@ -90,7 +89,7 @@ app.conf.beat_schedule = {
     },
 }
 
-# スケジュールのズレを防ぐためのタイムゾーン設定
+# Timezone settings to prevent scheduling deviations
 app.conf.timezone = 'Asia/Tokyo'
 ```
 
@@ -137,15 +136,14 @@ To prevent a large number of tasks from starting simultaneously, consider design
 💡 Define an appropriate retry policy to prepare for task failures caused by transient issues, such as temporary network interruptions or database timeouts. Introducing Exponential Backoff avoids concentrating load on downstream systems due to retries immediately after a failure.
 
 
-
 ```python
 @app.task(bind=True, max_retries=5, default_retry_delay=60)
 def execute_database_backup(self):
     try:
-        # バックアップ処理ロジックをここに記述
+        # Backup processing logic described here
         pass
     except Exception as exc:
-        # 失敗回数に応じてリトライ間隔を段階的に延長（60秒、120秒、180秒...）
+        # Gradually increase retry interval depending on number of failures (60 seconds, 120 seconds, 180 seconds...)
         raise self.retry(exc=exc, countdown=self.request.retries * 60)
 ```
 
@@ -158,7 +156,7 @@ When implementing periodic execution tasks, whether to adopt the OS standard `cr
 | Comparison Item | Celery Beat | System Cron (`cron`) |
 | :--- | :--- | :--- |
 | <b>Execution Model</b> | Asynchronous, execution via distributed task queues | Synchronous, execution via local system processes |
-| <b>Architecture</b> | Decoupled (Scheduler -&gt; Broker -&gt; Workers) | Tightly coupled (scheduling and execution occur on the same host) |
+| <b>Architecture</b> | Decoupled (Scheduler -> Broker -> Workers) | Tightly coupled (scheduling and execution occur on the same host) |
 | <b>Scalability</b> | High (tasks can be distributed to any worker in the cluster) | Dependent on resource limits of a single host |
 | <b>Suitable Use Cases</b> | Microservices, container environments, distributed systems | System maintenance within a single server, log rotation |
 | <b>Configuration Complexity</b> | Requires management of message brokers and dedicated processes | No additional infrastructure configuration required as it is an OS standard feature |
@@ -171,13 +169,15 @@ When implementing periodic execution tasks, whether to adopt the OS standard `cr
 
 
 * [ ] <b>Process Separation</b>: In production environments, are the scheduler (Beat) and worker (Worker) always started as separate processes (or containers)?
-  ```bash
-  # ワーカープロセスの起動
+
+ ```bash
+  # Starting the Worker Process
   celery -A tasks worker --loglevel=info
 
-  # スケジューラプロセスの起動（単一インスタンスで実行すること）
+  # Starting the Scheduler Process (to run in a single instance)
   celery -A tasks beat --loglevel=info
   ```
+  
 * [ ] <b>Timezone Alignment</b>: Is `app.conf.timezone` correctly configured and consistent with the database and OS timezones?
 * [ ] <b>Broker Connection Monitoring</b>: Is it configured to automatically reconnect in the event of a transient connection loss to the message broker (Redis/RabbitMQ)?
 * [ ] <b>Dead Letter Queue Consideration</b>: Is there a design in place to isolate repeatedly failing tasks and prevent them from blocking other periodic execution tasks?

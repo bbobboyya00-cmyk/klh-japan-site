@@ -113,7 +113,7 @@ while true; do
     ELAPSED_TIME=$((CURRENT_TIME - START_TIME));
     
     if [[ $ELAPSED_TIME -ge 60 ]]; then
-        echo "Error: Server did not start within 60 seconds." &gt;&amp;2;
+        echo "Error: Server did not start within 60 seconds." >&amp;2;
         exit 1;
     fi
     
@@ -121,7 +121,7 @@ while true; do
 done
 
 # Delete old container after startup confirmation
-docker rm -f app1_1 2&gt; /dev/null
+docker rm -f app1_1 2> /dev/null
 ```
 
 ## 5. Multi-layer Proxy Architecture: Integration of NPM and HAProxy

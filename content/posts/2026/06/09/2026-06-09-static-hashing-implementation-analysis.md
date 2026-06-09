@@ -44,7 +44,7 @@ int hash_division(int key, int m) {
 
 $$h(k) = \lfloor m(kA \pmod 1) \rfloor$$
 
-ここで $A$ は $0 &lt; A &lt; 1$ の定数であり、黄金比（$\approx 0.618033$）が頻繁に採用されます。
+ここで $A$ は $0 < A < 1$ の定数であり、黄金比（$\approx 0.618033$）が頻繁に採用されます。
 
 ### 2.3 折り畳み法 (Folding Method) と中間平方法 (Mid-Square Method)
 

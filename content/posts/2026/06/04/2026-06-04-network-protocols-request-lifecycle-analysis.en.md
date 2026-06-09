@@ -120,13 +120,13 @@ DNS is a distributed database system that translates human-readable domain names
 
 
 ```text
-[Client] ---&gt; (1) Local DNS Cache / Resolver
+[Client] ---> (1) Local DNS Cache / Resolver
                     |
-                    +---&gt; (2) Root DNS Server (.)
+                    +---> (2) Root DNS Server (.)
                     |
-                    +---&gt; (3) TLD DNS Server (.com)
+                    +---> (3) TLD DNS Server (.com)
                     |
-                    +---&gt; (4) Authoritative DNS Server (example.com)
+                    +---> (4) Authoritative DNS Server (example.com)
 ```
 
 ### 1. DNS Query Resolution Process
@@ -182,11 +182,11 @@ A proxy server is an intermediary server that relays communication between a cli
 ```text
 [Forward Proxy]
 [Client 1] --+
-[Client 2] --+--&gt; [Forward Proxy] ---&gt; [Internet] ---&gt; [Target Server]
+[Client 2] --+--> [Forward Proxy] ---> [Internet] ---> [Target Server]
 
 [Reverse Proxy]
-[Client] ---&gt; [Internet] ---&gt; [Reverse Proxy (Nginx)] ---&gt; [WAS 1]
-                                                      ---&gt; [WAS 2]
+[Client] ---> [Internet] ---> [Reverse Proxy (Nginx)] ---> [WAS 1]
+                                                      ---> [WAS 2]
 ```
 
 ### 1. Comparison of Forward Proxy and Reverse Proxy
@@ -256,12 +256,12 @@ Load balancers are components that distribute traffic across multiple servers to
 
 ```text
 [L4 Load Balancer]
-[Client] ---&gt; [L4 LB (IP/Port-based)] ---&gt; [Server A (10.0.0.1:80)]
-                                      ---&gt; [Server B (10.0.0.2:80)]
+[Client] ---> [L4 LB (IP/Port-based)] ---> [Server A (10.0.0.1:80)]
+                                      ---> [Server B (10.0.0.2:80)]
 
 [L7 Load Balancer]
-[Client] ---&gt; [L7 LB (URL/Header-based)] ---&gt; /api/users  ---&gt; [User Service]
-                                         ---&gt; /api/orders ---&gt; [Order Service]
+[Client] ---> [L7 LB (URL/Header-based)] ---> /api/users  ---> [User Service]
+                                         ---> /api/orders ---> [Order Service]
 ```
 
 ### 1. Technical Differences Between L4 and L7 Load Balancers
@@ -375,15 +375,15 @@ Traces the step-by-step flow of communication from when a user enters a URL in a
 
 
 ```text
-[Browser] --(1. DNS Query)--&gt; [DNS Server]
+[Browser] --(1. DNS Query)--> [DNS Server]
     |
 (2. TCP/QUIC Handshake &amp; HTTPS Request)
     v
-[L7 Load Balancer (ALB)] --(3. SSL Termination &amp; Route)--&gt; [Nginx (Reverse Proxy)]
+[L7 Load Balancer (ALB)] --(3. SSL Termination &amp; Route)--> [Nginx (Reverse Proxy)]
                                                                    |
                                                            (4. Forward Request)
                                                                    v
-[Database] &lt;--(6. SQL Query / Connection Pool)-- [WAS (Spring Boot / Node.js)]
+[Database] <--(6. SQL Query / Connection Pool)-- [WAS (Spring Boot / Node.js)]
 ```
 
 ### Step 1: Name Server Resolution (DNS Query)

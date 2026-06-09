@@ -47,7 +47,7 @@ Distinguishing between RUID and EUID is critical for analyzing SUID (Set-user-ID
 
 ```bash
 # Search for SUID binaries to identify privilege escalation risks
-find / -perm -4000 -type f 2&gt;/dev/null
+find / -perm -4000 -type f 2>/dev/null
 ```
 
 ## 3. Kernel-Level Isolation Techniques: Namespaces and cgroups

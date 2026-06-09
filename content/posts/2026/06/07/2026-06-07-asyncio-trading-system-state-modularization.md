@@ -109,7 +109,7 @@ class PositionManager:
     def calculate_position_size(self, atr, entry_price):
         risk_budget = self.total_capital * self.risk_ratio
         stop_loss_range = 2 * atr
-        if stop_loss_range &lt;= 0:
+        if stop_loss_range <= 0:
             return 0
         quantity = int(risk_budget / stop_loss_range)
         return quantity
@@ -233,25 +233,25 @@ class TrailingStopManager:
 
         atr = self.atr_provider.get_atr(symbol)
         
-        if current_price &gt; pos['highest_price']:
+        if current_price > pos['highest_price']:
             pos['highest_price'] = current_price
             new_stop_loss = current_price - (2 * atr)
-            if new_stop_loss &gt; pos['stop_loss']:
+            if new_stop_loss > pos['stop_loss']:
                 pos['stop_loss'] = new_stop_loss
                 logging.info(f"Trailing stop updated for {symbol} to {new_stop_loss}")
                 self.position_manager.save_positions()
 
-        if current_price &lt;= pos['stop_loss']:
+        if current_price <= pos['stop_loss']:
             logging.warning(f"Stop loss triggered for {symbol} at {current_price}")
             await self.order_executor.execute_order(symbol, "SELL", pos['quantity'], current_price)
             return
 
-        if pos['unit_count'] &lt; 4:
+        if pos['unit_count'] < 4:
             next_trigger = pos['entry_price'] + (pos['unit_count'] * 0.5 * atr)
-            if current_price &gt;= next_trigger:
+            if current_price >= next_trigger:
                 logging.info(f"Pyramidding triggered for {symbol} at {current_price}")
                 add_quantity = self.position_manager.calculate_position_size(atr, current_price)
-                if add_quantity &gt; 0:
+                if add_quantity > 0:
                     await self.order_executor.execute_order(symbol, "BUY", add_quantity, current_price)
 ```
 

@@ -97,7 +97,7 @@ while true; do
     ELAPSED_TIME=$((CURRENT_TIME - START_TIME));
     
     if [[ $ELAPSED_TIME -ge 60 ]]; then
-        echo "Error: Server did not start within 60 seconds." &gt;&amp;2;
+        echo "Error: Server did not start within 60 seconds." >&amp;2;
         exit 1;
     fi
     
@@ -105,7 +105,7 @@ while true; do
 done
 
 # 起動確認後に旧コンテナを削除
-docker rm -f app1_1 2&gt; /dev/null
+docker rm -f app1_1 2> /dev/null
 ```
 
 ## 5. 多層プロキシアーキテクチャ: NPMとHAProxyの連携

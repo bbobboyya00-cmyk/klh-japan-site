@@ -21,7 +21,7 @@ IPSが<code>drop</code>アクションを実行すると、クライアント側
 ```bash
 # /etc/snort/rules/local.rules
 # alertからdropへ変更し、IPSモードを有効化
-drop icmp any any -&gt; 10.10.11.10 any (msg: "ICMP ping Request Inline mode"; sid: 1000001;)
+drop icmp any any -> 10.10.11.10 any (msg: "ICMP ping Request Inline mode"; sid: 1000001;)
 
 # Snortの実行（インラインモード）
 snort -A console -q -u snort -g snort -c /etc/snort/snort.conf -Q
@@ -34,11 +34,11 @@ snort -A console -q -u snort -g snort -c /etc/snort/snort.conf -Q
 NAT（Network Address Translation）を経由する通信では、L3およびL4レイヤーでIPアドレスとポート番号の変換が行われます。<code>urllib3</code>の<code>HTTPConnectionPool</code>は、変換後の宛先IP（DIP）に対してコネクションを維持しますが、NATテーブルのタイムアウト設定とプールの<code>keep-alive</code>設定が不整合を起こすと、無効なコネクションがプールに残留し、通信エラーを誘発します。
 
 ```text
-[HTTP Request: 192.168.100.10 -&gt; 10.10.11.10]
+[HTTP Request: 192.168.100.10 -> 10.10.11.10]
 Before DNAT: |L3 SIP 192.168.100.1, DIP 192.168.100.10|L4 sport 5000, dport 80|
 After DNAT:  |L3 SIP 192.168.100.1, DIP 10.10.11.10|L4 sport 5000, dport 80|
 
-[HTTP Response: 10.10.11.10 -&gt; 192.168.100.10]
+[HTTP Response: 10.10.11.10 -> 192.168.100.10]
 Before SNAT: |L3 SIP 10.10.11.10, DIP 192.168.100.1|L4 sport 80, dport 5000|
 After SNAT:  |L3 SIP 192.168.100.10, DIP 192.168.100.1|L4 sport 80, dport 5000|
 ```
@@ -72,8 +72,8 @@ timeout=urllib3.Timeout(connect=2.0, read=5.0)
 
 ```bash
 # SQLインジェクション検知ルールの定義
-alert tcp any any -&gt; $HOME_NET 80 ( \
-msg: "&gt;&gt;&gt; WEB-Attack SQL injection attempt using UNION SELECT &lt;&lt;&lt;"; \
+alert tcp any any -> $HOME_NET 80 ( \
+msg: ">>> WEB-Attack SQL injection attempt using UNION SELECT <<<"; \
 flow:to_server,established; \
 content:"UNION"; nocase; http_uri; \
 content:"SELECT"; nocase; http_uri; \
@@ -82,6 +82,6 @@ sid:1000002; rev:1;)
 ```
 
 検知時のログ出力例：
-<code>06/30-12:33:42.766455 [<b>] [1:1000002:1] &gt;&gt;&gt; WEB-Attack SQL injection attempt using UNION SELECT &lt;&lt;&lt; [</b>] [Priority: 0] {TCP} 192.168.100.1:2508 -&gt; 10.10.11.10:80</code>
+<code>06/30-12:33:42.766455 [<b>] [1:1000002:1] >>> WEB-Attack SQL injection attempt using UNION SELECT <<< [</b>] [Priority: 0] {TCP} 192.168.100.1:2508 -> 10.10.11.10:80</code>
 
 インフラ側のIPS挙動とクライアント側の<code>urllib3</code>コネクション管理を同期させることで、異常トラフィック発生時も安定したシステム稼働が可能となります。技術的な整合性を確保することが、マイクロサービス全体の堅牢性を高める鍵となります。

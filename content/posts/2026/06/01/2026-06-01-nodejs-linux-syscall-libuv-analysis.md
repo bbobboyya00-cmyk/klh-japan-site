@@ -48,7 +48,7 @@ const reader = fs.createReadStream('./large.log', {
 highWaterMark: 64 * 1024 // 64KB単位でバッファリング
 });
 
-reader.on('data', (chunk) =&gt; {
+reader.on('data', (chunk) => {
 // チャンク単位で処理を行い、メモリ消費を抑制
 });
 ```
@@ -64,7 +64,7 @@ const canWrite = socket.write(data);
 
 if (!canWrite) {
 // バッファが飽和している場合、drainを待機してバックプレッシャーを制御
-socket.once('drain', () =&gt; {
+socket.once('drain', () => {
 console.log('Buffer drained, resuming writes...');
 });
 }

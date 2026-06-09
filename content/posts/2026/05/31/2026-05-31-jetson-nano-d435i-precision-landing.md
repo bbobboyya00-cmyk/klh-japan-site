@@ -93,8 +93,8 @@ TensorRT: export success, saved as best.engine (14.2 MB)
 ```python
 def get_filtered_depth(depth_frame, x, y, window_size=5):
 depth_roi = depth_frame[y-window_size:y+window_size, x-window_size:x+window_size]
-valid_depths = depth_roi[depth_roi &gt; 0]
-return np.mean(valid_depths) if len(valid_depths) &gt; 0 else 0
+valid_depths = depth_roi[depth_roi > 0]
+return np.mean(valid_depths) if len(valid_depths) > 0 else 0
 ```
 
 この座標データは、カメラの取り付け角度（ピッチ角）を考慮した回転行列を適用した後、MAVLink メッセージとしてパッキングされます。

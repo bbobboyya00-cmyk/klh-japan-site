@@ -298,7 +298,7 @@ Oracle RAC requires shared disks that can be read and written to simultaneously 
 
 ### 9.1. Adding Shared Disks to Node 1 (`ORA191`)
 
-1. Select "Add &gt; Hard Disk" from the configuration screen of `ORA191`.
+1. Select "Add > Hard Disk" from the configuration screen of `ORA191`.
 2. Select <b>SCSI</b> and allocate the required capacity.
 3. Open the "Advanced" properties of each added disk and check <b>Independent</b> and <b>Persistent</b>.
 
@@ -325,7 +325,7 @@ Add a second network adapter for the interconnect between nodes.
 
 
 
-1. Select "Add &gt; Network Adapter" from the settings of `ORA191`.
+1. Select "Add > Network Adapter" from the settings of `ORA191`.
 2. Set the network connection type to <b>Host-only</b>.
 3. Click "Generate" under "Advanced" to generate a unique MAC address.
 4. Perform the same steps for `ORA192` and ensure you regenerate the MAC address.
@@ -379,7 +379,7 @@ Partition the added shared disks on <b>Node 1 only</b>.
 
 ```bash
 fdisk /dev/sdb
-# n -&gt; p -&gt; 1 -&gt; default -&gt; default -&gt; w
+# n -> p -> 1 -> default -> default -> w
 ```
 
 ### 12.3. Creating ASM Disks (Node 1 Only)

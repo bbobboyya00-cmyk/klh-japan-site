@@ -140,7 +140,7 @@ Resolved by updating client-side libraries to the 2026 standard `valkey-py` or t
 
 ```bash
 # Dependency update
-uv add valkey&gt;=8.0.0
+uv add valkey>=8.0.0
 uv lock
 ```
 

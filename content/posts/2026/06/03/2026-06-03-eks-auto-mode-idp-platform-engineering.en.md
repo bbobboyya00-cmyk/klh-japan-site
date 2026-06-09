@@ -27,13 +27,13 @@ EKS Auto Mode is a managed service that adopts <b>Karpenter</b> as its core engi
 💡 <b>Key Technical Characteristics</b>
 
 
-・<b>JIT Provisioning</b>: Analyzes Pod CPU/memory requests, Node Selectors, Taints/Tolerations, and Topology Spread Constraints in real time to immediately launch the optimal EC2 instances.
+- <b>JIT Provisioning</b>: Analyzes Pod CPU/memory requests, Node Selectors, Taints/Tolerations, and Topology Spread Constraints in real time to immediately launch the optimal EC2 instances.
 
 
-・<b>Native Integration</b>: VPC CNI, EBS CSI, and ALB Controller are managed by default, eliminating the need for manual driver installation or patching.
+- <b>Native Integration</b>: VPC CNI, EBS CSI, and ALB Controller are managed by default, eliminating the need for manual driver installation or patching.
 
 
-・<b>Automated Maintenance</b>: OS patching and Kubernetes version upgrades are automated, significantly reducing operational overhead.
+- <b>Automated Maintenance</b>: OS patching and Kubernetes version upgrades are automated, significantly reducing operational overhead.
 
 
 
@@ -83,13 +83,13 @@ An IDP provides a "Golden Path" that allows developers to deploy applications wi
 Modern IDP architectures integrate and operate the following components:
 
 
-・<b>Backstage</b>: An open-source framework developed by Spotify that serves as an integrated interface for service catalogs, documentation, and CI/CD.
+- <b>Backstage</b>: An open-source framework developed by Spotify that serves as an integrated interface for service catalogs, documentation, and CI/CD.
 
 
-・<b>Argo CD</b>: Based on GitOps, it synchronizes cluster states using a Git repository as the Single Source of Truth (SSoT).
+- <b>Argo CD</b>: Based on GitOps, it synchronizes cluster states using a Git repository as the Single Source of Truth (SSoT).
 
 
-・<b>Crossplane</b>: Uses Kubernetes CRDs to declaratively provision AWS resources such as RDS and S3.
+- <b>Crossplane</b>: Uses Kubernetes CRDs to declaratively provision AWS resources such as RDS and S3.
 
 
 

@@ -36,7 +36,7 @@ Prometheusにおけるアラートルールは、YAML形式で定義されます
 
 ```yaml
 - alert: GpuHighTemperature
-  expr: gpu_temperature_celsius &gt; 80
+  expr: gpu_temperature_celsius > 80
   for: 5m
   labels:
     severity: warning
@@ -44,7 +44,7 @@ Prometheusにおけるアラートルールは、YAML形式で定義されます
   annotations:
     summary: "GPU temp on {{ $labels.host }}/{{ $labels.gpu }} = {{ $value }}°C"
     description: |
-      GPU {{ $labels.gpu }} on {{ $labels.host }} has been &gt; 80°C for 5 minutes.
+      GPU {{ $labels.gpu }} on {{ $labels.host }} has been > 80°C for 5 minutes.
       Threshold: 80°C / Critical: 85°C.
       Check: nvidia-smi -q -d TEMPERATURE
 ```
@@ -60,9 +60,9 @@ Prometheusにおけるアラートルールは、YAML形式で定義されます
 
 ```
                   [ expr がデータを返した時 ]
-  +------------+  --------------------&gt;  +------------+
+  +------------+  -------------------->  +------------+
   |  inactive  |                         |  pending   |
-  +------------+  &lt;--------------------  +------------+
+  +------------+  <--------------------  +------------+
         ^         [ expr の結果が空になった時 ]    |
         |                                      | [ 'for' で指定した時間が経過 ]
         |                                      v

@@ -97,7 +97,7 @@ nohup java -jar commerce-payment-application-0.0.1-SNAPSHOT.jar \
   --PROD_DB_URL=jdbc:mysql://[RDS_ENDPOINT]:3306/commerce_db \
   --PROD_DB_USERNAME=admin \
   --PROD_DB_PASSWORD=[PASSWORD_REDACTED] \
-  --PROD_JWT_SECRET=[SECRET_KEY_REDACTED] &gt; ~/app.log 2&gt;&amp;1 &amp;
+  --PROD_JWT_SECRET=[SECRET_KEY_REDACTED] > ~/app.log 2>&amp;1 &amp;
 ```
 
 ## 4. Docker CI/CD Pipeline Construction

@@ -75,9 +75,9 @@ jobs:
       - id: skip-eval
         run: |
           if [[ "${{ github.event.pull_request.title }}" =~ "\[ci skip\]" ]]; then
-            echo "should-skip=true" &gt;&gt; $GITHUB_OUTPUT
+            echo "should-skip=true" >> $GITHUB_OUTPUT
           else
-            echo "should-skip=false" &gt;&gt; $GITHUB_OUTPUT
+            echo "should-skip=false" >> $GITHUB_OUTPUT
           fi
 
   test:

@@ -43,7 +43,7 @@ To prevent data corruption, encode the Windows environment's kubeconfig file int
 Copy the outputted single-line long Base64 string.
 
 
-2. In the GitHub repository, go to "Settings" -&gt; "Secrets and variables" -&gt; "Actions", delete the existing `KUBE_CONFIG`, and register the copied Base64 string as the new value.
+2. In the GitHub repository, go to "Settings" -> "Secrets and variables" -> "Actions", delete the existing `KUBE_CONFIG`, and register the copied Base64 string as the new value.
 
 
 3. Modify the decoding process in the workflow file (`.github/workflows/docker-build.yml`) as follows:
@@ -54,7 +54,7 @@ Copy the outputted single-line long Base64 string.
       - name: Set kube config
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d &gt; ~/.kube/config
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
 ```
 
 ---
@@ -81,7 +81,7 @@ The standard GitHub Actions hosted runner (`runs-on: ubuntu-latest`) runs on a c
 To directly access resources within the local network, set up a <b><mark>Self-Hosted Runner</mark></b> on the local machine.
 
 
-1. In the GitHub repository, go to "Settings" -&gt; "Actions" -&gt; "Runners", select "New self-hosted runner", and specify "Windows" as the OS.
+1. In the GitHub repository, go to "Settings" -> "Actions" -> "Runners", select "New self-hosted runner", and specify "Windows" as the OS.
 
 
 2. Run the following commands in local PowerShell to download and extract the runner package:

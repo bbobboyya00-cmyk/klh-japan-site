@@ -90,7 +90,7 @@ def apply_skeletal_lock(pose_type):
         # 重心移動の許容範囲を定義
         cm_shift_limit = 0.15
         # アンカーポイントの拘束条件をプロンプトに注入
-        return f"[Skeletal Anchor: Fixed, CM_Shift: &lt;{cm_shift_limit}, No_Collapse: True]"
+        return f"[Skeletal Anchor: Fixed, CM_Shift: <{cm_shift_limit}, No_Collapse: True]"
     return "[Skeletal Anchor: Standard]"
 ```
 
@@ -105,8 +105,8 @@ Level 08（Spatiotemporal Layer）とLevel 09（Lighting）の同期について
 ./analyze_optics --input generated_sample_01.png --mode rembrandt-check
 
 # 出力結果
-# &gt; Shadow Density: 0.82 (Target: 0.80-0.85) - PASS
-# &gt; Light Angle: 45.2 deg (Target: 45.0 deg) - PASS
+# > Shadow Density: 0.82 (Target: 0.80-0.85) - PASS
+# > Light Angle: 45.2 deg (Target: 45.0 deg) - PASS
 ```
 
 また、Level 12（Post-Render Processing）において、キアロスクーロ（Chiaroscuro）の強度を0.0から1.0のスケールで制御するノードを最終段階に配置しました。これにより、フィルムグレインの重畳やカラーグレーディング（ティール＆オレンジ等）が、元のテクスチャを破壊することなく適用されるようになりました。
