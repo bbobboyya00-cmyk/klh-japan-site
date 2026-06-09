@@ -1,4 +1,71 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 07 Jun 2026 18:18:49 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>asyncioを用いたシステムトレードにおける状態管理とモジュール化の設計パターン</title><link>https://klifehack.com/p/asyncio-trading-system-state-modularization/</link><pubDate>Sun, 07 Jun 2026 18:18:49 +0900</pubDate><guid>https://klifehack.com/p/asyncio-trading-system-state-modularization/</guid><description>&lt;p&gt;Pythonの&lt;code&gt;asyncio&lt;/code&gt;フレームワークをベースに構築された自動システムトレードにおける、アーキテクチャの再設計とモジュール化について解説します。本システムは、Kiwoom Open API（RESTおよびWebSocketクライアントのハイブリッド）と連携し、システム的な取引戦略を実行するように設計されています。具体的には、ATR（Average True Range）のボラティリティに基づくポジションサイジング、マーク・ミネルヴィニ（Mark Minervini）のトレンドテンプレートに基づくエントリー、動的なピラミッディング、およびトレーリングストップを組み合わせたトレンドフォロー手法を実装します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 09 Jun 2026 18:24:03 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>静的ハッシュアルゴリズムの構造設計と衝突解決戦略の技術分析</title><link>https://klifehack.com/p/static-hashing-implementation-analysis/</link><pubDate>Tue, 09 Jun 2026 18:24:03 +0900</pubDate><guid>https://klifehack.com/p/static-hashing-implementation-analysis/</guid><description>&lt;p&gt;title: 静的ハッシュ法のアーキテクチャと実装仕様の分析
+meta_description: 静的ハッシュの基本構造、ハッシュ関数の設計、衝突解決戦略、および負荷係数に基づく性能評価について技術的視点から解説します。&lt;/p&gt;
+&lt;p&gt;ハッシュ法は、任意の長さのデータを固定長の数値にマッピングすることで、高速なデータ検索を実現する計算プロセスです。その中でも「静的ハッシュ（Static Hashing）」は、初期化時に決定された固定数のバケット（Bucket）を使用する手法を指します。本稿では、データベースインデックスやキャッシュシステム、メモリ管理の基盤となる静的ハッシュのアーキテクチャとその実装仕様について分析します。&lt;/p&gt;
+&lt;h2 id="1-静的ハッシュのアーキテクチャ構成"&gt;1. 静的ハッシュのアーキテクチャ構成
+&lt;/h2&gt;&lt;p&gt;静的ハッシュシステムは、主に以下の4つのコンポーネントで定義されます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ハッシュ関数 ($h$):&lt;/b&gt; 検索キー ($k$) をハッシュテーブル内の特定の物理アドレスに変換するアルゴリズム。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;バケット (Bucket):&lt;/b&gt; 1つ以上のレコードを格納できるストレージの単位。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;スロット (Slot):&lt;/b&gt; バケット内の細分化された領域。各スロットは1つのレコードまたはポインタを保持します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;アドレス範囲:&lt;/b&gt; ハッシュ関数によって生成されるインデックスの集合。通常、$0$ から $(m - 1)$ の範囲（$m$ は総バケット数）となります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-ハッシュ関数の設計手法"&gt;2. ハッシュ関数の設計手法
+&lt;/h2&gt;&lt;p&gt;システムの性能を維持するためには、計算効率が高く、キーを均等に分散させ、衝突（Collision）を最小限に抑えるハッシュ関数の選択が不可欠です。&lt;/p&gt;
+&lt;h3 id="21-除算方式-division-method"&gt;2.1 除算方式 (Division Method)
+&lt;/h3&gt;&lt;p&gt;最も一般的な手法であり、以下の数式で表されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// 除算方式の実装例
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;hash_division&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; key, &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; m) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; key &lt;span style="color:#f92672"&gt;%&lt;/span&gt; m;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この方式では、$m$ の選択が分布に大きく影響します。一般的に、2のべき乗に近い値を避け、&lt;b&gt;素数&lt;/b&gt;を $m$ に設定することで、より均一な分布が得られます。&lt;/p&gt;
+&lt;h3 id="22-乗算方式-multiplication-method"&gt;2.2 乗算方式 (Multiplication Method)
+&lt;/h3&gt;&lt;p&gt;キーの分布に対する依存度が低い手法です。&lt;/p&gt;
+&lt;p&gt;$$h(k) = \lfloor m(kA \pmod 1) \rfloor$$&lt;/p&gt;
+&lt;p&gt;ここで $A$ は $0 &amp;lt; A &amp;lt; 1$ の定数であり、黄金比（$\approx 0.618033$）が頻繁に採用されます。&lt;/p&gt;
+&lt;h3 id="23-折り畳み法-folding-method-と中間平方法-mid-square-method"&gt;2.3 折り畳み法 (Folding Method) と中間平方法 (Mid-Square Method)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;折り畳み法:&lt;/b&gt; キーを複数の部分に分割し、それらを加算してアドレスを生成します。境界折り畳み（Boundary Folding）では、一部のセグメントを反転させることでランダム性を高めます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;中間平方法:&lt;/b&gt; キーを2乗し、その結果の中間部分から $r$ ビットを抽出してアドレスとします。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-衝突解決戦略-collision-resolution"&gt;3. 衝突解決戦略 (Collision Resolution)
+&lt;/h2&gt;&lt;p&gt;異なるキーが同一のハッシュアドレスにマッピングされた場合、以下の戦略を用いて解決を図ります。&lt;/p&gt;
+&lt;h3 id="31-オープンアドレス法-open-addressing"&gt;3.1 オープンアドレス法 (Open Addressing)
+&lt;/h3&gt;&lt;p&gt;衝突が発生した際、テーブル内の別の空きスロットを探索する手法です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;線形探索 (Linear Probing):&lt;/b&gt; $h&amp;rsquo;(k, i) = (h(k) + i) \pmod m$。実装は容易ですが、連続したスロットが埋まる「一次クラスタリング」の問題が発生しやすくなります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;二次探索 (Quadratic Probing):&lt;/b&gt; $h&amp;rsquo;(k, i) = (h(k) + c_1i + c_2i^2) \pmod m$。一次クラスタリングを緩和しますが、二次クラスタリングの可能性があります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;二重ハッシュ (Double Hashing):&lt;/b&gt; $h&amp;rsquo;(k, i) = (h_1(k) + i \cdot h_2(k)) \pmod m$。2つ目のハッシュ関数を用いて探索ステップを決定するため、クラスタリングの抑制に最も効果的です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="32-チェイニング-chaining"&gt;3.2 チェイニング (Chaining)
+&lt;/h3&gt;&lt;p&gt;各バケットに連結リスト（Linked List）を保持し、衝突したレコードをリストに追加していく手法です。バケットのオーバーフローを自然に許容でき、削除操作の管理が比較的容易ですが、ポインタ保存用の追加メモリを必要とします。&lt;/p&gt;
+&lt;h2 id="4-性能指標と負荷係数-load-factor"&gt;4. 性能指標と負荷係数 (Load Factor)
+&lt;/h2&gt;&lt;p&gt;静的ハッシュの効率は、負荷係数 $\alpha = n/m$ （$n$: エントリ数、$m$: バケット数）によって評価されます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;時間計算量:&lt;/b&gt; 平均的には $O(1)$ ですが、衝突が頻発する最悪のケースでは $O(n)$ に劣化します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;推奨閾値:&lt;/b&gt; 一般的な運用環境では、$\alpha \le 0.7$ から $0.8$ を維持することが推奨されます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;検索コスト:&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;チェイニング: $1 + \alpha/2$&lt;/li&gt;
+&lt;li&gt;オープンアドレス法: $1/(1-\alpha)$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-実装上の留意点と制約"&gt;5. 実装上の留意点と制約
+&lt;/h2&gt;&lt;p&gt;静的ハッシュは、データ量が予測可能な環境で極めて高いパフォーマンスを発揮しますが、以下の制約が存在します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;スケーラビリティの欠如:&lt;/b&gt; バケット数が固定されているため、データ量の急激な増加に対応できません。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;リハッシュ (Rehashing) のコスト:&lt;/b&gt; ⚠️ テーブルが満杯に近づいた際、より大きなテーブルを再作成し、全キーを再配置する必要があります。これは計算負荷が高く、リアルタイムシステムにおいてレイテンシスパイクの原因となります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="実用例"&gt;実用例
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;MySQL MEMORYストレージエンジン:&lt;/b&gt; 等価検索に最適化されたハッシュインデックスとして利用。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Redis / Memcached:&lt;/b&gt; 高速なKey-Valueルックアップの基盤構造。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ネットワークルーティング:&lt;/b&gt; IPアドレスに基づく経路決定テーブルの低レイテンシ実装。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;p&gt;静的ハッシュを実装する際は、以下のガイドラインを考慮してください。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;初期サイズの選定:&lt;/b&gt; 🛠️ 予想されるデータ件数の &lt;b&gt;1.3倍から1.5倍&lt;/b&gt; のサイズを確保し、サイズには素数を使用してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;戦略の選択:&lt;/b&gt; メモリ効率を優先する場合は二重ハッシュ（オープンアドレス法）、メモリに余裕があり削除操作が多い場合はチェイニングを選択するのが一般的です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;高度な手法の検討:&lt;/b&gt; ルックアップの最悪値を $O(1)$ に抑える必要がある場合は Cuckoo Hashing、キャッシュ局所性を向上させる場合は Hopscotch Hashing などの検討が有効です。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>asyncioを用いたシステムトレードにおける状態管理とモジュール化の設計パターン</title><link>https://klifehack.com/p/asyncio-trading-system-state-modularization/</link><pubDate>Sun, 07 Jun 2026 18:18:49 +0900</pubDate><guid>https://klifehack.com/p/asyncio-trading-system-state-modularization/</guid><description>&lt;p&gt;Pythonの&lt;code&gt;asyncio&lt;/code&gt;フレームワークをベースに構築された自動システムトレードにおける、アーキテクチャの再設計とモジュール化について解説します。本システムは、Kiwoom Open API（RESTおよびWebSocketクライアントのハイブリッド）と連携し、システム的な取引戦略を実行するように設計されています。具体的には、ATR（Average True Range）のボラティリティに基づくポジションサイジング、マーク・ミネルヴィニ（Mark Minervini）のトレンドテンプレートに基づくエントリー、動的なピラミッディング、およびトレーリングストップを組み合わせたトレンドフォロー手法を実装します。&lt;/p&gt;
 &lt;h2 id="1-アーキテクチャの概要とリファクタリングの目的"&gt;1. アーキテクチャの概要とリファクタリングの目的
 &lt;/h2&gt;&lt;p&gt;従来の一体型（モノリシック）エンジンでは、注文執行、状態追跡、リスク管理、およびログ記録が密結合しており、保守性と拡張性に課題がありました。今回の再設計では、以下の4つの目的を達成するためにモジュール化を実施しました。&lt;/p&gt;
 &lt;p&gt;💡 &lt;b&gt;関心の分離（Decoupling of Concerns）&lt;/b&gt;: 各コンポーネントを疎結合なイベント駆動型アーキテクチャへ移行します。&lt;/p&gt;
