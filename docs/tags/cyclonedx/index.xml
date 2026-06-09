@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cyclonedx on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/cyclonedx/</link><description>Recent content in Cyclonedx on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 09 Jun 2026 14:11:57 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/cyclonedx/index.xml" rel="self" type="application/rss+xml"/><item><title>Genians ZTNAにおけるマイクロセグメンテーションとSBOMの実装アーキテクチャ分析</title><link>https://klifehack.com/p/genians-ztna-security-architecture-analysis/</link><pubDate>Tue, 09 Jun 2026 14:11:57 +0900</pubDate><guid>https://klifehack.com/p/genians-ztna-security-architecture-analysis/</guid><description>&lt;h2 id="600以上の条件に基づくマイクロセグメンテーション"&gt;600以上の条件に基づくマイクロセグメンテーション
+&lt;/h2&gt;&lt;p&gt;従来のZTNAソリューションの多くは、単純なロールベースのポリシーに依存していますが、Genians ZTNAはNAC（Network Access Control）の技術スタックを活用し、極めて粒度の高いノード分類を実現しています。境界型セキュリティの限界が露呈する中、VPNからZero Trust Network Accessへの移行において、この識別能力は極めて重要な要素となります。&lt;/p&gt;
+&lt;h3 id="分類マトリックスの構成要素"&gt;分類マトリックスの構成要素
+&lt;/h3&gt;&lt;p&gt;ノードグループの定義には、以下の4つのカテゴリにわたる600以上の条件が組み合わされます。これにより、静的な属性だけでなく、動的なコンテキストに基づいたアクセス制御が可能になります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ネットワーク識別子&lt;/b&gt;: IP/MACアドレス、オープンポート、トラフィックパターン&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;システムメタデータ&lt;/b&gt;: プラットフォームタイプ、システム情報、ノードタイプ、登録日&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;セキュリティポスチャ&lt;/b&gt;: アンチウイルス（AV）の状態、エージェントのヘルスチェック、パスワード設定、OSアップデート状況&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;コンテキストデータ&lt;/b&gt;: ユーザーアカウント、カスタムタグ、アプリケーション固有のデータ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらの条件を組み合わせることで、「最新のAVシグネチャを保持し、企業ドメインに参加しているWindows 11デバイスが、外部IPからアクセスしている場合のみ許可する」といった、多層的な条件分岐が論理的に構成されます。&lt;/p&gt;
+&lt;h3 id="二段階ポリシー構造complianceとpermission"&gt;二段階ポリシー構造：ComplianceとPermission
+&lt;/h3&gt;&lt;p&gt;アクセス制御は、以下の二段階の検証プロセスを経て実行されます。このアーキテクチャは、ホワイトリストベースの「Deny by Default」原則に基づいて動作し、明示的に許可されていないトラフィックはすべて遮断されます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Compliance Policy（コンプライアンスポリシー）&lt;/b&gt;: デバイスがアクセス権を検討される前に満たすべき最低限のセキュリティ基準（必須ソフトウェアのインストール、パッチ適用状況など）を定義します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Permission Policy（許可ポリシー）&lt;/b&gt;: コンプライアンスが確認された後、特定のサービス、アプリケーション、アクセス場所、および時間枠に対する具体的な権限を付与します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;policy_name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Secure_Remote_Access_v1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;compliance_criteria&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;os_version&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Windows 11 22H2+&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;antivirus&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Active&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;patch_level&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Critical_Only&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;agent_status&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Healthy&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;permission_rules&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;service&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Internal_ERP&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;access_method&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;SDP_Gateway&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;authentication&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;FIDO2_Passkey&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;ALLOW&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;default_action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;DENY&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="パスキー認証によるパスワードレス実装"&gt;パスキー認証によるパスワードレス実装
+&lt;/h2&gt;&lt;p&gt;フィッシング攻撃やパスワードの使い回しによるリスクを排除するため、Genians ZTNAはFIDO2/WebAuthn規格に準拠したパスキー認証を統合しています。これにより、認証プロセスの堅牢性が大幅に向上しています。&lt;/p&gt;
+&lt;h3 id="認証メカニズムとセキュリティ"&gt;認証メカニズムとセキュリティ
+&lt;/h3&gt;&lt;p&gt;パスキーは公開鍵暗号方式を採用しており、秘密鍵はユーザーのデバイス（スマートフォンやPC）内のセキュアエレメントに保管されます。サーバー側には公開鍵のみが保存されるため、サーバーからの認証情報漏洩リスクが構造的に排除されています。また、パスキーはドメインに紐付けられているため、フィッシングサイトでの誤用を防止する特性を持ちます。&lt;/p&gt;
+&lt;h3 id="運用シナリオ"&gt;運用シナリオ
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;管理者コンソール&lt;/b&gt;: 最も機密性の高い管理エンドポイントへのアクセスをパスキーで保護します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Captive Web Portal (CWP)&lt;/b&gt;: 一般ユーザーが内部リソースにアクセスする際のゲートウェイとして機能します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;マルチファクタ認証 (MFA)&lt;/b&gt;: SMSやメール認証と組み合わせたMFAの要素、あるいはプライマリ認証として柔軟に構成可能です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;デスクトップに生体認証ハードウェアがない場合、Bluetoothを介してスマートフォン（Android/Chrome, iPhone/Safari）をローミング認証器として使用するクロスデバイス認証もサポートされており、利便性とセキュリティの両立が図られています。&lt;/p&gt;
+&lt;h2 id="sbomによるソフトウェアサプライチェーンの透明性"&gt;SBOMによるソフトウェアサプライチェーンの透明性
+&lt;/h2&gt;&lt;p&gt;Log4jの脆弱性事案以降、ソフトウェア構成要素の可視化は不可欠な要件となりました。Genians ZTNAは、製品の全コンポーネントに対してSBOM（Software Bill of Materials）を提供し、サプライチェーンの透明性を確保しています。&lt;/p&gt;
+&lt;h3 id="標準フォーマットと生成プロセス"&gt;標準フォーマットと生成プロセス
+&lt;/h3&gt;&lt;p&gt;SBOMは、業界標準である&lt;b&gt;CycloneDX&lt;/b&gt;（OWASP）および&lt;b&gt;SPDX&lt;/b&gt;（Linux Foundation, ISO/IEC 5962:2021）フォーマットで提供されます。ビルド時に &lt;code&gt;Syft&lt;/code&gt; などのツールや言語固有のプラグインを使用して自動生成され、リリースパッケージごとに最新の構成リストが維持されます。&lt;/p&gt;
+&lt;h3 id="コンポーネント別の粒度"&gt;コンポーネント別の粒度
+&lt;/h3&gt;&lt;p&gt;監査の精度を高めるため、SBOMはモノリシックな1つのファイルではなく、コンポーネントごとに分割して提供されます。これにより、特定のライブラリにCVEが報告された際、該当するバージョンがどのコンポーネントに含まれているかを即座に特定できます。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;コンポーネント&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;フォーマット&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;生成ツール例&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Management Console (WebUI)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;CycloneDX&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;cyclonedx-npm&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Engine (centerd)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;CycloneDX&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;cyclonedx-gomod&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Agent (Windows/Linux/macOS)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;CycloneDX&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Syft&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="findings"&gt;Findings
+&lt;/h2&gt;&lt;p&gt;Genians ZTNAは、単なるアクセス制御の置き換えではなく、NACの深い可視性とFIDO2、SBOMといったモダンなセキュリティ規格を統合することで、ゼロトラストの概念を実務的な運用レベルへと昇華させています。特に、600以上の条件を組み合わせた動的なマイクロセグメンテーションは、ランサムウェアによるラテラルムーブメントを抑制する上で極めて有効な防御層を形成します。導入にあたっては、ポリシーサーバーへのドメイン割り当てなど、パスキーのドメインバインディング特性を考慮したネットワーク設計が重要となります。&lt;/p&gt;</description></item></channel></rss>

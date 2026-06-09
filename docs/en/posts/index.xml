@@ -1,4 +1,83 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 09 Jun 2026 10:06:48 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Performance Improvement and Automation for NAS-Google Drive Synchronization Using rclone</title><link>https://klifehack.com/en/p/rclone-gdrive-api-performance-optimization/</link><pubDate>Tue, 09 Jun 2026 10:06:48 +0900</pubDate><guid>https://klifehack.com/en/p/rclone-gdrive-api-performance-optimization/</guid><description>&lt;p&gt;In the synchronization operation between NAS and Google Drive (Google Workspace Shared Drive), a serious performance bottleneck was identified from operational data after the initial setup. This article describes the process of introducing a dedicated API key and optimizing the synchronization cycle to improve transfer speeds and eliminate synchronization delays.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 09 Jun 2026 14:11:58 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation Architecture Analysis of Micro-segmentation and SBOM in Genians ZTNA</title><link>https://klifehack.com/en/p/genians-ztna-security-architecture-analysis/</link><pubDate>Tue, 09 Jun 2026 14:11:58 +0900</pubDate><guid>https://klifehack.com/en/p/genians-ztna-security-architecture-analysis/</guid><description>&lt;h2 id="micro-segmentation-based-on-over-600-conditions"&gt;Micro-segmentation Based on Over 600 Conditions
+&lt;/h2&gt;&lt;p&gt;While many conventional ZTNA solutions rely on simple role-based policies, Genians ZTNA leverages the NAC (Network Access Control) technology stack to achieve extremely granular node classification. As the limitations of perimeter-based security are exposed, this identification capability becomes a critical factor in the transition from VPN to Zero Trust Network Access.&lt;/p&gt;
+&lt;h3 id="components-of-the-classification-matrix"&gt;Components of the Classification Matrix
+&lt;/h3&gt;&lt;p&gt;Node group definitions combine over 600 conditions across the following four categories. This enables access control based not only on static attributes but also on dynamic context.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Network Identifiers&lt;/b&gt;: IP/MAC addresses, open ports, traffic patterns&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;System Metadata&lt;/b&gt;: Platform type, system information, node type, registration date&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Security Posture&lt;/b&gt;: Anti-virus (AV) status, agent health checks, password settings, OS update status&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Context Data&lt;/b&gt;: User accounts, custom tags, application-specific data&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;By combining these conditions, multi-layered conditional branching is logically constructed, such as &amp;ldquo;Allow only if a Windows 11 device that maintains the latest AV signatures and is joined to the corporate domain is accessing from an external IP.&amp;rdquo;&lt;/p&gt;
+&lt;h3 id="two-stage-policy-structure-compliance-and-permission"&gt;Two-Stage Policy Structure: Compliance and Permission
+&lt;/h3&gt;&lt;p&gt;Access control is executed through the following two-stage verification process. This architecture operates based on the whitelist-based &amp;ldquo;Deny by Default&amp;rdquo; principle, where all traffic not explicitly permitted is blocked.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Compliance Policy&lt;/b&gt;: Defines the minimum security standards (installation of required software, patch status, etc.) that a device must meet before being considered for access rights.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Permission Policy&lt;/b&gt;: Grants specific permissions for particular services, applications, access locations, and timeframes after compliance is verified.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;policy_name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Secure_Remote_Access_v1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;compliance_criteria&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;os_version&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Windows 11 22H2+&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;antivirus&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Active&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;patch_level&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Critical_Only&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;agent_status&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Healthy&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;permission_rules&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;service&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Internal_ERP&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;access_method&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;SDP_Gateway&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;authentication&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;FIDO2_Passkey&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;ALLOW&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;default_action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;DENY&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="passwordless-implementation-via-passkey-authentication"&gt;Passwordless Implementation via Passkey Authentication
+&lt;/h2&gt;&lt;p&gt;To eliminate risks from phishing attacks and password reuse, Genians ZTNA integrates passkey authentication compliant with FIDO2/WebAuthn standards. This significantly enhances the robustness of the authentication process.&lt;/p&gt;
+&lt;h3 id="authentication-mechanism-and-security"&gt;Authentication Mechanism and Security
+&lt;/h3&gt;&lt;p&gt;Passkeys utilize public-key cryptography, where the private key is stored in a secure element within the user&amp;rsquo;s device (smartphone or PC). Since only the public key is stored on the server side, the risk of credential leakage from the server is structurally eliminated. Furthermore, because passkeys are bound to domains, they possess characteristics that prevent misuse on phishing sites.&lt;/p&gt;
+&lt;h3 id="operational-scenarios"&gt;Operational Scenarios
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Administrator Console&lt;/b&gt;: Protects access to the most sensitive management endpoints with passkeys.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Captive Web Portal (CWP)&lt;/b&gt;: Functions as a gateway when general users access internal resources.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Multi-factor Authentication (MFA)&lt;/b&gt;: Can be flexibly configured as an MFA factor combined with SMS or email authentication, or as primary authentication.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If desktop hardware lacks biometric authentication, cross-device authentication is also supported, allowing smartphones (Android/Chrome, iPhone/Safari) to be used as roaming authenticators via Bluetooth, balancing convenience and security.&lt;/p&gt;
+&lt;h2 id="software-supply-chain-transparency-via-sbom"&gt;Software Supply Chain Transparency via SBOM
+&lt;/h2&gt;&lt;p&gt;Since the Log4j vulnerability incident, visibility into software components has become an indispensable requirement. Genians ZTNA provides an SBOM (Software Bill of Materials) for all product components to ensure supply chain transparency.&lt;/p&gt;
+&lt;h3 id="standard-formats-and-generation-process"&gt;Standard Formats and Generation Process
+&lt;/h3&gt;&lt;p&gt;SBOMs are provided in industry-standard &lt;b&gt;CycloneDX&lt;/b&gt; (OWASP) and &lt;b&gt;SPDX&lt;/b&gt; (Linux Foundation, ISO/IEC 5962:2021) formats. They are automatically generated at build time using tools such as &lt;code&gt;Syft&lt;/code&gt; or language-specific plugins, maintaining an up-to-date configuration list for each release package.&lt;/p&gt;
+&lt;h3 id="granularity-by-component"&gt;Granularity by Component
+&lt;/h3&gt;&lt;p&gt;To improve audit precision, the SBOM is provided separately for each component rather than as a single monolithic file. This allows for immediate identification of which component contains a specific library version when a CVE is reported.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Component&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Format&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Example Generation Tools&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Management Console (WebUI)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;CycloneDX&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;cyclonedx-npm&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Engine (centerd)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;CycloneDX&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;cyclonedx-gomod&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Agent (Windows/Linux/macOS)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;CycloneDX&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Syft&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="findings"&gt;Findings
+&lt;/h2&gt;&lt;p&gt;Genians ZTNA is not merely a replacement for access control; it elevates the concept of Zero Trust to a practical operational level by integrating deep NAC visibility with modern security standards like FIDO2 and SBOM. In particular, dynamic micro-segmentation combining over 600 conditions forms an extremely effective defense layer for suppressing lateral movement by ransomware. During implementation, network design considering the domain binding characteristics of passkeys, such as domain assignment to the policy server, is crucial.&lt;/p&gt;</description></item><item><title>Implementation of Performance Improvement and Automation for NAS-Google Drive Synchronization Using rclone</title><link>https://klifehack.com/en/p/rclone-gdrive-api-performance-optimization/</link><pubDate>Tue, 09 Jun 2026 10:06:48 +0900</pubDate><guid>https://klifehack.com/en/p/rclone-gdrive-api-performance-optimization/</guid><description>&lt;p&gt;In the synchronization operation between NAS and Google Drive (Google Workspace Shared Drive), a serious performance bottleneck was identified from operational data after the initial setup. This article describes the process of introducing a dedicated API key and optimizing the synchronization cycle to improve transfer speeds and eliminate synchronization delays.&lt;/p&gt;
 &lt;h2 id="1-current-status-analysis-and-issue-identification"&gt;1. Current Status Analysis and Issue Identification
 &lt;/h2&gt;&lt;p&gt;As a result of conducting an operational test for approximately two weeks in an environment synchronizing 1.1 TB of ipTIME NAS data to Google Drive, the following two constraints were identified.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Stagnant Transfer Speeds&lt;/b&gt;: Despite being in a gigabit network environment, the speed during rclone copy execution hovered around 1 MB/s to 3 MB/s. Especially in directories containing tens of thousands of small files, it took a significant amount of time to complete synchronization.&lt;/p&gt;
