@@ -47,38 +47,41 @@ Connection issues between the Docker Engine and the desktop environment may prev
 The primary cause of "Permission Denied" when executing docker image push is the absence of the account namespace in the image tag. Without a namespace, Docker Engine interprets the upload as being to the root public namespace and rejects it due to insufficient permissions. To resolve this, re-tagging must be performed in the following format:
 
 
-
+```bash
 # Example of re-tagging and pushing an image
 docker tag local-image:latest $dockerId/repository-name:latest
 docker push $dockerId/repository-name:latest
+```
 
 ## Building Private Registries and Security Constraints
 
 In closed network environments or highly confidential projects, building a proprietary private registry is necessary. Registry containers are deployed with the following parameters:
 
 
-
+```bash
 # Command to start the private registry
 docker run -d \
   -p 5000:5000 \
   --restart always \
   --name registry \
   registry:2
+```
 
 The --restart always flag is essential for ensuring the registry service continues after host or engine restarts. Additionally, Docker Engine enforces HTTPS communication by default; however, if a local registry operates over HTTP, communication errors will occur. In this case, the following configuration must be added to daemon.json to explicitly allow it as an insecure registry.
 
 
-
+```json
 {
   "insecure-registries": ["127.0.0.1:5000"]
 }
+```
 
 ## Optimization via Multi-Stage Builds
 
 Multi-stage builds are effective for preventing image bloat and improving security. By separating the compilation environment from the execution environment, unnecessary build tools and intermediate dependencies are excluded from the final image.
 
 
-
+```dockerfile
 # Multi-stage build configuration example
 FROM golang:1.21-alpine AS builder
 WORKDIR /app
@@ -89,6 +92,7 @@ FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/main .
 CMD ["./main"]
+```
 
 This approach significantly reduces image size, improves network transfer speeds, and minimizes the attack surface.
 
@@ -107,7 +111,7 @@ While Docker containers are inherently stateless, the following mechanisms shoul
 In distributed applications, docker-compose is the standard method for centrally managing multiple container stacks. Compose automatically creates an internal network and provides built-in DNS.
 
 
-
+```yaml
 version: '3.8'
 services:
   web:
@@ -122,7 +126,7 @@ services:
       POSTGRES_PASSWORD: example_password
 
 By executing nslookup db from within a container, you can verify that name resolution is possible via the service name rather than a volatile IP address. This abstraction serves as the foundation for scalability in microservices architecture (MSA).
-
+```
 
 
 ## Findings

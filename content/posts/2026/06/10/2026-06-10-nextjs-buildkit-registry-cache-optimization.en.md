@@ -48,11 +48,13 @@ By setting output: 'standalone' in next.config.js, Next.js traces and outputs on
 
 
 
+```javascript
 // next.config.js
 module.exports = {
   output: 'standalone',
   // ...other configurations
 }
+```
 
 The Dockerfile was transitioned to a multi-stage build configuration to copy only the standalone directory and static assets (public and .next/static) into the runner stage. This reduced the final container image size from over 2.5 GB to approximately 400 MB, significantly shortening image push times and Cloud Run cold start durations.
 
@@ -73,7 +75,7 @@ To utilize layer caching in Cloud Build's clean VM environment, Kaniko was initi
 The final solution involved adopting the docker-container driver of docker buildx and the type=registry cache, utilizing Artifact Registry as the cache storage. Specifying mode=max ensures all build layers, including intermediate layers, are cached.
 
 
-
+```yaml
 # cloudbuild.yaml snippet
 steps:
   - name: 'gcr.io/cloud-builders/docker'
@@ -89,6 +91,8 @@ steps:
           --cache-to=type=registry,ref=asia-northeast1-docker.pkg.dev/$PROJECT_ID/cache/app:latest,mode=max \
           --push \
           -t asia-northeast1-docker.pkg.dev/$PROJECT_ID/repo/app:$COMMIT_SHA .
+```
+
 
 Implementation requires the docker-container driver to explicitly handle credentials, as it does not automatically inherit host credential helpers. A temporary access token is retrieved from the Google Cloud metadata server to perform a docker login inside the container. Bash variables within the Cloud Build YAML must be escaped with double dollar signs ($$ACCESS_TOKEN) to avoid conflicts with substitution parameters.
 
