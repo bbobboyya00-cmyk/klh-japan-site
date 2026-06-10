@@ -18,40 +18,34 @@
 &lt;/h3&gt;&lt;p&gt;Unused @sentry/nextjs and @module-federation/nextjs-mf were removed. Sentry, in particular, was generating and uploading global source maps during the build, imposing a heavy load. The SophiProvider component, which dynamically imported obsolete remote modules, was also eliminated. Regarding build scripts, the redundant tsc step was removed since next build performs type checking internally. Static analysis (Lint) was moved to the commit stage to simplify the build pipeline.&lt;/p&gt;
 &lt;h3 id="23-applying-nextjs-standalone-and-multi-stage-builds"&gt;2.3 Applying Next.js Standalone and Multi-Stage Builds
 &lt;/h3&gt;&lt;p&gt;By setting output: &amp;lsquo;standalone&amp;rsquo; in next.config.js, Next.js traces and outputs only the minimal set of files required for production.&lt;/p&gt;
-&lt;p&gt;// next.config.js
-module.exports = {
-output: &amp;lsquo;standalone&amp;rsquo;,
-// &amp;hellip;other configurations
-}&lt;/p&gt;
-&lt;p&gt;The Dockerfile was transitioned to a multi-stage build configuration to copy only the standalone directory and static assets (public and .next/static) into the runner stage. This reduced the final container image size from over 2.5 GB to approximately 400 MB, significantly shortening image push times and Cloud Run cold start durations.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// next.config.js
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;module&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;exports&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;output&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;standalone&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// ...other configurations
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Dockerfile was transitioned to a multi-stage build configuration to copy only the standalone directory and static assets (public and .next/static) into the runner stage. This reduced the final container image size from over 2.5 GB to approximately 400 MB, significantly shortening image push times and Cloud Run cold start durations.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="3-attempted-kaniko-integration-and-failure-due-to-out-of-memory-oom-phase-2"&gt;3. Attempted Kaniko Integration and Failure Due to Out of Memory (OOM) (Phase 2)
 &lt;/h2&gt;&lt;p&gt;To utilize layer caching in Cloud Build&amp;rsquo;s clean VM environment, Kaniko was initially introduced to generate and store cache inside the container image. However, Kaniko loads filesystem snapshots into memory to calculate differences. In an environment with 2.5 GB of node_modules, it exceeded the 8 GB memory limit of the E2_HIGHCPU_8 machine, resulting in an Exit 137 (OOM) error. Although the build eventually succeeded using memory-reduction flags like &amp;ndash;compressed-caching=false and &amp;ndash;snapshot-mode=redo, the process took 9 minutes 12.8 seconds due to snapshot overhead. This led to the decision to migrate to Docker Buildx.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="4-introducing-docker-buildx-and-registry-cache-phase-3"&gt;4. Introducing Docker Buildx and Registry Cache (Phase 3)
 &lt;/h2&gt;&lt;p&gt;The final solution involved adopting the docker-container driver of docker buildx and the type=registry cache, utilizing Artifact Registry as the cache storage. Specifying mode=max ensures all build layers, including intermediate layers, are cached.&lt;/p&gt;
-&lt;h1 id="cloudbuildyaml-snippet"&gt;cloudbuild.yaml snippet
-&lt;/h1&gt;&lt;p&gt;steps:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;name: &amp;lsquo;gcr.io/cloud-builders/docker&amp;rsquo;
-entrypoint: &amp;lsquo;bash&amp;rsquo;
-args:
-&lt;ul&gt;
-&lt;li&gt;&amp;lsquo;-c&amp;rsquo;&lt;/li&gt;
-&lt;li&gt;|
-docker buildx create &amp;ndash;use &amp;ndash;driver docker-container
-ACCESS_TOKEN=$(gcloud auth print-access-token)
-docker login -u oauth2accesstoken -p $$ACCESS_TOKEN &lt;a class="link" href="https://asia-northeast1-docker.pkg.dev" target="_blank" rel="noopener"
- &gt;https://asia-northeast1-docker.pkg.dev&lt;/a&gt;
-docker buildx build &lt;br&gt;
-&amp;ndash;cache-from=type=registry,ref=asia-northeast1-docker.pkg.dev/$PROJECT_ID/cache/app:latest &lt;br&gt;
-&amp;ndash;cache-to=type=registry,ref=asia-northeast1-docker.pkg.dev/$PROJECT_ID/cache/app:latest,mode=max &lt;br&gt;
-&amp;ndash;push &lt;br&gt;
--t asia-northeast1-docker.pkg.dev/$PROJECT_ID/repo/app:$COMMIT_SHA .&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Implementation requires the docker-container driver to explicitly handle credentials, as it does not automatically inherit host credential helpers. A temporary access token is retrieved from the Google Cloud metadata server to perform a docker login inside the container. Bash variables within the Cloud Build YAML must be escaped with double dollar signs ($$ACCESS_TOKEN) to avoid conflicts with substitution parameters.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# cloudbuild.yaml snippet&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;gcr.io/cloud-builders/docker&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;entrypoint&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;bash&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;-c&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker buildx create --use --driver docker-container
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ACCESS_TOKEN=$(gcloud auth print-access-token)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker login -u oauth2accesstoken -p $$ACCESS_TOKEN https://asia-northeast1-docker.pkg.dev
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker buildx build \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --cache-from=type=registry,ref=asia-northeast1-docker.pkg.dev/$PROJECT_ID/cache/app:latest \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --cache-to=type=registry,ref=asia-northeast1-docker.pkg.dev/$PROJECT_ID/cache/app:latest,mode=max \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --push \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -t asia-northeast1-docker.pkg.dev/$PROJECT_ID/repo/app:$COMMIT_SHA .&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Implementation requires the docker-container driver to explicitly handle credentials, as it does not automatically inherit host credential helpers. A temporary access token is retrieved from the Google Cloud metadata server to perform a docker login inside the container. Bash variables within the Cloud Build YAML must be escaped with double dollar signs ($$ACCESS_TOKEN) to avoid conflicts with substitution parameters.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="5-implementation-results-and-performance-verification"&gt;5. Implementation Results and Performance Verification
 &lt;/h2&gt;&lt;p&gt;The transition of build times across the optimization phases is summarized below:&lt;/p&gt;
