@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Data-Persistence on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/data-persistence/</link><description>Recent content in Data-Persistence on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 10 Jun 2026 10:06:47 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/data-persistence/index.xml" rel="self" type="application/rss+xml"/><item><title>Technical Considerations for Docker Image Lifecycle Management and Multi-Container Configurations</title><link>https://klifehack.com/en/p/docker-image-orchestration-and-persistence/</link><pubDate>Wed, 10 Jun 2026 10:06:47 +0900</pubDate><guid>https://klifehack.com/en/p/docker-image-orchestration-and-persistence/</guid><description>&lt;h1 id="designing-and-operating-docker-infrastructure-in-production-environments-from-image-management-to-orchestration"&gt;Designing and Operating Docker Infrastructure in Production Environments: From Image Management to Orchestration
+&lt;/h1&gt;&lt;p&gt;The core of container operations lies not merely in process isolation, but in how consistently image distribution, data persistence, and orchestration between multiple containers are designed. This article analyzes the components of Docker infrastructure for production environments from a practical perspective.&lt;/p&gt;
+&lt;h2 id="docker-image-identification-structure-and-reference-protocols"&gt;Docker Image Identification Structure and Reference Protocols
+&lt;/h2&gt;&lt;p&gt;Docker images are identified not by a single name, but by a strict addressing system that defines their origin, ownership, and version. The structure of an image reference consists of the following elements:&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Registry Domain&lt;/b&gt;: The network address of the registry server where the image is hosted. If omitted, Docker Hub is the default.
+&lt;b&gt;Repository (Account)&lt;/b&gt;: The namespace belonging to the image creator, organization, or project.
+&lt;b&gt;Image Name&lt;/b&gt;: The specific identifier for the application or service.
+&lt;b&gt;Tag&lt;/b&gt;: An identifier defining the version or a specific variant (defaults to latest).&lt;/p&gt;
+&lt;p&gt;Deficiencies in this coordinate system are direct causes of upload failures during the distribution phase and inconsistencies in CI/CD pipelines.&lt;/p&gt;
+&lt;h2 id="authentication-and-troubleshooting-in-registry-distribution"&gt;Authentication and Troubleshooting in Registry Distribution
+&lt;/h2&gt;&lt;p&gt;When distributing locally built images to public registries, the authentication protocol and the order of tagging are critical.&lt;/p&gt;
+&lt;h3 id="avoiding-authentication-errors"&gt;Avoiding Authentication Errors
+&lt;/h3&gt;&lt;p&gt;Connection issues between the Docker Engine and the desktop environment may prevent standard terminal logins. In such cases, it is necessary to verify credentials using a web-based authentication flow and confirm &amp;ldquo;Login Succeeded.&amp;rdquo; To maintain workflow consistency, it is recommended to manage account identifiers as variables (e.g., $dockerId).&lt;/p&gt;
+&lt;h3 id="resolving-push-permission-errors-permission-denied"&gt;Resolving Push Permission Errors (Permission Denied)
+&lt;/h3&gt;&lt;p&gt;The primary cause of &amp;ldquo;Permission Denied&amp;rdquo; when executing docker image push is the absence of the account namespace in the image tag. Without a namespace, Docker Engine interprets the upload as being to the root public namespace and rejects it due to insufficient permissions. To resolve this, re-tagging must be performed in the following format:&lt;/p&gt;
+&lt;h1 id="example-of-re-tagging-and-pushing-an-image"&gt;Example of re-tagging and pushing an image
+&lt;/h1&gt;&lt;p&gt;docker tag local-image:latest $dockerId/repository-name:latest
+docker push $dockerId/repository-name:latest&lt;/p&gt;
+&lt;h2 id="building-private-registries-and-security-constraints"&gt;Building Private Registries and Security Constraints
+&lt;/h2&gt;&lt;p&gt;In closed network environments or highly confidential projects, building a proprietary private registry is necessary. Registry containers are deployed with the following parameters:&lt;/p&gt;
+&lt;h1 id="command-to-start-the-private-registry"&gt;Command to start the private registry
+&lt;/h1&gt;&lt;p&gt;docker run -d &lt;br&gt;
+-p 5000:5000 &lt;br&gt;
+&amp;ndash;restart always &lt;br&gt;
+&amp;ndash;name registry &lt;br&gt;
+registry:2&lt;/p&gt;
+&lt;p&gt;The &amp;ndash;restart always flag is essential for ensuring the registry service continues after host or engine restarts. Additionally, Docker Engine enforces HTTPS communication by default; however, if a local registry operates over HTTP, communication errors will occur. In this case, the following configuration must be added to daemon.json to explicitly allow it as an insecure registry.&lt;/p&gt;
+&lt;p&gt;{
+&amp;ldquo;insecure-registries&amp;rdquo;: [&amp;ldquo;127.0.0.1:5000&amp;rdquo;]
+}&lt;/p&gt;
+&lt;h2 id="optimization-via-multi-stage-builds"&gt;Optimization via Multi-Stage Builds
+&lt;/h2&gt;&lt;p&gt;Multi-stage builds are effective for preventing image bloat and improving security. By separating the compilation environment from the execution environment, unnecessary build tools and intermediate dependencies are excluded from the final image.&lt;/p&gt;
+&lt;h1 id="multi-stage-build-configuration-example"&gt;Multi-stage build configuration example
+&lt;/h1&gt;&lt;p&gt;FROM golang:1.21-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN go build -o main .&lt;/p&gt;
+&lt;p&gt;FROM alpine:latest
+WORKDIR /root/
+COPY &amp;ndash;from=builder /app/main .
+CMD [&amp;quot;./main&amp;quot;]&lt;/p&gt;
+&lt;p&gt;This approach significantly reduces image size, improves network transfer speeds, and minimizes the attack surface.&lt;/p&gt;
+&lt;h2 id="data-persistence-choosing-between-volumes-and-bind-mounts"&gt;Data Persistence: Choosing Between Volumes and Bind Mounts
+&lt;/h2&gt;&lt;p&gt;While Docker containers are inherently stateless, the following mechanisms should be selected when data persistence is required:&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Docker Volume&lt;/b&gt;: Managed by the Docker Engine and abstracted from the host file system. It offers high data integrity and portability, making it suitable for storing database files and logs.
+&lt;b&gt;Bind Mount&lt;/b&gt;: Directly mounts a specific path from the host OS into the container. It is used for real-time source code synchronization (hot reloading) in development environments.&lt;/p&gt;
+&lt;h2 id="service-discovery-with-docker-compose"&gt;Service Discovery with Docker Compose
+&lt;/h2&gt;&lt;p&gt;In distributed applications, docker-compose is the standard method for centrally managing multiple container stacks. Compose automatically creates an internal network and provides built-in DNS.&lt;/p&gt;
+&lt;p&gt;version: &amp;lsquo;3.8&amp;rsquo;
+services:
+web:
+build: .
+ports:
+- &amp;ldquo;8080:80&amp;rdquo;
+depends_on:
+- db
+db:
+image: postgres:15-alpine
+environment:
+POSTGRES_PASSWORD: example_password&lt;/p&gt;
+&lt;p&gt;By executing nslookup db from within a container, you can verify that name resolution is possible via the service name rather than a volatile IP address. This abstraction serves as the foundation for scalability in microservices architecture (MSA).&lt;/p&gt;
+&lt;h2 id="findings"&gt;Findings
+&lt;/h2&gt;&lt;p&gt;In building container infrastructure, image registries, persistent volumes, and orchestration via Compose are three interdependent pillars. By combining efficiency through multi-stage builds with network design leveraging service discovery, it is possible to construct a robust and highly scalable cloud-native operational foundation.&lt;/p&gt;</description></item></channel></rss>
