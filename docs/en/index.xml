@@ -1,4 +1,179 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 10 Jun 2026 14:07:51 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Speeding Up Next.js 14 Deployment Pipelines and Resolving Bottlenecks with BuildKit Registry Cache</title><link>https://klifehack.com/en/p/nextjs-buildkit-registry-cache-optimization/</link><pubDate>Wed, 10 Jun 2026 14:07:51 +0900</pubDate><guid>https://klifehack.com/en/p/nextjs-buildkit-registry-cache-optimization/</guid><description>&lt;h1 id="nextjs-14--cloud-run-build-optimization-process-of-reducing-build-time-from-12-to-4-minutes"&gt;Next.js 14 + Cloud Run Build Optimization: Process of Reducing Build Time from 12 to 4 Minutes
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 10 Jun 2026 18:54:12 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Migration to a Stateless JWT Authentication Infrastructure in Spring Boot and React</title><link>https://klifehack.com/en/p/spring-boot-react-jwt-migration-guide/</link><pubDate>Wed, 10 Jun 2026 18:54:12 +0900</pubDate><guid>https://klifehack.com/en/p/spring-boot-react-jwt-migration-guide/</guid><description>&lt;h1 id="building-a-scalable-authentication-infrastructure-in-modern-web-applications-migration-strategy-from-session-based-to-jwt"&gt;Building a Scalable Authentication Infrastructure in Modern Web Applications: Migration Strategy from Session-Based to JWT
+&lt;/h1&gt;&lt;p&gt;In the scalability of modern web applications, the authentication and authorization architecture is a critical pillar that goes beyond mere security requirements to dictate system availability and operational stability. In a decoupled architecture combining a Spring Boot REST API and a React SPA (Single Page Application), strategies for authentication state management, token expiration, and silent refresh directly impact system resilience.&lt;/p&gt;
+&lt;p&gt;This article describes the technical details of the process undertaken by CORNERSTONE (cornerstone.io.kr) to migrate from a traditional stateful server-side session model to a stateless JWT model utilizing dual-token rotation (Access/Refresh Token).&lt;/p&gt;
+&lt;h2 id="challenges-of-the-existing-session-based-architecture"&gt;Challenges of the Existing Session-Based Architecture
+&lt;/h2&gt;&lt;p&gt;The system prior to migration relied on standard Spring Boot session management. As traffic increased, the following operational bottlenecks became apparent:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Operational load of session clustering&lt;/b&gt;: Horizontal scaling required the management of sticky sessions or distributed session stores via Redis, increasing infrastructure complexity.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Authentication inconsistency during deployment&lt;/b&gt;: During instance termination due to rolling updates or auto-scaling, users were unexpectedly logged out due to session synchronization delays.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Inconsistent error handling&lt;/b&gt;: The backend would sometimes return 302 redirects or 500 errors upon authentication failure, making it difficult for the SPA to programmatically distinguish between expiration and server errors.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To resolve these issues, the decision was made to migrate to a stateless JWT architecture based on priorities of reliability, security, operational convenience, and development velocity.&lt;/p&gt;
+&lt;h2 id="target-architecture-and-security-policy"&gt;Target Architecture and Security Policy
+&lt;/h2&gt;&lt;p&gt;The designed JWT authentication infrastructure is based on token separation, secure storage, and a standardized error contract.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Token Type&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Expiration&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Storage Location&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Transmission Mechanism&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Access Token&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;15 minutes&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Client Memory (React)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Authorization Header (Bearer)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;Refresh Token&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;14 days&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;HttpOnly, Secure, SameSite=Lax Cookie&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Cookie Header (Automatic)&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="key-security-policies"&gt;Key Security Policies
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Access Token&lt;/b&gt;: To prevent token theft via XSS attacks, it is not stored in &lt;code&gt;localStorage&lt;/code&gt; but held only in memory.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Refresh Token&lt;/b&gt;: The &lt;code&gt;HttpOnly&lt;/code&gt; attribute is applied to block access from JavaScript, and the &lt;code&gt;Secure&lt;/code&gt; attribute is applied to allow only HTTPS communication.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Authorization Model&lt;/b&gt;: Role-Based Access Control (RBAC) is adopted, and by including roles as claims in the JWT payload, authorization checks can be performed without database lookups.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="backend-implementation-spring-boot"&gt;Backend Implementation: Spring Boot
+&lt;/h2&gt;&lt;p&gt;A stateless verification process is realized through the configuration of a &lt;code&gt;JwtAuthenticationFilter&lt;/code&gt; that extracts the token from the Authorization header for every request and validates the signature and expiration.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; io.cornerstone.security.jwt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.FilterChain;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.ServletException;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.http.HttpServletRequest;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.http.HttpServletResponse;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; lombok.RequiredArgsConstructor;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.core.Authentication;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.core.context.SecurityContextHolder;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.stereotype.Component;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.util.StringUtils;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.web.filter.OncePerRequestFilter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.io.IOException;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Component&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@RequiredArgsConstructor&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;JwtAuthenticationFilter&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;extends&lt;/span&gt; OncePerRequestFilter {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; JwtTokenProvider jwtTokenProvider;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;static&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; String AUTHORIZATION_HEADER &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Authorization&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;static&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; String BEARER_PREFIX &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Bearer &amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Override&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;protected&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;doFilterInternal&lt;/span&gt;(HttpServletRequest request, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; HttpServletResponse response, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; FilterChain filterChain) &lt;span style="color:#66d9ef"&gt;throws&lt;/span&gt; ServletException, IOException {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; String token &lt;span style="color:#f92672"&gt;=&lt;/span&gt; resolveAccessToken(request);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (StringUtils.&lt;span style="color:#a6e22e"&gt;hasText&lt;/span&gt;(token) &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp; jwtTokenProvider.&lt;span style="color:#a6e22e"&gt;validateAccessToken&lt;/span&gt;(token)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Authentication authentication &lt;span style="color:#f92672"&gt;=&lt;/span&gt; jwtTokenProvider.&lt;span style="color:#a6e22e"&gt;getAuthentication&lt;/span&gt;(token);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SecurityContextHolder.&lt;span style="color:#a6e22e"&gt;getContext&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;setAuthentication&lt;/span&gt;(authentication);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; filterChain.&lt;span style="color:#a6e22e"&gt;doFilter&lt;/span&gt;(request, response);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;resolveAccessToken&lt;/span&gt;(HttpServletRequest request) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; String bearerToken &lt;span style="color:#f92672"&gt;=&lt;/span&gt; request.&lt;span style="color:#a6e22e"&gt;getHeader&lt;/span&gt;(AUTHORIZATION_HEADER);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (StringUtils.&lt;span style="color:#a6e22e"&gt;hasText&lt;/span&gt;(bearerToken) &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp; bearerToken.&lt;span style="color:#a6e22e"&gt;startsWith&lt;/span&gt;(BEARER_PREFIX)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; bearerToken.&lt;span style="color:#a6e22e"&gt;substring&lt;/span&gt;(BEARER_PREFIX.&lt;span style="color:#a6e22e"&gt;length&lt;/span&gt;());
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="frontend-implementation-concurrent-request-control-via-axios-interceptors"&gt;Frontend Implementation: Concurrent Request Control via Axios Interceptors
+&lt;/h2&gt;&lt;p&gt;To prevent a &amp;ldquo;refresh storm&amp;rdquo; where multiple API requests simultaneously trigger 401 errors when a token expires, a queuing mechanism was built to temporarily hold subsequent requests and execute them in bulk after token reissue.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;axios&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;axios&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;api&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;axios&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;create&lt;/span&gt;({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;baseURL&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;https://api.cornerstone.io.kr&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;withCredentials&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;let&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;isRefreshing&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;let&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;failedQueue&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;processQueue&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;token&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;failedQueue&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;forEach&lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;prom&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;prom&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;reject&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;prom&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;resolve&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;failedQueue&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;api&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;interceptors&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;response&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;use&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;response&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;response&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;originalRequest&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;config&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;response&lt;/span&gt;&lt;span style="color:#f92672"&gt;?&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;status&lt;/span&gt; &lt;span style="color:#f92672"&gt;===&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;401&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;amp&lt;/span&gt;;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;amp&lt;/span&gt;; &lt;span style="color:#f92672"&gt;!&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;originalRequest&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;_retry&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;isRefreshing&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Promise((&lt;span style="color:#a6e22e"&gt;resolve&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;reject&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;failedQueue&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;push&lt;/span&gt;({ &lt;span style="color:#a6e22e"&gt;resolve&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;reject&lt;/span&gt; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;then&lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;originalRequest&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;headers&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Authorization&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`Bearer &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;token&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;api&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;originalRequest&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; Promise.&lt;span style="color:#a6e22e"&gt;reject&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;originalRequest&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;_retry&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;isRefreshing&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Promise((&lt;span style="color:#a6e22e"&gt;resolve&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;reject&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;axios&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;post&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;https://api.cornerstone.io.kr/auth/refresh&amp;#39;&lt;/span&gt;, {}, { &lt;span style="color:#a6e22e"&gt;withCredentials&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;then&lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;res&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;newAccessToken&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;res&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;accessToken&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Update the in-memory token store
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;originalRequest&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;headers&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Authorization&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`Bearer &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;newAccessToken&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;processQueue&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;newAccessToken&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;resolve&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;api&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;originalRequest&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;processQueue&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; window.&lt;span style="color:#a6e22e"&gt;location&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;href&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;/login?expired=true&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;reject&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt;(() &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;isRefreshing&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; Promise.&lt;span style="color:#a6e22e"&gt;reject&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-troubleshooting-and-edge-cases"&gt;Operational Troubleshooting and Edge Cases
+&lt;/h2&gt;&lt;h3 id="1-client-and-server-clock-synchronization-clock-skew"&gt;1. Client and Server Clock Synchronization (Clock Skew)
+&lt;/h3&gt;&lt;p&gt;Validating the JWT &lt;code&gt;exp&lt;/code&gt; claim on the client side posed a risk of infinite redirects due to discrepancies in device time settings. To avoid this, client-side pre-validation was abolished, and the design was changed to trigger only on 401 responses from the server. Additionally, a 60-second leeway (allowable error) was set on the server side to account for network latency.&lt;/p&gt;
+&lt;h3 id="2-authentication-state-sync-across-multiple-tabs"&gt;2. Authentication State Sync Across Multiple Tabs
+&lt;/h3&gt;&lt;p&gt;There was an issue where if a logout occurred in one tab, other tabs would continue to hold the old in-memory token. To solve this, logic was implemented to synchronize the authentication state across browser tabs using the &lt;code&gt;StorageEvent&lt;/code&gt; API.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;window.&lt;span style="color:#a6e22e"&gt;addEventListener&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;storage&amp;#39;&lt;/span&gt;, (&lt;span style="color:#a6e22e"&gt;event&lt;/span&gt;) &lt;span style="color:#f92672"&gt;=&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;gt&lt;/span&gt;; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;event&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;key&lt;/span&gt; &lt;span style="color:#f92672"&gt;===&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;cornerstone_logout_event&amp;#39;&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Clear in-memory tokens and redirect
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; window.&lt;span style="color:#a6e22e"&gt;location&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;href&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;/login?expired=true&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-metric-improvement-results"&gt;Operational Metric Improvement Results
+&lt;/h2&gt;&lt;p&gt;Based on observation data for 90 days post-migration, significant improvements were confirmed in both infrastructure stability and user experience.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Authentication-related support tickets&lt;/b&gt;: Decreased from a monthly average of 32 to 11 (-65.6%)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Peak authentication failure rate&lt;/b&gt;: Improved from 3.1% to 0.9% (-2.2%p)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Average token reissue latency&lt;/b&gt;: Reduced from 240ms to 130ms (-45.8%)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;In migrating from stateful sessions to stateless JWT, the most important factor is not the choice of technology itself, but the formulation of a consistent policy regarding token storage, expiration, and error handling. In particular, considering edge cases such as refresh storms caused by concurrent requests and client-side clock synchronization discrepancies during the design phase is essential for stable operation in production environments. At CORNERSTONE, by establishing a strict API contract between the frontend and backend, we were able to build a scalable and fault-tolerant authentication infrastructure.&lt;/p&gt;</description></item><item><title>Speeding Up Next.js 14 Deployment Pipelines and Resolving Bottlenecks with BuildKit Registry Cache</title><link>https://klifehack.com/en/p/nextjs-buildkit-registry-cache-optimization/</link><pubDate>Wed, 10 Jun 2026 14:07:51 +0900</pubDate><guid>https://klifehack.com/en/p/nextjs-buildkit-registry-cache-optimization/</guid><description>&lt;h1 id="nextjs-14--cloud-run-build-optimization-process-of-reducing-build-time-from-12-to-4-minutes"&gt;Next.js 14 + Cloud Run Build Optimization: Process of Reducing Build Time from 12 to 4 Minutes
 &lt;/h1&gt;&lt;p&gt;In the pipeline for deploying a Next.js 14 application to Google Cloud Run, a significant bottleneck occurred where the build time exceeded 12 minutes, despite the source code size being only 5.4 MB. This technical log details the optimization methods used to reduce the build time from 12 minutes 7.2 seconds to 4 minutes 23.5 seconds—approximately a 64% reduction—by correcting .dockerignore syntax, removing unnecessary dependencies, implementing Next.js standalone output, and migrating from Kaniko to Docker Buildx with Registry Cache.&lt;/p&gt;
 &lt;h2 id="1-analysis-of-the-factors-behind-the-12-minute-build-bottleneck"&gt;1. Analysis of the Factors Behind the 12-Minute Build Bottleneck
 &lt;/h2&gt;&lt;p&gt;The target project is a Next.js application consisting of approximately 60 pages. An audit of the Cloud Build logs, Dockerfile, and cloudbuild.yaml identified the following six factors contributing to the delay:&lt;/p&gt;
