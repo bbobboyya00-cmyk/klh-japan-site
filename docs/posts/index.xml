@@ -1,4 +1,100 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 10 Jun 2026 10:06:46 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Dockerイメージのライフサイクル管理とマルチコンテナ構成の技術的考察</title><link>https://klifehack.com/p/docker-image-orchestration-and-persistence/</link><pubDate>Wed, 10 Jun 2026 10:06:46 +0900</pubDate><guid>https://klifehack.com/p/docker-image-orchestration-and-persistence/</guid><description>&lt;h1 id="プロダクション環境におけるdockerインフラの設計と運用イメージ管理からオーケストレーションまで"&gt;プロダクション環境におけるDockerインフラの設計と運用：イメージ管理からオーケストレーションまで
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 10 Jun 2026 14:07:51 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>BuildKitレジストリキャッシュによるNext.js 14デプロイパイプラインの高速化とボトルネック解消</title><link>https://klifehack.com/p/nextjs-buildkit-registry-cache-optimization/</link><pubDate>Wed, 10 Jun 2026 14:07:51 +0900</pubDate><guid>https://klifehack.com/p/nextjs-buildkit-registry-cache-optimization/</guid><description>&lt;h1 id="nextjs-14--cloud-run-ビルド最適化12分から4分への短縮プロセス"&gt;Next.js 14 + Cloud Run ビルド最適化：12分から4分への短縮プロセス
+&lt;/h1&gt;&lt;p&gt;Next.js 14アプリケーションをGoogle Cloud Runへデプロイするパイプラインにおいて、ソースコード自体は5.4MB程度であるにもかかわらず、ビルド時間が12分を超過する深刻なボトルネックが発生しました。本稿では、.dockerignoreの構文修正、不要な依存関係の整理、Next.jsのstandalone出力の適用、そしてKanikoからDocker Buildx（Registry Cache）への移行プロセスを通じて、ビルド時間を12分7.2秒から4分23.5秒（約64%削減）へと短縮した最適化手法について記述します。&lt;/p&gt;
+&lt;h2 id="1-12分におよぶビルドボトルの要因分析"&gt;1. 12分におよぶビルドボトルの要因分析
+&lt;/h2&gt;&lt;p&gt;対象プロジェクトは、約60ページで構成されるNext.jsアプリケーションです。Cloud Buildのログ、Dockerfile、およびcloudbuild.yamlを監査した結果、以下の6つの要因が特定されました。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;無効な.dockerignore&lt;/b&gt;: 構文の誤りにより、ローカルの巨大なディレクトリがビルドコンテキストに含まれていました。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;未使用の依存関係&lt;/b&gt;: ビルド時に不要な外部モジュール（SentryやModule Federation関連）が動作し、処理を遅延させていました。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;重複したビルドロジック&lt;/b&gt;: tscによる型チェックとnext build内部の型チェックが重複して実行されていました。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;最適化されていない出力フォーマット&lt;/b&gt;: Next.jsのstandaloneモードが有効化されていませんでした。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ランナーステージの肥大化&lt;/b&gt;: 最終的なDockerイメージに開発用モジュールや不要なnode_modulesが混入していました。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;レイヤーキャッシュの欠如&lt;/b&gt;: Cloud BuildのエフェメラルなVM環境において、ビルドごとのレイヤーキャッシュが機能していませんでした。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="2-基本的な最適化フェーズ1"&gt;2. 基本的な最適化（フェーズ1）
+&lt;/h2&gt;&lt;h3 id="21-dockerignoreの修正によるコンテキスト削減"&gt;2.1 .dockerignoreの修正によるコンテキスト削減
+&lt;/h3&gt;&lt;p&gt;初期の.dockerignoreでは、Markdownのエスケープ構文（例: *~, *.md）が混入しており、Dockerが標準的なグロブパターンとして解釈できていませんでした。さらに、node_modulesや.next/cacheが除外対象から漏れていました。これにより、毎回のビルドで約2.5GBのnode_modulesと約909MBの.next/cacheがビルドコンテキストとしてアップロードされていました。標準的なGit構文に準拠した.dockerignoreへ書き換えることで、ビルドコンテキストのサイズを3.6GBから数MBへと削減し、アップロードに伴うオーバーヘッドを解消しました。&lt;/p&gt;
+&lt;h3 id="22-依存関係とビルドスクリプトの整理"&gt;2.2 依存関係とビルドスクリプトの整理
+&lt;/h3&gt;&lt;p&gt;使用されていなかった@sentry/nextjsおよび@module-federation/nextjs-mfを依存関係から削除しました。特にSentryは、ビルド時にグローバルソースマップを生成・アップロードする処理を実行しており、これが大きな負荷となっていました。また、すでに使用されていなかったリモートモジュールを動的インポートしていたSophiProviderコンポーネントを排除しました。&lt;/p&gt;
+&lt;p&gt;ビルドスクリプトについては、next buildが内部で型チェックを実行するため、事前のtscを削除しました。静的解析（Lint）はコミット時に実行する運用へ移行し、ビルドプロセスを簡素化しました。&lt;/p&gt;
+&lt;h3 id="23-nextjs-standaloneとマルチステージビルドの適用"&gt;2.3 Next.js Standaloneとマルチステージビルドの適用
+&lt;/h3&gt;&lt;p&gt;next.config.jsにoutput: &amp;lsquo;standalone&amp;rsquo;を設定することで、Next.jsは本番稼働に必要な最小限のファイル群のみをトレースして出力します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// next.config.js
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;module&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;exports&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;output&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;standalone&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// ...other configurations
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Dockerfileをマルチステージビルド構成に変更し、ランナーステージにはこのstandaloneディレクトリと静的アセット（publicおよび.next/static）のみをコピーするように設計しました。これにより、最終的なコンテナイメージサイズは2.5GB以上から約400MBへと縮小され、イメージのプッシュ時間およびCloud Runのコールドスタート時間が大幅に短縮されました。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="3-kaniko導入の試みとメモリ不足oomによる失敗フェーズ2"&gt;3. Kaniko導入の試みとメモリ不足（OOM）による失敗（フェーズ2）
+&lt;/h2&gt;&lt;p&gt;Cloud BuildのクリーンなVM環境でレイヤーキャッシュを活用するため、コンテナイメージ内でキャッシュを生成・保存できるKanikoの導入を試みました。しかし、Kanikoはファイルシステムのスナップショットをメモリ上に展開して差分を計算する特性があるため、2.5GB規模のnode_modulesが存在する環境では、Cloud BuildのE2_HIGHCPU_8マシン（メモリ8GB）の制限を超過し、OOM（Out Of Memory）によりプロセスが強制終了（Exit 137）しました。&lt;/p&gt;
+&lt;p&gt;&amp;ndash;compressed-caching=falseや&amp;ndash;snapshot-mode=redoなどのメモリ削減フラグを適用することでビルド自体は成功したものの、スナップショット処理のオーバーヘッドにより9分12.8秒を要しました。Kanikoのアーキテクチャ特性上、巨大な依存関係を持つプロジェクトでの高速化には限界があると判断し、Docker Buildxへの移行を決定しました。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="4-docker-buildxとregistry-cacheの導入フェーズ3"&gt;4. Docker BuildxとRegistry Cacheの導入（フェーズ3）
+&lt;/h2&gt;&lt;p&gt;最終的な解決策として、docker buildxのdocker-containerドライバーと、Artifact Registryをキャッシュストレージとして利用するtype=registryキャッシュを採用しました。mode=maxを指定することで、最終イメージに含まれない中間レイヤーも含めて、すべてのビルドレイヤーをレジストリにキャッシュします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# cloudbuild.yaml snippet&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;gcr.io/cloud-builders/docker&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;entrypoint&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;bash&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;-c&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker buildx create --use --driver docker-container
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ACCESS_TOKEN=$(gcloud auth print-access-token)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker login -u oauth2accesstoken -p $$ACCESS_TOKEN https://asia-northeast1-docker.pkg.dev
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker buildx build \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --cache-from=type=registry,ref=asia-northeast1-docker.pkg.dev/$PROJECT_ID/cache/app:latest \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --cache-to=type=registry,ref=asia-northeast1-docker.pkg.dev/$PROJECT_ID/cache/app:latest,mode=max \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --push \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -t asia-northeast1-docker.pkg.dev/$PROJECT_ID/repo/app:$COMMIT_SHA .&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実装における重要な注意点として、docker-containerドライバーはホストの認証ヘルパーを自動的には継承しません。そのため、Google Cloudのメタデータサーバーから一時的なアクセストークンを直接取得し、コンテナ内で明示的にdocker loginを実行する必要があります。また、Cloud BuildのYAML内でBashの変数を使用する場合、置換パラメータとの競合を防ぐため、$$ACCESS_TOKENのようにダブルドル記号でエスケープする必要があります。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="5-導入効果とパフォーマンス検証"&gt;5. 導入効果とパフォーマンス検証
+&lt;/h2&gt;&lt;p&gt;各フェーズにおけるビルド時間の推移は以下の通りです。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;ビルド構成&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;総ビルド時間&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;ステータス&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;初期状態 (標準 Docker Build)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;12分 7.2秒&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;成功 (キャッシュなし)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Kaniko (初期適用)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;N/A&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;失敗 (Exit 137 - OOM)&lt;/b&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Kaniko (メモリ削減フラグ適用)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;9分 12.8秒&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;成功&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Buildx (初回 - キャッシュ生成時)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;6分 41.5秒&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;成功&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Buildx (2回目以降 - キャッシュヒット時)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;4分 23.5秒&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;成功 (初期比 -64%)&lt;/b&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Buildxとレジストリキャッシュの組み合わせにより、ビルド時間を約8分短縮しました。パッケージの追加や削除が発生した場合でも、キャッシュが無効化されるのは依存関係のインストールレイヤーのみであり、Kanikoのようなスナップショット処理に伴う全体的な遅延は発生しません。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;ビルドコンテキストの厳密な管理&lt;/b&gt;: .dockerignoreの記述ミスは、数ギガバイト単位の不要なデータ転送を引き起こし、CI/CD全体のパフォーマンスを著しく低下させます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;キャッシュエンジンの選定&lt;/b&gt;: エフェメラルなビルド環境においては、ファイルシステム全体のスナップショットをメモリ上で処理するツールよりも、BuildKit（Buildx）によるレイヤーベースのレジストリキャッシュの方が、メモリ効率および実行速度の面で優れています。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;今後の課題&lt;/b&gt;: さらなる高速化に向けて、ビルド間で.next/cacheを永続化し、Next.jsの増分コンパイル（Incremental Compilation）を有効化する仕組みの導入を検討します。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Dockerイメージのライフサイクル管理とマルチコンテナ構成の技術的考察</title><link>https://klifehack.com/p/docker-image-orchestration-and-persistence/</link><pubDate>Wed, 10 Jun 2026 10:06:46 +0900</pubDate><guid>https://klifehack.com/p/docker-image-orchestration-and-persistence/</guid><description>&lt;h1 id="プロダクション環境におけるdockerインフラの設計と運用イメージ管理からオーケストレーションまで"&gt;プロダクション環境におけるDockerインフラの設計と運用：イメージ管理からオーケストレーションまで
 &lt;/h1&gt;&lt;p&gt;コンテナ運用の核心は、単なるプロセスの隔離ではなく、イメージの配布、データの永続化、そして複数コンテナ間のオーケストレーションをいかに整合性を持って設計するかにあります。本稿では、プロダクション環境を見据えたDockerインフラの構成要素について、実務的な観点から分析します。&lt;/p&gt;
 &lt;h2 id="dockerイメージの識別構造と参照プロトコル"&gt;Dockerイメージの識別構造と参照プロトコル
 &lt;/h2&gt;&lt;p&gt;Dockerイメージは、単一の名称ではなく、そのオリジン、所有権、およびバージョンを定義する厳密なアドレス体系によって識別されます。イメージ参照の構造は以下の要素で構成されます。&lt;/p&gt;

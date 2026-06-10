@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker-Buildx on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/docker-buildx/</link><description>Recent content in Docker-Buildx on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 10 Jun 2026 14:07:51 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/docker-buildx/index.xml" rel="self" type="application/rss+xml"/><item><title>Speeding Up Next.js 14 Deployment Pipelines and Resolving Bottlenecks with BuildKit Registry Cache</title><link>https://klifehack.com/en/p/nextjs-buildkit-registry-cache-optimization/</link><pubDate>Wed, 10 Jun 2026 14:07:51 +0900</pubDate><guid>https://klifehack.com/en/p/nextjs-buildkit-registry-cache-optimization/</guid><description>&lt;h1 id="nextjs-14--cloud-run-build-optimization-process-of-reducing-build-time-from-12-to-4-minutes"&gt;Next.js 14 + Cloud Run Build Optimization: Process of Reducing Build Time from 12 to 4 Minutes
+&lt;/h1&gt;&lt;p&gt;In the pipeline for deploying a Next.js 14 application to Google Cloud Run, a significant bottleneck occurred where the build time exceeded 12 minutes, despite the source code size being only 5.4 MB. This technical log details the optimization methods used to reduce the build time from 12 minutes 7.2 seconds to 4 minutes 23.5 seconds—approximately a 64% reduction—by correcting .dockerignore syntax, removing unnecessary dependencies, implementing Next.js standalone output, and migrating from Kaniko to Docker Buildx with Registry Cache.&lt;/p&gt;
+&lt;h2 id="1-analysis-of-the-factors-behind-the-12-minute-build-bottleneck"&gt;1. Analysis of the Factors Behind the 12-Minute Build Bottleneck
+&lt;/h2&gt;&lt;p&gt;The target project is a Next.js application consisting of approximately 60 pages. An audit of the Cloud Build logs, Dockerfile, and cloudbuild.yaml identified the following six factors contributing to the delay:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Invalid .dockerignore&lt;/b&gt;: Syntax errors caused large local directories to be included in the build context.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Unused Dependencies&lt;/b&gt;: Unnecessary external modules related to Sentry and Module Federation were processed during the build.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Duplicate Build Logic&lt;/b&gt;: Type checking via tsc and internal type checking during next build were executed redundantly.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Unoptimized Output Format&lt;/b&gt;: Next.js standalone mode was not enabled.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Bloated Runner Stage&lt;/b&gt;: Development modules and unnecessary node_modules were included in the final Docker image.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Lack of Layer Cache&lt;/b&gt;: Per-build layer caching was not functioning within the ephemeral VM environment of Cloud Build.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="2-basic-optimization-phase-1"&gt;2. Basic Optimization (Phase 1)
+&lt;/h2&gt;&lt;h3 id="21-reducing-context-by-correcting-dockerignore"&gt;2.1 Reducing Context by Correcting .dockerignore
+&lt;/h3&gt;&lt;p&gt;In the initial .dockerignore, Markdown escape syntax (e.g., *~, *.md) was incorrectly used, preventing Docker from interpreting them as standard glob patterns. Furthermore, node_modules and .next/cache were not excluded. Consequently, approximately 2.5 GB of node_modules and 909 MB of .next/cache were uploaded as the build context in every cycle. Rewriting the .dockerignore to comply with standard Git syntax reduced the build context size from 3.6 GB to a few megabytes, eliminating the upload overhead.&lt;/p&gt;
+&lt;h3 id="22-cleaning-up-dependencies-and-build-scripts"&gt;2.2 Cleaning Up Dependencies and Build Scripts
+&lt;/h3&gt;&lt;p&gt;Unused @sentry/nextjs and @module-federation/nextjs-mf were removed. Sentry, in particular, was generating and uploading global source maps during the build, imposing a heavy load. The SophiProvider component, which dynamically imported obsolete remote modules, was also eliminated. Regarding build scripts, the redundant tsc step was removed since next build performs type checking internally. Static analysis (Lint) was moved to the commit stage to simplify the build pipeline.&lt;/p&gt;
+&lt;h3 id="23-applying-nextjs-standalone-and-multi-stage-builds"&gt;2.3 Applying Next.js Standalone and Multi-Stage Builds
+&lt;/h3&gt;&lt;p&gt;By setting output: &amp;lsquo;standalone&amp;rsquo; in next.config.js, Next.js traces and outputs only the minimal set of files required for production.&lt;/p&gt;
+&lt;p&gt;// next.config.js
+module.exports = {
+output: &amp;lsquo;standalone&amp;rsquo;,
+// &amp;hellip;other configurations
+}&lt;/p&gt;
+&lt;p&gt;The Dockerfile was transitioned to a multi-stage build configuration to copy only the standalone directory and static assets (public and .next/static) into the runner stage. This reduced the final container image size from over 2.5 GB to approximately 400 MB, significantly shortening image push times and Cloud Run cold start durations.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="3-attempted-kaniko-integration-and-failure-due-to-out-of-memory-oom-phase-2"&gt;3. Attempted Kaniko Integration and Failure Due to Out of Memory (OOM) (Phase 2)
+&lt;/h2&gt;&lt;p&gt;To utilize layer caching in Cloud Build&amp;rsquo;s clean VM environment, Kaniko was initially introduced to generate and store cache inside the container image. However, Kaniko loads filesystem snapshots into memory to calculate differences. In an environment with 2.5 GB of node_modules, it exceeded the 8 GB memory limit of the E2_HIGHCPU_8 machine, resulting in an Exit 137 (OOM) error. Although the build eventually succeeded using memory-reduction flags like &amp;ndash;compressed-caching=false and &amp;ndash;snapshot-mode=redo, the process took 9 minutes 12.8 seconds due to snapshot overhead. This led to the decision to migrate to Docker Buildx.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="4-introducing-docker-buildx-and-registry-cache-phase-3"&gt;4. Introducing Docker Buildx and Registry Cache (Phase 3)
+&lt;/h2&gt;&lt;p&gt;The final solution involved adopting the docker-container driver of docker buildx and the type=registry cache, utilizing Artifact Registry as the cache storage. Specifying mode=max ensures all build layers, including intermediate layers, are cached.&lt;/p&gt;
+&lt;h1 id="cloudbuildyaml-snippet"&gt;cloudbuild.yaml snippet
+&lt;/h1&gt;&lt;p&gt;steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;name: &amp;lsquo;gcr.io/cloud-builders/docker&amp;rsquo;
+entrypoint: &amp;lsquo;bash&amp;rsquo;
+args:
+&lt;ul&gt;
+&lt;li&gt;&amp;lsquo;-c&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;|
+docker buildx create &amp;ndash;use &amp;ndash;driver docker-container
+ACCESS_TOKEN=$(gcloud auth print-access-token)
+docker login -u oauth2accesstoken -p $$ACCESS_TOKEN &lt;a class="link" href="https://asia-northeast1-docker.pkg.dev" target="_blank" rel="noopener"
+ &gt;https://asia-northeast1-docker.pkg.dev&lt;/a&gt;
+docker buildx build &lt;br&gt;
+&amp;ndash;cache-from=type=registry,ref=asia-northeast1-docker.pkg.dev/$PROJECT_ID/cache/app:latest &lt;br&gt;
+&amp;ndash;cache-to=type=registry,ref=asia-northeast1-docker.pkg.dev/$PROJECT_ID/cache/app:latest,mode=max &lt;br&gt;
+&amp;ndash;push &lt;br&gt;
+-t asia-northeast1-docker.pkg.dev/$PROJECT_ID/repo/app:$COMMIT_SHA .&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Implementation requires the docker-container driver to explicitly handle credentials, as it does not automatically inherit host credential helpers. A temporary access token is retrieved from the Google Cloud metadata server to perform a docker login inside the container. Bash variables within the Cloud Build YAML must be escaped with double dollar signs ($$ACCESS_TOKEN) to avoid conflicts with substitution parameters.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="5-implementation-results-and-performance-verification"&gt;5. Implementation Results and Performance Verification
+&lt;/h2&gt;&lt;p&gt;The transition of build times across the optimization phases is summarized below:&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Build Configuration&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Total Build Time&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Status&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Initial State (Standard Docker Build)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;12 min 7.2 sec&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Success (No cache)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Kaniko (Initial Attempt)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;N/A&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Failure (Exit 137 - OOM)&lt;/b&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Kaniko (Memory-reduction flags applied)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;9 min 12.8 sec&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Success&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Buildx (First run - Cache generation)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;6 min 41.5 sec&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Success&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Buildx (Subsequent runs - Cache hit)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;4 min 23.5 sec&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Success (approx. -64% vs. initial)&lt;/b&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The combination of Buildx and registry cache reduced the build time by approximately 8 minutes. Even when packages are modified, only the dependency installation layer is invalidated, preventing the massive delays associated with full filesystem snapshot processing.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Strict Management of Build Context&lt;/b&gt;: Errors in .dockerignore lead to unnecessary gigabyte-scale data transfers, severely degrading CI/CD performance.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Selection of Cache Engine&lt;/b&gt;: In ephemeral build environments, layer-based registry caching with BuildKit (Buildx) is superior to snapshot-based tools in terms of memory efficiency and execution speed.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Future Work&lt;/b&gt;: Further speedups will be explored by implementing mechanisms to persist .next/cache between builds and enabling Next.js Incremental Compilation.&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
