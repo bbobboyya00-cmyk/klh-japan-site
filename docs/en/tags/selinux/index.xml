@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Selinux on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/selinux/</link><description>Recent content in Selinux on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 11 Jun 2026 14:17:27 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/selinux/index.xml" rel="self" type="application/rss+xml"/><item><title>Reverse Proxy Migration Procedure from Apache mod_proxy to Nginx Proxy Manager</title><link>https://klifehack.com/en/p/apache-to-npm-migration-guide/</link><pubDate>Thu, 11 Jun 2026 14:17:27 +0900</pubDate><guid>https://klifehack.com/en/p/apache-to-npm-migration-guide/</guid><description>&lt;h1 id="implementation-guide-for-migrating-from-apache-mod_proxy-to-nginx-proxy-manager-on-rocky-linux"&gt;Implementation Guide for Migrating from Apache mod_proxy to Nginx Proxy Manager on Rocky Linux
+&lt;/h1&gt;&lt;p&gt;This guide outlines the implementation steps for migrating from a traditional configuration using Apache &lt;b&gt;mod_proxy&lt;/b&gt; to Nginx Proxy Manager (NPM) in a Rocky Linux environment. This process covers the transition from initial Apache configuration to container-based operations.&lt;/p&gt;
+&lt;h2 id="initial-reverse-proxy-configuration-with-apache-mod_proxy"&gt;Initial Reverse Proxy Configuration with Apache mod_proxy
+&lt;/h2&gt;&lt;p&gt;Configure Apache HTTP Server (httpd) as a gateway to the Tomcat application server running in the backend.&lt;/p&gt;
+&lt;h3 id="package-installation-and-service-activation"&gt;Package Installation and Service Activation
+&lt;/h3&gt;&lt;p&gt;Install httpd using the DNF package manager and configure it to start automatically at system boot.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dnf install -y httpd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl start httpd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable httpd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="defining-proxy-settings"&gt;Defining Proxy Settings
+&lt;/h3&gt;&lt;p&gt;Create /etc/httpd/conf.d/tomcat.conf and write directives to forward specific traffic to the Tomcat server on port 8080.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-apache" data-lang="apache"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;virtualhost&lt;/span&gt; &lt;span style="color:#e6db74"&gt;*:80=&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ProxyPreserveHost &lt;span style="color:#66d9ef"&gt;On&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ProxyPass / http://10.101.0.28:8080/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ProxyPassReverse / http://10.101.0.28:8080/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/virtualhost&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="adjusting-selinux-security-policies"&gt;Adjusting SELinux Security Policies
+&lt;/h3&gt;&lt;p&gt;In the default security policy of Rocky Linux, external network connections by the Apache process are restricted. To function as a reverse proxy, the following boolean value must be modified.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;setsebool -P httpd_can_network_connect &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;By providing the &lt;b&gt;-P&lt;/b&gt; flag, this setting is persisted across OS reboots. After applying the settings, execute systemctl restart httpd to verify the connection.&lt;/p&gt;
+&lt;h2 id="migration-process-to-nginx-proxy-manager-npm"&gt;Migration Process to Nginx Proxy Manager (NPM)
+&lt;/h2&gt;&lt;p&gt;Migrate the environment to Nginx Proxy Manager running on a Docker container to increase operational management flexibility.&lt;/p&gt;
+&lt;h3 id="stopping-existing-services-and-releasing-ports"&gt;Stopping Existing Services and Releasing Ports
+&lt;/h3&gt;&lt;p&gt;Since NPM uses ports 80 and 443 by default, it conflicts with the existing Apache service. Stop Apache and disable its automatic startup before migration. Failure to stop existing services results in container binding errors.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop httpd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable httpd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="deploying-the-npm-container"&gt;Deploying the NPM Container
+&lt;/h3&gt;&lt;p&gt;Set up the NPM environment using Docker Compose. Navigate to the working directory and start the container in detached mode.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd ~/npm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose up -d
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="proxy-settings-in-the-management-interface"&gt;Proxy Settings in the Management Interface
+&lt;/h3&gt;&lt;p&gt;Access the NPM management console via the default port 81 and register a new Proxy Host. The configuration values are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Domain Names&lt;/b&gt;: Public IP address or domain name&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Scheme&lt;/b&gt;: http&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Forward Hostname / IP&lt;/b&gt;: 10.101.0.28 (Internal IP of the backend Tomcat)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Forward Port&lt;/b&gt;: 8080&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Security&lt;/b&gt;: Enable &amp;ldquo;Block Common Exploits&amp;rdquo; to apply filtering against common attacks such as SQL injection and XSS.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="findings"&gt;Findings
+&lt;/h2&gt;&lt;p&gt;The migration from Apache &lt;b&gt;mod_proxy&lt;/b&gt; to Nginx Proxy Manager transitions management from configuration file-based workflows to intuitive GUI-based host management. Compared to traditional configurations requiring SELinux context adjustments, containerized NPM minimizes host OS dependencies while providing integrated security filtering features. During migration, verify the occupancy status of ports 80/443 and ensure existing services are completely stopped.&lt;/p&gt;</description></item></channel></rss>

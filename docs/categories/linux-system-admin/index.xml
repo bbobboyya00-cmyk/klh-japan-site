@@ -1,4 +1,44 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 11 Jun 2026 10:16:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>RsyncとCronを用いたLinuxデータ同期システムの自動化</title><link>https://klifehack.com/p/rsync-cron-linux-backup-automation/</link><pubDate>Thu, 11 Jun 2026 10:16:07 +0900</pubDate><guid>https://klifehack.com/p/rsync-cron-linux-backup-automation/</guid><description>&lt;h1 id="rsyncとcronを用いた自動データ同期システムの構築"&gt;RsyncとCronを用いた自動データ同期システムの構築
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 11 Jun 2026 14:17:26 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Apache mod_proxyからNginx Proxy Managerへのリバースプロキシ移行手順</title><link>https://klifehack.com/p/apache-to-npm-migration-guide/</link><pubDate>Thu, 11 Jun 2026 14:17:26 +0900</pubDate><guid>https://klifehack.com/p/apache-to-npm-migration-guide/</guid><description>&lt;h1 id="rocky-linuxにおけるapache-mod_proxyからnginx-proxy-managerへの移行実装ガイド"&gt;Rocky LinuxにおけるApache mod_proxyからNginx Proxy Managerへの移行実装ガイド
+&lt;/h1&gt;&lt;p&gt;Rocky Linux環境において、従来のApache &lt;b&gt;mod_proxy&lt;/b&gt;を利用した構成から、GUIベースの管理が可能なNginx Proxy Manager (NPM) へ移行する際の実装手順をまとめます。本稿では、初期のApache構成からコンテナベースの運用への転換プロセスを扱います。&lt;/p&gt;
+&lt;h2 id="apache-mod_proxyによる初期リバースプロキシ構成"&gt;Apache mod_proxyによる初期リバースプロキシ構成
+&lt;/h2&gt;&lt;p&gt;まず、バックエンドで動作するTomcatアプリケーションサーバーへのゲートウェイとして、Apache HTTP Server (httpd) を構成します。&lt;/p&gt;
+&lt;h3 id="パッケージのインストールとサービス有効化"&gt;パッケージのインストールとサービス有効化
+&lt;/h3&gt;&lt;p&gt;DNFパッケージマネージャーを使用してhttpdを導入し、システムの起動時に自動的に開始されるよう設定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dnf install -y httpd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl start httpd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable httpd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="プロキシ設定の定義"&gt;プロキシ設定の定義
+&lt;/h3&gt;&lt;p&gt;/etc/httpd/conf.d/tomcat.confを作成し、特定のトラフィックをTomcatサーバー（ポート8080）へ転送するディレクティブを記述します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-apache" data-lang="apache"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;virtualhost&lt;/span&gt; &lt;span style="color:#e6db74"&gt;*:80=&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ProxyPreserveHost &lt;span style="color:#66d9ef"&gt;On&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ProxyPass / http://10.101.0.28:8080/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ProxyPassReverse / http://10.101.0.28:8080/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/virtualhost&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="selinuxセキュリティポリシーの調整"&gt;SELinuxセキュリティポリシーの調整
+&lt;/h3&gt;&lt;p&gt;Rocky Linuxのデフォルトのセキュリティポリシーでは、Apacheプロセスによる外部ネットワーク接続が制限されています。リバースプロキシとして機能させるには、以下のブール値を変更する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;setsebool -P httpd_can_network_connect &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;-P&lt;/b&gt;フラグを付与することで、OSの再起動後もこの設定が永続化されます。設定反映後、systemctl restart httpdを実行して接続を確認します。&lt;/p&gt;
+&lt;h2 id="nginx-proxy-manager-npm-への移行プロセス"&gt;Nginx Proxy Manager (NPM) への移行プロセス
+&lt;/h2&gt;&lt;p&gt;運用管理の柔軟性を高めるため、Dockerコンテナ上で動作するNginx Proxy Managerへ環境を移行します。&lt;/p&gt;
+&lt;h3 id="既存サービスの停止とポートの解放"&gt;既存サービスの停止とポートの解放
+&lt;/h3&gt;&lt;p&gt;NPMは標準でポート80および443を使用するため、既存のApacheサービスと競合します。移行前にApacheを停止し、自動起動を無効化します。⚠️ 既存サービスの停止を忘れると、コンテナのバインドエラーが発生します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl stop httpd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl disable httpd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="npmコンテナのデプロイ"&gt;NPMコンテナのデプロイ
+&lt;/h3&gt;&lt;p&gt;Docker Composeを使用してNPM環境を立ち上げます。作業ディレクトリに移動し、デタッチモードでコンテナを起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd ~/npm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose up -d
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="管理インターフェースでのプロキシ設定"&gt;管理インターフェースでのプロキシ設定
+&lt;/h3&gt;&lt;p&gt;NPMの管理コンソール（デフォルトポート: 81）にアクセスし、新しいProxy Hostを登録します。設定値は以下の通りです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Domain Names&lt;/b&gt;: 公開IPアドレスまたはドメイン名&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Scheme&lt;/b&gt;: http&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Forward Hostname / IP&lt;/b&gt;: 10.101.0.28 (バックエンドTomcatの内部IP)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Forward Port&lt;/b&gt;: 8080&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Security&lt;/b&gt;: 「Block Common Exploits」を有効化し、SQLインジェクションやXSSなどの一般的な攻撃に対するフィルタリングを適用します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="findings"&gt;Findings
+&lt;/h2&gt;&lt;p&gt;Apache &lt;b&gt;mod_proxy&lt;/b&gt;からNginx Proxy Managerへの移行により、設定ファイルベースの管理からGUIによる直感的なホスト管理へと転換されました。特に、SELinuxのコンテキスト調整が必要な従来の構成と比較して、コンテナ化されたNPMはホストOSの依存関係を最小限に抑えつつ、セキュリティフィルタリング機能を容易に適用できる利点があります。🛠️ 移行の際は、ポート80/443の占有状況を事前に確認し、既存サービスを完全に停止させることが不可欠です。&lt;/p&gt;</description></item><item><title>RsyncとCronを用いたLinuxデータ同期システムの自動化</title><link>https://klifehack.com/p/rsync-cron-linux-backup-automation/</link><pubDate>Thu, 11 Jun 2026 10:16:07 +0900</pubDate><guid>https://klifehack.com/p/rsync-cron-linux-backup-automation/</guid><description>&lt;h1 id="rsyncとcronを用いた自動データ同期システムの構築"&gt;RsyncとCronを用いた自動データ同期システムの構築
 &lt;/h1&gt;&lt;p&gt;サーバー運用において、ヒューマンエラーやハードウェアの故障、外部からの脅威によるデータ損失のリスクは常に存在します。手動によるデータ複製は非効率であり、一貫性を欠く可能性があるため、変更されたファイルのみを特定して定期的に同期する自動化システムの構築が不可欠です。Linuxの標準的なユーティリティであるRsyncとCronを組み合わせた、堅牢なデータ同期およびバックアップの実装手順を記述します。&lt;/p&gt;
 &lt;h3 id="1-技術的構成要素の概要"&gt;1. 技術的構成要素の概要
 &lt;/h3&gt;&lt;p&gt;Rsync（Remote Sync）は、ローカルまたはリモートのエンドポイント間でファイルやディレクトリを同期するためのコマンドラインユーティリティです。標準的なcpコマンドとは異なり、デルタ転送アルゴリズムを採用しています。これにより、ソースとデスティネーション間の差分（新しく追加または変更されたセグメント）のみを転送するため、ネットワーク帯域幅とディスクI/Oの負荷を大幅に軽減できます。&lt;/p&gt;
