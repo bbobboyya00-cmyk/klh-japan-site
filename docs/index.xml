@@ -1,4 +1,80 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 12 Jun 2026 10:07:01 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>NVIDIA GPUのVRAMをLinuxスワップ領域として活用するNBD-VRAMのアーキテクチャと実装</title><link>https://klifehack.com/p/nvidia-vram-linux-swap-nbd/</link><pubDate>Fri, 12 Jun 2026 10:07:01 +0900</pubDate><guid>https://klifehack.com/p/nvidia-vram-linux-swap-nbd/</guid><description>&lt;p&gt;開発環境におけるコンテナの乱立や大規模なビルドプロセスの実行は、物理メモリ（System RAM）の枯渇を招き、システム全体のハングアップやOOM（Out Of Memory）キラーによるプロセスの強制終了を引き起こします。特にオンボードメモリを搭載したノートPCや、物理的なメモリ増設が困難なエッジノードにおいて、この問題は顕著です。従来のSSDやHDDを対象としたスワップ領域の拡張は、ストレージの書き込み寿命（TBW）を著しく縮めるだけでなく、I/Oボトルネックによるシステム全体のパフォーマンス低下を招きます。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 12 Jun 2026 14:10:56 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>CentOS 7.9環境におけるBind Mountを活用したNFSエクスポート構成</title><link>https://klifehack.com/p/nfs-bind-mount-centos-ubuntu/</link><pubDate>Fri, 12 Jun 2026 14:10:56 +0900</pubDate><guid>https://klifehack.com/p/nfs-bind-mount-centos-ubuntu/</guid><description>&lt;p&gt;Linuxサーバーの運用において、特定のユーザーディレクトリ（特に/root）配下のデータをNFSで共有する必要が生じることがあります。しかし、/rootディレクトリの厳格なパーミッション設定（700/750）は、NFSクライアントによるディレクトリツリーのトラバースを阻害し、&amp;lsquo;Permission Denied&amp;rsquo;を引き起こす主要な要因となります。この制約を回避するために、元データの物理的な場所を変更することなく、NFSエクスポート専用のパスへマッピングする「Bind Mount」戦略を採用した実装手順を詳述します。&lt;/p&gt;
+&lt;h2 id="1-システム構成と設計要件"&gt;1. システム構成と設計要件
+&lt;/h2&gt;&lt;p&gt;本構成では、CentOS 7.9上の/root/webapps/dataをソースとし、Ubuntuクライアントからアクセス可能な/srv/nfs/dataへバインドします。これにより、親ディレクトリの権限継承問題を回避しつつ、セキュアなデータ共有を実現します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;NFS Server:&lt;/b&gt; CentOS Linux release 7.9.2009 (192.168.0.100)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;NFS Client:&lt;/b&gt; Ubuntu (192.168.0.200)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Source Path:&lt;/b&gt; /root/webapps/data (Restrictive permissions)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Export Path:&lt;/b&gt; /srv/nfs/data (Proxy path)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-サーバー側実装-centos-79"&gt;2. サーバー側実装 (CentOS 7.9)
+&lt;/h2&gt;&lt;h3 id="21-パッケージの導入とディレクトリ準備"&gt;2.1. パッケージの導入とディレクトリ準備
+&lt;/h3&gt;&lt;p&gt;まず、NFSサーバー機能を提供するnfs-utilsをインストールし、エクスポート用のエンドポイントを作成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install -y nfs-utils
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /srv/nfs/data
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-bind-mountによるパスのマッピング"&gt;2.2. Bind Mountによるパスのマッピング
+&lt;/h3&gt;&lt;p&gt;/root配下のディレクトリを直接エクスポートするのではなく、/srv配下へバインドします。これにより、NFSデーモンは/rootのパーミッション制約を受けずにデータへアクセス可能となります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mount --bind /root/webapps/data /srv/nfs/data
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;再起動後もこの設定を維持するため、/etc/fstabに以下のエントリを追加します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-etc" data-lang="etc"&gt;/root/webapps/data /srv/nfs/data none bind 0 0
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="23-nfsエクスポート設定"&gt;2.3. NFSエクスポート設定
+&lt;/h3&gt;&lt;p&gt;/etc/exportsにて、特定のクライアントIPに対するアクセス権限を定義します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-etc" data-lang="etc"&gt;/srv/nfs/data 192.168.0.200(rw,sync,no_root_squash,no_subtree_check)
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;rw:&lt;/b&gt; 読み書き権限の付与。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;sync:&lt;/b&gt; 書き込み完了後に応答を返すことでデータ整合性を確保。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;no_root_squash:&lt;/b&gt; クライアント側のrootユーザーをサーバー側のrootとして扱う設定（運用要件に応じて慎重に検討）。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;no_subtree_check:&lt;/b&gt; サブディレクトリのチェックを無効化し、信頼性を向上。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;設定反映後、エクスポート状態を確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;exportfs -ra
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;exportfs -v
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="24-サービス管理とrpc登録"&gt;2.4. サービス管理とRPC登録
+&lt;/h3&gt;&lt;p&gt;NFSサービスおよびポートマッパー（rpcbind）を起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable --now rpcbind
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable --now nfs-server
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-クライアント側実装-ubuntu"&gt;3. クライアント側実装 (Ubuntu)
+&lt;/h2&gt;&lt;p&gt;Ubuntuクライアント側では、nfs-commonパッケージを使用してマウントを準備します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt-get update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt-get install -y nfs-common
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /mnt/nfs_data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mount -t nfs 192.168.0.100:/srv/nfs/data /mnt/nfs_data
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-セキュリティおよびファイアウォール構成"&gt;4. セキュリティおよびファイアウォール構成
+&lt;/h2&gt;&lt;h3 id="41-firewalld設定-centos-7"&gt;4.1. Firewalld設定 (CentOS 7)
+&lt;/h3&gt;&lt;p&gt;NFS、rpc-bind、mountdの各サービスを許可します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;nfs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;rpc-bind
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;mountd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-selinuxの調整"&gt;4.2. SELinuxの調整
+&lt;/h3&gt;&lt;p&gt;SELinuxが有効な場合、NFS経由のアクセスが拒否されることがあります。適切なコンテキストを付与します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;setsebool -P nfs_export_all_rw &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;semanage fcontext -a -t public_content_rw_t &lt;span style="color:#e6db74"&gt;&amp;#34;/srv/nfs/data(/.*)?&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;restorecon -Rv /srv/nfs/data
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-troubleshooting"&gt;5. Troubleshooting
+&lt;/h2&gt;&lt;h3 id="51-rpc通信エラー-clnt_create-rpc-unable-to-receive"&gt;5.1. RPC通信エラー (clnt_create: RPC: Unable to receive)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;原因:&lt;/b&gt; nfs-serverが未起動、またはファイアウォールでポート2049/111が遮断されている。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策:&lt;/b&gt; systemctl status nfs-serverを確認し、rpcinfo -pでポートの待機状態を検証してください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="52-権限拒否-permission-denied"&gt;5.2. 権限拒否 (Permission Denied)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;原因:&lt;/b&gt; Bind Mountが正しく行われていない、または/etc/exportsのIP制限が不適切。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策:&lt;/b&gt; サーバー側でmount | grep dataを実行し、バインド状態を再確認してください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="6-実装検証ログ"&gt;6. 実装検証ログ
+&lt;/h2&gt;&lt;p&gt;構成完了後の正常動作を示すプロトコルログを以下に記します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Server] # ls -ld /root/webapps/data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drwxr-xr-x 2 root root 4096 Jun 15 10:00 /root/webapps/data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] # df -h | grep nfs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.0.100:/srv/nfs/data 50G 1.2G 49G 3% /mnt/nfs_data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] # touch /mnt/nfs_data/verify.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] # ls -l /mnt/nfs_data/verify.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-r--r-- 1 root root 0 Jun 15 10:05 /mnt/nfs_data/verify.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;NFS運用において、/rootなどの特権ディレクトリ配下のデータを共有する際は、物理パスを直接公開するのではなく、本稿で示したBind Mountによる抽象化レイヤーを設けることが、セキュリティと運用柔軟性の両立において極めて有効です。特にCentOS 7系では、SELinuxポリシーとNFSの相互作用により複雑なトラブルが発生しやすいため、マウントポイントのコンテキスト管理を徹底することが推奨されます。&lt;/p&gt;</description></item><item><title>NVIDIA GPUのVRAMをLinuxスワップ領域として活用するNBD-VRAMのアーキテクチャと実装</title><link>https://klifehack.com/p/nvidia-vram-linux-swap-nbd/</link><pubDate>Fri, 12 Jun 2026 10:07:01 +0900</pubDate><guid>https://klifehack.com/p/nvidia-vram-linux-swap-nbd/</guid><description>&lt;p&gt;開発環境におけるコンテナの乱立や大規模なビルドプロセスの実行は、物理メモリ（System RAM）の枯渇を招き、システム全体のハングアップやOOM（Out Of Memory）キラーによるプロセスの強制終了を引き起こします。特にオンボードメモリを搭載したノートPCや、物理的なメモリ増設が困難なエッジノードにおいて、この問題は顕著です。従来のSSDやHDDを対象としたスワップ領域の拡張は、ストレージの書き込み寿命（TBW）を著しく縮めるだけでなく、I/Oボトルネックによるシステム全体のパフォーマンス低下を招きます。&lt;/p&gt;
 &lt;p&gt;このような背景から、システムに搭載されているものの、グラフィックス処理や機械学習タスクを実行していない時間帯に遊休状態となっているNVIDIA GPUのVRAM（Video RAM）を、Linuxの高速なスワップ階層として再利用するアプローチが注目されています。本稿では、Network Block Device（NBD）とCUDA APIを組み合わせたオープンソースプロジェクト「NBD-VRAM」のアーキテクチャ、実装プロセス、および運用上の注意点について技術的な分析を行います。&lt;/p&gt;
 &lt;h2 id="nbd-vramのメモリ階層アーキテクチャ"&gt;NBD-VRAMのメモリ階層アーキテクチャ
 &lt;/h2&gt;&lt;p&gt;💡 NBD-VRAMは、VRAMを単なる物理メモリの直接的な拡張として扱うのではなく、Linuxの仮想メモリ管理システムにおける「超高速な中間スワップ階層」として位置づけます。これにより、多段階のメモリ階層が形成されます。&lt;/p&gt;

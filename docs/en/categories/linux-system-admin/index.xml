@@ -1,4 +1,80 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 12 Jun 2026 10:07:02 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Architecture and Implementation of NBD-VRAM: Utilizing NVIDIA GPU VRAM as Linux Swap Space</title><link>https://klifehack.com/en/p/nvidia-vram-linux-swap-nbd/</link><pubDate>Fri, 12 Jun 2026 10:07:02 +0900</pubDate><guid>https://klifehack.com/en/p/nvidia-vram-linux-swap-nbd/</guid><description>&lt;h1 id="high-speed-linux-swap-tier-using-gpu-vram-architecture-and-implementation-of-nbd-vram"&gt;High-Speed Linux Swap Tier Using GPU VRAM: Architecture and Implementation of NBD-VRAM
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 12 Jun 2026 14:10:56 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>NFS Export Configuration Using Bind Mount in a CentOS 7.9 Environment</title><link>https://klifehack.com/en/p/nfs-bind-mount-centos-ubuntu/</link><pubDate>Fri, 12 Jun 2026 14:10:56 +0900</pubDate><guid>https://klifehack.com/en/p/nfs-bind-mount-centos-ubuntu/</guid><description>&lt;p&gt;In Linux server operations, it may become necessary to share data under specific user directories (especially /root) via NFS. However, the strict permission settings (700/750) of the /root directory hinder directory tree traversal by NFS clients, serving as a primary cause of &amp;lsquo;Permission Denied&amp;rsquo;. To circumvent this restriction without changing the physical location of the original data, this document details implementation procedures adopting a &amp;ldquo;Bind Mount&amp;rdquo; strategy to map data to a path dedicated to NFS export.&lt;/p&gt;
+&lt;h2 id="1-system-configuration-and-design-requirements"&gt;1. System Configuration and Design Requirements
+&lt;/h2&gt;&lt;p&gt;In this configuration, /root/webapps/data on CentOS 7.9 is used as the source and bound to /srv/nfs/data, which is accessible from the Ubuntu client. This achieves secure data sharing while avoiding permission inheritance issues from parent directories.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;NFS Server:&lt;/b&gt; CentOS Linux release 7.9.2009 (192.168.0.100)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;NFS Client:&lt;/b&gt; Ubuntu (192.168.0.200)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Source Path:&lt;/b&gt; /root/webapps/data (Restrictive permissions)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Export Path:&lt;/b&gt; /srv/nfs/data (Proxy path)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-server-side-implementation-centos-79"&gt;2. Server-Side Implementation (CentOS 7.9)
+&lt;/h2&gt;&lt;h3 id="21-package-installation-and-directory-preparation"&gt;2.1. Package Installation and Directory Preparation
+&lt;/h3&gt;&lt;p&gt;First, install nfs-utils, which provides NFS server functionality, and create the endpoint for export.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install -y nfs-utils
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /srv/nfs/data
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-path-mapping-via-bind-mount"&gt;2.2. Path Mapping via Bind Mount
+&lt;/h3&gt;&lt;p&gt;Instead of exporting the directory under /root directly, bind it under /srv. This allows the NFS daemon to access the data without being subject to /root&amp;rsquo;s permission restrictions.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mount --bind /root/webapps/data /srv/nfs/data
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To maintain this setting after a reboot, add the following entry to /etc/fstab.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-etc" data-lang="etc"&gt;/root/webapps/data /srv/nfs/data none bind 0 0
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="23-nfs-export-configuration"&gt;2.3. NFS Export Configuration
+&lt;/h3&gt;&lt;p&gt;Define access permissions for specific client IPs in /etc/exports.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-etc" data-lang="etc"&gt;/srv/nfs/data 192.168.0.200(rw,sync,no_root_squash,no_subtree_check)
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;rw:&lt;/b&gt; Grants read and write permissions.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;sync:&lt;/b&gt; Ensures data consistency by responding only after writes are completed.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;no_root_squash:&lt;/b&gt; Treats the root user on the client side as the root user on the server side (consider carefully based on operational requirements).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;no_subtree_check:&lt;/b&gt; Disables subtree checking to improve reliability.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After applying the settings, verify the export status.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;exportfs -ra
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;exportfs -v
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="24-service-management-and-rpc-registration"&gt;2.4. Service Management and RPC Registration
+&lt;/h3&gt;&lt;p&gt;Start the NFS service and the port mapper (rpcbind).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable --now rpcbind
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl enable --now nfs-server
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-client-side-implementation-ubuntu"&gt;3. Client-Side Implementation (Ubuntu)
+&lt;/h2&gt;&lt;p&gt;On the Ubuntu client side, prepare the mount using the nfs-common package.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt-get update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt-get install -y nfs-common
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /mnt/nfs_data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mount -t nfs 192.168.0.100:/srv/nfs/data /mnt/nfs_data
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-security-and-firewall-configuration"&gt;4. Security and Firewall Configuration
+&lt;/h2&gt;&lt;h3 id="41-firewalld-configuration-centos-7"&gt;4.1. Firewalld Configuration (CentOS 7)
+&lt;/h3&gt;&lt;p&gt;Allow the NFS, rpc-bind, and mountd services.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;nfs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;rpc-bind
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --permanent --add-service&lt;span style="color:#f92672"&gt;=&lt;/span&gt;mountd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;firewall-cmd --reload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-selinux-adjustments"&gt;4.2. SELinux Adjustments
+&lt;/h3&gt;&lt;p&gt;If SELinux is enabled, access via NFS may be denied. Assign the appropriate context.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;setsebool -P nfs_export_all_rw &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;semanage fcontext -a -t public_content_rw_t &lt;span style="color:#e6db74"&gt;&amp;#34;/srv/nfs/data(/.*)?&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;restorecon -Rv /srv/nfs/data
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-troubleshooting"&gt;5. Troubleshooting
+&lt;/h2&gt;&lt;h3 id="51-rpc-communication-error-clnt_create-rpc-unable-to-receive"&gt;5.1. RPC Communication Error (clnt_create: RPC: Unable to receive)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Cause:&lt;/b&gt; nfs-server is not running, or ports 2049/111 are blocked by the firewall.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Countermeasure:&lt;/b&gt; Check systemctl status nfs-server and verify the port listening status with rpcinfo -p.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="52-permission-denied"&gt;5.2. Permission Denied
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Cause:&lt;/b&gt; Bind Mount is not correctly performed, or IP restrictions in /etc/exports are inappropriate.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Countermeasure:&lt;/b&gt; Run mount | grep data on the server side to re-verify the bind status.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="6-implementation-verification-log"&gt;6. Implementation Verification Log
+&lt;/h2&gt;&lt;p&gt;This protocol log demonstrates normal operation after configuration completion.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Server] # ls -ld /root/webapps/data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drwxr-xr-x 2 root root 4096 Jun 15 10:00 /root/webapps/data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] # df -h | grep nfs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.0.100:/srv/nfs/data 50G 1.2G 49G 3% /mnt/nfs_data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] # touch /mnt/nfs_data/verify.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] # ls -l /mnt/nfs_data/verify.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-r--r-- 1 root root 0 Jun 15 10:05 /mnt/nfs_data/verify.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;In NFS operations, when sharing data under privileged directories such as /root, establishing an abstraction layer via Bind Mount—rather than exposing the physical path directly—is extremely effective for balancing security and operational flexibility. Particularly in the CentOS 7 series, where complex issues often arise due to the interaction between SELinux policies and NFS, thorough management of mount point contexts is recommended.&lt;/p&gt;</description></item><item><title>Architecture and Implementation of NBD-VRAM: Utilizing NVIDIA GPU VRAM as Linux Swap Space</title><link>https://klifehack.com/en/p/nvidia-vram-linux-swap-nbd/</link><pubDate>Fri, 12 Jun 2026 10:07:02 +0900</pubDate><guid>https://klifehack.com/en/p/nvidia-vram-linux-swap-nbd/</guid><description>&lt;h1 id="high-speed-linux-swap-tier-using-gpu-vram-architecture-and-implementation-of-nbd-vram"&gt;High-Speed Linux Swap Tier Using GPU VRAM: Architecture and Implementation of NBD-VRAM
 &lt;/h1&gt;&lt;p&gt;The proliferation of containers in development environments and the execution of large-scale build processes lead to the exhaustion of physical memory (System RAM), causing system-wide hangs and process termination by the OOM (Out Of Memory) killer. This issue is particularly prominent in laptops with onboard memory or edge nodes where physical memory expansion is difficult. Traditional swap space expansion targeting SSDs or HDDs not only significantly shortens storage write endurance (TBW) but also causes overall system performance degradation due to I/O bottlenecks.&lt;/p&gt;
 &lt;p&gt;Against this background, an approach that repurposes the VRAM (Video RAM) of NVIDIA GPUs—which are installed in systems but remain idle during periods when they are not executing graphics processing or machine learning tasks—as a high-speed Linux swap tier has attracted attention. This article provides a technical analysis of the architecture, implementation process, and operational considerations of &amp;ldquo;NBD-VRAM&amp;rdquo;, an open-source project that combines Network Block Device (NBD) and the CUDA API.&lt;/p&gt;
 &lt;h2 id="memory-hierarchy-architecture-of-nbd-vram"&gt;Memory Hierarchy Architecture of NBD-VRAM
