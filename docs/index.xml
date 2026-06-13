@@ -1,4 +1,237 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 12 Jun 2026 18:24:14 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>OCI ARMインスタンスにおけるnixos-anywhereとdiskoを用いたNixOSの宣言的デプロイ</title><link>https://klifehack.com/p/oci-arm-nixos-anywhere-disko-deployment/</link><pubDate>Fri, 12 Jun 2026 18:24:14 +0900</pubDate><guid>https://klifehack.com/p/oci-arm-nixos-anywhere-disko-deployment/</guid><description>&lt;h1 id="oci-armインスタンスにおけるnixos-anywhereを用いたnixosへの完全移行プロセス"&gt;OCI ARMインスタンスにおけるnixos-anywhereを用いたNixOSへの完全移行プロセス
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 13 Jun 2026 10:09:31 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>LLMエージェントの高信頼化における分散システムパターンの適用設計</title><link>https://klifehack.com/p/recoverable-ai-agents-reliability-patterns/</link><pubDate>Sat, 13 Jun 2026 10:09:31 +0900</pubDate><guid>https://klifehack.com/p/recoverable-ai-agents-reliability-patterns/</guid><description>&lt;p&gt;本番環境におけるLLM（大規模言語モデル）エージェントの運用では、外部APIやデータベースとの連携において非決定的なエラーに直面することは避けられません。例えば、決済APIの呼び出しに成功したものの、その後の在庫確保APIで503エラーが発生した場合、システムは不整合な状態（部分的成功）に陥ります。単純なループ処理のみで構築されたエージェントは、こうした分散システム特有の障害に対応できず、異常終了するか、あるいは不整合な状態を放置することになります。&lt;/p&gt;
+&lt;p&gt;本稿では、分散システムで培われた信頼性パターン（サーキットブレーカー、Sagaパターン、指数バックオフ、構造化バリデーション）をLLMオーケストレーションに適用し、堅牢なエージェントシステムを構築する設計手法について解説します。&lt;/p&gt;
+&lt;h2 id="1-エージェント実行における3つの障害モード"&gt;1. エージェント実行における3つの障害モード
+&lt;/h2&gt;&lt;p&gt;エージェントが外部環境と相互作用する際、主に以下の3つの障害モードが発生します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;障害モード1: ツール実行時の例外 (Tool Exceptions)&lt;/b&gt;
+レートリミット（HTTP 429）や一時的なネットワーク切断、タイムアウトなど。適切なリトライロジックがない場合、エージェントループ全体がクラッシュし、実行コンテキストが消失します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;障害モード2: 不正なツール出力 (Garbage Tool Outputs)&lt;/b&gt;
+ツールがエラーハンドリングを怠り、正常系を装った不正なペイロードを返却した場合、LLMはその誤った情報を前提に後続の処理を決定してしまいます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;障害モード3: 部分的成功による状態不整合 (Partial Success)&lt;/b&gt;
+複数ステップからなるワークフローにおいて、一部の処理のみが成功し、後続処理が失敗した場合。ロールバック機構がないため、システムの状態が未定義のまま放置されます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらの課題は、LLMの推論能力向上だけでは解決できません。確率的なLLMの振る舞いを、決定論的な状態遷移マシン（オーケストレーター）でラップする設計が必要となります。&lt;/p&gt;
+&lt;h2 id="2-5層の信頼性レイヤーによる防御アプローチ"&gt;2. 5層の信頼性レイヤーによる防御アプローチ
+&lt;/h2&gt;&lt;p&gt;ツール呼び出しの信頼性を担保するため、以下の5つのレイヤーをネストして適用するアーキテクチャを構築します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[エージェントループ]
+ |
+ v
++-----------------------------------------------------------------+
+| 1. traced_call (実行ログ記録、所要時間計測、認証情報のマスク) |
+| +------------------------------------------------------------+
+| | 2. Circuit Breaker (下流サービスの障害時に即座に遮断) |
+| | +-------------------------------------------------------+
+| | | 3. with_retry (指数バックオフとジッターによる再試行) |
+| | | +--------------------------------------------------+
+| | | | 4. validated_call (スキーマおよび型の厳密な検証) |
+| | | | +---------------------------------------------+
+| | | | | 5. call_tool (実際のツールロジックの実行) |
++----+----+----+----+---------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="レイヤー1-指数バックオフとジッター-with_retry"&gt;レイヤー1: 指数バックオフとジッター (&lt;code&gt;with_retry&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;一時的なネットワークエラーから回復するため、再試行間隔を指数関数的に増加させます。また、複数のエージェントが同時に再試行して下流サービスを圧倒する「群衆雪崩（Thundering Herd）現象」を防ぐため、ランダムな揺らぎ（ジッター）を加えます。&lt;/p&gt;
+&lt;h3 id="レイヤー2-サーキットブレーカー"&gt;レイヤー2: サーキットブレーカー
+&lt;/h3&gt;&lt;p&gt;完全にダウンしているサービスに対してリトライを繰り返すことは、リソースの無駄遣いであり、相手方の復旧を妨げる要因になります。連続して $N$ 回失敗した場合は回路を「OPEN」にし、以降の呼び出しを即座に遮断（フェイルファスト）します。一定時間経過後に「HALF-OPEN」状態へ遷移し、テストリクエストが成功すれば回路を「CLOSED」に戻します。&lt;/p&gt;
+&lt;h3 id="レイヤー3-sagaパターンと冪等性キー"&gt;レイヤー3: Sagaパターンと冪等性キー
+&lt;/h3&gt;&lt;p&gt;ロールバックが不可能な分散トランザクションにおいて、各ステップに対応する「補償アクション（Compensating Action）」を定義します。ステップ $N$ で失敗した場合、それまでに実行した $1$ から $N-1$ のステップの補償アクションを逆順で実行し、システムを整合性のある状態に戻します。また、再試行時の二重決済を防ぐため、すべての書き込み処理に一意な「冪等性キー（Idempotency Key）」を付与します。&lt;/p&gt;
+&lt;h3 id="レイヤー4-構造化バリデーション-validated_call"&gt;レイヤー4: 構造化バリデーション (&lt;code&gt;validated_call&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;LLMが生成するツール引数は、型エラーや必須パラメータの欠落が頻発します。実行前にPydantic等を用いてスキーマ検証を行い、エラーが発生した場合はその詳細をLLMにフィードバックして自律的に修正（Self-Correction）させます。&lt;/p&gt;
+&lt;h3 id="レイヤー5-オブザーバビリティとトレース-traced_call"&gt;レイヤー5: オブザーバビリティとトレース (&lt;code&gt;traced_call&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;エージェントの動作をブラックボックス化させないため、すべてのツール呼び出しの引数、実行時間、成否を構造化ログとして記録します。その際、APIキーやパスワードなどの機密情報は自動的にマスクします。&lt;/p&gt;
+&lt;h2 id="3-信頼性レイヤーの実装明細"&gt;3. 信頼性レイヤーの実装明細
+&lt;/h2&gt;&lt;p&gt;これらのパターンを統合したPythonによる実装コードは、堅牢なエラーハンドリングと状態管理を統合的に提供します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; random
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; logging
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; uuid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Callable, Optional, Any
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel, create_model, ValidationError
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;_log &lt;span style="color:#f92672"&gt;=&lt;/span&gt; logging&lt;span style="color:#f92672"&gt;.&lt;/span&gt;getLogger(__name__)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# --- レイヤー1: 指数バックオフとジッター ---&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;with_retry&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; fn: Callable[&lt;span style="color:#f92672"&gt;...&lt;/span&gt;, str],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; args: dict,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_attempts: int &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; base_delay: float &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1.0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; attempt &lt;span style="color:#f92672"&gt;in&lt;/span&gt; range(max_attempts):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; fn(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;args)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Exception&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; e:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; attempt &lt;span style="color:#f92672"&gt;==&lt;/span&gt; max_attempts &lt;span style="color:#f92672"&gt;-&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; delay &lt;span style="color:#f92672"&gt;=&lt;/span&gt; base_delay &lt;span style="color:#f92672"&gt;*&lt;/span&gt; (&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; &lt;span style="color:#f92672"&gt;**&lt;/span&gt; attempt) &lt;span style="color:#f92672"&gt;+&lt;/span&gt; random&lt;span style="color:#f92672"&gt;.&lt;/span&gt;uniform(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _log&lt;span style="color:#f92672"&gt;.&lt;/span&gt;warning(&lt;span style="color:#e6db74"&gt;&amp;#34;Attempt &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%d&lt;/span&gt;&lt;span style="color:#e6db74"&gt; failed (&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt;) - retrying in &lt;/span&gt;&lt;span style="color:#e6db74"&gt;%.1f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;s&amp;#34;&lt;/span&gt;, attempt &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, e, delay)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(delay)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# --- レイヤー2: サーキットブレーカー ---&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;CircuitBreaker&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CLOSED, OPEN, HALF_OPEN &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;closed&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;open&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;half-open&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;__init__&lt;/span&gt;(self, failure_threshold: int &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;, reset_timeout: float &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;30.0&lt;/span&gt;) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;failure_threshold &lt;span style="color:#f92672"&gt;=&lt;/span&gt; failure_threshold
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;reset_timeout &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reset_timeout
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_failures &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_state &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;CLOSED
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_opened_at: Optional[float] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;call&lt;/span&gt;(self, fn: Callable[&lt;span style="color:#f92672"&gt;...&lt;/span&gt;, str], args: dict) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_state &lt;span style="color:#f92672"&gt;==&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;OPEN:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; elapsed &lt;span style="color:#f92672"&gt;=&lt;/span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;time() &lt;span style="color:#f92672"&gt;-&lt;/span&gt; (self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_opened_at &lt;span style="color:#f92672"&gt;or&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0.0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; elapsed &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;lt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;reset_timeout:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;RuntimeError&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Circuit open - service unavailable (resets in &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;reset_timeout &lt;span style="color:#f92672"&gt;-&lt;/span&gt; elapsed&lt;span style="color:#e6db74"&gt;:&lt;/span&gt;&lt;span style="color:#e6db74"&gt;.0f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;s)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_state &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;HALF_OPEN
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; fn(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;args)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_state &lt;span style="color:#f92672"&gt;==&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;HALF_OPEN:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_reset()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; result
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Exception&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_failures &lt;span style="color:#f92672"&gt;+=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_failures &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;failure_threshold:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_state &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;OPEN
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_opened_at &lt;span style="color:#f92672"&gt;=&lt;/span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;time()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_reset&lt;/span&gt;(self) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_failures &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_state &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;CLOSED
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_opened_at &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# --- レイヤー4: 構造化バリデーション ---&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;_VALIDATORS: dict[str, type[BaseModel]] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;_TYPE_MAP &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;: str,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;integer&amp;#34;&lt;/span&gt;: int,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;number&amp;#34;&lt;/span&gt;: float,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;boolean&amp;#34;&lt;/span&gt;: bool,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;call_tool&lt;/span&gt;(name: str, args: dict) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 実際のツール実行プレースホルダー&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Success: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;name&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; executed with &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;args&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;validated_call&lt;/span&gt;(name: str, args: dict) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; validator &lt;span style="color:#f92672"&gt;=&lt;/span&gt; _VALIDATORS&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get(name)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; validator &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; call_tool(name, args)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; validated &lt;span style="color:#f92672"&gt;=&lt;/span&gt; validator(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;args)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; call_tool(name, validated&lt;span style="color:#f92672"&gt;.&lt;/span&gt;model_dump(exclude_none&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; ValidationError &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; e:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Invalid arguments for &amp;#39;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;name&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;e&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# --- レイヤー5: トレースとマスキング ---&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;traced_call&lt;/span&gt;(name: str, args: dict, fn: Callable[&lt;span style="color:#f92672"&gt;...&lt;/span&gt;, str]) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sanitized &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; k: &lt;span style="color:#e6db74"&gt;&amp;#34;***&amp;#34;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; any(w &lt;span style="color:#f92672"&gt;in&lt;/span&gt; k&lt;span style="color:#f92672"&gt;.&lt;/span&gt;lower() &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; w &lt;span style="color:#f92672"&gt;in&lt;/span&gt; (&lt;span style="color:#e6db74"&gt;&amp;#34;key&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;secret&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;token&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;)) &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; k, v &lt;span style="color:#f92672"&gt;in&lt;/span&gt; args&lt;span style="color:#f92672"&gt;.&lt;/span&gt;items()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; start &lt;span style="color:#f92672"&gt;=&lt;/span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;time()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; fn(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;args)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _log&lt;span style="color:#f92672"&gt;.&lt;/span&gt;info(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;tool=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt; args=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt; result=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%r&lt;/span&gt;&lt;span style="color:#e6db74"&gt; duration=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%.3f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;s&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name, json&lt;span style="color:#f92672"&gt;.&lt;/span&gt;dumps(sanitized), str(result)[:&lt;span style="color:#ae81ff"&gt;120&lt;/span&gt;], time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;time() &lt;span style="color:#f92672"&gt;-&lt;/span&gt; start,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; result
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Exception&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; e:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _log&lt;span style="color:#f92672"&gt;.&lt;/span&gt;error(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;tool=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt; args=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt; error=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%s&lt;/span&gt;&lt;span style="color:#e6db74"&gt; duration=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;%.3f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;s&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name, json&lt;span style="color:#f92672"&gt;.&lt;/span&gt;dumps(sanitized), e, time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;time() &lt;span style="color:#f92672"&gt;-&lt;/span&gt; start,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# --- ディスパッチャーの合成 ---&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_make_dispatcher&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; breakers: dict[str, CircuitBreaker],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_retries: int,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; Callable[[str, dict], str]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;dispatch&lt;/span&gt;(name: str, args: dict) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;core&lt;/span&gt;(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;kw) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; validated_call(name, kw)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;retried&lt;/span&gt;(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;kw) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; with_retry(core, kw, max_attempts&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_retries)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;guarded&lt;/span&gt;(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;kw) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; breakers[name]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;call(retried, kw)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; traced_call(name, args, guarded)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; dispatch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-セマンティックハルシネーションの緩和策"&gt;4. セマンティック・ハルシネーションの緩和策
+&lt;/h2&gt;&lt;p&gt;構造化バリデーションは「構文的」なエラーを防ぎますが、LLMが「論理的に誤った値」を生成する&lt;b&gt;セマンティック・ハルシネーション（意味的幻覚）&lt;/b&gt;を防ぐことはできません。これらは分散システムにおけるビザンチン障害（ノードが正常に動作しているように見えて誤ったデータを送信する状態）に相当します。&lt;/p&gt;
+&lt;p&gt;この問題に対処するため、以下の4つのアプローチをユースケースに応じて適用します。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;手法&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;概要&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;学術的背景&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;トレードオフ&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Chain-of-Verification (CoVe)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;生成した回答に対し、モデル自身が検証用の質問を作成・回答し、自己修正を行う。&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Dhuliawala et al. (2024)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;低コスト&lt;/b&gt;: 追加のLLM呼び出しが最小限で済み、実用的。&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Self-Consistency&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;複数の推論パスをサンプリングし、多数決で最終出力を決定する。&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Wang et al. (2023)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;高コスト&lt;/b&gt;: 応答遅延が大きく、リアルタイム処理には不向き。&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;LLM-as-a-Judge&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;メインモデルの出力を、別の独立した検証用LLMが評価・検証する。&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Zheng et al. (2023)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;中コスト&lt;/b&gt;: 重要な書き込み処理の直前フェーズに推奨。&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Output Grounding (RAG)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;外部知識ソースへの厳密な参照（Citation）を義務付け、根拠を検証する。&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Es et al. (2024)&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;低〜中コスト&lt;/b&gt;: 検索ツール設計と評価パイプラインの構築が必要。&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="5-troubleshooting"&gt;5. Troubleshooting
+&lt;/h2&gt;&lt;p&gt;⚠️ 本アーキテクチャを本番環境に導入する際、直面しやすい摩擦点（Friction Points）とその解決策を整理します。&lt;/p&gt;
+&lt;h3 id="摩擦点1-分散環境におけるサーキットブレーカーの状態ドリフト"&gt;摩擦点1: 分散環境におけるサーキットブレーカーの状態ドリフト
+&lt;/h3&gt;&lt;p&gt;エージェントが複数のコンテナインスタンスで並行動作する場合、メモリ内（In-Memory）でサーキットブレーカーの状態を保持すると、インスタンス間で状態の不整合が発生します。あるノードでは回路が「OPEN」であるにもかかわらず、別のノードでは「CLOSED」のまま下流サービスにリクエストを送り続け、障害を悪化させることがあります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;解決策&lt;/b&gt;: サーキットブレーカーの状態（失敗回数、最終エラー時刻、現在のステート）をRedisなどの共有データストアに外部化し、分散ロックまたはアトミックな増減操作を用いて同期します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="摩擦点2-llmの自己修正ループにおける無限置換"&gt;摩擦点2: LLMの自己修正ループにおける無限置換
+&lt;/h3&gt;&lt;p&gt;構造化バリデーションエラーをLLMに返却して再試行させる際、プロンプトの制約が曖昧だと、LLMが同じ誤ったパラメータを繰り返し生成し、無限ループに陥るケースがあります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;解決策&lt;/b&gt;: ディスパッチャー側で同一ツールに対する自己修正の最大試行回数（Max Self-Correction Limits、推奨値: 3回）を厳密にカウントし、上限に達した場合は即座に例外をスローして上位のSaga補償フローへ移行させます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="6-verification"&gt;6. Verification
+&lt;/h2&gt;&lt;p&gt;🛠️ 高信頼化ディスパッチャーを適用したエージェントの実行ログプロトコルは、スキーマエラーの自己修正、および一時的エラーに対するリトライとサーキットブレーカーの作動プロセスを明示します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 1. 構造化バリデーションによる自己修正のトリガー
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-13 10:42:01,102 [INFO] tool=charge_card args={&amp;#34;amount&amp;#34;: &amp;#34;forty-nine&amp;#34;, &amp;#34;card_token&amp;#34;: &amp;#34;tok_123&amp;#34;} result=&amp;#39;Invalid arguments for &amp;#34;charge_card&amp;#34;: amount must be a float&amp;#39; duration=0.012s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-13 10:42:02,450 [INFO] LLM detected validation error. Retrying with corrected arguments...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-13 10:42:03,115 [INFO] tool=charge_card args={&amp;#34;amount&amp;#34;: 49.00, &amp;#34;card_token&amp;#34;: &amp;#34;tok_123&amp;#34;} result=&amp;#39;Success: charge_card executed&amp;#39; duration=0.189s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 2. 下流サービス障害に伴う指数バックオフの作動
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-13 10:42:05,201 [WARNING] Attempt 1 failed (503 Service Unavailable) - retrying in 1.2s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-13 10:42:07,412 [WARNING] Attempt 2 failed (503 Service Unavailable) - retrying in 2.5s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-13 10:42:10,920 [ERROR] tool=send_notification args={&amp;#34;email&amp;#34;: &amp;#34;user@example.com&amp;#34;} error=503 Service Unavailable duration=1.002s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 3. 連続失敗によるサーキットブレーカーの作動（OPEN状態への遷移）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-13 10:42:11,005 [ERROR] tool=send_notification args={&amp;#34;email&amp;#34;: &amp;#34;user@example.com&amp;#34;} error=Circuit open - service unavailable (resets in 30s) duration=0.001s
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;💡 LLMエージェントの信頼性設計は、プロンプトエンジニアリングの領域を超え、古典的な分散システム設計 of 領域へと回帰しています。エージェントを自律的なアクターとして本番環境にデプロイするためには、確率的な推論エンジンを決定論的なセーフティネットで包み込むことが不可欠です。本稿で示した5層の防御レイヤーを適用することで、APIのダウンタイムやLLMの構造的エラーに耐えうる、真に自律的なエージェントシステムの構築が可能となります。&lt;/p&gt;</description></item><item><title>OCI ARMインスタンスにおけるnixos-anywhereとdiskoを用いたNixOSの宣言的デプロイ</title><link>https://klifehack.com/p/oci-arm-nixos-anywhere-disko-deployment/</link><pubDate>Fri, 12 Jun 2026 18:24:14 +0900</pubDate><guid>https://klifehack.com/p/oci-arm-nixos-anywhere-disko-deployment/</guid><description>&lt;h1 id="oci-armインスタンスにおけるnixos-anywhereを用いたnixosへの完全移行プロセス"&gt;OCI ARMインスタンスにおけるnixos-anywhereを用いたNixOSへの完全移行プロセス
 &lt;/h1&gt;&lt;p&gt;クラウドインフラの運用において、OSレベルの構成管理を宣言的に維持することは、構成ドリフト（Configuration Drift）を防ぐための重要な課題です。特にOracle Cloud Infrastructure (OCI) のARMインスタンスのようなパブリッククラウド環境では、手動によるインストール手順を排除し、再現可能なデプロイメントパイプラインを構築することが求められます。本稿では、&lt;b&gt;nixos-anywhere&lt;/b&gt;と&lt;b&gt;disko&lt;/b&gt;を組み合わせ、既存のUbuntuインスタンスを稼働させたまま、リモートからNixOSへ完全に置換する実装プロセスについて解説します。&lt;/p&gt;
 &lt;h2 id="oci-armインスタンスのプロビジョニング"&gt;OCI ARMインスタンスのプロビジョニング
 &lt;/h2&gt;&lt;p&gt;まず、OCIコンソールからベースとなるARMインスタンスを構築します。このインスタンスは、NixOSインストールプロセスを開始するための踏み台（Bootstrap環境）として機能します。スペックは、Canonical Ubuntu 24.04 Minimal aarch64をイメージに採用し、ShapeはVM.Standard.A1.Flex（Always Free枠内: 4 OCPU, 24 GB RAM）を選択します。ストレージは50GB以上のブートボリュームが推奨されます。&lt;/p&gt;
