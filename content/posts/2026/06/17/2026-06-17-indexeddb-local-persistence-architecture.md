@@ -42,17 +42,17 @@ const STORE_NAME = 'entries';
 export class DiaryDB {
   private db: IDBDatabase | null = null;
 
-  public async open(): Promise<idbdatabase> {
-    return new Promise((resolve, reject) =&gt; {
+  public async open(): Promise<IDBDatabase> {
+    return new Promise((resolve, reject) => {
       const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-      request.onerror = () =&gt; reject(request.error);
-      request.onsuccess = () =&gt; {
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
         this.db = request.result;
         resolve(request.result);
       };
 
-      request.onupgradeneeded = (event: IDBVersionChangeEvent) =&gt; {
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
@@ -62,32 +62,32 @@ export class DiaryDB {
     });
   }
 
-  public async addEntry(entry: Omit<diaryentry, 'id'="">): Promise<number> {
+  public async addEntry(entry: Omit<DiaryEntry, 'id'>): Promise<number> {
     const db = await this.getDB();
-    return new Promise((resolve, reject) =&gt; {
+    return new Promise((resolve, reject) => {
       const transaction = db.transaction(STORE_NAME, 'readwrite');
       const store = transaction.objectStore(STORE_NAME);
       const request = store.add(entry);
 
-      request.onsuccess = () =&gt; resolve(request.result as number);
-      request.onerror = () =&gt; reject(request.error);
+      request.onsuccess = () => resolve(request.result as number);
+      request.onerror = () => reject(request.error);
     });
   }
 
-  public async getAllEntries(): Promise<diaryentry[]> {
+  public async getAllEntries(): Promise<DiaryEntry[]> {
     const db = await this.getDB();
-    return new Promise((resolve, reject) =&gt; {
+    return new Promise((resolve, reject) => {
       const transaction = db.transaction(STORE_NAME, 'readonly');
       const store = transaction.objectStore(STORE_NAME);
       const index = store.index('createdAt');
       const request = index.getAll();
 
-      request.onsuccess = () =&gt; resolve(request.result);
-      request.onerror = () =&gt; reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
     });
   }
 
-  private async getDB(): Promise<idbdatabase> {
+  private async getDB(): Promise<IDBDatabase> {
     if (this.db) return this.db;
     return this.open();
   }
@@ -131,4 +131,4 @@ Cache-Control: no-cache
 
 ## Operational Notes
 
-🛠️ `src/db/indexedDb.ts` は、単なるデータアクセス層ではなく、アプリケーションの「プライバシー・サンドボックス」を定義する重要なコンポーネントです。サーバーレスなアーキテクチャを採用することで、ユーザーは自身のデータを完全にコントロール下に置くことができ、開発側はサーバー維持コストとセキュリティリスクを大幅に低減できます。今後の拡張として、WebCrypto APIを用いたローカル暗号化の実装を検討することで、さらに堅牢なデータ保護が可能となります。</idbdatabase></diaryentry[]></number></diaryentry,></idbdatabase>
+🛠️ `src/db/indexedDb.ts` は、単なるデータアクセス層ではなく、アプリケーションの「プライバシー・サンドボックス」を定義する重要なコンポーネントです。サーバーレスなアーキテクチャを採用することで、ユーザーは自身のデータを完全にコントロール下に置くことができ、開発側はサーバー維持コストとセキュリティリスクを大幅に低減できます。今後の拡張として、WebCrypto APIを用いたローカル暗号化の実装を検討することで、さらに堅牢なデータ保護が可能となります。
