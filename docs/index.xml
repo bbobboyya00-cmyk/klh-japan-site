@@ -1,4 +1,73 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 17 Jun 2026 10:11:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>IndexedDBによるクライアントサイド永続化の技術的考察と実装</title><link>https://klifehack.com/p/indexeddb-local-persistence-architecture/</link><pubDate>Wed, 17 Jun 2026 10:11:07 +0900</pubDate><guid>https://klifehack.com/p/indexeddb-local-persistence-architecture/</guid><description>&lt;h1 id="indexeddbによるオフラインファーストアーキテクチャの構築と実装詳細"&gt;IndexedDBによるオフラインファースト・アーキテクチャの構築と実装詳細
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 19 Jun 2026 10:16:43 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Docker Composeにおけるサービスディスカバリとネットワーク分離の設計実装</title><link>https://klifehack.com/p/docker-compose-networking-service-discovery/</link><pubDate>Fri, 19 Jun 2026 10:16:43 +0900</pubDate><guid>https://klifehack.com/p/docker-compose-networking-service-discovery/</guid><description>&lt;p&gt;マイクロサービスアーキテクチャや多層構造のアプリケーションにおいて、コンテナ間の通信管理を静的なIPアドレスに依存することは、スケーラビリティと保守性の観点から大きなリスクを伴います。Docker Composeを利用した環境構築では、内部DNSによるサービスディスカバリとネットワーク分離を適切に設計することで、ホストマシンのポート競合を回避しつつ、セキュアなバックエンド通信を実現することが求められます。&lt;/p&gt;
+&lt;h3 id="内部dnsとサービスディスカバリのメカニズム"&gt;内部DNSとサービスディスカバリのメカニズム
+&lt;/h3&gt;&lt;p&gt;Docker Composeで定義されたサービス群は、デフォルトで単一のブリッジネットワークに割り当てられます。このネットワーク内では、各コンテナはサービス名をホスト名として相互に解決可能です。例えば、データベースサービスを&lt;b&gt;db_server&lt;/b&gt;として定義した場合、Webアプリケーションコンテナからはlocalhostではなく&lt;b&gt;db_server:3306&lt;/b&gt;というエンドポイントで接続が可能になります。これにより、コンテナ再起動時に内部IPが変動しても、アプリケーション側の設定を変更する必要がなくなります。&lt;/p&gt;
+&lt;h3 id="実装構成案nginxとmysqlの統合"&gt;実装構成案：NginxとMySQLの統合
+&lt;/h3&gt;&lt;p&gt;以下の構成では、外部に公開するWebサーバーと、内部ネットワークに隠蔽するデータベースを分離し、データの永続化とヘルスチェックによる依存関係制御を実装しています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.8&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;web_app&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx:1.25-alpine&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;web_service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;8080:80&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;depends_on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;db_service&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;condition&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;service_healthy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;backend_net&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;./html:/usr/share/nginx/html:ro&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;db_service&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;mysql:8.0.36&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;db_instance&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;MYSQL_ROOT_PASSWORD&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${DB_PASSWORD}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;MYSQL_DATABASE&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app_db&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;backend_net&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;db_data:/var/lib/mysql&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;healthcheck&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;CMD&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;mysqladmin&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;ping&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-h&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-u&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;root&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-p$${DB_PASSWORD}&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;interval&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;10s&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;timeout&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5s&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;retries&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;start_period&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;30s&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;backend_net&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;driver&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;bridge&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;db_data&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;driver&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;local&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ネットワーク分離とポートフォワーディングの原則"&gt;ネットワーク分離とポートフォワーディングの原則
+&lt;/h3&gt;&lt;p&gt;本構成において、&lt;b&gt;db_service&lt;/b&gt;にはports定義が存在しません。これは、データベースへのアクセスを同一ネットワーク内の&lt;b&gt;web_app&lt;/b&gt;のみに制限し、ホストマシン経由の外部攻撃ベクトルを遮断するためです。外部ユーザーはホストの8080番ポートを通じてNginxにアクセスしますが、NginxからMySQLへの通信はDocker内部の&lt;b&gt;backend_net&lt;/b&gt;を通り、3306番ポートで直接行われます。&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;運用環境で最も頻繁に遭遇する問題は、コンテナの起動順序とアプリケーションの接続試行のタイミングの乖離による&lt;b&gt;Connection Refused&lt;/b&gt;エラーです。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;データベース初期化の遅延&lt;/b&gt;: depends_onはコンテナの「開始」のみを保証し、内部プロセス（MySQLエンジン）の「準備完了」は保証しません。これを解決するために、上述のYAMLのようにhealthcheckとcondition: service_healthyを組み合わせる必要があります。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;名前解決の失敗&lt;/b&gt;: サービス名が正しく解決されない場合、コンテナが同一のnetworksブロックに属しているかを確認してください。異なるネットワークに属するコンテナ間では、明示的に接続設定を追加しない限り通信は遮断されます。&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;環境変数の不一致&lt;/b&gt;: MYSQL_ROOT_PASSWORDなどの認証情報が、Webアプリ側の接続文字列と一致しているか、.envファイルの読み込み状況を確認してください。&lt;/p&gt;
+&lt;h3 id="接続整合性の検証ログ"&gt;接続整合性の検証ログ
+&lt;/h3&gt;&lt;p&gt;デプロイ後、以下のコマンドを使用してネットワークの疎通とサービスの状態を確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# コンテナのステータスおよびヘルスチェック状態の確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker compose ps
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME IMAGE COMMAND SERVICE STATUS PORTS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;db_instance mysql:8.0.36 &amp;#34;docker-entrypoint.s…&amp;#34; db_service healthy 3306/tcp, 33060/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;web_service nginx:1.25-alpine &amp;#34;/docker-entrypoint.…&amp;#34; web_app running 0.0.0.0:8080-&amp;amp;gt;80/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# WebコンテナからDBサービスへの名前解決テスト
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker exec -it web_service ping -c 3 db_service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PING db_service (172.21.0.2): 56 data bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;64 bytes from 172.21.0.2: seq=0 ttl=64 time=0.082 ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;64 bytes from 172.21.0.2: seq=1 ttl=64 time=0.124 ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# リアルタイムログによる接続エラーの監視
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker compose logs -f web_app
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;Docker Composeを用いたインフラ構成において、単なるコンテナの羅列ではなく、ネットワーク分離とヘルスチェックを組み込むことは、システムの堅牢性を高める上で不可欠です。特に、データベースの初期化時間を考慮した起動制御（Healthcheck）の実装は、デプロイ自動化におけるConnection Refused起因のパイプライン失敗を抑制する極めて有効な手段となります。また、永続ボリュームの適切なマッピングにより、コンテナのライフサイクルに依存しないデータ管理を徹底することが、プロダクション環境への移行における最低条件となります。&lt;/p&gt;</description></item><item><title>IndexedDBによるクライアントサイド永続化の技術的考察と実装</title><link>https://klifehack.com/p/indexeddb-local-persistence-architecture/</link><pubDate>Wed, 17 Jun 2026 10:11:07 +0900</pubDate><guid>https://klifehack.com/p/indexeddb-local-persistence-architecture/</guid><description>&lt;h1 id="indexeddbによるオフラインファーストアーキテクチャの構築と実装詳細"&gt;IndexedDBによるオフラインファースト・アーキテクチャの構築と実装詳細
 &lt;/h1&gt;&lt;p&gt;Webアプリケーションの設計において、ユーザーデータのすべてを中央サーバーに同期するアーキテクチャは、ネットワーク遅延やプライバシー保護、インフラコストの観点から常に最適とは限りません。特に日記のようなパーソナルなデータを取り扱う場合、オフラインでの動作保証とデータ主権の維持が不可欠です。&lt;code&gt;src/db/indexedDb.ts&lt;/code&gt;における実装は、単なるサンプルデータの定義ではなく、ブラウザの物理ストレージを抽象化し、永続的なデータストアとして機能させるための基盤となります。&lt;/p&gt;
 &lt;h2 id="1-indexeddb採用の技術的背景"&gt;1. IndexedDB採用の技術的背景
 &lt;/h2&gt;&lt;p&gt;モダンなWebストレージにはLocalStorageやSessionStorageが存在しますが、本実装でIndexedDBを選択した理由は、以下の制約条件に基づいています。&lt;/p&gt;
