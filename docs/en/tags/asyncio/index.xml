@@ -1,4 +1,175 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Asyncio on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/asyncio/</link><description>Recent content in Asyncio on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 07 Jun 2026 18:18:50 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/asyncio/index.xml" rel="self" type="application/rss+xml"/><item><title>Design Patterns for State Management and Modularization in Systematic Trading Using asyncio</title><link>https://klifehack.com/en/p/asyncio-trading-system-state-modularization/</link><pubDate>Sun, 07 Jun 2026 18:18:50 +0900</pubDate><guid>https://klifehack.com/en/p/asyncio-trading-system-state-modularization/</guid><description>&lt;p&gt;This article explains the architectural redesign and modularization of an automated systematic trading system built on Python&amp;rsquo;s &lt;code&gt;asyncio&lt;/code&gt; framework. The system is designed to interface with the Kiwoom Open API (a hybrid REST and WebSocket client) to execute systematic trading strategies. Specifically, it implements a trend-following methodology that combines ATR (Average True Range) volatility-based position sizing, entries based on Mark Minervini&amp;rsquo;s Trend Template, dynamic pyramiding, and trailing stops.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Asyncio on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/asyncio/</link><description>Recent content in Asyncio on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 21 Jun 2026 10:15:13 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/asyncio/index.xml" rel="self" type="application/rss+xml"/><item><title>Design and Asynchronous Optimization of Real-Time Parallel Processing Pipeline in ZroAct Stage 2</title><link>https://klifehack.com/en/p/zroact-stage2-parallel-pipeline-optimization/</link><pubDate>Sun, 21 Jun 2026 10:15:13 +0900</pubDate><guid>https://klifehack.com/en/p/zroact-stage2-parallel-pipeline-optimization/</guid><description>&lt;h1 id="migration-to-asynchronous-parallel-pipeline-and-bottleneck-optimization-verification-in-zroact-stage-2"&gt;Migration to Asynchronous Parallel Pipeline and Bottleneck Optimization Verification in ZroAct Stage 2
+&lt;/h1&gt;&lt;p&gt;In real-time video inference pipelines, synchronous blocking operations between stages lead to severe underutilization of GPU resources and degradation of end-to-end latency. In particular, in a cascaded architecture that combines a lightweight preprocessing stage (Stage 1) for object detection or action recognition with an evaluation stage (Stage 2) using a large vision-language model (VLM), the overlapping design of data transfer and inference execution determines the overall processing throughput.&lt;/p&gt;
+&lt;p&gt;This article analyzes specific bottlenecks and compares multiple optimization approaches during the migration process from a sequential execution model to an asynchronous parallel processing architecture in the ZroAct Stage 2 system.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="1-current-system-architecture-and-performance-benchmarks"&gt;1. Current System Architecture and Performance Benchmarks
+&lt;/h2&gt;&lt;p&gt;The target system consists of two stages: action detection using the YOWOv3 ONNX model (Stage 1) and video language evaluation using the Qwen3.5-2B VLM (Stage 2). Stage 2 is deployed on the vLLM serving layer, designed to enable high-throughput inference.&lt;/p&gt;
+&lt;h3 id="11-directory-structure"&gt;1.1 Directory Structure
+&lt;/h3&gt;&lt;p&gt;The system is divided into components operating cooperatively as HTTP-based microservices.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;zroact-stage2/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── pipeline/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── main.py # Legacy sequential processing pipeline
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── pipeline_ver2/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ ├── main.py # Common utilities (frame extraction, timing logging, etc.)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── realtime_pipeline.py # Current version (asyncio + aiohttp-based)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── serving/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── app.py # FastAPI job acceptance API
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── config.json # Port and path configuration
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── run_job.py # Single job execution engine
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; └── workers/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── stage1_server.py # YOWOv3 ONNX HTTP daemon (Port 8001)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── stage2_server.py # Qwen3.5 VLM HTTP daemon (Port 8002)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; └── scheduler.py # Real-time scheduler (unimplemented stub)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="12-hardware-profile-and-resource-status"&gt;1.2 Hardware Profile and Resource Status
+&lt;/h3&gt;&lt;p&gt;The hardware specifications and resource utilization in the verification environment are as follows.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;GPU&lt;/b&gt;: NVIDIA RTX A6000 (47.5 GB VRAM)&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Stage 1 ONNX Memory Footprint&lt;/b&gt;: Approx. 1 GB VRAM&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Stage 2 Qwen3.5-2B Memory Footprint&lt;/b&gt;: Approx. 5 GB VRAM&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Available Free VRAM (Headroom)&lt;/b&gt;: Approx. 15 to 16 GB&lt;/p&gt;
+&lt;h3 id="13-performance-measurement-baseline"&gt;1.3 Performance Measurement Baseline
+&lt;/h3&gt;&lt;p&gt;The baseline measurement values when using a 14-second video clip (419 frames in total) as input are as follows.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Phase / Component&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Execution Time&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Throughput / Latency Metric&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Stage 1 (41 clips)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;6.71 seconds&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;163 ms per clip&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Stage 2 (13 VLM requests)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;26.93 seconds&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;2.07 seconds per request (serialized by &lt;code&gt;semaphore=1&lt;/code&gt;)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Overall Streaming Loop&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;27.91 seconds&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Total wall-clock execution time&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="2-detected-system-bottlenecks"&gt;2. Detected System Bottlenecks
+&lt;/h2&gt;&lt;h3 id="bottleneck-1-synchronous-stage-1-batch-loop"&gt;Bottleneck 1: Synchronous Stage 1 Batch Loop
+&lt;/h3&gt;&lt;p&gt;In the current realtime_pipeline.py, Stage 1 batch processing is sequentially awaited within a loop.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; kf_batch &lt;span style="color:#f92672"&gt;in&lt;/span&gt; keyframe_batches:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Execution is blocked until the previous batch completes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; resp_data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; detect_clip_batch(&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this design, when the batch size is small (e.g., 1), the GPU remains idle between ONNX Runtime inference calls, accumulating network round-trip time (RTT) latency.&lt;/p&gt;
+&lt;h3 id="bottleneck-2-serialization-of-stage-2-vlm-due-to-semaphore-limits"&gt;Bottleneck 2: Serialization of Stage 2 VLM due to Semaphore Limits
+&lt;/h3&gt;&lt;p&gt;Stage 2 VLM requests are restricted by a strict semaphore limit.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vlm_semaphore &lt;span style="color:#f92672"&gt;=&lt;/span&gt; asyncio&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Semaphore(&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As a result, the 13 VLM requests are processed entirely in series, reaching an accumulated latency of $13 \times 2.07\text{s} = 26.9\text{s}$. The abundant VRAM of the RTX A6000 (15 to 16 GB of free capacity) is not being utilized effectively.&lt;/p&gt;
+&lt;h3 id="bottleneck-3-latency-in-inter-stage-transition"&gt;Bottleneck 3: Latency in Inter-Stage Transition
+&lt;/h3&gt;&lt;p&gt;Stage 2 tasks are registered to the event loop via asyncio.create_task as soon as the input slots are ready. However, because the single-threaded asyncio event loop is blocked waiting for the completion of Stage 1 HTTP requests, the actual execution start of the registered Stage 2 tasks is delayed.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="3-verification-of-parallelization-and-optimization-strategies"&gt;3. Verification of Parallelization and Optimization Strategies
+&lt;/h2&gt;&lt;h3 id="option-a-asynchronous-batch-execution-of-stage-1-asynciogather"&gt;Option A: Asynchronous Batch Execution of Stage 1 (asyncio.gather)
+&lt;/h3&gt;&lt;p&gt;Instead of executing batches sequentially in a loop, all requests are packaged as coroutines and dispatched concurrently using asyncio.gather.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Improved parallel execution code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tasks &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; detect_clip_batch(session, clips&lt;span style="color:#f92672"&gt;=&lt;/span&gt;build_payload(kf_batch))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; kf_batch &lt;span style="color:#f92672"&gt;in&lt;/span&gt; keyframe_batches
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;results &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; asyncio&lt;span style="color:#f92672"&gt;.&lt;/span&gt;gather(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;tasks)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;Advantages&lt;/b&gt;: Minimal code changes are required, and the cumulative HTTP RTT can be reduced.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Disadvantages&lt;/b&gt;: If the ONNX Runtime InferenceSession is not thread-safe, processing will be serialized at the final GPU execution level, so extreme parallelization will lead to event loop saturation.&lt;/p&gt;
+&lt;h3 id="option-b-parallel-processing-of-stage-2-vlm-relaxing-semaphores"&gt;Option B: Parallel Processing of Stage 2 VLM (Relaxing Semaphores)
+&lt;/h3&gt;&lt;p&gt;Relax the restrictions of vlm_semaphore to execute multiple requests concurrently using the free VRAM of the RTX A6000.&lt;/p&gt;
+&lt;p&gt;The VRAM scaling projection is calculated as follows:&lt;/p&gt;
+&lt;p&gt;• Qwen3.5-2B base weights: Approx. 5 GB&lt;/p&gt;
+&lt;p&gt;• Activation memory per request (3 images + prompt): Approx. 1 to 2 GB&lt;/p&gt;
+&lt;p&gt;• For Semaphore(2): ~5GB + (2 * 2GB) = 7 ~ 9GB (extremely stable)&lt;/p&gt;
+&lt;p&gt;• For Semaphore(4): ~5GB + (4 * 2GB) = 11 ~ 13GB (within safe margin)&lt;/p&gt;
+&lt;p&gt;• No limit (13 parallel): ~5GB + (13 * 2GB) &amp;gt;= 31GB (high risk of OOM)&lt;/p&gt;
+&lt;h3 id="option-c-producer-consumer-pipeline-using-asyncioqueue"&gt;Option C: Producer-Consumer Pipeline Using asyncio.Queue
+&lt;/h3&gt;&lt;p&gt;Completely decouple Stage 1 (Producer) and Stage 2 (Consumer), streaming data through a shared queue. This allows Stage 2 processing to begin the moment the first clip of Stage 1 is completed.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; asyncio
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;stage2_queue &lt;span style="color:#f92672"&gt;=&lt;/span&gt; asyncio&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Queue()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;stage1_producer&lt;/span&gt;(session, keyframe_batches, queue):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; kf_batch &lt;span style="color:#f92672"&gt;in&lt;/span&gt; keyframe_batches:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; resp &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; detect_clip_batch(session, clips&lt;span style="color:#f92672"&gt;=&lt;/span&gt;build_payload(kf_batch))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; result &lt;span style="color:#f92672"&gt;in&lt;/span&gt; resp[&lt;span style="color:#e6db74"&gt;&amp;#34;results&amp;#34;&lt;/span&gt;]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Enqueue once slot dependencies are resolved&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; check_slot_ready(result):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;put(build_vlm_request(result))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;put(&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# Termination signal&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;stage2_consumer&lt;/span&gt;(session, queue, results_list):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Limit concurrency to 2 to protect resources&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sem &lt;span style="color:#f92672"&gt;=&lt;/span&gt; asyncio&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Semaphore(&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;worker&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; req &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; req &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;task_done()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;put(&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# Propagate termination to other workers&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; sem:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; res &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; evaluate_vlm(session, req)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; results_list&lt;span style="color:#f92672"&gt;.&lt;/span&gt;append(res)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;task_done()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; worker()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="option-f-asynchronous-io-prefetching-via-run_in_executor"&gt;Option F: Asynchronous I/O Prefetching via run_in_executor
+&lt;/h3&gt;&lt;p&gt;Offload blocking I/O operations, such as image loading and decoding, to a thread pool using loop.run_in_executor so that the main event loop can focus solely on waiting for network responses.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; concurrent.futures &lt;span style="color:#f92672"&gt;import&lt;/span&gt; ThreadPoolExecutor
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; asyncio
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;executor &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ThreadPoolExecutor(max_workers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;4&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;prefetch_clip_frames&lt;/span&gt;(loop, frame_paths, key_idx, clip_length, sampling_rate):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_load&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Load images from disk (blocking operation)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; str(frame_paths[max(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, key_idx &lt;span style="color:#f92672"&gt;-&lt;/span&gt; i &lt;span style="color:#f92672"&gt;*&lt;/span&gt; sampling_rate &lt;span style="color:#f92672"&gt;-&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i &lt;span style="color:#f92672"&gt;in&lt;/span&gt; reversed(range(clip_length))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; loop&lt;span style="color:#f92672"&gt;.&lt;/span&gt;run_in_executor(executor, _load)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="4-troubleshooting-and-practical-constraints"&gt;4. Troubleshooting and Practical Constraints
+&lt;/h2&gt;&lt;h3 id="41-python-gil-and-cuda-kernel-serialization"&gt;4.1 Python GIL and CUDA Kernel Serialization
+&lt;/h3&gt;&lt;p&gt;Even when HTTP requests are sent asynchronously in parallel using asyncio, actual GPU execution is partially serialized due to the Python Global Interpreter Lock (GIL) and CUDA stream synchronization constraints when the underlying PyTorch or ONNX Runtime calls GPU kernels. However, CPU-bound preprocessing tasks such as image decoding, tensor preprocessing, and JSON serialization/deserialization are significantly overlapped through asynchronous execution, improving overall throughput.&lt;/p&gt;
+&lt;h3 id="42-vram-fragmentation-and-oom-out-of-memory"&gt;4.2 VRAM Fragmentation and OOM (Out of Memory)
+&lt;/h3&gt;&lt;p&gt;Setting the vlm_semaphore value excessively high causes contention with the vLLM KV cache area, leading to CUDA out of memory errors during runtime. In the RTX A6000 environment, it is necessary to operate with Semaphore(2) or Semaphore(3) considering a safety margin, and monitor memory usage during spikes.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="5-operational-verification-logs"&gt;5. Operational Verification Logs
+&lt;/h2&gt;&lt;p&gt;The simulation of the console output log during the execution of the optimized pipeline (Option A + Option B Semaphore(2)) demonstrates overlapping execution of Stage 1 batch processing and Stage 2 VLM evaluation.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:01,102 [INFO] Starting pipeline optimization validation...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:01,105 [INFO] Stage 1 Server (Port 8001) and Stage 2 Server (Port 8002) are active.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:01,150 [INFO] Dispatching Stage 1 batches concurrently using asyncio.gather...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:02,890 [INFO] Stage 1: Batch 1-10 processed successfully.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:02,910 [INFO] Slot 3-frame ready for Keyframe Index 12. Spawning Stage 2 Task...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:02,915 [INFO] Slot 3-frame ready for Keyframe Index 24. Spawning Stage 2 Task...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:02,920 [DEBUG] Active VLM Semaphore count: 2/2. Task for Index 24 queued.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:04,950 [INFO] Stage 2: VLM evaluation completed for Index 12 (Duration: 2.03s).
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:04,952 [DEBUG] Semaphore released. Task for Index 24 immediately acquired lock.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:06,980 [INFO] Stage 2: VLM evaluation completed for Index 24 (Duration: 2.01s).
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:07,810 [INFO] All Stage 1 and Stage 2 tasks completed.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:07,812 [INFO] Total pipeline wall-clock time: 16.71 seconds (Baseline: 27.91s, ~40.1% improvement).
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="6-lessons-learned"&gt;6. Lessons Learned
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Effectiveness of Asynchronous Queues in Cascaded Pipelines&lt;/b&gt;: By keeping Stage 1 and Stage 2 loosely coupled and streaming data via asyncio.Queue, heavy inference in the subsequent stage can begin without waiting for the preceding stage to complete, significantly reducing overall execution time.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Semaphore Control Tailored to Hardware Characteristics&lt;/b&gt;: Rather than simply increasing the degree of parallelism, accurately calculating the GPU VRAM capacity (47.5 GB for RTX A6000) and model footprint (5 GB for Qwen3.5-2B + activations) to set a safe concurrency limit (Semaphore(2-3)) is extremely critical for stable operation in production environments.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Eliminating I/O Blocking&lt;/b&gt;: Offloading disk I/O using run_in_executor is an essential pattern to prevent stalls in network-bound asynchronous event loops.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Design Patterns for State Management and Modularization in Systematic Trading Using asyncio</title><link>https://klifehack.com/en/p/asyncio-trading-system-state-modularization/</link><pubDate>Sun, 07 Jun 2026 18:18:50 +0900</pubDate><guid>https://klifehack.com/en/p/asyncio-trading-system-state-modularization/</guid><description>&lt;p&gt;This article explains the architectural redesign and modularization of an automated systematic trading system built on Python&amp;rsquo;s &lt;code&gt;asyncio&lt;/code&gt; framework. The system is designed to interface with the Kiwoom Open API (a hybrid REST and WebSocket client) to execute systematic trading strategies. Specifically, it implements a trend-following methodology that combines ATR (Average True Range) volatility-based position sizing, entries based on Mark Minervini&amp;rsquo;s Trend Template, dynamic pyramiding, and trailing stops.&lt;/p&gt;
 &lt;h2 id="1-architectural-overview-and-refactoring-objectives"&gt;1. Architectural Overview and Refactoring Objectives
 &lt;/h2&gt;&lt;p&gt;In the conventional monolithic engine, order execution, state tracking, risk management, and logging were tightly coupled, posing challenges for maintainability and scalability. In this redesign, modularization was implemented to achieve the following four objectives:&lt;/p&gt;
 &lt;p&gt;💡 &lt;b&gt;Decoupling of Concerns&lt;/b&gt;: Transition each component to a loosely coupled, event-driven architecture.&lt;/p&gt;

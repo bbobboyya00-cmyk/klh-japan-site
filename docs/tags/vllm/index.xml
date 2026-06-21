@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vllm on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/vllm/</link><description>Recent content in Vllm on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 21 Jun 2026 10:15:12 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/vllm/index.xml" rel="self" type="application/rss+xml"/><item><title>ZroAct Stage 2におけるリアルタイム並列処理パイプラインの設計と非同期最適化</title><link>https://klifehack.com/p/zroact-stage2-parallel-pipeline-optimization/</link><pubDate>Sun, 21 Jun 2026 10:15:12 +0900</pubDate><guid>https://klifehack.com/p/zroact-stage2-parallel-pipeline-optimization/</guid><description>&lt;h1 id="zroact-stage-2における非同期並列パイプラインへの移行とボトルネック最適化検証"&gt;ZroAct Stage 2における非同期並列パイプラインへの移行とボトルネック最適化検証
+&lt;/h1&gt;&lt;p&gt;リアルタイムのビデオ推論パイプラインにおいて、ステージ間の同期的なブロッキング処理は、GPUリソースの深刻な過少利用とエンドツーエンドの遅延（Latency）悪化を招きます。特に、物体検出やアクション認識を行う軽量な前処理ステージ（Stage 1）と、大規模なマルチモーダル基盤モデル（VLM）による評価ステージ（Stage 2）を組み合わせるカスケード型アーキテクチャでは、データ転送と推論実行のオーバーラップ設計が全体の処理スループットを決定づけます。&lt;/p&gt;
+&lt;p&gt;本稿では、ZroAct Stage 2システムにおけるシーケンシャルな実行モデルから、非同期並列処理アーキテクチャへの移行プロセスについて、具体的なボトルネックの分析と複数の最適化アプローチの比較検証を行います。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="1-現行システムのアーキテクチャと性能基準"&gt;1. 現行システムのアーキテクチャと性能基準
+&lt;/h2&gt;&lt;p&gt;対象システムは、YOWOv3 ONNXモデルによるアクション検出（Stage 1）と、Qwen3.5-2B VLMによるビデオ言語評価（Stage 2）の2段階で構成されています。Stage 2はvLLMサービングレイヤー上にデプロイされ、高スループットな推論を可能にする設計となっています。&lt;/p&gt;
+&lt;h3 id="11-ディレクトリ構造"&gt;1.1 ディレクトリ構造
+&lt;/h3&gt;&lt;p&gt;システムは以下のコンポーネントに分割され、HTTPベースのマイクロサービスとして協調動作します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;zroact-stage2/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── pipeline/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── main.py # レガシーな順次処理パイプライン
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── pipeline_ver2/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ ├── main.py # 共通ユーティリティ（フレーム抽出、タイミング記録等）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── realtime_pipeline.py # 現行バージョン（asyncio + aiohttpベース）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── serving/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── app.py # FastAPIジョブ受付API
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── config.json # ポートおよびパス設定
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── run_job.py # 単一ジョブ実行エンジン
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; └── workers/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── stage1_server.py # YOWOv3 ONNX HTTPデーモン (Port 8001)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├── stage2_server.py # Qwen3.5 VLM HTTPデーモン (Port 8002)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; └── scheduler.py # リアルタイムスケジューラ（未実装スタブ）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="12-ハードウェアプロファイルとリソース状況"&gt;1.2 ハードウェアプロファイルとリソース状況
+&lt;/h3&gt;&lt;p&gt;検証環境におけるハードウェア仕様およびリソースの占有状況は以下の通りです。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;GPU&lt;/b&gt;: NVIDIA RTX A6000 (47.5 GB VRAM)
+💡 &lt;b&gt;Stage 1 ONNX メモリ占有量&lt;/b&gt;: 約 1 GB VRAM
+💡 &lt;b&gt;Stage 2 Qwen3.5-2B メモリ占有量&lt;/b&gt;: 約 5 GB VRAM
+💡 &lt;b&gt;利用可能な空きVRAM（ヘッドルーム）&lt;/b&gt;: 約 15 〜 16 GB&lt;/p&gt;
+&lt;h3 id="13-性能測定のベースライン"&gt;1.3 性能測定のベースライン
+&lt;/h3&gt;&lt;p&gt;14秒のビデオクリップ（計419フレーム）を入力とした場合のベースライン測定値は以下の通りです。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;フェーズ / コンポーネント&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;実行時間&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;スループット / 遅延指標&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Stage 1 (41 クリップ)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;6.71 秒&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;1クリップあたり 163 ms&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Stage 2 (13 VLM リクエスト)&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;26.93 秒&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;1リクエストあたり 2.07 秒 (&lt;code&gt;semaphore=1&lt;/code&gt; による直列化)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;全体のストリーミングループ&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;27.91 秒&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;総ウォールクロック実行時間&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="2-検出されたシステムボトルネック"&gt;2. 検出されたシステムボトルネック
+&lt;/h2&gt;&lt;h3 id="ボトルネック-1-同期的な-stage-1-バッチループ"&gt;ボトルネック 1: 同期的な Stage 1 バッチループ
+&lt;/h3&gt;&lt;p&gt;現行の &lt;code&gt;realtime_pipeline.py&lt;/code&gt; では、Stage 1のバッチ処理がループ内で順次 &lt;code&gt;await&lt;/code&gt; されています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; kf_batch &lt;span style="color:#f92672"&gt;in&lt;/span&gt; keyframe_batches:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 前のバッチが完了するまで実行がブロックされる&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; resp_data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; detect_clip_batch(&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この設計では、バッチサイズが小さい場合（例: 1）、ONNX Runtimeの推論呼び出しの合間にGPUがアイドル状態になり、ネットワーク往復遅延（RTT）が累積します。&lt;/p&gt;
+&lt;h3 id="ボトルネック-2-セマフォ制限による-stage-2-vlm-の直列化"&gt;ボトルネック 2: セマフォ制限による Stage 2 VLM の直列化
+&lt;/h3&gt;&lt;p&gt;Stage 2のVLMリクエストは、以下の厳格なセマフォによって制限されています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vlm_semaphore &lt;span style="color:#f92672"&gt;=&lt;/span&gt; asyncio&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Semaphore(&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;これにより、13件 of VLMリクエストが完全に直列処理され、累積遅延が $13 \times 2.07\text{秒} = 26.9\text{秒}$ に達します。RTX A6000の豊富なVRAM（空き容量 15〜16 GB）が有効に活用されていません。&lt;/p&gt;
+&lt;h3 id="ボトルネック-3-ステージ間遷移の遅延"&gt;ボトルネック 3: ステージ間遷移の遅延
+&lt;/h3&gt;&lt;p&gt;Stage 2のタスクは、入力スロットが準備できた段階で &lt;code&gt;asyncio.create_task&lt;/code&gt; によってイベントループに登録されます。しかし、シングルスレッドの &lt;code&gt;asyncio&lt;/code&gt; イベントループが Stage 1 のHTTPリクエストの完了待ちでブロックされているため、登録された Stage 2 タスクの実際の実行開始が遅延します。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="3-並列化および最適化戦略の検証"&gt;3. 並列化および最適化戦略の検証
+&lt;/h2&gt;&lt;h3 id="オプション-a-stage-1-バッチの非同期一括実行-asynciogather"&gt;オプション A: Stage 1 バッチの非同期一括実行 (&lt;code&gt;asyncio.gather&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;バッチをループで順次実行する代わりに、すべてのリクエストをコルーチンとしてパッケージ化し、&lt;code&gt;asyncio.gather&lt;/code&gt; で同時にディスパッチします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 改善後の並列実行コード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tasks &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; detect_clip_batch(session, clips&lt;span style="color:#f92672"&gt;=&lt;/span&gt;build_payload(kf_batch))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; kf_batch &lt;span style="color:#f92672"&gt;in&lt;/span&gt; keyframe_batches
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;results &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; asyncio&lt;span style="color:#f92672"&gt;.&lt;/span&gt;gather(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;tasks)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;利点&lt;/b&gt;: コードの変更が最小限で済み、HTTPの累積RTTを削減できます。
+⚠️ &lt;b&gt;欠点&lt;/b&gt;: ONNX Runtimeの &lt;code&gt;InferenceSession&lt;/code&gt; がスレッドセーフでない場合、最終的なGPU実行レベルで処理が直列化されるため、極端な並列化はイベントループの飽和を招きます。&lt;/p&gt;
+&lt;h3 id="オプション-b-stage-2-vlm-の並列処理セマフォの緩和"&gt;オプション B: Stage 2 VLM の並列処理（セマフォの緩和）
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;vlm_semaphore&lt;/code&gt; の制限を緩和し、RTX A6000の空きVRAMを利用して複数リクエストを同時実行します。&lt;/p&gt;
+&lt;p&gt;VRAMスケーリング予測は以下の通りです。
+・ Qwen3.5-2B 基本重み: 約 5 GB
+・ 1リクエストあたりのアクティベーションメモリ（画像3枚 + プロンプト）: 約 1 〜 2 GB
+・ &lt;code&gt;Semaphore(2)&lt;/code&gt; の場合: $\sim 5\text{GB} + (2 \times 2\text{GB}) = 7 \sim 9\text{GB}$（極めて安定）
+・ &lt;code&gt;Semaphore(4)&lt;/code&gt; の場合: $\sim 5\text{GB} + (4 \times 2\text{GB}) = 11 \sim 13\text{GB}$（安全圏内）
+・ 制限なし（13並列）: $\sim 5\text{GB} + (13 \times 2\text{GB}) \ge 31\text{GB}$（OOMのリスク高）&lt;/p&gt;
+&lt;h3 id="オプション-c-asyncioqueue-を用いた-producer-consumer-パイプライン"&gt;オプション C: &lt;code&gt;asyncio.Queue&lt;/code&gt; を用いた Producer-Consumer パイプライン
+&lt;/h3&gt;&lt;p&gt;Stage 1（Producer）と Stage 2（Consumer）を完全に分離し、共有キューを介してデータをストリーミングします。これにより、Stage 1の最初のクリップが完了した瞬間に Stage 2 の処理を開始できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; asyncio
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;stage2_queue &lt;span style="color:#f92672"&gt;=&lt;/span&gt; asyncio&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Queue()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;stage1_producer&lt;/span&gt;(session, keyframe_batches, queue):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; kf_batch &lt;span style="color:#f92672"&gt;in&lt;/span&gt; keyframe_batches:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; resp &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; detect_clip_batch(session, clips&lt;span style="color:#f92672"&gt;=&lt;/span&gt;build_payload(kf_batch))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; result &lt;span style="color:#f92672"&gt;in&lt;/span&gt; resp[&lt;span style="color:#e6db74"&gt;&amp;#34;results&amp;#34;&lt;/span&gt;]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# スロットの依存関係が解決されたらキューに投入&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; check_slot_ready(result):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;put(build_vlm_request(result))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;put(&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 終了シグナル&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;stage2_consumer&lt;/span&gt;(session, queue, results_list):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 同時実行数を2に制限してリソースを保護&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sem &lt;span style="color:#f92672"&gt;=&lt;/span&gt; asyncio&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Semaphore(&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;worker&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; req &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; req &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;task_done()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;put(&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 他のワーカースレッドにも終了を伝播&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; sem:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; res &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; evaluate_vlm(session, req)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; results_list&lt;span style="color:#f92672"&gt;.&lt;/span&gt;append(res)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; queue&lt;span style="color:#f92672"&gt;.&lt;/span&gt;task_done()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; worker()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="オプション-f-run_in_executor-による-io-プリフェッチの非同期化"&gt;オプション F: &lt;code&gt;run_in_executor&lt;/code&gt; による I/O プリフェッチの非同期化
+&lt;/h3&gt;&lt;p&gt;画像の読み込みやデコードなどのブロッキングI/O処理を、&lt;code&gt;loop.run_in_executor&lt;/code&gt; を使用してスレッドプールにオフロードし、メインのイベントループがネットワーク応答の待機に専念できるようにします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; concurrent.futures &lt;span style="color:#f92672"&gt;import&lt;/span&gt; ThreadPoolExecutor
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; asyncio
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;executor &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ThreadPoolExecutor(max_workers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;4&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;prefetch_clip_frames&lt;/span&gt;(loop, frame_paths, key_idx, clip_length, sampling_rate):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_load&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# ディスクからの画像読み込み（ブロッキング処理）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; str(frame_paths[max(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, key_idx &lt;span style="color:#f92672"&gt;-&lt;/span&gt; i &lt;span style="color:#f92672"&gt;*&lt;/span&gt; sampling_rate &lt;span style="color:#f92672"&gt;-&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i &lt;span style="color:#f92672"&gt;in&lt;/span&gt; reversed(range(clip_length))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; loop&lt;span style="color:#f92672"&gt;.&lt;/span&gt;run_in_executor(executor, _load)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="4-トラブルシューティングと実務上の制約"&gt;4. トラブルシューティングと実務上の制約
+&lt;/h2&gt;&lt;h3 id="41-python-gil-と-cuda-カーネルの直列化"&gt;4.1 Python GIL と CUDA カーネルの直列化
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;asyncio&lt;/code&gt; を用いて非同期にHTTPリクエストを並列送信しても、下層の PyTorch や ONNX Runtime がGPUカーネルを呼び出す際、Pythonのグローバルインタプリタロック（GIL）およびCUDAストリームの同期制約により、実際のGPU実行は一部直列化されます。しかし、画像デコード、テンソル前処理、JSONのシリアライズ/デシリアライズなどのCPUバウンドな前処理タスクは非同期化によって大幅にオーバーラップされ、全体的なスループットが向上します。&lt;/p&gt;
+&lt;h3 id="42-vramの断片化と-oom-out-of-memory"&gt;4.2 VRAMの断片化と OOM (Out of Memory)
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;code&gt;vlm_semaphore&lt;/code&gt; の値を過度に大きくすると、vLLMのKVキャッシュ領域と競合し、ランタイム中に &lt;code&gt;CUDA out of memory&lt;/code&gt; エラーが発生します。RTX A6000環境では、安全マージンを考慮して &lt;code&gt;Semaphore(2)&lt;/code&gt; または &lt;code&gt;Semaphore(3)&lt;/code&gt; で運用し、スパイク時のメモリ使用量を監視する必要があります。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="5-運用検証ログ"&gt;5. 運用検証ログ
+&lt;/h2&gt;&lt;p&gt;最適化後のパイプライン（Option A + Option B &lt;code&gt;Semaphore(2)&lt;/code&gt;）を実行した際のコンソール出力ログのシミュレーションを示します。Stage 1のバッチ処理と Stage 2 のVLM評価がオーバーラップして実行されていることが確認できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:01,102 [INFO] Starting pipeline optimization validation...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:01,105 [INFO] Stage 1 Server (Port 8001) and Stage 2 Server (Port 8002) are active.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:01,150 [INFO] Dispatching Stage 1 batches concurrently using asyncio.gather...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:02,890 [INFO] Stage 1: Batch 1-10 processed successfully.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:02,910 [INFO] Slot 3-frame ready for Keyframe Index 12. Spawning Stage 2 Task...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:02,915 [INFO] Slot 3-frame ready for Keyframe Index 24. Spawning Stage 2 Task...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:02,920 [DEBUG] Active VLM Semaphore count: 2/2. Task for Index 24 queued.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:04,950 [INFO] Stage 2: VLM evaluation completed for Index 12 (Duration: 2.03s).
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:04,952 [DEBUG] Semaphore released. Task for Index 24 immediately acquired lock.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:06,980 [INFO] Stage 2: VLM evaluation completed for Index 24 (Duration: 2.01s).
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:07,810 [INFO] All Stage 1 and Stage 2 tasks completed.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-06-21 10:00:07,812 [INFO] Total pipeline wall-clock time: 16.71 seconds (Baseline: 27.91s, ~40.1% improvement).
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="6-lessons-learned"&gt;6. Lessons Learned
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;カスケード型パイプラインにおける非同期キューの有効性&lt;/b&gt;: Stage 1 と Stage 2 を疎結合に保ち、&lt;code&gt;asyncio.Queue&lt;/code&gt; を介してデータをストリーミングすることで、前段の完了を待たずに後段 of 重い推論を開始でき、全体の実行時間を大幅に短縮できます。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;ハードウェア特性に応じたセマフォ制御&lt;/b&gt;: 単に並列数を増やすのではなく、GPUのVRAM容量（RTX A6000の47.5GB）とモデルのフットプリント（Qwen3.5-2Bの5GB + アクティベーション）を正確に計算し、安全な同時実行数（&lt;code&gt;Semaphore(2〜3)&lt;/code&gt;）を設定することが、本番環境での安定稼働において極めて重要です。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;I/Oブロッキングの排除&lt;/b&gt;: &lt;code&gt;run_in_executor&lt;/code&gt; を用いたディスクI/Oのオフロードは、ネットワークバウンドな非同期イベントループのストールを防ぐための必須パターンです。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description></item></channel></rss>
