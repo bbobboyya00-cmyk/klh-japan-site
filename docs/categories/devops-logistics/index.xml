@@ -1,4 +1,81 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 19 Jun 2026 10:16:43 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>Docker Composeにおけるサービスディスカバリとネットワーク分離の設計実装</title><link>https://klifehack.com/p/docker-compose-networking-service-discovery/</link><pubDate>Fri, 19 Jun 2026 10:16:43 +0900</pubDate><guid>https://klifehack.com/p/docker-compose-networking-service-discovery/</guid><description>&lt;p&gt;マイクロサービスアーキテクチャや多層構造のアプリケーションにおいて、コンテナ間の通信管理を静的なIPアドレスに依存することは、スケーラビリティと保守性の観点から大きなリスクを伴います。Docker Composeを利用した環境構築では、内部DNSによるサービスディスカバリとネットワーク分離を適切に設計することで、ホストマシンのポート競合を回避しつつ、セキュアなバックエンド通信を実現することが求められます。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 23 Jun 2026 10:11:29 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes StatefulSetにおける永続データ管理とネットワーク識別子の設計</title><link>https://klifehack.com/p/k8s-statefulset-architecture-storage/</link><pubDate>Tue, 23 Jun 2026 10:11:29 +0900</pubDate><guid>https://klifehack.com/p/k8s-statefulset-architecture-storage/</guid><description>&lt;h1 id="kubernetes-statefulsetにおける永続的アイデンティティとストレージの管理手法"&gt;Kubernetes StatefulSetにおける永続的アイデンティティとストレージの管理手法
+&lt;/h1&gt;&lt;p&gt;分散システムやデータベース（MySQL、PostgreSQL、Kafkaなど）の運用において、ポッドの再起動後も同一のアイデンティティとデータを保持することは、システムの整合性を維持するための必須要件です。標準的なDeploymentでは、ポッドはエフェメラル（一時的）な存在として扱われ、再起動のたびにランダムなホスト名とIPアドレスが割り当てられます。このようなステートレスな設計は、データの永続性やマスター・スレーブ間の固定的な通信が必要なワークロードにおいて、重大な運用上の制約となります。本稿では、これらの課題を解決するStatefulSetの内部構造と、Headless ServiceおよびVolumeClaimTemplatesを用いた実装手法について技術的分析を行います。&lt;/p&gt;
+&lt;h2 id="1-statefulsetとdeploymentの構造的相違"&gt;1. StatefulSetとDeploymentの構造的相違
+&lt;/h2&gt;&lt;p&gt;StatefulSetは、ポッドの「順序性」と「一意性」を保証するために設計されています。Deploymentとの主な違いは以下の通りです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;識別子&lt;/b&gt;: Deploymentはランダムなサフィックスを付与しますが、StatefulSetは &lt;code&gt;mysql-0&lt;/code&gt;, &lt;code&gt;mysql-1&lt;/code&gt; のように固定の序数インデックスを付与します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ストレージ&lt;/b&gt;: Deploymentは全レプリカで同一のボリュームを共有（またはボリュームなし）しますが、StatefulSetは各ポッドに専用のPVC（PersistentVolumeClaim）を1対1で割り当てます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;デプロイ順序&lt;/b&gt;: Deploymentは並列で作成・削除されますが、StatefulSetはインデックス0から順次作成され、削除時は逆順（OrderedReady）で実行されます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-headless-serviceによるネットワーク識別子の固定"&gt;2. Headless Serviceによるネットワーク識別子の固定
+&lt;/h2&gt;&lt;p&gt;StatefulSetのポッドが固定のFQDN（Fully Qualified Domain Name）を持つためには、Headless Serviceとの連携が不可欠です。&lt;code&gt;clusterIP: None&lt;/code&gt; を設定することで、Serviceは仮想IPを持たず、DNSクエリに対して個々のポッドのIPアドレスを直接返します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;sfs-service01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app.kubernetes.io/name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;web-sfs01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;type&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ClusterIP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;clusterIP&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;protocol&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TCP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この設定により、各ポッドは &lt;code&gt;[Pod Name].[Service Name].[Namespace].svc.cluster.local&lt;/code&gt; という形式で相互に通信可能となります。これは、クラスタ内でのリーダー選定やデータ同期において、特定のノードを明示的に指定する必要がある分散データベースにおいて極めて重要です。&lt;/p&gt;
+&lt;h2 id="3-statefulsetの実装とポッドのライフサイクル"&gt;3. StatefulSetの実装とポッドのライフサイクル
+&lt;/h2&gt;&lt;p&gt;以下は、Nginxイメージを使用したStatefulSetの基本構成です。&lt;code&gt;serviceName&lt;/code&gt; フィールドによって、前述のHeadless Serviceと明示的に紐付けられます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;apps/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;StatefulSet&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;sfs-test01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;replicas&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;matchLabels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app.kubernetes.io/name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;web-sfs01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;serviceName&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;sfs-service01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;template&lt;/span&gt;: &lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app.kubernetes.io/name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;web-sfs01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-volumeclaimtemplatesによる動的プロビジョニング"&gt;4. VolumeClaimTemplatesによる動的プロビジョニング
+&lt;/h2&gt;&lt;p&gt;StatefulSetの最も強力な機能の一つは、&lt;code&gt;volumeClaimTemplates&lt;/code&gt; です。これにより、ポッドごとに独立したストレージが自動的にプロビジョニングされます。ポッドが削除されてもPVCは保持されるため、再起動後のポッドは以前と同じデータボリュームに再マウントされます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumeClaimTemplates&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;sfs-vol01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;accessModes&lt;/span&gt;: [ &lt;span style="color:#e6db74"&gt;&amp;#34;ReadWriteOnce&amp;#34;&lt;/span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;storageClassName&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pv-sfs-test01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;requests&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;storage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5Mi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;StatefulSetの運用において最も頻繁に遭遇する問題は、スケーリング時の &lt;b&gt;PVCのPending状態&lt;/b&gt; です。手動でPersistentVolume（PV）を管理している環境において、&lt;code&gt;replicas&lt;/code&gt; を増やした際、対応する &lt;code&gt;storageClassName&lt;/code&gt; を持つ利用可能なPVが不足していると、新しいポッドは &lt;code&gt;Pending&lt;/code&gt; のまま起動しません。⚠️&lt;/p&gt;
+&lt;p&gt;また、StatefulSetを削除してもPVCは自動削除されないため、ディスク容量の枯渇を招く可能性があります。不要になったデータは、StatefulSetの削除後に手動で &lt;code&gt;kubectl delete pvc&lt;/code&gt; を実行してクリーンアップする必要があります。&lt;/p&gt;
+&lt;h2 id="operational-verifications"&gt;Operational Verifications
+&lt;/h2&gt;&lt;p&gt;デプロイ後のリソース状態およびネットワーク疎通の確認ログを以下に示します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# リソースの起動確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% kubectl get pod -o wide
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY STATUS RESTARTS AGE IP NODE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sfs-test01-0 1/1 Running 0 80s 10.244.2.9 worker-node-01
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sfs-test01-1 1/1 Running 0 80s 10.244.1.17 worker-node-02
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sfs-test01-2 1/1 Running 0 79s 10.244.1.18 worker-node-02
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Headless Serviceの確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% kubectl get svc sfs-service01
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sfs-service01 ClusterIP None &amp;lt;none&amp;gt; 80/TCP 14m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 特定ポッドへの疎通確認 (Pod 1への直接アクセス)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% kubectl exec -it nginx-client -- curl -I sfs-test01-1.sfs-service01.default.svc.cluster.local
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Server: nginx/1.25.x
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: text/html
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;StatefulSetの導入は、単なるポッドの管理を超え、インフラ層におけるストレージのライフサイクル管理とネットワークトポロジの固定化を意味します。特にデータベースのコンテナ化においては、&lt;code&gt;volumeClaimTemplates&lt;/code&gt; によるデータの局所性確保と、Headless Serviceによる安定したエンドポイントの提供が、システムの信頼性を左右する決定的な要因となります。💡 運用設計においては、ポッドの異常終了時におけるPVCの再アタッチ時間や、スケーリング時のPV供給能力を事前に検証しておくことが推奨されます。&lt;/none&gt;&lt;/p&gt;</description></item><item><title>Docker Composeにおけるサービスディスカバリとネットワーク分離の設計実装</title><link>https://klifehack.com/p/docker-compose-networking-service-discovery/</link><pubDate>Fri, 19 Jun 2026 10:16:43 +0900</pubDate><guid>https://klifehack.com/p/docker-compose-networking-service-discovery/</guid><description>&lt;p&gt;マイクロサービスアーキテクチャや多層構造のアプリケーションにおいて、コンテナ間の通信管理を静的なIPアドレスに依存することは、スケーラビリティと保守性の観点から大きなリスクを伴います。Docker Composeを利用した環境構築では、内部DNSによるサービスディスカバリとネットワーク分離を適切に設計することで、ホストマシンのポート競合を回避しつつ、セキュアなバックエンド通信を実現することが求められます。&lt;/p&gt;
 &lt;h3 id="内部dnsとサービスディスカバリのメカニズム"&gt;内部DNSとサービスディスカバリのメカニズム
 &lt;/h3&gt;&lt;p&gt;Docker Composeで定義されたサービス群は、デフォルトで単一のブリッジネットワークに割り当てられます。このネットワーク内では、各コンテナはサービス名をホスト名として相互に解決可能です。例えば、データベースサービスを&lt;b&gt;db_server&lt;/b&gt;として定義した場合、Webアプリケーションコンテナからはlocalhostではなく&lt;b&gt;db_server:3306&lt;/b&gt;というエンドポイントで接続が可能になります。これにより、コンテナ再起動時に内部IPが変動しても、アプリケーション側の設定を変更する必要がなくなります。&lt;/p&gt;
 &lt;h3 id="実装構成案nginxとmysqlの統合"&gt;実装構成案：NginxとMySQLの統合

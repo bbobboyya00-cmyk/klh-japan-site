@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pvc on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/pvc/</link><description>Recent content in Pvc on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 23 Jun 2026 10:11:31 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/pvc/index.xml" rel="self" type="application/rss+xml"/><item><title>Persistent Data Management and Network Identifier Design in Kubernetes StatefulSet</title><link>https://klifehack.com/en/p/k8s-statefulset-architecture-storage/</link><pubDate>Tue, 23 Jun 2026 10:11:31 +0900</pubDate><guid>https://klifehack.com/en/p/k8s-statefulset-architecture-storage/</guid><description>&lt;h1 id="management-methods-for-persistent-identity-and-storage-in-kubernetes-statefulset"&gt;Management Methods for Persistent Identity and Storage in Kubernetes StatefulSet
+&lt;/h1&gt;&lt;p&gt;In the operation of distributed systems and databases such as MySQL, PostgreSQL, and Kafka, maintaining identity and data consistency across pod restarts is a critical requirement. Standard Deployments treat pods as ephemeral entities with random hostnames and IP addresses assigned upon each lifecycle event. This stateless nature poses significant operational constraints for workloads requiring data persistence or fixed communication between master and slave nodes. StatefulSet addresses these challenges by providing stable identifiers and persistent storage integration through Headless Services and VolumeClaimTemplates.&lt;/p&gt;
+&lt;h2 id="1-structural-differences-between-statefulset-and-deployment"&gt;1. Structural Differences Between StatefulSet and Deployment
+&lt;/h2&gt;&lt;p&gt;StatefulSet is engineered to guarantee the order and uniqueness of pods. The primary technical distinctions from the Deployment controller are as follows:&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Identifiers&lt;/b&gt;: Deployment assigns random alphanumeric suffixes to pod names. StatefulSet assigns fixed ordinal indexes, such as mysql-0 and mysql-1, which persist across restarts.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Storage&lt;/b&gt;: Deployment typically shares the same volume across replicas or operates statelessly. StatefulSet assigns a dedicated PersistentVolumeClaim (PVC) to each pod on a one-to-one basis, ensuring data isolation and persistence.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Deployment Order&lt;/b&gt;: Deployment creates and deletes pods in parallel. StatefulSet manages pods sequentially, starting from index 0 during creation and deleting them in reverse order (OrderedReady) to maintain cluster stability.&lt;/p&gt;
+&lt;h2 id="2-fixing-network-identifiers-via-headless-service"&gt;2. Fixing Network Identifiers via Headless Service
+&lt;/h2&gt;&lt;p&gt;For StatefulSet pods to utilize a fixed Fully Qualified Domain Name (FQDN), integration with a Headless Service is mandatory. By setting the clusterIP field to None, the Service avoids assigning a single virtual IP and instead returns the direct IP addresses of individual pods in response to DNS queries.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;sfs-service01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app.kubernetes.io/name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;web-sfs01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;type&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ClusterIP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;clusterIP&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;protocol&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TCP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Under this configuration, each pod communicates using the format [Pod Name].[Service Name].[Namespace].svc.cluster.local. This mechanism is vital for distributed databases where specific nodes must be explicitly designated for leader election or data synchronization within the cluster.&lt;/p&gt;
+&lt;h2 id="3-statefulset-implementation-and-pod-lifecycle"&gt;3. StatefulSet Implementation and Pod Lifecycle
+&lt;/h2&gt;&lt;p&gt;The implementation of a StatefulSet requires an explicit link to a Headless Service via the serviceName field. This ensures that the network identity is correctly mapped to the pod replicas throughout their lifecycle.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;apps/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;StatefulSet&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;sfs-test01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;replicas&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;matchLabels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app.kubernetes.io/name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;web-sfs01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;serviceName&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;sfs-service01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;template&lt;/span&gt;: &lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app.kubernetes.io/name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;web-sfs01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-dynamic-provisioning-via-volumeclaimtemplates"&gt;4. Dynamic Provisioning via VolumeClaimTemplates
+&lt;/h2&gt;&lt;p&gt;The volumeClaimTemplates feature enables the automatic provisioning of independent storage for each pod replica. Since the PVC is retained even if the pod is deleted, the pod remounts the identical data volume upon restarting, preserving the state of the application.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;volumeClaimTemplates&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;sfs-vol01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;accessModes&lt;/span&gt;: [ &lt;span style="color:#e6db74"&gt;&amp;#34;ReadWriteOnce&amp;#34;&lt;/span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;storageClassName&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pv-sfs-test01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;requests&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;storage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5Mi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;A frequent issue in StatefulSet operations is the &lt;b&gt;PVC Pending state&lt;/b&gt; during scaling. In environments where PersistentVolumes (PV) are managed manually, a shortage of available PVs matching the storageClassName will cause new pods to remain in a Pending state. ⚠️&lt;/p&gt;
+&lt;p&gt;Additionally, the deletion of a StatefulSet does not trigger the automatic removal of associated PVCs. While this prevents accidental data loss, it can lead to disk space exhaustion. Manual cleanup using kubectl delete pvc is required to reclaim storage resources after a StatefulSet is decommissioned.&lt;/p&gt;
+&lt;h2 id="operational-verifications"&gt;Operational Verifications
+&lt;/h2&gt;&lt;p&gt;The following logs and commands are used to verify resource status and validate network connectivity after deployment.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Verify resource startup
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% kubectl get pod -o wide
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY STATUS RESTARTS AGE IP NODE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sfs-test01-0 1/1 Running 0 80s 10.244.2.9 worker-node-01
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sfs-test01-1 1/1 Running 0 80s 10.244.1.17 worker-node-02
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sfs-test01-2 1/1 Running 0 79s 10.244.1.18 worker-node-02
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Verify Headless Service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% kubectl get svc sfs-service01
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sfs-service01 ClusterIP None &amp;lt;none&amp;gt; 80/TCP 14m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Verify connectivity to a specific pod (Direct access to Pod 1)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% kubectl exec -it nginx-client -- curl -I sfs-test01-1.sfs-service01.default.svc.cluster.local
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Server: nginx/1.25.x
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: text/html
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;The adoption of StatefulSet signifies the transition from simple pod management to the management of storage lifecycles and network topologies at the infrastructure layer. In the context of database containerization, ensuring data locality through volumeClaimTemplates and providing stable endpoints via Headless Services are decisive factors for system reliability. 💡 Operational design should include verification of PVC re-attachment latency during abnormal terminations and PV supply capacity during scaling operations.&lt;/p&gt;
+&lt;/none&gt;</description></item></channel></rss>
