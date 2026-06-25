@@ -1,4 +1,68 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 23 Jun 2026 10:11:29 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetes StatefulSetにおける永続データ管理とネットワーク識別子の設計</title><link>https://klifehack.com/p/k8s-statefulset-architecture-storage/</link><pubDate>Tue, 23 Jun 2026 10:11:29 +0900</pubDate><guid>https://klifehack.com/p/k8s-statefulset-architecture-storage/</guid><description>&lt;h1 id="kubernetes-statefulsetにおける永続的アイデンティティとストレージの管理手法"&gt;Kubernetes StatefulSetにおける永続的アイデンティティとストレージの管理手法
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 25 Jun 2026 10:23:33 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Ubuntu 24.04 LTSにおけるHermes Agentの導入とAI Gatewayによるシステム管理の抽象化</title><link>https://klifehack.com/p/hermes-agent-ai-gateway-ubuntu-setup/</link><pubDate>Thu, 25 Jun 2026 10:23:33 +0900</pubDate><guid>https://klifehack.com/p/hermes-agent-ai-gateway-ubuntu-setup/</guid><description>&lt;h1 id="ubuntu-2404-ltsにおけるhermes-agentの構築ai-gatewayによるシステム管理の自動化"&gt;Ubuntu 24.04 LTSにおけるHermes Agentの構築：AI Gatewayによるシステム管理の自動化
+&lt;/h1&gt;&lt;p&gt;インフラストラクチャの規模が拡大するにつれ、従来のCLIによる手動操作は認知負荷の増大とヒューマンエラーのリスクを伴うようになります。特に、複雑なセキュリティ監査や環境構築において、自然言語による意図を正確なシェルコマンドやコード実行に変換する「AI Gateway」の導入は、運用効率を劇的に向上させる鍵となります。本稿では、Ubuntu 24.04 LTS環境において、OpenAI Codexと連携するHermes Agentを構築し、セキュアなサンドボックス環境でシステム管理を自動化するための実装プロセスを詳述します。&lt;/p&gt;
+&lt;h2 id="1-システム環境仕様"&gt;1. システム環境仕様
+&lt;/h2&gt;&lt;p&gt;Hermes Agentの安定稼働を実現するため、以下のランタイムおよび依存関係を定義します。これらはシステムの整合性を維持するための最小要件です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;OS&lt;/b&gt;: Ubuntu 24.04 LTS (Noble Numbat)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Python Runtime&lt;/b&gt;: Python 3.12&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;JavaScript Runtime&lt;/b&gt;: Node.js 22 LTS (NodeSource)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;AI Integration&lt;/b&gt;: OpenAI Codex (OAuth認証)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Toolchain&lt;/b&gt;: pipx (CLIツールの隔離管理)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-依存パッケージのプロビジョニング"&gt;2. 依存パッケージのプロビジョニング
+&lt;/h2&gt;&lt;p&gt;まず、システムパッケージの同期を行い、Hermes Agentが内部処理で使用するユーティリティ（ripgrep、ffmpeg等）をインストールします。これにより、ファイル検索やメディア処理のコンテキストがエージェントに付与されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt full-upgrade -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install -y curl git python3 python3-pip python3-venv pipx ripgrep ffmpeg
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-nodejs-22-lts-ランタイムの構築"&gt;3. Node.js 22 LTS ランタイムの構築
+&lt;/h2&gt;&lt;p&gt;Hermes Agentは最新のLTS機能を必要とするため、Ubuntu標準リポジトリではなくNodeSourceを使用してNode.js 22を導入します。これにより、非同期処理の最適化とセキュリティパッチの適用が保証されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install -y nodejs
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-hermes-agentのインストールと初期化"&gt;4. Hermes Agentのインストールと初期化
+&lt;/h2&gt;&lt;p&gt;Pythonのグローバル環境を汚染せず、バイナリの独立性を維持するために&lt;b&gt;pipx&lt;/b&gt;を使用します。隔離された環境での実行は、依存関係の競合を回避するベストプラクティスです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# バイナリのデプロイ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pipx install hermes-agent
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# パスの自動設定と反映&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pipx ensurepath
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;source ~/.bashrc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# インストールの検証&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hermes --version
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;次に、AIモデルとの連携およびバックエンド設定を行います。このプロセスにより、OpenAI Codexとのセキュアな通信チャネルが確立されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 初期設定ウィザードの実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hermes postinstall
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# モデルの選択 (OpenAI Codexを選択し、OAuth認証を完了させる)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hermes model
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-ワークスペースと実行コンテキストの定義"&gt;5. ワークスペースと実行コンテキストの定義
+&lt;/h2&gt;&lt;p&gt;Hermes Agentがコマンドを実行する際の境界条件を設定します。本構成では、ホストOSへの直接アクセスを許可する「Local」バックエンドを採用し、運用の柔軟性を確保します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Terminal Backend&lt;/b&gt;: Local (ホスト上での直接実行を許可)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Working Directory&lt;/b&gt;: セキュリティ上の理由から、専用のサンドボックスディレクトリ（例: ~/hermes-workspace）を作成することを推奨します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p ~/hermes-workspace
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-troubleshooting"&gt;6. Troubleshooting
+&lt;/h2&gt;&lt;p&gt;導入時に発生しやすい代表的な摩擦点と解決策を以下に示します。これらは環境構築時のデバッグ時間を短縮するための重要なチェックポイントです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;PATHの未反映&lt;/b&gt;: 🛠️ &lt;code&gt;pipx install&lt;/code&gt;後、&lt;code&gt;hermes&lt;/code&gt;コマンドが認識されない場合は、&lt;code&gt;~/.local/bin&lt;/code&gt;が&lt;code&gt;$PATH&lt;/code&gt;に含まれているか確認してください。&lt;code&gt;pipx ensurepath&lt;/code&gt;実行後にシェルを再起動する必要があります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Node.jsのバージョン不一致&lt;/b&gt;: ⚠️ 以前のバージョン（v18等）が残っている場合、Hermesの内部モジュールが正常に動作しないことがあります。&lt;code&gt;node -v&lt;/code&gt;で22.x系であることを確認してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;OAuth認証の失敗&lt;/b&gt;: 💡 ブラウザベースの認証がタイムアウトする場合、ヘッドレス環境ではポートフォワーディングを使用してローカルPCのブラウザで認証を通す必要があります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="7-運用検証-operational-verification"&gt;7. 運用検証 (Operational Verification)
+&lt;/h2&gt;&lt;p&gt;デプロイ完了後、エージェントがシステムリソースに正しくアクセスできるかを確認します。以下のコマンドを実行し、ランタイムの応答性を検証してください。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ hermes --version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hermes-agent v1.x.x (Ubuntu 24.04 optimized)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ hermes run &amp;#34;Check the current SSH configuration for security vulnerabilities&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Hermes] Analyzing /etc/ssh/sshd_config...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Hermes] Found: PermitRootLogin is set to yes. Recommendation: Change to no.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Hermes] Found: PasswordAuthentication is enabled. Recommendation: Use SSH keys.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -ld ~/hermes-workspace
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drwxr-xr-x 2 user user 4096 Jun 25 2026 /home/user/hermes-workspace
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;Hermes AgentをUbuntu 24.04 LTSに導入することで、自然言語による抽象化されたシステム操作が可能になります。ただし、&lt;b&gt;Local&lt;/b&gt;バックエンドを使用する場合、エージェントは実行ユーザーと同等の権限を持つため、指定したワークスペース外へのアクセス制限や、実行ログの定期的な監査を組み合わせることが、プロダクション環境における安全な運用のための必須条件となります。&lt;/p&gt;</description></item><item><title>Kubernetes StatefulSetにおける永続データ管理とネットワーク識別子の設計</title><link>https://klifehack.com/p/k8s-statefulset-architecture-storage/</link><pubDate>Tue, 23 Jun 2026 10:11:29 +0900</pubDate><guid>https://klifehack.com/p/k8s-statefulset-architecture-storage/</guid><description>&lt;h1 id="kubernetes-statefulsetにおける永続的アイデンティティとストレージの管理手法"&gt;Kubernetes StatefulSetにおける永続的アイデンティティとストレージの管理手法
 &lt;/h1&gt;&lt;p&gt;分散システムやデータベース（MySQL、PostgreSQL、Kafkaなど）の運用において、ポッドの再起動後も同一のアイデンティティとデータを保持することは、システムの整合性を維持するための必須要件です。標準的なDeploymentでは、ポッドはエフェメラル（一時的）な存在として扱われ、再起動のたびにランダムなホスト名とIPアドレスが割り当てられます。このようなステートレスな設計は、データの永続性やマスター・スレーブ間の固定的な通信が必要なワークロードにおいて、重大な運用上の制約となります。本稿では、これらの課題を解決するStatefulSetの内部構造と、Headless ServiceおよびVolumeClaimTemplatesを用いた実装手法について技術的分析を行います。&lt;/p&gt;
 &lt;h2 id="1-statefulsetとdeploymentの構造的相違"&gt;1. StatefulSetとDeploymentの構造的相違
 &lt;/h2&gt;&lt;p&gt;StatefulSetは、ポッドの「順序性」と「一意性」を保証するために設計されています。Deploymentとの主な違いは以下の通りです。&lt;/p&gt;

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ai-Gateway on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/ai-gateway/</link><description>Recent content in Ai-Gateway on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 25 Jun 2026 10:23:35 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/ai-gateway/index.xml" rel="self" type="application/rss+xml"/><item><title>Deployment of Hermes Agent on Ubuntu 24.04 LTS and Abstraction of System Management via AI Gateway</title><link>https://klifehack.com/en/p/hermes-agent-ai-gateway-ubuntu-setup/</link><pubDate>Thu, 25 Jun 2026 10:23:35 +0900</pubDate><guid>https://klifehack.com/en/p/hermes-agent-ai-gateway-ubuntu-setup/</guid><description>&lt;h1 id="building-hermes-agent-on-ubuntu-2404-lts-automating-system-management-with-ai-gateway"&gt;Building Hermes Agent on Ubuntu 24.04 LTS: Automating System Management with AI Gateway
+&lt;/h1&gt;&lt;p&gt;As infrastructure scales, manual CLI operations involve increased cognitive load and the risk of human error. Especially in complex security audits and environment setup, introducing an AI Gateway that converts natural language intent into precise shell commands or code execution is key to improving operational efficiency. This article details the implementation process for building Hermes Agent linked with OpenAI Codex on Ubuntu 24.04 LTS to automate system management in a secure sandbox environment.&lt;/p&gt;
+&lt;h2 id="1-system-environment-specifications"&gt;1. System Environment Specifications
+&lt;/h2&gt;&lt;p&gt;To ensure stable operation of Hermes Agent, the following runtimes and dependencies are defined. These are the minimum requirements to maintain system integrity.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;OS&lt;/b&gt;: Ubuntu 24.04 LTS (Noble Numbat)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Python Runtime&lt;/b&gt;: Python 3.12&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;JavaScript Runtime&lt;/b&gt;: Node.js 22 LTS (NodeSource)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;AI Integration&lt;/b&gt;: OpenAI Codex (OAuth Authentication)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Toolchain&lt;/b&gt;: pipx (Isolated management of CLI tools)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-provisioning-dependency-packages"&gt;2. Provisioning Dependency Packages
+&lt;/h2&gt;&lt;p&gt;First, synchronize system packages and install utilities such as ripgrep and ffmpeg used by Hermes Agent for internal processing. This provides the agent with context for file searching and media processing.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt full-upgrade -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install -y curl git python3 python3-pip python3-venv pipx ripgrep ffmpeg
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-building-the-nodejs-22-lts-runtime"&gt;3. Building the Node.js 22 LTS Runtime
+&lt;/h2&gt;&lt;p&gt;Hermes Agent requires the latest LTS features; therefore, Node.js 22 is introduced using NodeSource instead of the standard Ubuntu repositories. This ensures optimization of asynchronous processing and the application of security patches.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install -y nodejs
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-installation-and-initialization-of-hermes-agent"&gt;4. Installation and Initialization of Hermes Agent
+&lt;/h2&gt;&lt;p&gt;Use &lt;b&gt;pipx&lt;/b&gt; to maintain binary independence without polluting the global Python environment. Execution in an isolated environment is a best practice to avoid dependency conflicts.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Deploy binary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pipx install hermes-agent
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Automatically configure and apply path settings&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pipx ensurepath
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;source ~/.bashrc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Verify installation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hermes --version
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, perform AI model integration and backend configuration. This process establishes a secure communication channel with OpenAI Codex.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Run the initial setup wizard&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hermes postinstall
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Select model (Select OpenAI Codex and complete OAuth authentication)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hermes model
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-defining-workspace-and-execution-context"&gt;5. Defining Workspace and Execution Context
+&lt;/h2&gt;&lt;p&gt;Set the boundary conditions for when Hermes Agent executes commands. This configuration adopts the Local backend, allowing direct access to the host OS, to ensure operational flexibility.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Terminal Backend&lt;/b&gt;: Local (Allows direct execution on the host)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Working Directory&lt;/b&gt;: For security reasons, it is recommended to create a dedicated sandbox directory (e.g., ~/hermes-workspace).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p ~/hermes-workspace
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-troubleshooting"&gt;6. Troubleshooting
+&lt;/h2&gt;&lt;p&gt;The following troubleshooting steps address common friction points encountered during deployment to reduce debugging time during environment setup.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;PATH not reflected&lt;/b&gt;: 🛠️ If the &lt;code&gt;hermes&lt;/code&gt; command is not recognized after &lt;code&gt;pipx install&lt;/code&gt;, check if &lt;code&gt;~/.local/bin&lt;/code&gt; is included in &lt;code&gt;$PATH&lt;/code&gt;. The shell must be restarted after running &lt;code&gt;pipx ensurepath&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Node.js version mismatch&lt;/b&gt;: ⚠️ If previous versions remain, Hermes internal modules may not function correctly. Verify that the version is 22.x using &lt;code&gt;node -v&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;OAuth authentication failure&lt;/b&gt;: 💡 If browser-based authentication times out in headless environments, use port forwarding to complete authentication via a browser on a local PC.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="7-operational-verification"&gt;7. Operational Verification
+&lt;/h2&gt;&lt;p&gt;After deployment is complete, verify that the agent can correctly access system resources. Verification of runtime responsiveness is performed by executing the validation command.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ hermes --version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hermes-agent v1.x.x (Ubuntu 24.04 optimized)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ hermes run &amp;#34;Check the current SSH configuration for security vulnerabilities&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Hermes] Analyzing /etc/ssh/sshd_config...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Hermes] Found: PermitRootLogin is set to yes. Recommendation: Change to no.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Hermes] Found: PasswordAuthentication is enabled. Recommendation: Use SSH keys.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -ld ~/hermes-workspace
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drwxr-xr-x 2 user user 4096 Jun 25 2026 /home/user/hermes-workspace
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;By introducing Hermes Agent to Ubuntu 24.04 LTS, abstracted system operations via natural language become possible. However, when using the &lt;b&gt;Local&lt;/b&gt; backend, the agent has the same privileges as the executing user. Therefore, combining access restrictions outside the specified workspace with regular auditing of execution logs is a mandatory requirement for safe operation in production environments.&lt;/p&gt;</description></item></channel></rss>
