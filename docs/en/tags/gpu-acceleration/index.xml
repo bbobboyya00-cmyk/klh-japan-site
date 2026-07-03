@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Gpu-Acceleration on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/gpu-acceleration/</link><description>Recent content in Gpu-Acceleration on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 03 Jul 2026 10:52:55 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/gpu-acceleration/index.xml" rel="self" type="application/rss+xml"/><item><title>Construction of a Local LLM Infrastructure Using Open WebUI and Ollama in a Docker Environment</title><link>https://klifehack.com/en/p/local-llm-open-webui-ollama-docker/</link><pubDate>Fri, 03 Jul 2026 10:52:55 +0900</pubDate><guid>https://klifehack.com/en/p/local-llm-open-webui-ollama-docker/</guid><description>&lt;h2 id="local-llm-infrastructure-integrating-ollama-and-open-webui-via-docker"&gt;Local LLM Infrastructure: Integrating Ollama and Open WebUI via Docker
+&lt;/h2&gt;&lt;p&gt;In the operation of Large Language Models (LLMs) within local environments, direct library installation on the host OS presents a high risk of dependency conflicts and GPU driver inconsistencies. Environment isolation and reproducibility are critical during research and development phases involving multiple models. This technical log details the methodology for integrating the Ollama inference engine with Open WebUI using Docker containers to establish a secure, portable private AI infrastructure.&lt;/p&gt;
+&lt;h2 id="rationality-of-configuration-and-significance-of-containerization"&gt;Rationality of Configuration and Significance of Containerization
+&lt;/h2&gt;&lt;p&gt;Deploying Open WebUI via Docker is a standard practice in infrastructure management rather than a mere convenience. Containerization facilitates the management of persistent data volumes and secure access to inference endpoints through the host gateway without compromising the host-side network stack or file system. This approach ensures a scalable interface while preventing configuration errors that might necessitate OS reinstallation.&lt;/p&gt;
+&lt;h2 id="deployment-workflow"&gt;Deployment Workflow
+&lt;/h2&gt;&lt;h3 id="1-preparation-of-docker-runtime-and-verification-of-virtualization"&gt;1. Preparation of Docker Runtime and Verification of Virtualization
+&lt;/h3&gt;&lt;p&gt;Verify the correct operation of the container runtime. In Windows environments, the WSL2 (Windows Subsystem for Linux) backend is mandatory.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;💡 &lt;b&gt;Enabling Virtualization:&lt;/b&gt; Ensure Virtualization Technology (VT-x or AMD-V) is enabled in BIOS/UEFI settings. Docker Engine initialization will fail if this is disabled.&lt;/li&gt;
+&lt;li&gt;🛠️ &lt;b&gt;Binary Verification:&lt;/b&gt; Execute terminal commands to confirm path configurations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker --version
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-running-the-open-webui-container"&gt;2. Running the Open WebUI Container
+&lt;/h3&gt;&lt;p&gt;With the Ollama service active on the host machine, initiate Open WebUI. Network flags for host-to-container communication are essential for establishing the API bridge.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d -p 3000:8080 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --add-host&lt;span style="color:#f92672"&gt;=&lt;/span&gt;host.docker.internal:host-gateway &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -v open-webui:/app/backend/data &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --name open-webui &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --restart always &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ghcr.io/open-webui/open-webui:main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;Technical Explanation of Key Parameters:&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;-p 3000:8080:&lt;/b&gt; Maps host port 3000 to container port 8080.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;&amp;ndash;add-host=host.docker.internal:host-gateway:&lt;/b&gt; Establishes a bridge to access the host-side Ollama API from within the container environment.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;-v open-webui:/app/backend/data:&lt;/b&gt; Defines a named volume for persistent chat history and user settings, ensuring data survival across container lifecycles.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;&amp;ndash;restart always:&lt;/b&gt; Ensures automatic container recovery upon system reboot or unexpected process termination.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="integration-with-ollama-and-model-management"&gt;Integration with Ollama and Model Management
+&lt;/h2&gt;&lt;p&gt;Access port 3000 via a web browser and configure an administrator account. Data is stored locally in SQLite or PostgreSQL, ensuring no external leakage of sensitive prompts.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Connection Verification:&lt;/b&gt; Validate the Ollama connection status in the settings menu via the host.docker.internal endpoint.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Pulling Models:&lt;/b&gt; Download required models (e.g., llama3:8b) through the UI. The Llama 3 8B model requires approximately 4.7GB of storage.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;Common operational friction points and their respective technical solutions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;⚠️ &lt;b&gt;Port Conflict (Port 3000):&lt;/b&gt; If port 3000 is occupied by another service, modify the host-side port mapping (e.g., -p 3001:8080).&lt;/li&gt;
+&lt;li&gt;⚠️ &lt;b&gt;Connection Refused:&lt;/b&gt; If Open WebUI cannot reach Ollama, ensure the host-side Ollama service allows external connections by setting the environment variable OLLAMA_HOST=0.0.0.0.&lt;/li&gt;
+&lt;li&gt;⚠️ &lt;b&gt;GPU Offload Failure:&lt;/b&gt; Low inference speeds (1-2 tokens/s) indicate insufficient VRAM or CPU-only operation. Verify &amp;ldquo;Dedicated GPU Memory&amp;rdquo; in Task Manager. An 8B model is recommended for 8GB VRAM; 70B models require 16GB or more for stable performance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="verification-of-operational-status"&gt;Verification of Operational Status
+&lt;/h2&gt;&lt;p&gt;Confirm container integrity and network connectivity to ensure the infrastructure is ready for inference tasks.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Check container status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker ps --filter &amp;#34;name=open-webui&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CONTAINER ID IMAGE COMMAND STATUS PORTS NAMES
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;7f8e9d0c1b2a ghcr.io/open-webui/open-webui:main &amp;#34;/app/backend/start.…&amp;#34; Up 15 minutes 0.0.0.0:3000-&amp;amp;gt;8080/tcp open-webui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Check host port listening status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep :3000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 4096 0.0.0.0:3000 0.0.0.0:* users:((&amp;#34;docker-proxy&amp;#34;,pid=1234,fd=4))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Verify connectivity to the API endpoint
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I http://localhost:3000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: text/html; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Length: 1234
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;Building a local LLM environment provides significant security advantages, enabling the processing of confidential code and internal documents offline while eliminating subscription costs. Docker provides an abstraction layer that simplifies future hardware upgrades and migrations. In environments with 16GB+ VRAM, Llama 3 70B class models can operate at practical speeds for advanced inference tasks, fully contained within the private network.&lt;/p&gt;</description></item></channel></rss>
