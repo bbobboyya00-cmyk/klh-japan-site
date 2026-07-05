@@ -1,4 +1,57 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Devops on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/devops/</link><description>Recent content in Devops on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 08 Jun 2026 18:03:25 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/devops/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude CodeによるKubernetesマニフェ生成とHelm移行の自動化</title><link>https://klifehack.com/p/claude-code-k8s-helm-migration/</link><pubDate>Mon, 08 Jun 2026 18:03:25 +0900</pubDate><guid>https://klifehack.com/p/claude-code-k8s-helm-migration/</guid><description>&lt;p&gt;Kubernetesの運用において、手動によるマニフェスト（YAML）の作成と管理は、ヒューマンエラーの温床となりやすく、多くの時間を消費します。本稿では、AIエージェントであるClaude Codeを活用し、Google Kubernetes Engine（GKE）環境を対象としたマニフェスト生成の自動化、および静的なYAMLからHelmチャートへの移行プロセスを技術的に分析します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Devops on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/devops/</link><description>Recent content in Devops on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 05 Jul 2026 10:12:16 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/devops/index.xml" rel="self" type="application/rss+xml"/><item><title>Supabase Free Planのプロジェクト停止を防止するGitHub Actionsの自動化実装</title><link>https://klifehack.com/p/supabase-keepalive-automation-github-actions/</link><pubDate>Sun, 05 Jul 2026 10:12:16 +0900</pubDate><guid>https://klifehack.com/p/supabase-keepalive-automation-github-actions/</guid><description>&lt;p&gt;Supabase Free Planの自動停止を回避するGitHub Actionsによる死活監視構成&lt;/p&gt;
+&lt;p&gt;SupabaseのFree Planにおいて、7日間連続でアクティビティが検出されない場合にプロジェクトが自動的に一時停止（Pause）される仕様は、開発環境やプロトタイプ運用の継続性を阻害する要因となります。一度停止されたデータベースはダッシュボードから手動で再開（Resume）する必要があり、APIリクエストのダウンタイムを招きます。本稿では、GitHub Actionsのスケジュール実行機能を利用し、5日周期でREST APIへ「Ping」を送信することで、この非アクティブタイマーを自動的にリセットするインフラ構成について詳述します。&lt;/p&gt;
+&lt;h2 id="構成アーキテクチャとセキュリティ要件"&gt;構成アーキテクチャとセキュリティ要件
+&lt;/h2&gt;&lt;p&gt;この自動化スタックは、機密情報であるAPIキーを保護するため、プライベートリポジトリ内での運用を前提とします。GitHub ActionsのFree Tierでは、プライベートリポジトリに対して月間2,000分の実行時間が提供されており、本タスクのような軽量なcurl実行には十分なリソースです。&lt;/p&gt;
+&lt;h3 id="1-github-secretsによる認証情報の管理"&gt;1. GitHub Secretsによる認証情報の管理
+&lt;/h3&gt;&lt;p&gt;ハードコーディングによる漏洩を防止するため、リポジトリの &lt;b&gt;Settings &amp;gt; Secrets and variables &amp;gt; Actions&lt;/b&gt; に以下の環境変数を登録します。値に引用符を含めず、生の文字列のみを入力することが重要です。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;SUPABASE_URL_1&lt;/b&gt;: プロジェクトのRESTエンドポイント (例: https://[PROJECT_ID].supabase.co)
+&lt;b&gt;SUPABASE_KEY_1&lt;/b&gt;: anon (anonymous) 公開APIキー&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;セキュリティ上の注意点:&lt;/b&gt; 認証には必ず &lt;b&gt;anon&lt;/b&gt; キーを使用してください。&lt;b&gt;service_role&lt;/b&gt; キーはRow Level Security (RLS) をバイパスする権限を持つため、死活監視目的での使用は過剰な権限付与となり、セキュリティリスクを増大させます。&lt;/p&gt;
+&lt;h2 id="ワークフローの実装"&gt;ワークフローの実装
+&lt;/h2&gt;&lt;p&gt;&lt;b&gt;.github/workflows/keepalive.yml&lt;/b&gt; として以下の定義を作成します。&lt;b&gt;workflow_dispatch&lt;/b&gt; を含めることで、スケジュール待機なしで手動テストが可能になります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Supabase Keep Alive&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;schedule&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;cron&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;0 0 */5 * *&amp;#39;&lt;/span&gt; &lt;span style="color:#75715e"&gt;# 5日ごとの午前0時に実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;workflow_dispatch&lt;/span&gt;: &lt;span style="color:#75715e"&gt;# 手動実行を許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;keepalive&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Ping Supabase Project&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; curl -s &amp;#34;${{ secrets.SUPABASE_URL_1 }}/rest/v1/&amp;#34; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -H &amp;#34;apikey: ${{ secrets.SUPABASE_KEY_1 }}&amp;#34; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -H &amp;#34;Authorization: Bearer ${{ secrets.SUPABASE_KEY_1 }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="cron構文の解析と実行間隔の最適化"&gt;Cron構文の解析と実行間隔の最適化
+&lt;/h2&gt;&lt;p&gt;Supabaseの停止閾値は7日間であるため、実行間隔は余裕を持って5日 (&lt;b&gt;*/5&lt;/b&gt;) に設定します。POSIX標準のcron構文に基づき、以下のパラメータで制御されます。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;0 0 */5 * *&lt;/b&gt;: 5日おきの00:00に実行。GitHub Actionsの共有ランナーの負荷状況により、実際の実行開始時間は数分から数十分遅延する可能性がありますが、死活監視の目的においては許容範囲内です。&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;実装時に直面する可能性のある主要なエラーとその対策を以下に示します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;401 Unauthorized&lt;/b&gt;: &lt;b&gt;SUPABASE_KEY_1&lt;/b&gt; が正しく設定されていない、または &lt;b&gt;apikey&lt;/b&gt; ヘッダーが欠落している場合に発生します。Secretの値に不要なスペースや改行が含まれていないか確認してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;404 Not Found&lt;/b&gt;: &lt;b&gt;SUPABASE_URL_1&lt;/b&gt; の末尾に &lt;b&gt;/rest/v1/&lt;/b&gt; が正しく付与されているか確認してください。エンドポイントが不正確な場合、アクティビティとしてカウントされないリスクがあります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Workflow not triggering&lt;/b&gt;: GitHub Actionsのスケジュール実行は、リポジトリに一定期間コミットがない場合に無効化されることがあります。その場合は、手動でワークフローを再有効化するか、ダミーのコミットを定期的にプッシュする構成を検討してください。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="運用検証ログ"&gt;運用検証ログ
+&lt;/h2&gt;&lt;p&gt;GitHub Actionsのコンソール上で正常にリクエストが完了した場合、以下のプロトコルログが出力されます。HTTPステータスコードが200 OK（またはスキーマ情報を含むJSONレスポンス）であれば、Supabase側でアクティビティとして受理されています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Run curl -s &amp;#34;***&amp;#34; -H &amp;#34;apikey: ***&amp;#34; -H &amp;#34;Authorization: Bearer ***&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;swagger&amp;#34;: &amp;#34;2.0&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;info&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;title&amp;#34;: &amp;#34;PostgREST API&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;description&amp;#34;: &amp;#34;Standard REST interface for any PostgreSQL database&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;host&amp;#34;: &amp;#34;your-project.supabase.co&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;basePath&amp;#34;: &amp;#34;/&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;schemes&amp;#34;: [&amp;#34;https&amp;#34;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Process completed with exit code 0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;本手法はあくまでFree Planの制限内での運用を補助するものであり、本番環境やミッションクリティカルなサービスにおいては、Pro Planへのアップグレードによる自動停止の無効化を推奨します。また、GitHub Actionsの実行ログを定期的に監視し、APIキーの有効期限やエンドポイントの変更に追従できる体制を維持してください。&lt;/p&gt;</description></item><item><title>Claude CodeによるKubernetesマニフェ生成とHelm移行の自動化</title><link>https://klifehack.com/p/claude-code-k8s-helm-migration/</link><pubDate>Mon, 08 Jun 2026 18:03:25 +0900</pubDate><guid>https://klifehack.com/p/claude-code-k8s-helm-migration/</guid><description>&lt;p&gt;Kubernetesの運用において、手動によるマニフェスト（YAML）の作成と管理は、ヒューマンエラーの温床となりやすく、多くの時間を消費します。本稿では、AIエージェントであるClaude Codeを活用し、Google Kubernetes Engine（GKE）環境を対象としたマニフェスト生成の自動化、および静的なYAMLからHelmチャートへの移行プロセスを技術的に分析します。&lt;/p&gt;
 &lt;h2 id="1-コンテキストの永続化claudemdの定義"&gt;1. コンテキストの永続化：CLAUDE.mdの定義
 &lt;/h2&gt;&lt;p&gt;AIによる生成の精度を維持し、セッションごとに同一の制約を適用するためには、プロジェクトルートに&lt;b&gt;CLAUDE.md&lt;/b&gt;を配置することが不可欠です。これにより、クラスタ固有の規約や命名規則、デプロイメント戦略をAIに事前学習させ、一貫性のある出力を担保します。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# CLAUDE.md Configuration for GKE

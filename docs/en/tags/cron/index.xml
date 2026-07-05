@@ -1,4 +1,62 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cron on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/cron/</link><description>Recent content in Cron on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 11 Jun 2026 10:16:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/cron/index.xml" rel="self" type="application/rss+xml"/><item><title>Automating Linux Data Synchronization Systems with Rsync and Cron</title><link>https://klifehack.com/en/p/rsync-cron-linux-backup-automation/</link><pubDate>Thu, 11 Jun 2026 10:16:07 +0900</pubDate><guid>https://klifehack.com/en/p/rsync-cron-linux-backup-automation/</guid><description>&lt;h1 id="building-an-automated-data-synchronization-system-with-rsync-and-cron"&gt;Building an Automated Data Synchronization System with Rsync and Cron
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cron on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/cron/</link><description>Recent content in Cron on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 05 Jul 2026 10:12:17 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/cron/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementing GitHub Actions Automation to Prevent Supabase Free Plan Project Pausing</title><link>https://klifehack.com/en/p/supabase-keepalive-automation-github-actions/</link><pubDate>Sun, 05 Jul 2026 10:12:17 +0900</pubDate><guid>https://klifehack.com/en/p/supabase-keepalive-automation-github-actions/</guid><description>&lt;h1 id="health-monitoring-configuration-via-github-actions-to-avoid-automatic-pausing-of-supabase-free-plan"&gt;Health Monitoring Configuration via GitHub Actions to Avoid Automatic Pausing of Supabase Free Plan
+&lt;/h1&gt;&lt;p&gt;In the Supabase Free Plan, projects are automatically paused if no activity is detected for 7 consecutive days, hindering development continuity and prototype operations. Manual resumption from the dashboard results in API downtime. This infrastructure configuration resets the inactivity timer by sending a REST API request every 5 days using GitHub Actions scheduled execution.&lt;/p&gt;
+&lt;h2 id="configuration-architecture-and-security-requirements"&gt;Configuration Architecture and Security Requirements
+&lt;/h2&gt;&lt;p&gt;This automation stack operates within a private repository to protect API keys. GitHub Actions Free Tier provides 2,000 minutes of execution time per month, sufficient for lightweight curl operations.&lt;/p&gt;
+&lt;h3 id="1-credential-management-via-github-secrets"&gt;1. Credential Management via GitHub Secrets
+&lt;/h3&gt;&lt;p&gt;Register environment variables in &lt;b&gt;Settings &amp;gt; Secrets and variables &amp;gt; Actions&lt;/b&gt;. Enter raw strings without quotes.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;SUPABASE_URL_1&lt;/b&gt;: Project REST endpoint (e.g., https://[PROJECT_ID].supabase.co)&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;SUPABASE_KEY_1&lt;/b&gt;: anon (anonymous) public API key&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Security Note:&lt;/b&gt; Use the &lt;b&gt;anon&lt;/b&gt; key for authentication. The &lt;b&gt;service_role&lt;/b&gt; key possesses permissions to bypass Row Level Security (RLS), creating unnecessary security risks for health monitoring.&lt;/p&gt;
+&lt;h2 id="workflow-implementation"&gt;Workflow Implementation
+&lt;/h2&gt;&lt;p&gt;The configuration for &lt;b&gt;.github/workflows/keepalive.yml&lt;/b&gt; includes &lt;b&gt;workflow_dispatch&lt;/b&gt; for manual testing.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Supabase Keep Alive&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;schedule&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;cron&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;0 0 */5 * *&amp;#39;&lt;/span&gt; &lt;span style="color:#75715e"&gt;# Runs at midnight every 5 days&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;workflow_dispatch&lt;/span&gt;: &lt;span style="color:#75715e"&gt;# Allow manual execution&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;keepalive&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Ping Supabase Project&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; curl -s &amp;#34;${{ secrets.SUPABASE_URL_1 }}/rest/v1/&amp;#34; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -H &amp;#34;apikey: ${{ secrets.SUPABASE_KEY_1 }}&amp;#34; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; -H &amp;#34;Authorization: Bearer ${{ secrets.SUPABASE_KEY_1 }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="cron-syntax-analysis-and-execution-interval-optimization"&gt;Cron Syntax Analysis and Execution Interval Optimization
+&lt;/h2&gt;&lt;p&gt;The execution interval is set to 5 days (&lt;b&gt;*/5&lt;/b&gt;) to provide a margin against the 7-day threshold. POSIX standard cron syntax controls the timing.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;0 0 */5 * *&lt;/b&gt;: Executes at 00:00 every 5 days. Actual execution may be delayed by GitHub Actions runner load, which is acceptable for this use case.&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;401 Unauthorized&lt;/b&gt;: Occurs if &lt;b&gt;SUPABASE_KEY_1&lt;/b&gt; is incorrect or the &lt;b&gt;apikey&lt;/b&gt; header is missing. Verify Secret values for trailing spaces or line breaks.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;404 Not Found&lt;/b&gt;: Ensure &lt;b&gt;/rest/v1/&lt;/b&gt; is appended to &lt;b&gt;SUPABASE_URL_1&lt;/b&gt;. Inaccurate endpoints may fail to trigger activity counts.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Workflow not triggering&lt;/b&gt;: Scheduled workflows may be disabled if the repository has no commits for an extended period. Re-enable the workflow manually or configure periodic dummy commits.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="operational-verification-logs"&gt;Operational Verification Logs
+&lt;/h2&gt;&lt;p&gt;The protocol log indicates successful request completion. HTTP status 200 OK or a JSON response containing schema information confirms activity registration.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Run curl -s &amp;#34;***&amp;#34; -H &amp;#34;apikey: ***&amp;#34; -H &amp;#34;Authorization: Bearer ***&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;swagger&amp;#34;: &amp;#34;2.0&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;info&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;title&amp;#34;: &amp;#34;PostgREST API&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;description&amp;#34;: &amp;#34;Standard REST interface for any PostgreSQL database&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;host&amp;#34;: &amp;#34;your-project.supabase.co&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;basePath&amp;#34;: &amp;#34;/&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;schemes&amp;#34;: [&amp;#34;https&amp;#34;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Process completed with exit code 0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;This method assists operation within Free Plan limits. For production environments or mission-critical services, upgrading to the Pro Plan is recommended to disable automatic pausing. Periodically monitor execution logs and track changes in API key expiration or endpoints.&lt;/p&gt;</description></item><item><title>Automating Linux Data Synchronization Systems with Rsync and Cron</title><link>https://klifehack.com/en/p/rsync-cron-linux-backup-automation/</link><pubDate>Thu, 11 Jun 2026 10:16:07 +0900</pubDate><guid>https://klifehack.com/en/p/rsync-cron-linux-backup-automation/</guid><description>&lt;h1 id="building-an-automated-data-synchronization-system-with-rsync-and-cron"&gt;Building an Automated Data Synchronization System with Rsync and Cron
 &lt;/h1&gt;&lt;p&gt;In server operations, there is always a risk of data loss due to human error, hardware failure, or external threats. Manual data replication is inefficient and can lack consistency, making it essential to build an automated system that identifies only modified files and synchronizes them periodically. This document describes the implementation steps for robust data synchronization and backup by combining Rsync and Cron, which are standard Linux utilities.&lt;/p&gt;
 &lt;h3 id="1-overview-of-technical-components"&gt;1. Overview of Technical Components
 &lt;/h3&gt;&lt;p&gt;Rsync (Remote Sync) is a command-line utility for synchronizing files and directories between local or remote endpoints. Unlike the standard cp command, it employs a delta transfer algorithm. This significantly reduces network bandwidth and disk I/O load by transferring only the differences (newly added or modified segments) between the source and destination.&lt;/p&gt;
