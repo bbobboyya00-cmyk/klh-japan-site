@@ -1,4 +1,133 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 05 Jul 2026 10:12:17 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementing GitHub Actions Automation to Prevent Supabase Free Plan Project Pausing</title><link>https://klifehack.com/en/p/supabase-keepalive-automation-github-actions/</link><pubDate>Sun, 05 Jul 2026 10:12:17 +0900</pubDate><guid>https://klifehack.com/en/p/supabase-keepalive-automation-github-actions/</guid><description>&lt;h1 id="health-monitoring-configuration-via-github-actions-to-avoid-automatic-pausing-of-supabase-free-plan"&gt;Health Monitoring Configuration via GitHub Actions to Avoid Automatic Pausing of Supabase Free Plan
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 07 Jul 2026 10:33:06 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Resolution Methods for 502 Bad Gateway and Permission Boundaries in Nginx-Gunicorn Integration for Django Applications</title><link>https://klifehack.com/en/p/nginx-gunicorn-django-troubleshooting/</link><pubDate>Tue, 07 Jul 2026 10:33:06 +0900</pubDate><guid>https://klifehack.com/en/p/nginx-gunicorn-django-troubleshooting/</guid><description>&lt;h1 id="three-tier-deployment-architecture-and-troubleshooting-in-django-production-environments"&gt;Three-Tier Deployment Architecture and Troubleshooting in Django Production Environments
+&lt;/h1&gt;&lt;p&gt;When scaling up infrastructure or migrating to a production environment, exposing the Django development server (runserver) directly to the internet is not recommended due to security and concurrency performance concerns. In production, it is common to build a three-tier architecture consisting of a reverse proxy (Nginx), a WSGI application server (Gunicorn), and the application logic (Django). However, this configuration increases the number of communication paths between components, frequently leading to errors such as &amp;ldquo;502 Bad Gateway&amp;rdquo; or &amp;ldquo;403 Forbidden&amp;rdquo; due to socket permission misconfigurations or abnormal process terminations. This article explains the system design and troubleshooting procedures to prevent these errors and to quickly identify and resolve them when they occur.&lt;/p&gt;
+&lt;h2 id="basic-design-of-the-three-tier-deployment-architecture"&gt;Basic Design of the Three-Tier Deployment Architecture
+&lt;/h2&gt;&lt;p&gt;To achieve efficient traffic control and static file delivery in a production environment, the stack is configured with the following roles:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Nginx (Port 80/443)&lt;/b&gt;: Acts as the reverse proxy that first receives requests from clients. It directly serves static files (CSS/JS/media files) and forwards only dynamic requests to the downstream Gunicorn.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Gunicorn (WSGI Server)&lt;/b&gt;: Communicates with Nginx via a Unix domain socket and executes the Python process. It is managed as a daemon by systemd to ensure process persistence.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Django&lt;/b&gt;: Processes business logic and interfaces with the database (such as AWS RDS).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="gunicorn-systemd-service-definition"&gt;Gunicorn systemd Service Definition
+&lt;/h3&gt;&lt;p&gt;To ensure stable operation of the Gunicorn process, define &lt;code&gt;/etc/systemd/system/gunicorn.service&lt;/code&gt;. The design of the socket file location and ownership is the key to preventing permission errors.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Unit]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Description&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;gunicorn daemon&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;After&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;network.target&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Service]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;User&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;ubuntu&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Group&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;www-data&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;WorkingDirectory&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/home/ubuntu/myproject&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ExecStart&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/home/ubuntu/myproject/venv/bin/gunicorn \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --access-logfile - \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --workers 3 \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --bind unix:/run/gunicorn.sock \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; myproject.wsgi:application&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Install]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;WantedBy&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;multi-user.target&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="nginx-virtual-host-configuration"&gt;Nginx Virtual Host Configuration
+&lt;/h3&gt;&lt;p&gt;Configure &lt;code&gt;/etc/nginx/sites-available/django&lt;/code&gt; to proxy requests to the Unix domain socket &lt;code&gt;/run/gunicorn.sock&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nginx" data-lang="nginx"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;listen&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server_name&lt;/span&gt; &lt;span style="color:#e6db74"&gt;_&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;/favicon.ico&lt;/span&gt; { &lt;span style="color:#f92672"&gt;access_log&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;off&lt;/span&gt;; &lt;span style="color:#f92672"&gt;log_not_found&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;off&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/static/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;alias&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/home/ubuntu/myproject/static/&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;include&lt;/span&gt; &lt;span style="color:#e6db74"&gt;proxy_params&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_pass&lt;/span&gt; &lt;span style="color:#e6db74"&gt;http://unix:/run/gunicorn.sock&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;The following are typical error patterns encountered during production operations and their resolution workflows.&lt;/p&gt;
+&lt;h3 id="1-502-bad-gateway"&gt;1. 502 Bad Gateway
+&lt;/h3&gt;&lt;p&gt;Occurs when Nginx cannot connect to the Gunicorn socket file, or when the socket file itself does not exist.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Cause A&lt;/b&gt;: The Gunicorn service is not running. Check the status with &lt;code&gt;systemctl status gunicorn&lt;/code&gt;; if it is stopped, start it with &lt;code&gt;systemctl start gunicorn&lt;/code&gt;. Check error logs using &lt;code&gt;journalctl -u gunicorn&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Cause B&lt;/b&gt;: Socket file path mismatch. Verify that the path specified in Nginx&amp;rsquo;s &lt;code&gt;proxy_pass&lt;/code&gt; exactly matches the path specified in Gunicorn&amp;rsquo;s &lt;code&gt;--bind&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id="2-403-forbidden"&gt;2. 403 Forbidden
+&lt;/h3&gt;&lt;p&gt;Occurs when the Nginx execution user (usually &lt;code&gt;www-data&lt;/code&gt;) does not have access permissions to the socket file or the static file directory.&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Cause A&lt;/b&gt;: Permission restrictions on the &lt;code&gt;/home/ubuntu&lt;/code&gt; directory. In default Ubuntu settings, the permissions for &lt;code&gt;/home/ubuntu&lt;/code&gt; may be set to &lt;code&gt;700&lt;/code&gt; (read/write/execute for the owner only). In this case, Nginx cannot access the sockets or static files located beneath it. Change the directory permissions to &lt;code&gt;755&lt;/code&gt; or change the socket file creation location to a shared directory such as &lt;code&gt;/run/&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; ```bash
+ chmod 755 /home/ubuntu
+ ```
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Cause B&lt;/b&gt;: Ownership inconsistency in the static files directory. Change the owner of the static files directory so that Nginx can read it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; ```bash
+ sudo chown -R www-data:www-data /home/ubuntu/myproject/static/
+ ```
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="3-port-conflict-address-already-in-use"&gt;3. Port Conflict (Address already in use)
+&lt;/h3&gt;&lt;p&gt;Occurs when a port is already in use during Docker container startup or when attempting to manually start the Django test server.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; ```bash
+ sudo lsof -i :8000
+
+ ```bash
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;kill -15 &amp;lt;PID&amp;gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; ```bash
+ kill -9 &amp;lt;pid&amp;gt;
+ ```
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="django-network-design-in-docker-environments"&gt;Django Network Design in Docker Environments
+&lt;/h2&gt;&lt;p&gt;When running Django in a containerized environment, attention must be paid to network binding settings. If Django is bound to &lt;code&gt;localhost&lt;/code&gt; (127.0.0.1) inside the container, it cannot accept access via port mapping from the host machine or other containers (such as Nginx). To receive traffic from outside the container, it must be bound to &lt;code&gt;0.0.0.0&lt;/code&gt;, which represents all network interfaces.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Not recommended (inaccessible from outside the container)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;python manage.py runserver 127.0.0.1:8000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Recommended (allows access from outside the container)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;python manage.py runserver 0.0.0.0:8000
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Furthermore, to accommodate the ephemeral nature of containers, the design must synchronize (volume mount) static files, media files, and database data with directories on the host machine.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -p 8000:8000 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -v /home/ubuntu/myproject/media:/app/media &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --name django-app my-django-image
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="verification-logs"&gt;Verification Logs
+&lt;/h2&gt;&lt;p&gt;The following are verification commands and examples of expected output logs to confirm that each component is operating normally after system construction.&lt;/p&gt;
+&lt;h3 id="verifying-gunicorn-operational-status"&gt;Verifying Gunicorn Operational Status
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ systemctl status gunicorn
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;● gunicorn.service - gunicorn daemon
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Loaded: loaded (/etc/systemd/system/gunicorn.service; enabled; vendor preset: enabled)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Active: active (running) since Tue 2026-07-07 10:00:00 UTC; 5min ago
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Main PID: 12345 (gunicorn)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Tasks: 4 (limit: 1143)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Memory: 48.2M
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CPU: 120ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CGroup: /system.slice/gunicorn.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├─12345 /home/ubuntu/myproject/venv/bin/python3 /home/ubuntu/myproject/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock myproject.wsgi:application
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├─12346 /home/ubuntu/myproject/venv/bin/python3 /home/ubuntu/myproject/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock myproject.wsgi:application
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; └─12347 /home/ubuntu/myproject/venv/bin/python3 /home/ubuntu/myproject/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock myproject.wsgi:application
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="verifying-socket-file-existence-and-permissions"&gt;Verifying Socket File Existence and Permissions
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -la /run/gunicorn.sock
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;srwxrwxrwx 1 ubuntu www-data 0 Jul 7 10:00 /run/gunicorn.sock
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="verifying-http-responses-via-nginx"&gt;Verifying HTTP Responses via Nginx
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I http://localhost
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Server: nginx/1.18.0 (Ubuntu)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Date: Tue, 07 Jul 2026 10:05:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: text/html; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Connection: keep-alive
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;X-Frame-Options: DENY
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;X-Content-Type-Options: nosniff
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Referrer-Policy: same-origin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;In production environment operations, regularly check the following checklist to maintain configuration consistency.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Principle of Least Privilege for Security Groups&lt;/b&gt;: Restrict SSH (Port 22) and development ports (8000) to specific administrative source IP addresses only, and avoid opening them to &lt;code&gt;0.0.0.0/0&lt;/code&gt;. If the IP address changes, update the security group inbound rules immediately.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Separation of Environment Variables&lt;/b&gt;: Sensitive information such as database connection details and the Django &lt;code&gt;SECRET_KEY&lt;/code&gt; should not be hard-coded in the codebase. Inject them using &lt;code&gt;.env&lt;/code&gt; files or services like AWS Systems Manager Parameter Store, and exclude them from version control system (Git) tracking.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Aggregation of Static Files&lt;/b&gt;: When updating the application, always execute &lt;code&gt;python manage.py collectstatic&lt;/code&gt; to update the static file directory referenced by Nginx to the latest state.&lt;/p&gt;
+&lt;/pid&gt;</description></item><item><title>Implementing GitHub Actions Automation to Prevent Supabase Free Plan Project Pausing</title><link>https://klifehack.com/en/p/supabase-keepalive-automation-github-actions/</link><pubDate>Sun, 05 Jul 2026 10:12:17 +0900</pubDate><guid>https://klifehack.com/en/p/supabase-keepalive-automation-github-actions/</guid><description>&lt;h1 id="health-monitoring-configuration-via-github-actions-to-avoid-automatic-pausing-of-supabase-free-plan"&gt;Health Monitoring Configuration via GitHub Actions to Avoid Automatic Pausing of Supabase Free Plan
 &lt;/h1&gt;&lt;p&gt;In the Supabase Free Plan, projects are automatically paused if no activity is detected for 7 consecutive days, hindering development continuity and prototype operations. Manual resumption from the dashboard results in API downtime. This infrastructure configuration resets the inactivity timer by sending a REST API request every 5 days using GitHub Actions scheduled execution.&lt;/p&gt;
 &lt;h2 id="configuration-architecture-and-security-requirements"&gt;Configuration Architecture and Security Requirements
 &lt;/h2&gt;&lt;p&gt;This automation stack operates within a private repository to protect API keys. GitHub Actions Free Tier provides 2,000 minutes of execution time per month, sufficient for lightweight curl operations.&lt;/p&gt;
@@ -3075,7 +3204,7 @@ In a multi-step workflow, when only some processes succeed and subsequent proces
 &lt;/ul&gt;
 &lt;p&gt;Implementation of a custom command to retrieve Pull Request diffs and perform a review:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: Review PR differences and provide suggestions for improvement
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Review PR differences and provide suggestions for improvement&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;!git diff main...HEAD
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Review the differences above and review them from the following perspectives:
@@ -3109,8 +3238,8 @@ In a multi-step workflow, when only some processes succeed and subsequent proces
 &lt;/h2&gt;&lt;p&gt;With updates to Claude Code, custom commands and &amp;ldquo;Skills&amp;rdquo; have been organized into an integrated execution framework. Both &lt;code&gt;.claude/commands/review.md&lt;/code&gt; and &lt;code&gt;.claude/skills/review/SKILL.md&lt;/code&gt; are registered as the &lt;code&gt;/review&lt;/code&gt; command, but the Skill format is recommended for new implementations. If the same name exists, the Skill takes precedence.&lt;/p&gt;
 &lt;p&gt;Skills are managed as folder-level assets and have the structure &lt;code&gt;.claude/skills/&amp;lt;name&amp;gt;/SKILL.md&lt;/code&gt;. They support Autonomous Triggering, allowing Claude to automatically launch a Skill based on context without the user explicitly executing a command. Additionally, because of the folder structure, they have the advantage of being able to bundle related documents and templates.&lt;/name&gt;&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: Scan for project security vulnerabilities and provide remediation proposals
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;disable-model-invocation: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Scan for project security vulnerabilities and provide remediation proposals&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;disable-model-invocation&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Static analysis of the project-wide source code for vulnerabilities in OWASP Top 10.
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 &lt;b&gt;Important Parameters&lt;/b&gt;: &lt;code&gt;description&lt;/code&gt; is a semantic description that serves as a trigger for autonomous execution. Claude analyzes this description to determine the application scenario. &lt;code&gt;disable-model-invocation: true&lt;/code&gt; is used to prevent autonomous execution and restrict it to manual execution only for processes with side effects, such as infrastructure changes or database operations.&lt;/p&gt;
@@ -3149,8 +3278,8 @@ In a multi-step workflow, when only some processes succeed and subsequent proces
 &lt;h2 id="5-practical-example-building-a-pipeline-from-review-to-fix"&gt;5. Practical Example: Building a Pipeline from Review to Fix
 &lt;/h2&gt;&lt;p&gt;Automating code reviews specialized for a specific technology stack is effective for maintaining quality. Implementation of a custom code review Skill for a Flutter project:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: Review code based on Flutter best practices
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model: claude-3-5-sonnet-latest
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Review code based on Flutter best practices&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;model&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;claude-3-5-sonnet-latest&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Examine the code from the Flutter/Dart perspective below:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Widget hypertrophy (need extraction)

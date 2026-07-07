@@ -8,7 +8,7 @@
 &lt;/ul&gt;
 &lt;p&gt;以下は、Pull Requestの差分を取得してレビューを実行するカスタムコマンドの実装例です。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: PRの差分をレビューし、改善案を提示します
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PRの差分をレビューし、改善案を提示します&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;!git diff main...HEAD
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;上記の差分を確認し、以下の観点でレビューを行ってください：
@@ -42,8 +42,8 @@
 &lt;/h2&gt;&lt;p&gt;Claude Codeのアップデートにより、カスタムコマンドと「Skill」は統合された実行フレームワークとして整理されました。&lt;code&gt;.claude/commands/review.md&lt;/code&gt; と &lt;code&gt;.claude/skills/review/SKILL.md&lt;/code&gt; は、どちらも &lt;code&gt;/review&lt;/code&gt; コマンドとして登録されますが、新規実装ではSkill形式が推奨されます。同一名称が存在する場合、Skillが優先されます。&lt;/p&gt;
 &lt;p&gt;Skillはフォルダ単位のアセットとして管理され、&lt;code&gt;.claude/skills/&amp;lt;name&amp;gt;/SKILL.md&lt;/code&gt; の構造を持ちます。自律的な呼び出し（Autonomous Triggering）が可能であり、ユーザーが明示的にコマンドを実行しなくても、Claudeがコンテキストから判断して自動的にSkillを起動できます。また、フォルダ構造であるため、関連するドキュメントやテンプレートを同梱できる利点があります。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: プロジェクトのセキュリティ脆弱性をスキャンし、修正案を提示します
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;disable-model-invocation: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;プロジェクトのセキュリティ脆弱性をスキャンし、修正案を提示します&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;disable-model-invocation&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;プロジェクト全体のソースコードを静的解析し、OWASP Top 10に該当する脆弱性がないか確認してください。
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 &lt;b&gt;重要なパラメータ&lt;/b&gt;: &lt;code&gt;description&lt;/code&gt; は自律起動のトリガーとなるセマンティックな説明文です。Claudeはこの記述を解析し、適用シーンを判断します。&lt;code&gt;disable-model-invocation: true&lt;/code&gt; は、インフラ変更やデータベース操作など、副作用を伴う処理において自律実行を防ぎ、手動実行のみに制限するために使用します。&lt;/p&gt;
@@ -83,8 +83,8 @@
 &lt;h2 id="5-実践例レビューから修正へのパイプライン構築"&gt;5. 実践例：レビューから修正へのパイプライン構築
 &lt;/h2&gt;&lt;p&gt;特定の技術スタックに特化したコードレビューを自動化することは、品質維持に有効です。以下は、Flutterプロジェクト向けのカスタムコードレビューSkillの実装例です。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;description: Flutterのベストプラクティスに基づきコードをレビューします
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model: claude-3-5-sonnet-latest
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Flutterのベストプラクティスに基づきコードをレビューします&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;model&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;claude-3-5-sonnet-latest&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;以下のFlutter/Dartの観点でコードを精査してください：
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; Widgetの肥大化（抽出の必要性）

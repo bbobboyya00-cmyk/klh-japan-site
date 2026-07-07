@@ -1,4 +1,126 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Systemd on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/systemd/</link><description>Recent content in Systemd on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 12 Jun 2026 10:07:01 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/systemd/index.xml" rel="self" type="application/rss+xml"/><item><title>NVIDIA GPUのVRAMをLinuxスワップ領域として活用するNBD-VRAMのアーキテクチャと実装</title><link>https://klifehack.com/p/nvidia-vram-linux-swap-nbd/</link><pubDate>Fri, 12 Jun 2026 10:07:01 +0900</pubDate><guid>https://klifehack.com/p/nvidia-vram-linux-swap-nbd/</guid><description>&lt;p&gt;開発環境におけるコンテナの乱立や大規模なビルドプロセスの実行は、物理メモリ（System RAM）の枯渇を招き、システム全体のハングアップやOOM（Out Of Memory）キラーによるプロセスの強制終了を引き起こします。特にオンボードメモリを搭載したノートPCや、物理的なメモリ増設が困難なエッジノードにおいて、この問題は顕著です。従来のSSDやHDDを対象としたスワップ領域の拡張は、ストレージの書き込み寿命（TBW）を著しく縮めるだけでなく、I/Oボトルネックによるシステム全体のパフォーマンス低下を招きます。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Systemd on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/systemd/</link><description>Recent content in Systemd on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 07 Jul 2026 10:33:05 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/systemd/index.xml" rel="self" type="application/rss+xml"/><item><title>DjangoアプリケーションにおけるNginx・Gunicorn連携時の502 Bad Gatewayおよび権限境界の解決手法</title><link>https://klifehack.com/p/nginx-gunicorn-django-troubleshooting/</link><pubDate>Tue, 07 Jul 2026 10:33:05 +0900</pubDate><guid>https://klifehack.com/p/nginx-gunicorn-django-troubleshooting/</guid><description>&lt;h1 id="django本番環境における3層デプロイ構成とトラブルシューティング"&gt;Django本番環境における3層デプロイ構成とトラブルシューティング
+&lt;/h1&gt;&lt;p&gt;インフラストラクチャのスケールアップや本番環境への移行において、Djangoの開発用サーバー（runserver）をそのままインターネットに公開することは、セキュリティおよび並行処理性能の観点から推奨されません。本番環境では、リバースプロキシ（Nginx）、WSGIアプリケーションサーバー（Gunicorn）、そしてアプリケーションロジック（Django）の3層構造を構築することが一般的です。しかし、この構成ではコンポーネント間の通信経路が増えるため、ソケットの権限設定ミスやプロセスの異常終了に伴う「502 Bad Gateway」や「403 Forbidden」といったエラーが頻発します。本稿では、これらのエラーを未然に防ぎ、発生時に迅速に特定・解決するためのシステム設計とトラブルシューティングの手順を解説します。&lt;/p&gt;
+&lt;h2 id="3層デプロイアーキテクチャの基本設計"&gt;3層デプロイアーキテクチャの基本設計
+&lt;/h2&gt;&lt;p&gt;本番環境におけるトラフィック制御および静的ファイルの効率的な配信を実現するため、以下の役割分担でスタックを構成します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Nginx (ポート 80/443)&lt;/b&gt;: クライアントからのリクエストを最初に受け取るリバースプロキシとして動作します。静的ファイル（CSS/JS/メディアファイル）の配信を直接行い、動的リクエストのみを後続のGunicornに転送します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Gunicorn (WSGIサーバー)&lt;/b&gt;: Unixドメインソケットを介してNginxと通信し、Pythonプロセスを実行します。systemdによってデーモンとして管理され、プロセスの永続性を担保します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Django&lt;/b&gt;: ビジネスロジックを処理し、データベース（AWS RDSなど）と連携します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="gunicornのsystemdサービス定義"&gt;Gunicornのsystemdサービス定義
+&lt;/h3&gt;&lt;p&gt;Gunicornプロセスを安定して稼働させるため、&lt;code&gt;/etc/systemd/system/gunicorn.service&lt;/code&gt; を以下のように定義します。ソケットファイルの作成場所と所有権の設計が、後述する権限エラーを防ぐ鍵となります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Unit]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Description&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;gunicorn daemon&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;After&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;network.target&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Service]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;User&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;ubuntu&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Group&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;www-data&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;WorkingDirectory&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/home/ubuntu/myproject&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ExecStart&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/home/ubuntu/myproject/venv/bin/gunicorn \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --access-logfile - \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --workers 3 \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --bind unix:/run/gunicorn.sock \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; myproject.wsgi:application&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Install]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;WantedBy&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;multi-user.target&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="nginxのバーチャルホスト設定"&gt;Nginxのバーチャルホスト設定
+&lt;/h3&gt;&lt;p&gt;Nginxから上記で作成されるUnixドメインソケット &lt;code&gt;/run/gunicorn.sock&lt;/code&gt; へリクエストをプロキシするように、&lt;code&gt;/etc/nginx/sites-available/django&lt;/code&gt; を設定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nginx" data-lang="nginx"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;listen&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server_name&lt;/span&gt; &lt;span style="color:#e6db74"&gt;_&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;/favicon.ico&lt;/span&gt; { &lt;span style="color:#f92672"&gt;access_log&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;off&lt;/span&gt;; &lt;span style="color:#f92672"&gt;log_not_found&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;off&lt;/span&gt;; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/static/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;alias&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/home/ubuntu/myproject/static/&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;include&lt;/span&gt; &lt;span style="color:#e6db74"&gt;proxy_params&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_pass&lt;/span&gt; &lt;span style="color:#e6db74"&gt;http://unix:/run/gunicorn.sock&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;本番運用時に発生する代表的なエラーパターンと、その解決ワークフローを以下に示します。&lt;/p&gt;
+&lt;h3 id="1-502-bad-gateway"&gt;1. 502 Bad Gateway
+&lt;/h3&gt;&lt;p&gt;NginxがGunicornのソケットファイルに接続できない、またはソケットファイル自体が存在しない場合に発生します。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;原因A&lt;/b&gt;: Gunicornサービスが起動していない。&lt;code&gt;systemctl status gunicorn&lt;/code&gt; でステータスを確認し、停止している場合は &lt;code&gt;systemctl start gunicorn&lt;/code&gt; で起動します。エラーログは &lt;code&gt;journalctl -u gunicorn&lt;/code&gt; で確認します。
+💡 &lt;b&gt;原因B&lt;/b&gt;: ソケットファイルのパス不一致。Nginxの &lt;code&gt;proxy_pass&lt;/code&gt; に指定したパスと、Gunicornの &lt;code&gt;--bind&lt;/code&gt; に指定したパスが完全に一致しているか確認します。&lt;/p&gt;
+&lt;h3 id="2-403-forbidden"&gt;2. 403 Forbidden
+&lt;/h3&gt;&lt;p&gt;Nginxの実行ユーザー（通常は &lt;code&gt;www-data&lt;/code&gt;）が、ソケットファイルや静的ファイルディレクトリへのアクセス権限を持っていない場合に発生します。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;原因A&lt;/b&gt;: &lt;code&gt;/home/ubuntu&lt;/code&gt; ディレクトリの権限制限。Ubuntuのデフォルト設定では、&lt;code&gt;/home/ubuntu&lt;/code&gt; の権限が &lt;code&gt;700&lt;/code&gt;（所有者のみ読み書き実行可能）になっていることがあります。この場合、Nginxは配下のソケットや静的ファイルにアクセスできません。ディレクトリの権限を &lt;code&gt;755&lt;/code&gt; に変更するか、ソケットファイルの作成場所を &lt;code&gt;/run/&lt;/code&gt; などの共有ディレクトリに変更します。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; ```bash
+ chmod 755 /home/ubuntu
+ ```
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;⚠️ &lt;b&gt;原因B&lt;/b&gt;: 静的ファイルディレクトリの所有権不整合。静的ファイルディレクトリの所有者をNginxが読み込めるように変更します。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; ```bash
+ sudo chown -R www-data:www-data /home/ubuntu/myproject/static/
+ ```
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="3-port-conflict-address-already-in-use"&gt;3. Port Conflict (Address already in use)
+&lt;/h3&gt;&lt;p&gt;Dockerコンテナの起動時や、手動でDjangoのテストサーバーを起動しようとした際、ポートがすでに使用されている場合に発生します。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; ```bash
+ sudo lsof -i :8000
+
+ ```bash
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;kill -15 &lt;pid&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; ```bash
+ kill -9 &amp;lt;pid&amp;gt;
+ ```
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="docker環境におけるdjangoネットワーク設計"&gt;Docker環境におけるDjangoネットワーク設計
+&lt;/h2&gt;&lt;p&gt;コンテナ化された環境でDjangoを稼働させる場合、ネットワークのバインド設定に注意が必要です。コンテナ内部の &lt;code&gt;localhost&lt;/code&gt; (127.0.0.1) にDjangoをバインドすると、ホストマシンや他のコンテナ（Nginxなど）からのポートマッピング経由のアクセスを受け付けることができません。コンテナ外部からのトラフィックを受信するためには、すべてのネットワークインターフェースを指す &lt;code&gt;0.0.0.0&lt;/code&gt; にバインドする必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 非推奨（コンテナ外からアクセス不可）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;python manage.py runserver 127.0.0.1:8000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 推奨（コンテナ外からのアクセスを許可）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;python manage.py runserver 0.0.0.0:8000
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;また、コンテナの使い捨て（Ephemeral）の特性に対応するため、静的ファイルやメディアファイル、データベースのデータはホストマシンのディレクトリと同期（ボリュームマウント）させる設計が必要です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -p 8000:8000 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -v /home/ubuntu/myproject/media:/app/media &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --name django-app my-django-image
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="verification-logs"&gt;Verification Logs
+&lt;/h2&gt;&lt;p&gt;システム構築後、各コンポーネントが正常に稼働しているかを確認するための検証コマンドと、期待される出力ログの例です。&lt;/p&gt;
+&lt;h3 id="gunicornの稼働状態確認"&gt;Gunicornの稼働状態確認
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ systemctl status gunicorn
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;● gunicorn.service - gunicorn daemon
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Loaded: loaded (/etc/systemd/system/gunicorn.service; enabled; vendor preset: enabled)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Active: active (running) since Tue 2026-07-07 10:00:00 UTC; 5min ago
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Main PID: 12345 (gunicorn)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Tasks: 4 (limit: 1143)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Memory: 48.2M
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CPU: 120ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CGroup: /system.slice/gunicorn.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├─12345 /home/ubuntu/myproject/venv/bin/python3 /home/ubuntu/myproject/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock myproject.wsgi:application
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ├─12346 /home/ubuntu/myproject/venv/bin/python3 /home/ubuntu/myproject/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock myproject.wsgi:application
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; └─12347 /home/ubuntu/myproject/venv/bin/python3 /home/ubuntu/myproject/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock myproject.wsgi:application
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ソケットファイルの存在と権限の確認"&gt;ソケットファイルの存在と権限の確認
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -la /run/gunicorn.sock
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;srwxrwxrwx 1 ubuntu www-data 0 Jul 7 10:00 /run/gunicorn.sock
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="nginx経由のhttpレスポンス検証"&gt;Nginx経由のHTTPレスポンス検証
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I http://localhost
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Server: nginx/1.18.0 (Ubuntu)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Date: Tue, 07 Jul 2026 10:05:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: text/html; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Connection: keep-alive
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;X-Frame-Options: DENY
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;X-Content-Type-Options: nosniff
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Referrer-Policy: same-origin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;本番環境の運用においては、以下のチェックリストを定期的に確認し、構成の整合性を維持してください。&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;セキュリティグループの最小特権原則&lt;/b&gt;: SSH（ポート22）および開発用ポート（8000）は、特定の管理元IPアドレスのみに制限し、&lt;code&gt;0.0.0.0/0&lt;/code&gt;への開放は避けてください。IPアドレスが変更された場合は、セキュリティグループのインバウンドルールを即座に更新します。
+🛠️ &lt;b&gt;環境変数の分離&lt;/b&gt;: データベース接続情報やDjangoの &lt;code&gt;SECRET_KEY&lt;/code&gt; などの機密情報は、コードベースにハードコーディングせず、&lt;code&gt;.env&lt;/code&gt; ファイルやAWS Systems Manager Parameter Store等を利用して注入し、バージョン管理システム（Git）の追跡対象から除外します。
+🛠️ &lt;b&gt;静的ファイルの集約&lt;/b&gt;: アプリケーションのアップデート時には、必ず &lt;code&gt;python manage.py collectstatic&lt;/code&gt; を実行し、Nginxが参照する静的ファイルディレクトリを最新の状態に更新してください。&lt;/pid&gt;&lt;/pid&gt;&lt;/p&gt;</description></item><item><title>NVIDIA GPUのVRAMをLinuxスワップ領域として活用するNBD-VRAMのアーキテクチャと実装</title><link>https://klifehack.com/p/nvidia-vram-linux-swap-nbd/</link><pubDate>Fri, 12 Jun 2026 10:07:01 +0900</pubDate><guid>https://klifehack.com/p/nvidia-vram-linux-swap-nbd/</guid><description>&lt;p&gt;開発環境におけるコンテナの乱立や大規模なビルドプロセスの実行は、物理メモリ（System RAM）の枯渇を招き、システム全体のハングアップやOOM（Out Of Memory）キラーによるプロセスの強制終了を引き起こします。特にオンボードメモリを搭載したノートPCや、物理的なメモリ増設が困難なエッジノードにおいて、この問題は顕著です。従来のSSDやHDDを対象としたスワップ領域の拡張は、ストレージの書き込み寿命（TBW）を著しく縮めるだけでなく、I/Oボトルネックによるシステム全体のパフォーマンス低下を招きます。&lt;/p&gt;
 &lt;p&gt;このような背景から、システムに搭載されているものの、グラフィックス処理や機械学習タスクを実行していない時間帯に遊休状態となっているNVIDIA GPUのVRAM（Video RAM）を、Linuxの高速なスワップ階層として再利用するアプローチが注目されています。本稿では、Network Block Device（NBD）とCUDA APIを組み合わせたオープンソースプロジェクト「NBD-VRAM」のアーキテクチャ、実装プロセス、および運用上の注意点について技術的な分析を行います。&lt;/p&gt;
 &lt;h2 id="nbd-vramのメモリ階層アーキテクチャ"&gt;NBD-VRAMのメモリ階層アーキテクチャ
 &lt;/h2&gt;&lt;p&gt;💡 NBD-VRAMは、VRAMを単なる物理メモリの直接的な拡張として扱うのではなく、Linuxの仮想メモリ管理システムにおける「超高速な中間スワップ階層」として位置づけます。これにより、多段階のメモリ階層が形成されます。&lt;/p&gt;
