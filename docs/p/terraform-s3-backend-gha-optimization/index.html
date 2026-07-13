@@ -1,0 +1,154 @@
+<!doctype html><html lang=ja dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="TerraformのS3バックエンド設定における変数利用の制限と、GitHub Actionsのパスフィルタリング最適化に関する実務的な実装記録とトラブルシューティング。"><title>Terraform S3 Backendの初期化制約とGitHub Actionsパスフィルタリングの最適化</title><link rel=canonical href=https://klifehack.com/p/terraform-s3-backend-gha-optimization/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.166aa5bdeb7d404471668645f98967b7803f0e24913be8dca78065ece6f0d352.css><meta property='og:title' content="Terraform S3 Backendの初期化制約とGitHub Actionsパスフィルタリングの最適化"><meta property='og:description' content="TerraformのS3バックエンド設定における変数利用の制限と、GitHub Actionsのパスフィルタリング最適化に関する実務的な実装記録とトラブルシューティング。"><meta property='og:url' content='https://klifehack.com/p/terraform-s3-backend-gha-optimization/'><meta property='og:site_name' content='K-Life Hack | システムアーキテクチャ & DevOps'><meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='terraform'><meta property='article:tag' content='s3-backend'><meta property='article:tag' content='github-actions'><meta property='article:tag' content='aws-iam'><meta property='article:tag' content='state-management'><meta property='article:published_time' content='2026-07-13T10:13:55+09:00'><meta property='article:modified_time' content='2026-07-13T10:13:55+09:00'><meta name=twitter:title content="Terraform S3 Backendの初期化制約とGitHub Actionsパスフィルタリングの最適化"><meta name=twitter:description content="TerraformのS3バックエンド設定における変数利用の制限と、GitHub Actionsのパスフィルタリング最適化に関する実務的な実装記録とトラブルシューティング。"><script async src="https://www.googletagmanager.com/gtag/js?id=G-4KGC4HJF0E"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-4KGC4HJF0E")}</script><link rel=icon href=/favicon.ico type=image/x-icon><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"K-Life Hack | システムアーキテクチャ \u0026 DevOps","item":"https:\/\/klifehack.com\/"},{"@type":"ListItem","position":2,"name":"Posts","item":"https:\/\/klifehack.com\/posts/"},{"@type":"ListItem","position":3,"name":"Terraform S3 Backendの初期化制約とGitHub Actionsパスフィルタリングの最適化","item":"https:\/\/klifehack.com\/p\/terraform-s3-backend-gha-optimization\/"}]}</script><link rel=alternate hreflang=ja href=https://klifehack.com/p/terraform-s3-backend-gha-optimization/><meta property="og:image" content="https://klifehack.com/img/logo.webp"><meta property="twitter:image" content="https://klifehack.com/img/logo.webp"><style>@media(max-width:640px){.pagination{display:flex!important;flex-wrap:nowrap!important;justify-content:center!important;align-items:center!important;overflow:hidden!important;width:100%!important;padding:15px 0!important;margin:0!important;gap:3px!important;box-sizing:border-box!important}.pagination>*{min-width:28px!important;height:32px!important;padding:0 4px!important;text-decoration:none!important;box-sizing:border-box!important;border-radius:4px!important;flex:initial!important}.pagination>:first-child,.pagination>:last-child,.pagination>.pagination-link{min-width:24px!important;padding:0!important}.pagination svg{width:16px!important;height:16px!important;margin:0!important}.pagination>*{display:none!important}.pagination>:first-child,.pagination>:last-child,.pagination>:nth-child(2),.pagination>:nth-last-child(2),.pagination>.pagination-link,.pagination>.current{display:inline-flex!important}.pagination>.current+*,.pagination>.current+*+*{display:inline-flex!important}.pagination>*:has(+.current),.pagination>*:has(+*+.current){display:inline-flex!important}}</style></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=メニューを開く・閉じる>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/persona_k_ambient.webp width=559 height=559 class=site-logo loading=lazy alt=Avatar></a></figure><div class=site-meta><h1 class=site-name><a href=/>K-Life Hack | システムアーキテクチャ & DevOps</a></h1><h2 class=site-description>ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。</h2></div></header><ol class=menu id=main-menu><li><a href=/search/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1014 0A7 7 0 103 10"/><path d="M21 21l-6-6"/></svg>
+<span>検索</span></a></li><li><a href=/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>ホーム</span></a></li><li><a href=/archives/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6a2 2 0 012-2h14a2 2 0 012 2 2 2 0 01-2 2H5A2 2 0 013 6"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><path d="M10 12h4"/></svg>
+<span>アーカイブ</span></a></li><li><a href=/about/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 108 0A4 4 0 008 7"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>紹介</span></a></li><li><a href=mailto:contact@klifehack.com><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7"/><path d="M3 7l9 6 9-6"/></svg>
+<span>お問い合わせ</span></a></li><li class=menu-bottom-section><ol class=menu><li id=i18n-switch><svg class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<select name=language title=language onchange="window.location.href=this.selectedOptions[0].value"><option value=/p/terraform-s3-backend-gha-optimization/ selected>日本語</option><option value=/en/p/terraform-s3-backend-gha-optimization/>English</option></select></li><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>ダークモード</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><form action=/search/ class="search-form widget"><p><label>検索</label>
+<input name=keyword required placeholder=入力...>
+<button title=検索>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1014 0A7 7 0 103 10"/><path d="M21 21l-6-6"/></svg></button></p></form><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目次</h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ul><li><a href=#terraform-backendにおける変数の制約と解決>Terraform Backendにおける変数の制約と解決</a></li><li><a href=#s3オブジェクトキーの命名規則に関する制約>S3オブジェクトキーの命名規則に関する制約</a></li><li><a href=#github-actionsによるパスフィルタリングの最適化>GitHub Actionsによるパスフィルタリングの最適化</a></li><li><a href=#operational-verifications>Operational Verifications</a></li><li><a href=#lessons-learned>Lessons Learned</a></li></ul></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-category><a href=/categories/devops-logistics/ style=background-color:#cdbeef;color:#1e0f3d>DevOps Logistics</a></div><div class=article-title-wrapper><h2 class=article-title><a href=/p/terraform-s3-backend-gha-optimization/>Terraform S3 Backendの初期化制約とGitHub Actionsパスフィルタリングの最適化</a></h2><h3 class=article-subtitle>TerraformのS3バックエンド設定における変数利用の制限と、GitHub Actionsのパスフィルタリング最適化に関する実務的な実装記録とトラブルシューティング。</h3></div><div class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-07-13T10:13:55+09:00>2026/07/13</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span class=article-time--reading>読了時間: 4分</span></div><div class=inline-meta><svg class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<a href=/en/p/terraform-s3-backend-gha-optimization/ class=link>English</a></div></div></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span>目次</span></div></summary><nav class=toc-nav><ul><li><a href=#terraform-backendにおける変数の制約と解決>Terraform Backendにおける変数の制約と解決</a></li><li><a href=#s3オブジェクトキーの命名規則に関する制約>S3オブジェクトキーの命名規則に関する制約</a></li><li><a href=#github-actionsによるパスフィルタリングの最適化>GitHub Actionsによるパスフィルタリングの最適化</a></li><li><a href=#operational-verifications>Operational Verifications</a></li><li><a href=#lessons-learned>Lessons Learned</a></li></ul></nav></details></aside><section class=article-content><h1 id=terraformにおけるs3バックエンド構成の制約とgithub-actionsの最適化>TerraformにおけるS3バックエンド構成の制約とGitHub Actionsの最適化</h1><p>Infrastructure as Code (IaC) において、ステート管理（State Management）はシステムの整合性を維持するための核心的な要素です。特に複数人での開発やCI/CDパイプラインを運用する場合、ローカルの terraform.tfstate 管理は競合やデータ損失のリスクを伴うため、Amazon S3などのリモートバックエンドへの移行が不可欠となります。本稿では、TerraformのS3バックエンド構成時に直面した変数の制約、S3キーの命名規則、およびGitHub Actionsによる環境別デプロイの最適化プロセスについて記録します。</p><h2 id=terraform-backendにおける変数の制約と解決>Terraform Backendにおける変数の制約と解決</h2><p>環境（dev/prod）ごとにバックエンド構成を柔軟に変更するため、variables.tf で定義した変数を使用して backend &ldquo;s3&rdquo; ブロックを記述する構成を試行しました。当初、S3バケット名やリージョンを変数化して定義しました。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-hcl data-lang=hcl><span style=display:flex><span><span style=color:#75715e># variables.tf
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>variable</span> <span style=color:#e6db74>&#34;s3_backend&#34;</span> {
+</span></span><span style=display:flex><span>  type        <span style=color:#f92672>=</span> <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>  description <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;The ARN of the S3 Backend for storing Terraform State&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>variable</span> <span style=color:#e6db74>&#34;region&#34;</span> {
+</span></span><span style=display:flex><span>  type        <span style=color:#f92672>=</span> <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>  description <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;AWS Region Code&#34;</span>
+</span></span><span style=display:flex><span>}<span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e># backend.tf (エラーが発生する構成)
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>terraform</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>backend</span> <span style=color:#e6db74>&#34;s3&#34;</span> {
+</span></span><span style=display:flex><span>    bucket <span style=color:#f92672>=</span> <span style=color:#66d9ef>var</span>.<span style=color:#66d9ef>s3_backend</span>
+</span></span><span style=display:flex><span>    key    <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;dev/&#34;</span>
+</span></span><span style=display:flex><span>    region <span style=color:#f92672>=</span> <span style=color:#66d9ef>var</span>.<span style=color:#66d9ef>region</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>この状態で terraform init を実行すると、以下のエラーが送出されます。これはTerraformの初期化プロセスにおける仕様に起因するものです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>Initializing the backend...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>╷
+</span></span><span style=display:flex><span>│ Error: Variables not allowed
+</span></span><span style=display:flex><span>│
+</span></span><span style=display:flex><span>│   on backend.tf line 3, in terraform:
+</span></span><span style=display:flex><span>│    3:     bucket = var.s3_backend
+</span></span><span style=display:flex><span>│
+</span></span><span style=display:flex><span>│ Variables may not be used here.
+</span></span><span style=display:flex><span>╵
+</span></span></code></pre></div><p>Terraformのアーキテクチャ上、バックエンドの初期化は変数（Variables）、関数（Functions）、ローカル変数（Locals）が評価される前に行われます。そのため、backend ブロック内で var. 参照を使用することは言語仕様として許可されていません。この制約を回避するため、バックエンド構成にはハードコードされた文字列を使用するか、実行時に -backend-config オプションを利用して外部から値を注入する必要があります。今回は静的な構成ファイルとして再定義を行いました。</p><h2 id=s3オブジェクトキーの命名規則に関する制約>S3オブジェクトキーの命名規則に関する制約</h2><p>バックエンド構成を修正する際、S3内のパスを指定する key パラメータの記述においてもエラーが発生しました。以下は無効なキー指定の例です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-hcl data-lang=hcl><span style=display:flex><span><span style=color:#66d9ef>terraform</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>backend</span> <span style=color:#e6db74>&#34;s3&#34;</span> {
+</span></span><span style=display:flex><span>    bucket <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;lee-static-web-sre-state-storage&#34;</span>
+</span></span><span style=display:flex><span>    key    <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;dev/&#34;</span><span style=color:#75715e> # エラーの原因
+</span></span></span><span style=display:flex><span>    region <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;ap-northeast-2&#34;</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>実行時に送出されたエラーログは、パスの指定形式に問題があることを示しています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>╷
+</span></span><span style=display:flex><span>│ Error: Invalid Value
+</span></span><span style=display:flex><span>│
+</span></span><span style=display:flex><span>│   on backend.tf line 4, in terraform:
+</span></span><span style=display:flex><span>│    4:     key    = &#34;dev/&#34;
+</span></span><span style=display:flex><span>│
+</span></span><span style=display:flex><span>│ The value must not start or end with &#34;/&#34;
+</span></span></code></pre></div><p>S3バックエンドの key はディレクトリではなく、特定のステートファイルを指すオブジェクトキーである必要があります。末尾の / を削除し、明示的なファイル名を指定することで解決しました。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-hcl data-lang=hcl><span style=display:flex><span><span style=color:#66d9ef>terraform</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>backend</span> <span style=color:#e6db74>&#34;s3&#34;</span> {
+</span></span><span style=display:flex><span>    bucket <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;lee-static-web-sre-state-storage&#34;</span>
+</span></span><span style=display:flex><span>    key    <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;dev/state.tfstate&#34;</span>
+</span></span><span style=display:flex><span>    region <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;ap-northeast-2&#34;</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=github-actionsによるパスフィルタリングの最適化>GitHub Actionsによるパスフィルタリングの最適化</h2><p>モノレポ構成や複数の環境ディレクトリを持つプロジェクトでは、特定のディレクトリに変更があった場合のみワークフローをトリガーさせることが、計算リソースの節約とデプロイの安全性確保に繋がります。当初、特定のディレクトリを指定する際に末尾を / で終了させていましたが、これではサブディレクトリ内のファイル変更を検知できない場合があります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>on</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>push</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>paths</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#39;aws/2026/05/static-web-sre/src/environments/dev/&#39;</span> <span style=color:#75715e># 不十分な検知</span>
+</span></span></code></pre></div><p>GitHub Actionsの仕様では、ディレクトリ配下のすべての変更を再帰的に監視するために ** ワイルドカードを使用することが推奨されます。以下は、IAMロールの確認を目的とした、パスフィルタリング適用後のワークフロー構成です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>name</span>: <span style=color:#ae81ff>Show Current IAM Role</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>on</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>push</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>branches</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ae81ff>dev</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>paths</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#e6db74>&#39;aws/2026/05/static-web-sre/src/environments/dev/**&#39;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>workflow_dispatch</span>:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>env</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>AWS_REGION</span>: <span style=color:#ae81ff>ap-northeast-2</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>DEV_ROLE</span>: <span style=color:#ae81ff>arn:aws:iam::345003923266:role/github_action-dev_branch</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>permissions</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>id-token</span>: <span style=color:#ae81ff>write</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>contents</span>: <span style=color:#ae81ff>read</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>jobs</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>show-iam-role</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>runs-on</span>: <span style=color:#ae81ff>ubuntu-latest</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>steps</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Checkout repository</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>actions/checkout@v5</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Configure AWS credentials</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>aws-actions/configure-aws-credentials@v6.2.1</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>with</span>:
+</span></span><span style=display:flex><span>          <span style=color:#f92672>role-to-assume</span>: <span style=color:#ae81ff>${{ env.DEV_ROLE }}</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>aws-region</span>: <span style=color:#ae81ff>${{ env.AWS_REGION }}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Show IAM Role</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>run</span>: |<span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          aws sts get-caller-identity</span>
+</span></span></code></pre></div><h2 id=operational-verifications>Operational Verifications</h2><p>設定完了後、バックエンドの初期化およびAWSリソースへのアクセス権限を以下のコマンドで確認しました。これにより、リモートバックエンドが正しく認識され、権限に問題がないことが実証されました。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>$ terraform init
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Initializing the backend...
+</span></span><span style=display:flex><span>Successfully configured the backend &#34;s3&#34;!
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>$ aws s3api list-objects --bucket lee-static-web-sre-state-storage --query &#39;Contents[].Key&#39;
+</span></span><span style=display:flex><span>[
+</span></span><span style=display:flex><span>    &#34;dev/state.tfstate&#34;,
+</span></span><span style=display:flex><span>    &#34;prod/&#34;
+</span></span><span style=display:flex><span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>$ aws sts get-caller-identity
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    &#34;UserId&#34;: &#34;AROAXXXXXXXXXXXXXXXXX:github-actions-session&#34;,
+</span></span><span style=display:flex><span>    &#34;Account&#34;: &#34;345003923266&#34;,
+</span></span><span style=display:flex><span>    &#34;Arn&#34;: &#34;arn:aws:sts::345003923266:assumed-role/github_action-dev_branch/github-actions-session&#34;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=lessons-learned>Lessons Learned</h2><ol><li><b>Terraformの初期化順序</b>: backend ブロックは最優先で評価されるため、変数の動的注入には -backend-config を使用するか、静的な定義を維持する必要がある。</li><li><b>S3キーの厳密性</b>: バックエンドの key はプレフィックスではなくオブジェクトのフルパスを要求するため、末尾の / は許容されない。</li><li><b>CI/CDのトリガー精度</b>: GitHub Actionsの paths フィルタリングにおいて、ディレクトリ配下の全変更を捕捉するには ** による再帰的指定が必須である。</li></ol></section><footer class="article-meta article-footer"><section class=article-tags><a href=/tags/terraform/>Terraform</a>
+<a href=/tags/s3-backend/>S3-Backend</a>
+<a href=/tags/github-actions/>Github-Actions</a>
+<a href=/tags/aws-iam/>Aws-Iam</a>
+<a href=/tags/state-management/>State-Management</a></section></footer></article><aside><h2 class=section-title>関連するコンテンツ</h2><div class=subsection-list><div class=article-list--tile><article><a href=/p/supabase-keepalive-automation-github-actions/><div class=article-details><h2 class=article-title>Supabase Free Planのプロジェクト停止を防止するGitHub Actionsの自動化実装</h2></div></a></article><article><a href=/p/github-actions-huggingface-jobs-migration/><div class=article-details><h2 class=article-title>GitHub Actions Self-hosted RunnerからHugging Face Jobsへの移行によるGPU CI/CDの最適化</h2></div></a></article><article><a href=/p/github-actions-k8s-self-hosted-runner/><div class=article-details><h2 class=article-title>GitHub ActionsとSelf-Hosted RunnerによるKubernetesデプロイ自動化の実装</h2></div></a></article><article><a href=/p/npm-typosquatting-mini-shai-hulud-analysis/><div class=article-details><h2 class=article-title>npmエコシステムにおけるサプライチェーン攻撃「Mini Shai-Hulud」の技術解析</h2></div></a></article><article><a href=/p/github-actions-self-hosted-k8s-cicd/><div class=article-details><h2 class=article-title>GitHub ActionsとSelf-hosted RunnerによるローカルKubernetes CI/CDの構築と認証・ネットワーク境界の突破</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><div class=copyright>&copy;
+2026 K-Life Hack | システムアーキテクチャ & DevOps</div><div class=powerby><a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> で構築されています。<br>テーマ <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.0>Stack</a></b> は <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> によって設計されています。</div></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script><div style=text-align:center;margin-top:15px;font-size:.85em;opacity:.6><a href=/privacy-policy/ style="color:inherit;text-decoration:none;margin:0 10px">Privacy Policy</a>
+<a href=/disclaimer/ style="color:inherit;text-decoration:none;margin:0 10px">Disclaimer</a>
+<a href=mailto:contact@klifehack.com style="color:inherit;text-decoration:none;margin:0 10px">Contact</a></div></body></html>
