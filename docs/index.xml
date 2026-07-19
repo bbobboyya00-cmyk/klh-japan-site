@@ -1,4 +1,90 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 15 Jul 2026 10:11:40 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetesにおける設定管理とデータ永続化の抽象化設計</title><link>https://klifehack.com/p/k8s-config-persistence-strategy/</link><pubDate>Wed, 15 Jul 2026 10:11:40 +0900</pubDate><guid>https://klifehack.com/p/k8s-config-persistence-strategy/</guid><description>&lt;h1 id="kubernetesにおけるpodのライフサイクル管理とデータの永続化戦略"&gt;KubernetesにおけるPodのライフサイクル管理とデータの永続化戦略
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 19 Jul 2026 10:06:09 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>NCP Developer ToolsによるKubernetes CI/CDパイプラインの構築と運用最適化</title><link>https://klifehack.com/p/ncp-k8s-cicd-pipeline-implementation/</link><pubDate>Sun, 19 Jul 2026 10:06:09 +0900</pubDate><guid>https://klifehack.com/p/ncp-k8s-cicd-pipeline-implementation/</guid><description>&lt;h1 id="ncp-developer-toolsを活用したnks-cicdパイプラインの構築"&gt;NCP Developer Toolsを活用したNKS CI/CDパイプラインの構築
+&lt;/h1&gt;&lt;p&gt;クラウドネイティブなインフラストラクチャにおいて、手動によるデプロイ作業は環境の不一致やヒューマンエラーを誘発する大きな要因となります。特にマイクロサービスアーキテクチャでは、コンテナイメージのビルドからKubernetes（NKS）へのデプロイまでを抽象化し、一貫したパイプラインで管理することが、リリースの信頼性を確保するために不可欠です。本稿では、Naver Cloud Platform（NCP）のDeveloper Toolsスイートを活用し、ソースコードの変更をトリガーとしたエンドツーエンドのCI/CDパイプラインを構築する実務的な手法について詳述します。&lt;/p&gt;
+&lt;h2 id="1-アーキテクチャの構成要素"&gt;1. アーキテクチャの構成要素
+&lt;/h2&gt;&lt;p&gt;NCP Developer Toolsは、以下の4つのマネージドサービスで構成され、SDLC（Software Development Life Cycle）全体をカバーします。&lt;/p&gt;
+&lt;p&gt;SourceCommitはプライベートGitリポジトリであり、GitHub等からの移行もサポートします。SourceBuildは並列ビルドが可能なマネージドサービスで、Dockerイメージの作成とContainer Registryへのプッシュを担当します。SourceDeployはNKSやサーバー群への自動デプロイを行い、ローリングアップデート等の戦略をサポートします。SourcePipelineは、これらのプロセスを統合し、ワークフローを自動化するオーケストレーターとして機能します。&lt;/p&gt;
+&lt;h2 id="2-sourcecommitリポジトリの移行と認証設計"&gt;2. SourceCommit：リポジトリの移行と認証設計
+&lt;/h2&gt;&lt;p&gt;外部リポジトリ（GitHub等）からSourceCommitへ移行する際、認証情報の管理が最初の摩擦点となります。プライベートリポジトリのコピーには、標準のパスワードではなく、GitHubのPersonal Access Token（PAT）の使用が必須です。&lt;/p&gt;
+&lt;p&gt;運用担当者には&lt;b&gt;NCP_SOURCECOMMIT_MANAGER&lt;/b&gt;ポリシーを割り当て、コンソール上で専用のGitパスワードを設定する必要があります。これにより、HTTPS経由でのセキュアなクローンとプッシュが可能になります。&lt;/p&gt;
+&lt;h2 id="3-sourcebuildコンテナイメージの構築と最適化"&gt;3. SourceBuild：コンテナイメージの構築と最適化
+&lt;/h2&gt;&lt;p&gt;SourceBuildでは、Ubuntu 16.04等のベースランタイム上でDockerビルドを実行します。ここでは、アプリケーションの依存関係を解決し、軽量なイメージを作成する構成が求められます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;python:3.9-slim&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WORKDIR&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/app&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 依存関係のインストール（キャッシュ効率化のため先にコピー）&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; requirements.txt .&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; pip install --no-cache-dir -r requirements.txt&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; . .&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;EXPOSE&lt;/span&gt; &lt;span style="color:#e6db74"&gt;5000&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CMD&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;python&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;app.py&amp;#34;&lt;/span&gt;]&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ビルドプロジェクトの設定では、latestタグと併せて、ビルド番号（#シンボルを使用）によるバージョニングを有効にすることで、ロールバックの容易性を確保します。&lt;/p&gt;
+&lt;h2 id="4-sourcedeploynksへのデプロイメント戦略"&gt;4. SourceDeploy：NKSへのデプロイメント戦略
+&lt;/h2&gt;&lt;p&gt;SourceDeployは、Kubernetesマニフェスト（Deployment/Service）をNKSクラスタに適用します。ダウンタイムを最小化するため、通常はローリングアップデート戦略を選択します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;apps/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;flask-app-deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;replicas&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;matchLabels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;flask-app&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;flask-app&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;flask-app&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;&amp;lt;your-ncr-endpoint&amp;gt;/flask-app:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;containerPort&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;flask-app-service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;type&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;LoadBalancer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;targetPort&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;flask-app&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-sourcepipelineによる自動化とガバナンス"&gt;5. SourcePipelineによる自動化とガバナンス
+&lt;/h2&gt;&lt;p&gt;SourcePipelineでSourceCommitのmasterブランチへのプッシュをトリガーに設定することで、コード修正から本番反映までを完全自動化します。本番環境へのデプロイにおいては、requestDeploy権限を持つユーザーによる「承認フロー」を組み込むことで、ガバナンスを強化することが推奨されます。&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;⚠️ &lt;b&gt;認証エラー (401 Unauthorized)&lt;/b&gt;: SourceCommitへのプッシュ時に発生する場合、サブアカウントで設定したGitパスワードが正しく入力されているか確認してください。GitHubからのコピー時はPATの有効期限とスコープ（repo）を確認する必要があります。&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;ビルド時間の増大&lt;/b&gt;: requirements.txtのパッケージダウンロードがボトルネックになる場合、SourceBuildの「ビルド完了後のイメージアップロード」機能を活用し、依存関係が含まれたビルド環境自体をキャッシュイメージとしてContainer Registryに保存、次回のビルドでカスタムイメージとして使用することで大幅に短縮可能です。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;イメージプルエラー (ErrImagePull)&lt;/b&gt;: NKSがContainer Registryからイメージを取得できない場合、レジストリのエンドポイントURLがマニフェスト内で正確に記述されているか、およびNKSクラスタに適切なアクセス権限が付与されているかを確認してください。&lt;/p&gt;
+&lt;h2 id="verification"&gt;Verification
+&lt;/h2&gt;&lt;p&gt;デプロイ完了後、以下のコマンドを使用してクラスタの状態とアプリケーションの応答を確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Podのステータス確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl get pods -l app=flask-app
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY STATUS RESTARTS AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;flask-app-deployment-5f7d8b9c4d-abc12 1/1 Running 0 3m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;flask-app-deployment-5f7d8b9c4d-def34 1/1 Running 0 3m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;flask-app-deployment-5f7d8b9c4d-ghi56 1/1 Running 0 3m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# LoadBalancerの外部IP取得
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl get svc flask-app-service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;flask-app-service LoadBalancer 10.100.1.50 1.2.3.4 80:32000/TCP 5m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# アプリケーションの応答確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -s http://1.2.3.4 | jq .
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;pod_ip&amp;#34;: &amp;#34;172.16.0.10&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;pod_name&amp;#34;: &amp;#34;flask-app-deployment-5f7d8b9c4d-abc12&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;timestamp&amp;#34;: &amp;#34;2026-07-19T10:00:00Z&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;uri&amp;#34;: &amp;#34;/&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;NCP Developer Toolsを統合することで、インフラ構成のコード化（IaC）とアプリケーションの継続的デリバリーが高度に同期されます。特に、ビルドキャッシュの活用と承認プロセスの導入は、開発速度と安全性のトレードオフを解決する鍵となります。プロジェクトの規模に応じて、SourceBuildのコンピュートタイプを調整し、リソース効率を最適化することを推奨します。&lt;/your-ncr-endpoint&gt;&lt;/p&gt;</description></item><item><title>Kubernetesにおける設定管理とデータ永続化の抽象化設計</title><link>https://klifehack.com/p/k8s-config-persistence-strategy/</link><pubDate>Wed, 15 Jul 2026 10:11:40 +0900</pubDate><guid>https://klifehack.com/p/k8s-config-persistence-strategy/</guid><description>&lt;h1 id="kubernetesにおけるpodのライフサイクル管理とデータの永続化戦略"&gt;KubernetesにおけるPodのライフサイクル管理とデータの永続化戦略
 &lt;/h1&gt;&lt;p&gt;Kubernetesを用いたインフラ構成において、Podは本質的に短命（Ephemeral）なリソースとして設計されています。ノードのメンテナンス、ローリングアップデート、あるいは予期せぬシステム障害により、Podは頻繁に破棄され、新しいインスタンスに置き換わります。この動的なライフサイクルにおいて、アプリケーションの設定や生成されたデータをPod内部のファイルシステムに依存させることは、インスタンス再起動時のデータ消失や設定の不整合を招く致命的なリスクとなります。本稿では、アプリケーションのコードと設定を分離し、データの永続性を保証するためのアーキテクチャ設計について詳述します。&lt;/p&gt;
 &lt;h2 id="設定管理の分離configmapの導入"&gt;設定管理の分離：ConfigMapの導入
 &lt;/h2&gt;&lt;p&gt;アプリケーションの動作を制御する環境変数や設定ファイルをコンテナイメージに含める（Baking）手法は、環境ごとのイメージ作成を強いるため、デプロイパイプラインの柔軟性を著しく低下させます。ConfigMapを利用することで、イメージを不変（Immutable）に保ちながら、実行時に設定を注入することが可能になります。&lt;/p&gt;
