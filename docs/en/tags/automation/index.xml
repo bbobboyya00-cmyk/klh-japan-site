@@ -1,4 +1,145 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Automation on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/automation/</link><description>Recent content in Automation on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 11 Jun 2026 10:16:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/automation/index.xml" rel="self" type="application/rss+xml"/><item><title>Automating Linux Data Synchronization Systems with Rsync and Cron</title><link>https://klifehack.com/en/p/rsync-cron-linux-backup-automation/</link><pubDate>Thu, 11 Jun 2026 10:16:07 +0900</pubDate><guid>https://klifehack.com/en/p/rsync-cron-linux-backup-automation/</guid><description>&lt;h1 id="building-an-automated-data-synchronization-system-with-rsync-and-cron"&gt;Building an Automated Data Synchronization System with Rsync and Cron
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Automation on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/automation/</link><description>Recent content in Automation on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 21 Jul 2026 10:17:23 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/automation/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Automated Continuous Deployment Using GitHub Actions and SSH</title><link>https://klifehack.com/en/p/github-actions-ssh-cd-automation/</link><pubDate>Tue, 21 Jul 2026 10:17:23 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-ssh-cd-automation/</guid><description>&lt;h1 id="building-an-ssh-based-automated-deployment-pipeline-using-github-actions"&gt;Building an SSH-Based Automated Deployment Pipeline Using GitHub Actions
+&lt;/h1&gt;&lt;p&gt;As infrastructure scales, manual SSH connections and command execution become significant bottlenecks that induce human error. Especially in environments where the number of nodes increases and deployment frequency rises, operational mistakes such as incorrect directory specification, failure to apply environment variables, or forgetting to restart services directly lead to unexpected downtime. This article details a method for building a secure and lightweight SSH-based automated deployment pipeline using GitHub Actions while avoiding the overhead of operating a dedicated CI/CD server.&lt;/p&gt;
+&lt;h2 id="1-deployment-architecture-design"&gt;1. Deployment Architecture Design
+&lt;/h2&gt;&lt;p&gt;In remote server deployment, the most versatile and lightweight method is command execution via SSH (Secure Shell). This configuration adopts a structure where the GitHub Actions runner establishes a secure tunnel to the target server and kicks off a pre-defined deployment script.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Developer Push to &amp;#39;test&amp;#39; Branch]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ▼
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [GitHub Actions Runner]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (SSH Connection)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ▼
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [Target Remote Server]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (Executes deploy.sh)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ▼
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [Deployment Completed]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-server-side-preparation"&gt;2. Server-Side Preparation
+&lt;/h2&gt;&lt;p&gt;Before operating the automated pipeline, configuration is required on the target server side to accept secure connections.&lt;/p&gt;
+&lt;h3 id="ssh-authentication-configuration"&gt;SSH Authentication Configuration
+&lt;/h3&gt;&lt;p&gt;To allow access from the GitHub Actions runner, generate a key pair using the Ed25519 algorithm and register the public key in the server&amp;rsquo;s ~/.ssh/authorized_keys.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Generate key pair&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-keygen -t ed25519 -C &lt;span style="color:#e6db74"&gt;&amp;#34;github-actions-deploy&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Register public key (server side)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat id_ed25519.pub &amp;amp;gt;&amp;amp;gt; ~/.ssh/authorized_keys
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;600&lt;/span&gt; ~/.ssh/authorized_keys
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="implementation-of-the-deployment-script-deploysh"&gt;Implementation of the Deployment Script (deploy.sh)
+&lt;/h3&gt;&lt;p&gt;Instead of writing complex logic within the GitHub Actions YAML file, maintainability is improved by placing an execution script on the server side.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set -e &lt;span style="color:#75715e"&gt;# Exit immediately if an error occurs&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PROJECT_DIR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/var/www/my-app&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd $PROJECT_DIR
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Fetching latest changes from origin...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git fetch origin test
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git reset --hard origin/test
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Installing dependencies...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --production
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Building application...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm run build
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Restarting application service...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pm2 reload my-app &lt;span style="color:#f92672"&gt;||&lt;/span&gt; pm2 start dist/index.js --name &lt;span style="color:#e6db74"&gt;&amp;#34;my-app&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Deployment successfully completed!&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-managing-sensitive-information-with-github-secrets"&gt;3. Managing Sensitive Information with GitHub Secrets
+&lt;/h2&gt;&lt;p&gt;To ensure security, server IP addresses and SSH private keys must not be included in the codebase. Register variables in Settings &amp;gt; Secrets and variables &amp;gt; Actions of the GitHub repository.&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Secret Name&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Description&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;SSH_HOST&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Target server&amp;rsquo;s public IP or domain&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;SSH_USERNAME&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Username dedicated to deployment&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;SSH_KEY&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Full text of the generated SSH private key&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;SSH_PORT&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;SSH connection port (default is 22)&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="4-workflow-definition-yaml"&gt;4. Workflow Definition (YAML)
+&lt;/h2&gt;&lt;p&gt;Create .github/workflows/deploy.yml and define a pipeline that executes deployment triggered by a push to a specific branch.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Continuous Deployment to Test Environment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Execute Remote SSH Deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout Repository Code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Execute Remote Commands via SSH&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;appleboy/ssh-action@v1.0.3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;host&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.SSH_HOST }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;username&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.SSH_USERNAME }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.SSH_KEY }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.SSH_PORT }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script_stop&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;Successfully connected to remote host.&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; cd /var/www/my-app
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; chmod +x deploy.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ./deploy.sh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-troubleshooting--verification"&gt;5. Troubleshooting &amp;amp; Verification
+&lt;/h2&gt;&lt;p&gt;After deployment completion, execute verification commands to confirm the system is operating normally. In particular, if SSH connection timeouts or permission errors occur, check log protocols for diagnostic information.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Check service running status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ pm2 status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Check port listening status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep :3000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Check application response
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I http://localhost:3000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;X-Powered-By: Express
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: text/html; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="common-failure-cases-and-countermeasures"&gt;Common Failure Cases and Countermeasures
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Permission Denied&lt;/b&gt;: Occurs when the deployment user does not have write permissions for PROJECT_DIR. Set appropriate ownership using the chown command.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;SSH Timeout&lt;/b&gt;: The server-side firewall (UFW/iptables) may not be allowing the GitHub Actions IP range or the specific port.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Sudo Password Requirement&lt;/b&gt;: If sudo is required for service restarts, the pipeline will stop at the password prompt. Avoid this by adding NOPASSWD settings to /etc/sudoers.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Configuration example for /etc/sudoers&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;deploy-user ALL&lt;span style="color:#f92672"&gt;=(&lt;/span&gt;ALL&lt;span style="color:#f92672"&gt;)&lt;/span&gt; NOPASSWD: /usr/bin/systemctl restart my-app-service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-operational-notes"&gt;6. Operational Notes
+&lt;/h2&gt;&lt;p&gt;Three points are recommended as design guidelines when introducing automation.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;💡 &lt;b&gt;Principle of Least Privilege (PoLP)&lt;/b&gt;: Do not use the root user for deployment; create a dedicated user with limited permissions.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Decoupling Scripts&lt;/b&gt;: By encapsulating deployment logic in a shell script on the server rather than writing it directly in the YAML, operations become independent of the CI tool.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Private Key Rotation&lt;/b&gt;: Establish an operational flow to periodically update private keys registered in GitHub Secrets to minimize the risk in the event of a leak.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Implementing SSH deployment via GitHub Actions is an extremely effective approach to improving release reliability while minimizing infrastructure management overhead.&lt;/p&gt;</description></item><item><title>Automating Linux Data Synchronization Systems with Rsync and Cron</title><link>https://klifehack.com/en/p/rsync-cron-linux-backup-automation/</link><pubDate>Thu, 11 Jun 2026 10:16:07 +0900</pubDate><guid>https://klifehack.com/en/p/rsync-cron-linux-backup-automation/</guid><description>&lt;h1 id="building-an-automated-data-synchronization-system-with-rsync-and-cron"&gt;Building an Automated Data Synchronization System with Rsync and Cron
 &lt;/h1&gt;&lt;p&gt;In server operations, there is always a risk of data loss due to human error, hardware failure, or external threats. Manual data replication is inefficient and can lack consistency, making it essential to build an automated system that identifies only modified files and synchronizes them periodically. This document describes the implementation steps for robust data synchronization and backup by combining Rsync and Cron, which are standard Linux utilities.&lt;/p&gt;
 &lt;h3 id="1-overview-of-technical-components"&gt;1. Overview of Technical Components
 &lt;/h3&gt;&lt;p&gt;Rsync (Remote Sync) is a command-line utility for synchronizing files and directories between local or remote endpoints. Unlike the standard cp command, it employs a delta transfer algorithm. This significantly reduces network bandwidth and disk I/O load by transferring only the differences (newly added or modified segments) between the source and destination.&lt;/p&gt;

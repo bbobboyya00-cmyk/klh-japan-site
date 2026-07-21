@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cd-Pipeline on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/cd-pipeline/</link><description>Recent content in Cd-Pipeline on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 21 Jul 2026 10:17:22 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/cd-pipeline/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub ActionsとSSHを用いた継続的デプロイメントの自動化実装</title><link>https://klifehack.com/p/github-actions-ssh-cd-automation/</link><pubDate>Tue, 21 Jul 2026 10:17:22 +0900</pubDate><guid>https://klifehack.com/p/github-actions-ssh-cd-automation/</guid><description>&lt;h1 id="github-actionsを利用したsshベースの自動デプロイメントパイプラインの構築"&gt;GitHub Actionsを利用したSSHベースの自動デプロイメントパイプラインの構築
+&lt;/h1&gt;&lt;p&gt;インフラストラクチャのスケールに伴い、手動によるSSH接続とコマンド実行は、ヒューマンエラーを誘発する重大なボトルネックとなります。特に、ノード数が増加しデプロイ頻度が高まる環境では、ディレクトリの指定ミスや環境変数の適用漏れ、サービスの再起動忘れといったオペレーションミスが、予期せぬダウンタイムに直結します。本稿では、GitHub Actionsを活用し、専用のCI/CDサーバーを運用するオーバーヘッドを回避しつつ、安全かつ軽量なSSHベースの自動デプロイメントパイプラインを構築する手法について詳述します。&lt;/p&gt;
+&lt;h2 id="1-デプロイメントアーキテクチャの設計"&gt;1. デプロイメントアーキテクチャの設計
+&lt;/h2&gt;&lt;p&gt;リモートサーバーへのデプロイにおいて、最も汎用的かつ軽量な手法はSSH（Secure Shell）経由のコマンド実行です。本構成では、GitHub Actionsのランナーがターゲットサーバーに対してセキュアなトンネルを確立し、事前に定義されたデプロイスクリプトをキックする構造を採用します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Developer Push to &amp;#39;test&amp;#39; Branch]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ▼
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [GitHub Actions Runner]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (SSH Connection)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ▼
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [Target Remote Server]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (Executes deploy.sh)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ▼
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [Deployment Completed]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-サーバーサイドの事前準備"&gt;2. サーバーサイドの事前準備
+&lt;/h2&gt;&lt;p&gt;自動化パイプラインを稼働させる前に、ターゲットサーバー側でセキュアな接続を受け入れるための設定が必要です。&lt;/p&gt;
+&lt;h3 id="ssh認証の設定"&gt;SSH認証の設定
+&lt;/h3&gt;&lt;p&gt;GitHub Actionsランナーからのアクセスを許可するため、Ed25519アルゴリズムを用いた鍵ペアを生成し、公開鍵をサーバーの &lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt; に登録します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 鍵ペアの生成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-keygen -t ed25519 -C &lt;span style="color:#e6db74"&gt;&amp;#34;github-actions-deploy&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 公開鍵の登録（サーバー側）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat id_ed25519.pub &amp;amp;gt;&amp;amp;gt; ~/.ssh/authorized_keys
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;600&lt;/span&gt; ~/.ssh/authorized_keys
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="デプロイスクリプト-deploysh-の実装"&gt;デプロイスクリプト (&lt;code&gt;deploy.sh&lt;/code&gt;) の実装
+&lt;/h3&gt;&lt;p&gt;GitHub ActionsのYAMLファイル内に複雑なロジックを記述するのではなく、サーバー側に実行スクリプトを配置することで、保守性を高めます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set -e &lt;span style="color:#75715e"&gt;# エラー発生時に即時終了&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PROJECT_DIR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/var/www/my-app&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd $PROJECT_DIR
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Fetching latest changes from origin...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git fetch origin test
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git reset --hard origin/test
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Installing dependencies...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --production
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Building application...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm run build
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Restarting application service...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pm2 reload my-app &lt;span style="color:#f92672"&gt;||&lt;/span&gt; pm2 start dist/index.js --name &lt;span style="color:#e6db74"&gt;&amp;#34;my-app&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Deployment successfully completed!&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-github-secretsによる機密情報の管理"&gt;3. GitHub Secretsによる機密情報の管理
+&lt;/h2&gt;&lt;p&gt;セキュリティを担保するため、サーバーのIPアドレスやSSH秘密鍵をコードベースに含めてはなりません。GitHubリポジトリの &lt;code&gt;Settings &amp;amp;gt; Secrets and variables &amp;amp;gt; Actions&lt;/code&gt; に以下の変数を登録します。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Secret Name&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Description&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;SSH_HOST&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ターゲットサーバーのパブリックIPまたはドメイン&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;SSH_USERNAME&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;デプロイ専用のユーザー名&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;SSH_KEY&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;生成したSSH秘密鍵の全文&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;SSH_PORT&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;SSH接続ポート（デフォルトは22）&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="4-ワークフロー定義-yaml"&gt;4. ワークフロー定義 (YAML)
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;.github/workflows/deploy.yml&lt;/code&gt; を作成し、特定のブランチへのプッシュをトリガーとしてデプロイを実行するパイプラインを定義します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Continuous Deployment to Test Environment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Execute Remote SSH Deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout Repository Code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Execute Remote Commands via SSH&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;appleboy/ssh-action@v1.0.3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;host&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.SSH_HOST }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;username&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.SSH_USERNAME }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.SSH_KEY }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;port&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.SSH_PORT }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script_stop&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;Successfully connected to remote host.&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; cd /var/www/my-app
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; chmod +x deploy.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ./deploy.sh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-troubleshooting--verification"&gt;5. Troubleshooting &amp;amp; Verification
+&lt;/h2&gt;&lt;p&gt;デプロイ完了後、システムが正常に稼働しているかを確認するための検証コマンドを実行します。特に、SSH接続のタイムアウトや権限エラーが発生した場合は、以下のログプロトコルを確認してください。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# サービス稼働状態の確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ pm2 status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# ポートリスニング状態の確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep :3000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# アプリケーションのレスポンス確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I http://localhost:3000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;X-Powered-By: Express
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: text/html; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="代表的な失敗事例と対策"&gt;代表的な失敗事例と対策
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Permission Denied&lt;/b&gt;: デプロイユーザーが &lt;code&gt;PROJECT_DIR&lt;/code&gt; に対して書き込み権限を持っていない場合に発生します。&lt;code&gt;chown&lt;/code&gt; コマンドで適切な所有権を設定してください。
+&lt;b&gt;SSH Timeout&lt;/b&gt;: サーバー側のファイアウォール（UFW/iptables）で、GitHub ActionsのIPレンジまたは特定のポートが許可されていない可能性があります。
+&lt;b&gt;Sudo Password Requirement&lt;/b&gt;: サービス再起動に &lt;code&gt;sudo&lt;/code&gt; が必要な場合、パスワード入力でパイプラインが停止します。&lt;code&gt;/etc/sudoers&lt;/code&gt; に &lt;code&gt;NOPASSWD&lt;/code&gt; 設定を追加して回避します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# /etc/sudoers への設定例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;deploy-user ALL&lt;span style="color:#f92672"&gt;=(&lt;/span&gt;ALL&lt;span style="color:#f92672"&gt;)&lt;/span&gt; NOPASSWD: /usr/bin/systemctl restart my-app-service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-operational-notes"&gt;6. Operational Notes
+&lt;/h2&gt;&lt;p&gt;自動化を導入する際の設計指針として、以下の3点を推奨します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;💡 &lt;b&gt;最小権限の原則 (PoLP)&lt;/b&gt;: デプロイには &lt;code&gt;root&lt;/code&gt; ユーザーを使用せず、権限を限定した専用ユーザーを作成してください。&lt;/li&gt;
+&lt;li&gt;🛠️ &lt;b&gt;スクリプトの疎結合化&lt;/b&gt;: デプロイロジックをYAMLに直接記述せず、サーバー上のシェルスクリプトにカプセル化することで、CIツールに依存しない運用が可能になります。&lt;/li&gt;
+&lt;li&gt;⚠️ &lt;b&gt;秘密鍵のローテーション&lt;/b&gt;: GitHub Secretsに登録した秘密鍵は、定期的に更新し、万が一の漏洩リスクを最小限に抑える運用フローを構築してください。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;GitHub ActionsによるSSHデプロイの導入は、インフラ管理のオーバーヘッドを最小化しつつ、リリースの確実性を向上させる極めて有効なアプローチです。&lt;/p&gt;</description></item></channel></rss>
