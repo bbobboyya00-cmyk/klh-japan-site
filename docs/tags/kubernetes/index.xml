@@ -1,4 +1,226 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kubernetes on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/kubernetes/</link><description>Recent content in Kubernetes on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 15 Jul 2026 10:11:40 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetesにおける設定管理とデータ永続化の抽象化設計</title><link>https://klifehack.com/p/k8s-config-persistence-strategy/</link><pubDate>Wed, 15 Jul 2026 10:11:40 +0900</pubDate><guid>https://klifehack.com/p/k8s-config-persistence-strategy/</guid><description>&lt;h1 id="kubernetesにおけるpodのライフサイクル管理とデータの永続化戦略"&gt;KubernetesにおけるPodのライフサイクル管理とデータの永続化戦略
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kubernetes on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/kubernetes/</link><description>Recent content in Kubernetes on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 27 Jul 2026 10:09:04 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml"/><item><title>Helmを用いたKubernetesアプリケーション管理とPrometheus監視スタックの構築</title><link>https://klifehack.com/p/helm-kubernetes-prometheus-grafana-observability/</link><pubDate>Mon, 27 Jul 2026 10:09:04 +0900</pubDate><guid>https://klifehack.com/p/helm-kubernetes-prometheus-grafana-observability/</guid><description>&lt;p&gt;Kubernetesクラスタの運用規模が拡大するにつれ、静的なYAMLマニフェストを手動で個別にデプロイ・管理する手法は設定の肥大化やバージョン管理の混乱を引き起こします。特に複数環境に対する同一構成の適用や、依存関係を持つコンポーネントの一括管理において、抽象化されたパッケージング機構の導入は不可欠です。本稿では、KubernetesのパッケージマネージャーであるHelmを活用したリソースデプロイと、PrometheusおよびGrafanaを中心とした可視化・監視スタックの構築手順について解説します。&lt;/p&gt;
+&lt;h2 id="helmの基本構造と動作原理"&gt;Helmの基本構造と動作原理
+&lt;/h2&gt;&lt;p&gt;HelmはGo Template構文をベースとしたテンプレートエンジンと、変数設定ファイル（&lt;code&gt;values.yaml&lt;/code&gt;）を分離することで、動的なマニフェスト生成を実現します。チャートと呼ばれるパッケージ単位でアプリケーションのライフサイクルを管理します。&lt;/p&gt;
+&lt;h3 id="チャートの標準ディレクトリ構造"&gt;チャートの標準ディレクトリ構造
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt;chart-name&amp;gt;/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── Chart.yaml # チャートのメタデータ（名前、バージョン、APIバージョン等）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── values.yaml # テンプレートに注入するデフォルトのパラメータ値
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── charts/ # 依存するサブチャートを格納するディレクトリ
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── templates/ # Go templateで記述されたKubernetesマニフェスト群
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── .helmignore # パッケージング時に除外するファイルパターン
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="helm-3-バイナリのインストール"&gt;Helm 3 バイナリのインストール
+&lt;/h3&gt;&lt;p&gt;コントロールノードにHelm 3をインストールし、実行環境をセットアップします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir /root/helm &amp;amp;amp;&amp;amp;amp; cd /root/helm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fssL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x get_helm.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./get_helm.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;インストール完了後、バージョン情報を確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;helm version
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実行結果ログ例:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;version.BuildInfo{Version:&amp;#34;v3.20.0&amp;#34;, GitCommit:&amp;#34;b2e4314fa0f229a1de7b4c981273f61d69ee5a59&amp;#34;, GitTreeState:&amp;#34;clean&amp;#34;, GoVersion:&amp;#34;go1.25.6&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="リポジトリ連携とnginxチャートのパラメータカスタマイズ"&gt;リポジトリ連携とNGINXチャートのパラメータカスタマイズ
+&lt;/h2&gt;&lt;p&gt;外部リポジトリからチャートを取得し、パラメータを変更して特定ネームスペースへ展開します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;helm repo add bitnami https://charts.bitnami.com/bitnami/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;helm pull bitnami/nginx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tar zxvf nginx-22.5.5.tgz
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mv nginx/ nginx-22.5.5/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd nginx-22.5.5/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;values.yaml&lt;/code&gt; を編集し、レプリカ数をデフォルトの1から2へ変更します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## @param replicaCount Number of NGINX replicas to deploy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;##&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;replicaCount&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;専用ネームスペースを作成し、ローカルディレクトリのチャートからデプロイを実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl create ns nginx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;helm install nginx . --namespace&lt;span style="color:#f92672"&gt;=&lt;/span&gt;nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;デプロイ状態およびレンダリングされたマニフェストの検証を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;helm ls -n nginx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;helm get manifest nginx -n nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="observabilityスタックprometheus--grafanaの統合"&gt;Observabilityスタック（Prometheus / Grafana）の統合
+&lt;/h2&gt;&lt;p&gt;Kubernetesクラスタの安定運用には、ノードおよびコンテナ層のメトリクス収集と可視化が不可欠です。本構成では以下のコンポーネントを連携させます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Prometheus&lt;/b&gt;: 時系列データベース（TSDB）およびメトリクスのPull型収集エンジン&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Grafana&lt;/b&gt;: PromQLを用いてPrometheusからデータを取得・描画するダッシュボード&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Alertmanager&lt;/b&gt;: アラート条件に合致した通知を外部システムへルーティング&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;kube-state-metrics&lt;/b&gt;: APIサーバーを監視し、Kubernetesオブジェクトの状態をメトリクス化&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;cAdvisor&lt;/b&gt;: Kubeletに組み込まれ、コンテナ単位のCPU・メモリリソース消費量を抽出&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Node-Exporter&lt;/b&gt;: ホストOSレベルのハードウェア・カーネルメトリクスを露出&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="kube-prometheus-stackのデプロイ"&gt;kube-prometheus-stackのデプロイ
+&lt;/h3&gt;&lt;p&gt;Prometheus Communityの公式チャートを使用してスタック全体を一括展開します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;helm repo update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;helm install monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ダッシュボードへのアクセス設定"&gt;ダッシュボードへのアクセス設定
+&lt;/h3&gt;&lt;p&gt;Prometheus UIおよびGrafana Web UIへのポートフォワーディングを設定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Prometheus UI ポートフォワード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl port-forward --address 0.0.0.0 svc/monitoring-kube-prometheus-prometheus 9090:9090 -n monitoring
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Grafana管理者パスワードの取得&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get secret --namespace monitoring -l app.kubernetes.io/component&lt;span style="color:#f92672"&gt;=&lt;/span&gt;admin-secret -o jsonpath&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;{.items[0].data.admin-password}&amp;#34;&lt;/span&gt; | base64 --decode ; echo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Grafana UI ポートフォワード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl port-forward --address 0.0.0.0 svc/monitoring-grafana 3000:80 -n monitoring
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;カスタムの設定値（例: NodePortでの露出）を適用する場合は、オーバーライド用の &lt;code&gt;custom.yaml&lt;/code&gt; を作成してインストールします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;grafana&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;adminPassword&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;P@ssw0rd&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;service&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;type&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;NodePort&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;nodePort&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;30002&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;```bash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;helm install monitoring . -f custom.yaml -n monitoring&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="マニフェスト直接定義によるprometheusデプロイ"&gt;マニフェスト直接定義によるPrometheusデプロイ
+&lt;/h2&gt;&lt;p&gt;Helmを使用できない制限環境向けに、純粋なKubernetesマニフェストを用いてPrometheusを構成する手法を示します。&lt;/p&gt;
+&lt;h3 id="1-rbac権限の設定-prometheus-cluster-roleyaml"&gt;1. RBAC権限の設定 (&lt;code&gt;prometheus-cluster-role.yaml&lt;/code&gt;)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ClusterRole&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;monitoring&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;apiGroups&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#ae81ff"&gt;nodes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#ae81ff"&gt;nodes/proxy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#ae81ff"&gt;services&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#ae81ff"&gt;endpoints&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#ae81ff"&gt;pods&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;verbs&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;get&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;list&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;watch&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;apiGroups&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#ae81ff"&gt;extensions&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#ae81ff"&gt;ingresses&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;verbs&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;get&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;list&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;watch&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;nonResourceURLs&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;/metrics&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;verbs&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;get&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ClusterRoleBinding&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;roleRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiGroup&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ClusterRole&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;subjects&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ServiceAccount&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;monitoring&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-configmapによるprometheus設定-prometheus-config-mapyaml"&gt;2. ConfigMapによるPrometheus設定 (&lt;code&gt;prometheus-config-map.yaml&lt;/code&gt;)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ConfigMap&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus-server-conf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus-server-conf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;monitoring&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;data&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;prometheus.rules&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;|-&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;groups&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;container memory alert&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;alert&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;container memory usage rate is very high( &amp;amp;gt; 55%)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;expr&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;sum(container_memory_working_set_bytes{pod!=&amp;#34;&amp;#34;, name=&amp;#34;&amp;#34;})/ sum (kube_node_status_allocatable_memory_bytes) * 100 &amp;amp;gt; 55&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;for&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1m&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;severity&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;fatal&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;annotations&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;summary&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;High Memory Usage&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;prometheus.yml&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;|-&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;global&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;scrape_interval&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5s&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;evaluation_interval&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5s&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;rule_files&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#ae81ff"&gt;/etc/prometheus/prometheus.rules&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;scrape_configs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;job_name&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;kubernetes-apiservers&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kubernetes_sd_configs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;role&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;endpoints&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;scheme&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;https&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;tls_config&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;ca_file&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/var/run/secrets/kubernetes.io/serviceaccount/ca.crt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;bearer_token_file&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/var/run/secrets/kubernetes.io/serviceaccount/token&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;relabel_configs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;source_labels&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;action&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keep&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;regex&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;default;kubernetes;https&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;job_name&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;kubernetes-pods&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kubernetes_sd_configs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;role&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;relabel_configs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;source_labels&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;__meta_kubernetes_pod_annotation_prometheus_io_scrape]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;action&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keep&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;regex&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-deploymentとdaemonsetの適用"&gt;3. DeploymentとDaemonSetの適用
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;apps/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus-deployment&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;monitoring&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;replicas&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;selector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;matchLabels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;app&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prom/prometheus:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#e6db74"&gt;&amp;#34;--config.file=/etc/prometheus/prometheus.yml&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#e6db74"&gt;&amp;#34;--storage.tsdb.path=/prometheus/&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;containerPort&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;9090&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;volumeMounts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus-config-volume&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;mountPath&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/etc/prometheus/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus-storage-volume&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;mountPath&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/prometheus/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus-config-volume&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;configMap&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;defaultMode&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;420&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus-server-conf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;prometheus-storage-volume&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;emptyDir&lt;/span&gt;: {}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-リポジトリ未登録によるチャート検索エラー"&gt;1. リポジトリ未登録によるチャート検索エラー
+&lt;/h3&gt;&lt;p&gt;Helmのインストール直後に &lt;code&gt;helm search repo&lt;/code&gt; を実行すると以下のエラーが発生します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Error: no repositories configured
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;⚠️ &lt;b&gt;原因&lt;/b&gt;: ローカルキャッシュにリモートリポジトリ情報が存在しないためです。
+🛠️ &lt;b&gt;解決策&lt;/b&gt;: &lt;code&gt;helm repo add &amp;lt;name&amp;gt; &amp;lt;url&amp;gt;&lt;/code&gt; を実行し、対象のリポジトリを追加した後に &lt;code&gt;helm repo update&lt;/code&gt; を行ってインデックスを更新します。&lt;/p&gt;
+&lt;h3 id="2-ポートフォワーディング接続の拒否"&gt;2. ポートフォワーディング接続の拒否
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;kubectl port-forward&lt;/code&gt; を実行した際、外部クライアントからアクセスできない現象が発生することがあります。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;原因&lt;/b&gt;: デフォルトでは &lt;code&gt;127.0.0.1&lt;/code&gt;（ループバックアドレス）にのみバインドされるためです。
+🛠️ &lt;b&gt;解決策&lt;/b&gt;: 明示的に &lt;code&gt;&amp;ndash;address 0.0.0.0&lt;/code&gt; パラメータを付与して全ネットワークインタフェースからのトラフィックを許可します。&lt;/p&gt;
+&lt;h3 id="3-prometheusのapiスクレイピングにおける403-forbidden"&gt;3. PrometheusのAPIスクレイピングにおける403 Forbidden
+&lt;/h3&gt;&lt;p&gt;カスタムマニフェストでPrometheusをデプロイした際、&lt;code&gt;kubernetes-nodes&lt;/code&gt; や &lt;code&gt;kubernetes-pods&lt;/code&gt; のターゲット取得に失敗するケースがあります。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;原因&lt;/b&gt;: ServiceAccountに対するRBAC ClusterRoleの権限不足（&lt;code&gt;/metrics&lt;/code&gt; エンジンのアクセス権限欠落）です。
+🛠️ &lt;b&gt;解決策&lt;/b&gt;: ClusterRoleマニフェストにおいて &lt;code&gt;nonResourceURLs: [&amp;quot;/metrics&amp;quot;]&lt;/code&gt; に対する &lt;code&gt;get&lt;/code&gt; 権限を明示的に付与してください。&lt;/p&gt;
+&lt;h2 id="システム検証プロトコル"&gt;システム検証プロトコル
+&lt;/h2&gt;&lt;p&gt;デプロイ完了後、監視スタックが正常に稼働しているかを端末ログから検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl get pods -n monitoring
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY STATUS RESTARTS AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;alertmanager-monitoring-kube-prometheus-alertmanager-0 2/2 Running 0 10m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;monitoring-grafana-7678d7857c-x98kp 1/1 Running 0 10m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;monitoring-kube-prometheus-operator-7988fc5dcd-n4z92 1/1 Running 0 10m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;monitoring-kube-state-metrics-569d9c7d8b-z2xlj 1/1 Running 0 10m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;monitoring-prometheus-node-exporter-4z88k 1/1 Running 0 10m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prometheus-monitoring-kube-prometheus-prometheus-0 2/2 Running 0 10m
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ helm ls -n monitoring
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME NAMESPACE REVISION UPDATED STATUS CHART APP VERSION
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;monitoring monitoring 1 2026-07-27 10:15:22.123456789 +0900 KST deployed kube-prometheus-stack-58.2.0 v0.72.0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;💡 &lt;b&gt;Helmの管理方針&lt;/b&gt;: Helmを用いたチャート管理では、&lt;code&gt;values.yaml&lt;/code&gt; のバックアップ（&lt;code&gt;values.yaml.bak&lt;/code&gt;）を保持するか、Gitなどのリポジトリで管理してインフラの宣言的状態を維持してください。&lt;/li&gt;
+&lt;li&gt;💡 &lt;b&gt;データの永続化&lt;/b&gt;: プロダクション環境においてマニフェスト直接定義のPrometheusを運用する場合は、&lt;code&gt;emptyDir&lt;/code&gt; ではなく PersistentVolumeClaim (PVC) を割り当ててTSDB データの永続性を確保する必要があります。&lt;/li&gt;
+&lt;li&gt;💡 &lt;b&gt;スクレイピング間隔の最適化&lt;/b&gt;: 大規模クラスタでは、cAdvisorおよびNode-Exporterのスクレイピング間隔（&lt;code&gt;scrape_interval&lt;/code&gt;）を最適化し、PrometheusのストレージおよびCPU負荷を抑える設計を検討してください。&lt;/chart-name&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Kubernetesにおける設定管理とデータ永続化の抽象化設計</title><link>https://klifehack.com/p/k8s-config-persistence-strategy/</link><pubDate>Wed, 15 Jul 2026 10:11:40 +0900</pubDate><guid>https://klifehack.com/p/k8s-config-persistence-strategy/</guid><description>&lt;h1 id="kubernetesにおけるpodのライフサイクル管理とデータの永続化戦略"&gt;KubernetesにおけるPodのライフサイクル管理とデータの永続化戦略
 &lt;/h1&gt;&lt;p&gt;Kubernetesを用いたインフラ構成において、Podは本質的に短命（Ephemeral）なリソースとして設計されています。ノードのメンテナンス、ローリングアップデート、あるいは予期せぬシステム障害により、Podは頻繁に破棄され、新しいインスタンスに置き換わります。この動的なライフサイクルにおいて、アプリケーションの設定や生成されたデータをPod内部のファイルシステムに依存させることは、インスタンス再起動時のデータ消失や設定の不整合を招く致命的なリスクとなります。本稿では、アプリケーションのコードと設定を分離し、データの永続性を保証するためのアーキテクチャ設計について詳述します。&lt;/p&gt;
 &lt;h2 id="設定管理の分離configmapの導入"&gt;設定管理の分離：ConfigMapの導入
 &lt;/h2&gt;&lt;p&gt;アプリケーションの動作を制御する環境変数や設定ファイルをコンテナイメージに含める（Baking）手法は、環境ごとのイメージ作成を強いるため、デプロイパイプラインの柔軟性を著しく低下させます。ConfigMapを利用することで、イメージを不変（Immutable）に保ちながら、実行時に設定を注入することが可能になります。&lt;/p&gt;
