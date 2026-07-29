@@ -1,4 +1,223 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jwt on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/jwt/</link><description>Recent content in Jwt on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 10 Jun 2026 18:54:12 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/jwt/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation of Migration to a Stateless JWT Authentication Infrastructure in Spring Boot and React</title><link>https://klifehack.com/en/p/spring-boot-react-jwt-migration-guide/</link><pubDate>Wed, 10 Jun 2026 18:54:12 +0900</pubDate><guid>https://klifehack.com/en/p/spring-boot-react-jwt-migration-guide/</guid><description>&lt;h1 id="building-a-scalable-authentication-infrastructure-in-modern-web-applications-migration-strategy-from-session-based-to-jwt"&gt;Building a Scalable Authentication Infrastructure in Modern Web Applications: Migration Strategy from Session-Based to JWT
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jwt on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/jwt/</link><description>Recent content in Jwt on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 29 Jul 2026 10:11:28 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/jwt/index.xml" rel="self" type="application/rss+xml"/><item><title>Design and Implementation Verification of Stateless Authentication with Spring Security and JJWT</title><link>https://klifehack.com/en/p/spring-security-jwt-stateless-authentication/</link><pubDate>Wed, 29 Jul 2026 10:11:28 +0900</pubDate><guid>https://klifehack.com/en/p/spring-security-jwt-stateless-authentication/</guid><description>&lt;h2 id="architectural-background-and-motivation-for-adoption"&gt;Architectural Background and Motivation for Adoption
+&lt;/h2&gt;&lt;p&gt;In horizontal scaling (scale-out) within microservices and distributed infrastructures, traditional server-side session management used in conventional web applications becomes a major bottleneck. Architectures that maintain session information in memory incur operational costs such as sticky session configuration on load balancers or external session stores like Redis.&lt;/p&gt;
+&lt;p&gt;To address these structural challenges, we change the Spring Security session creation policy to stateless (&lt;code&gt;SessionCreationPolicy.STATELESS&lt;/code&gt;) and implement an architecture that migrates to an authentication infrastructure using JSON Web Tokens (JWT) capable of self-contained verification per request.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="dependency-definition-and-build-configuration"&gt;Dependency Definition and Build Configuration
+&lt;/h2&gt;&lt;p&gt;The &lt;code&gt;io.jsonwebtoken&lt;/code&gt; (JJWT) library is used for generating and validating JWTs. Improper scope specification in &lt;code&gt;pom.xml&lt;/code&gt; can cause runtime exceptions in production environments.&lt;/p&gt;
+&lt;p&gt;🛠️ In particular, if a &lt;code&gt;&amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;&lt;/code&gt; setting exists for &lt;code&gt;jjwt-api&lt;/code&gt;, it assumes that the application server will provide the library. In a standalone fat JAR configuration, this causes a &lt;code&gt;ClassNotFoundException&lt;/code&gt; or &lt;code&gt;NoClassDefFoundError&lt;/code&gt;. Define the scope appropriately so that the library is fully bundled during container execution.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;io.jsonwebtoken&lt;span style="color:#f92672"&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;jjwt-api&lt;span style="color:#f92672"&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.11.5&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;io.jsonwebtoken&lt;span style="color:#f92672"&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;jjwt-impl&lt;span style="color:#f92672"&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.11.5&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;runtime&lt;span style="color:#f92672"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;io.jsonwebtoken&lt;span style="color:#f92672"&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;jjwt-jackson&lt;span style="color:#f92672"&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.11.5&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;runtime&lt;span style="color:#f92672"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="externalizing-configuration-information"&gt;Externalizing Configuration Information
+&lt;/h2&gt;&lt;p&gt;Secret keys required for token signing and expiration times should not be hardcoded in the code, but designed to be injected from environment variables via &lt;code&gt;application.yml&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;app&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;jwt&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secret&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${JWT_SECRET}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;issuer&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;paymarket&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;expiration&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3600000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="implementation-of-the-jwtprovider-component"&gt;Implementation of the JwtProvider Component
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;JwtProvider&lt;/code&gt; is a component responsible for token generation, signature verification, and claims extraction. For signature verification, strict checks using an HMAC-SHA key are performed to detect tampering within the token.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; com.example.security;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; io.jsonwebtoken.Claims;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; io.jsonwebtoken.JwtException;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; io.jsonwebtoken.Jwts;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; io.jsonwebtoken.SignatureAlgorithm;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; io.jsonwebtoken.security.Keys;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.beans.factory.annotation.Value;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.stereotype.Component;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.nio.charset.StandardCharsets;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.security.Key;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.Date;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Component&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;JwtProvider&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; Key key;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; expirationTime;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; String issuer;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;JwtProvider&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Value&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;${app.jwt.secret}&amp;#34;&lt;/span&gt;) String secret,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Value&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;${app.jwt.expiration}&amp;#34;&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; expirationTime,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Value&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;${app.jwt.issuer}&amp;#34;&lt;/span&gt;) String issuer) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;key&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Keys.&lt;span style="color:#a6e22e"&gt;hmacShaKeyFor&lt;/span&gt;(secret.&lt;span style="color:#a6e22e"&gt;getBytes&lt;/span&gt;(StandardCharsets.&lt;span style="color:#a6e22e"&gt;UTF_8&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;expirationTime&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; expirationTime;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;issuer&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; issuer;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;createToken&lt;/span&gt;(String username) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Date now &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Date();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Date validity &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Date(now.&lt;span style="color:#a6e22e"&gt;getTime&lt;/span&gt;() &lt;span style="color:#f92672"&gt;+&lt;/span&gt; expirationTime);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; Jwts.&lt;span style="color:#a6e22e"&gt;builder&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setSubject&lt;/span&gt;(username)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setIssuer&lt;/span&gt;(issuer)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setIssuedAt&lt;/span&gt;(now)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setExpiration&lt;/span&gt;(validity)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;signWith&lt;/span&gt;(key, SignatureAlgorithm.&lt;span style="color:#a6e22e"&gt;HS256&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;compact&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;boolean&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;validateToken&lt;/span&gt;(String token) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Jwts.&lt;span style="color:#a6e22e"&gt;parserBuilder&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;setSigningKey&lt;/span&gt;(key).&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;parseClaimsJws&lt;/span&gt;(token);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (JwtException &lt;span style="color:#f92672"&gt;|&lt;/span&gt; IllegalArgumentException e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;getUsername&lt;/span&gt;(String token) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Claims claims &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Jwts.&lt;span style="color:#a6e22e"&gt;parserBuilder&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setSigningKey&lt;/span&gt;(key)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;parseClaimsJws&lt;/span&gt;(token)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;getBody&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; claims.&lt;span style="color:#a6e22e"&gt;getSubject&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="request-interception-with-jwtauthenticationfilter"&gt;Request Interception with JwtAuthenticationFilter
+&lt;/h2&gt;&lt;p&gt;To ensure execution exactly once per request, implement a custom filter extending &lt;code&gt;OncePerRequestFilter&lt;/code&gt;. Extract the token prefixed with &lt;code&gt;Bearer &lt;/code&gt; from the HTTP header &lt;code&gt;Authorization&lt;/code&gt;, and if valid, register the authentication information in the &lt;code&gt;SecurityContext&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; com.example.security;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.FilterChain;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.ServletException;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.http.HttpServletRequest;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.http.HttpServletResponse;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.core.context.SecurityContextHolder;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.core.userdetails.UserDetails;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.core.userdetails.UserDetailsService;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.stereotype.Component;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.util.StringUtils;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.web.filter.OncePerRequestFilter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.io.IOException;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Component&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;JwtAuthenticationFilter&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;extends&lt;/span&gt; OncePerRequestFilter {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; JwtProvider jwtProvider;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; UserDetailsService userDetailsService;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;JwtAuthenticationFilter&lt;/span&gt;(JwtProvider jwtProvider, UserDetailsService userDetailsService) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;jwtProvider&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; jwtProvider;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;userDetailsService&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; userDetailsService;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Override&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;protected&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;doFilterInternal&lt;/span&gt;(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;throws&lt;/span&gt; ServletException, IOException {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; String token &lt;span style="color:#f92672"&gt;=&lt;/span&gt; resolveToken(request);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (StringUtils.&lt;span style="color:#a6e22e"&gt;hasText&lt;/span&gt;(token) &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp; jwtProvider.&lt;span style="color:#a6e22e"&gt;validateToken&lt;/span&gt;(token)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; String username &lt;span style="color:#f92672"&gt;=&lt;/span&gt; jwtProvider.&lt;span style="color:#a6e22e"&gt;getUsername&lt;/span&gt;(token);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; UserDetails userDetails &lt;span style="color:#f92672"&gt;=&lt;/span&gt; userDetailsService.&lt;span style="color:#a6e22e"&gt;loadUserByUsername&lt;/span&gt;(username);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; UsernamePasswordAuthenticationToken authentication &lt;span style="color:#f92672"&gt;=&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; UsernamePasswordAuthenticationToken(userDetails, &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;, userDetails.&lt;span style="color:#a6e22e"&gt;getAuthorities&lt;/span&gt;());
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SecurityContextHolder.&lt;span style="color:#a6e22e"&gt;getContext&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;setAuthentication&lt;/span&gt;(authentication);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; filterChain.&lt;span style="color:#a6e22e"&gt;doFilter&lt;/span&gt;(request, response);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;resolveToken&lt;/span&gt;(HttpServletRequest request) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; String bearerToken &lt;span style="color:#f92672"&gt;=&lt;/span&gt; request.&lt;span style="color:#a6e22e"&gt;getHeader&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Authorization&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (StringUtils.&lt;span style="color:#a6e22e"&gt;hasText&lt;/span&gt;(bearerToken) &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp; bearerToken.&lt;span style="color:#a6e22e"&gt;startsWith&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Bearer &amp;#34;&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; bearerToken.&lt;span style="color:#a6e22e"&gt;substring&lt;/span&gt;(7);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="configuring-the-filter-chain-with-securityconfig"&gt;Configuring the Filter Chain with SecurityConfig
+&lt;/h2&gt;&lt;p&gt;In the Spring Security filter chain, place &lt;code&gt;JwtAuthenticationFilter&lt;/code&gt; before &lt;code&gt;UsernamePasswordAuthenticationFilter&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; com.example.security;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.context.annotation.Bean;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.context.annotation.Configuration;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.config.annotation.web.builders.HttpSecurity;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.config.http.SessionCreationPolicy;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.web.SecurityFilterChain;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@EnableWebSecurity&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;SecurityConfig&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; JwtAuthenticationFilter jwtAuthenticationFilter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;SecurityConfig&lt;/span&gt;(JwtAuthenticationFilter jwtAuthenticationFilter) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;jwtAuthenticationFilter&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; jwtAuthenticationFilter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Bean&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; SecurityFilterChain &lt;span style="color:#a6e22e"&gt;filterChain&lt;/span&gt;(HttpSecurity http) &lt;span style="color:#66d9ef"&gt;throws&lt;/span&gt; Exception {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;csrf&lt;/span&gt;(csrf &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; csrf.&lt;span style="color:#a6e22e"&gt;disable&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;sessionManagement&lt;/span&gt;(session &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; session.&lt;span style="color:#a6e22e"&gt;sessionCreationPolicy&lt;/span&gt;(SessionCreationPolicy.&lt;span style="color:#a6e22e"&gt;STATELESS&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;authorizeHttpRequests&lt;/span&gt;(auth &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; auth
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;requestMatchers&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/api/auth/login&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;permitAll&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;anyRequest&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;authenticated&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;addFilterBefore&lt;/span&gt;(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.&lt;span style="color:#a6e22e"&gt;class&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; http.&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="typical-failure-patterns-during-integration"&gt;Typical Failure Patterns During Integration
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;1. &lt;code&gt;NoClassDefFoundError: io/jsonwebtoken/Jwts&lt;/code&gt;&lt;/b&gt;&lt;br/&gt;
+・&lt;b&gt;Cause&lt;/b&gt;: Since &lt;code&gt;&amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;&lt;/code&gt; is specified for &lt;code&gt;jjwt-api&lt;/code&gt; in &lt;code&gt;pom.xml&lt;/code&gt;, it is not included in the build artifact during fat JAR creation, causing the class to not be found at runtime.&lt;br/&gt;
+・&lt;b&gt;Solution&lt;/b&gt;: Remove &lt;code&gt;&amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;&lt;/code&gt; and package with the transitive dependencies required for runtime.&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;2. 403 Forbidden occurs even when sending a valid token&lt;/b&gt;&lt;br/&gt;
+・&lt;b&gt;Cause&lt;/b&gt;: Context registration via &lt;code&gt;SecurityContextHolder.getContext().setAuthentication(authentication)&lt;/code&gt; is missing after token verification in the filter, or the insertion position in the filter chain is improper.&lt;br/&gt;
+・&lt;b&gt;Solution&lt;/b&gt;: Explicitly specify &lt;code&gt;addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)&lt;/code&gt; and verify that the authentication object is always stored in the &lt;code&gt;SecurityContext&lt;/code&gt; upon successful verification.&lt;/p&gt;
+&lt;h3 id="verification-protocol-log-in-terminal"&gt;Verification Protocol Log in Terminal
+&lt;/h3&gt;&lt;p&gt;💡 Operation verification logs for authentication endpoints and protected resources are as follows.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -i -X POST http://localhost:8080/api/auth/login \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -H &amp;#34;Content-Type: application/json&amp;#34; \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -d &amp;#39;{&amp;#34;username&amp;#34;:&amp;#34;admin&amp;#34;,&amp;#34;password&amp;#34;:&amp;#34;secretpassword&amp;#34;}&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: application/json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Date: Wed, 29 Jul 2026 10:00:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Length: 184
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&amp;#34;token&amp;#34;:&amp;#34;eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6InBheW1hcmtldCIsImlhdCI6MTc4NTMxMjAwMCwiZXhwIjoxNzg1MzE1NjAwfQ.example_signature_hash&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -i -X GET http://localhost:8080/api/protected \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -H &amp;#34;Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6InBheW1hcmtldCIsImlhdCI6MTc4NTMxMjAwMCwiZXhwIjoxNzg1MzE1NjAwfQ.example_signature_hash&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: application/json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Date: Wed, 29 Jul 2026 10:01:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&amp;#34;status&amp;#34;:&amp;#34;success&amp;#34;,&amp;#34;data&amp;#34;:&amp;#34;Access granted to protected resource&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;💡 In a stateless JWT authentication structure, it is in principle impossible to immediately revoke an issued token on the server side. When applying to production, it is recommended to additionally introduce a two-tier control design combining short-lived access tokens (about 1 hour) with refresh tokens managed in a persistent store.&lt;/p&gt;</description></item><item><title>Implementation of Migration to a Stateless JWT Authentication Infrastructure in Spring Boot and React</title><link>https://klifehack.com/en/p/spring-boot-react-jwt-migration-guide/</link><pubDate>Wed, 10 Jun 2026 18:54:12 +0900</pubDate><guid>https://klifehack.com/en/p/spring-boot-react-jwt-migration-guide/</guid><description>&lt;h1 id="building-a-scalable-authentication-infrastructure-in-modern-web-applications-migration-strategy-from-session-based-to-jwt"&gt;Building a Scalable Authentication Infrastructure in Modern Web Applications: Migration Strategy from Session-Based to JWT
 &lt;/h1&gt;&lt;p&gt;In the scalability of modern web applications, the authentication and authorization architecture is a critical pillar that goes beyond mere security requirements to dictate system availability and operational stability. In a decoupled architecture combining a Spring Boot REST API and a React SPA (Single Page Application), strategies for authentication state management, token expiration, and silent refresh directly impact system resilience.&lt;/p&gt;
 &lt;p&gt;This article describes the technical details of the process undertaken by CORNERSTONE (cornerstone.io.kr) to migrate from a traditional stateful server-side session model to a stateless JWT model utilizing dual-token rotation (Access/Refresh Token).&lt;/p&gt;
 &lt;h2 id="challenges-of-the-existing-session-based-architecture"&gt;Challenges of the Existing Session-Based Architecture

@@ -1,4 +1,223 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 27 Jun 2026 10:48:23 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>React 18とSSEによる高パフォーマンスなデータストリーミングの実装</title><link>https://klifehack.com/p/react18-sse-streaming-implementation/</link><pubDate>Sat, 27 Jun 2026 10:48:23 +0900</pubDate><guid>https://klifehack.com/p/react18-sse-streaming-implementation/</guid><description>&lt;p&gt;React 18 Streaming SSRとEdge Runtimeによる低遅延データストリーミングの実装&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 29 Jul 2026 10:11:26 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring SecurityとJJWTによるステートレス認証の設計と実装検証</title><link>https://klifehack.com/p/spring-security-jwt-stateless-authentication/</link><pubDate>Wed, 29 Jul 2026 10:11:26 +0900</pubDate><guid>https://klifehack.com/p/spring-security-jwt-stateless-authentication/</guid><description>&lt;h2 id="アーキテクチャの背景と導入の動機"&gt;アーキテクチャの背景と導入の動機
+&lt;/h2&gt;&lt;p&gt;マイクロサービスや分散インフラストラクチャにおける水平拡張（スケールアウト）において、従来のWebアプリケーションで用いられていたサーバーサイドセッション管理は大きなボトルネックとなります。セッション情報をメモリ上に保持する構成では、ロードバランサーでのスティッキーセッション設定や、Redis等の外部セッションストアの運用コストが発生します。&lt;/p&gt;
+&lt;p&gt;これらの構造的課題に対処するため、Spring Securityのセッション作成ポリシーをステートレス（&lt;code&gt;SessionCreationPolicy.STATELESS&lt;/code&gt;）に変更し、リクエストごとに自己完結型の検証が可能なJSON Web Token（JWT）を用いた認証基盤へ移行する構成を実装します。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="依存関係の定義とビルド設定"&gt;依存関係の定義とビルド設定
+&lt;/h2&gt;&lt;p&gt;JWTの生成および検証には &lt;code&gt;io.jsonwebtoken&lt;/code&gt;（JJWT）ライブラリを使用します。&lt;code&gt;pom.xml&lt;/code&gt; におけるスコープ指定の不備は、本番環境での実行時例外を引き起こす原因となります。&lt;/p&gt;
+&lt;p&gt;🛠️ 特に &lt;code&gt;jjwt-api&lt;/code&gt; に対する &lt;code&gt;&amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;&lt;/code&gt; 設定が存在する場合、アプリケーションサーバー側が該当ライブラリを提供する前提となり、単体で実行されるファットJAR構成では &lt;code&gt;ClassNotFoundException&lt;/code&gt; や &lt;code&gt;NoClassDefFoundError&lt;/code&gt; が発生します。コンテナ実行時にライブラリが完全にバンドルされるよう、スコープを適切に定義します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;io.jsonwebtoken&lt;span style="color:#f92672"&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;jjwt-api&lt;span style="color:#f92672"&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.11.5&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;io.jsonwebtoken&lt;span style="color:#f92672"&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;jjwt-impl&lt;span style="color:#f92672"&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.11.5&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;runtime&lt;span style="color:#f92672"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;io.jsonwebtoken&lt;span style="color:#f92672"&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;jjwt-jackson&lt;span style="color:#f92672"&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.11.5&lt;span style="color:#f92672"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;runtime&lt;span style="color:#f92672"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="設定情報の外部化"&gt;設定情報の外部化
+&lt;/h2&gt;&lt;p&gt;トークン署名に必要なシークレットキーや有効期限（Expiration time）は、コード内にハードコーディングせず、&lt;code&gt;application.yml&lt;/code&gt; 経由で環境変数から注入する設計とします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;app&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;jwt&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secret&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${JWT_SECRET}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;issuer&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;paymarket&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;expiration&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3600000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="jwtprovider-コンポーネントの実装"&gt;JwtProvider コンポーネントの実装
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;JwtProvider&lt;/code&gt; はトークンの生成、署名検証、クレーム（Claims）の抽出を一括して担うコンポーネントです。署名の検証においては、トークン内の改ざんを検知するためにHMAC-SHA鍵による厳密なチェックを実施します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; com.example.security;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; io.jsonwebtoken.Claims;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; io.jsonwebtoken.JwtException;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; io.jsonwebtoken.Jwts;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; io.jsonwebtoken.SignatureAlgorithm;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; io.jsonwebtoken.security.Keys;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.beans.factory.annotation.Value;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.stereotype.Component;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.nio.charset.StandardCharsets;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.security.Key;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.Date;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Component&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;JwtProvider&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; Key key;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; expirationTime;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; String issuer;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;JwtProvider&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Value&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;${app.jwt.secret}&amp;#34;&lt;/span&gt;) String secret,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Value&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;${app.jwt.expiration}&amp;#34;&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; expirationTime,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Value&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;${app.jwt.issuer}&amp;#34;&lt;/span&gt;) String issuer) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;key&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Keys.&lt;span style="color:#a6e22e"&gt;hmacShaKeyFor&lt;/span&gt;(secret.&lt;span style="color:#a6e22e"&gt;getBytes&lt;/span&gt;(StandardCharsets.&lt;span style="color:#a6e22e"&gt;UTF_8&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;expirationTime&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; expirationTime;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;issuer&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; issuer;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;createToken&lt;/span&gt;(String username) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Date now &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Date();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Date validity &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; Date(now.&lt;span style="color:#a6e22e"&gt;getTime&lt;/span&gt;() &lt;span style="color:#f92672"&gt;+&lt;/span&gt; expirationTime);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; Jwts.&lt;span style="color:#a6e22e"&gt;builder&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setSubject&lt;/span&gt;(username)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setIssuer&lt;/span&gt;(issuer)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setIssuedAt&lt;/span&gt;(now)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setExpiration&lt;/span&gt;(validity)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;signWith&lt;/span&gt;(key, SignatureAlgorithm.&lt;span style="color:#a6e22e"&gt;HS256&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;compact&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;boolean&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;validateToken&lt;/span&gt;(String token) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Jwts.&lt;span style="color:#a6e22e"&gt;parserBuilder&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;setSigningKey&lt;/span&gt;(key).&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;parseClaimsJws&lt;/span&gt;(token);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (JwtException &lt;span style="color:#f92672"&gt;|&lt;/span&gt; IllegalArgumentException e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;getUsername&lt;/span&gt;(String token) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Claims claims &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Jwts.&lt;span style="color:#a6e22e"&gt;parserBuilder&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;setSigningKey&lt;/span&gt;(key)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;parseClaimsJws&lt;/span&gt;(token)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;getBody&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; claims.&lt;span style="color:#a6e22e"&gt;getSubject&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="jwtauthenticationfilter-によるリクエストの捕捉"&gt;JwtAuthenticationFilter によるリクエストの捕捉
+&lt;/h2&gt;&lt;p&gt;リクエストごとに1度だけ実行されることを保証するため、&lt;code&gt;OncePerRequestFilter&lt;/code&gt; を継承したカスタムフィルターを実装します。HTTPヘッダーの &lt;code&gt;Authorization&lt;/code&gt; から &lt;code&gt;Bearer &lt;/code&gt; プレフィックス付きのトークンを抽出し、有効な場合に &lt;code&gt;SecurityContext&lt;/code&gt; へ認証情報を登録します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; com.example.security;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.FilterChain;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.ServletException;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.http.HttpServletRequest;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jakarta.servlet.http.HttpServletResponse;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.core.context.SecurityContextHolder;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.core.userdetails.UserDetails;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.core.userdetails.UserDetailsService;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.stereotype.Component;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.util.StringUtils;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.web.filter.OncePerRequestFilter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.io.IOException;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Component&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;JwtAuthenticationFilter&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;extends&lt;/span&gt; OncePerRequestFilter {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; JwtProvider jwtProvider;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; UserDetailsService userDetailsService;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;JwtAuthenticationFilter&lt;/span&gt;(JwtProvider jwtProvider, UserDetailsService userDetailsService) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;jwtProvider&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; jwtProvider;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;userDetailsService&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; userDetailsService;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Override&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;protected&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;doFilterInternal&lt;/span&gt;(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;throws&lt;/span&gt; ServletException, IOException {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; String token &lt;span style="color:#f92672"&gt;=&lt;/span&gt; resolveToken(request);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (StringUtils.&lt;span style="color:#a6e22e"&gt;hasText&lt;/span&gt;(token) &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp; jwtProvider.&lt;span style="color:#a6e22e"&gt;validateToken&lt;/span&gt;(token)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; String username &lt;span style="color:#f92672"&gt;=&lt;/span&gt; jwtProvider.&lt;span style="color:#a6e22e"&gt;getUsername&lt;/span&gt;(token);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; UserDetails userDetails &lt;span style="color:#f92672"&gt;=&lt;/span&gt; userDetailsService.&lt;span style="color:#a6e22e"&gt;loadUserByUsername&lt;/span&gt;(username);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; UsernamePasswordAuthenticationToken authentication &lt;span style="color:#f92672"&gt;=&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; UsernamePasswordAuthenticationToken(userDetails, &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;, userDetails.&lt;span style="color:#a6e22e"&gt;getAuthorities&lt;/span&gt;());
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SecurityContextHolder.&lt;span style="color:#a6e22e"&gt;getContext&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;setAuthentication&lt;/span&gt;(authentication);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; filterChain.&lt;span style="color:#a6e22e"&gt;doFilter&lt;/span&gt;(request, response);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; String &lt;span style="color:#a6e22e"&gt;resolveToken&lt;/span&gt;(HttpServletRequest request) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; String bearerToken &lt;span style="color:#f92672"&gt;=&lt;/span&gt; request.&lt;span style="color:#a6e22e"&gt;getHeader&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Authorization&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (StringUtils.&lt;span style="color:#a6e22e"&gt;hasText&lt;/span&gt;(bearerToken) &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp; bearerToken.&lt;span style="color:#a6e22e"&gt;startsWith&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Bearer &amp;#34;&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; bearerToken.&lt;span style="color:#a6e22e"&gt;substring&lt;/span&gt;(7);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="securityconfig-によるフィルターチェーンの構成"&gt;SecurityConfig によるフィルターチェーンの構成
+&lt;/h2&gt;&lt;p&gt;Spring Securityのフィルターチェーンにおいて、&lt;code&gt;JwtAuthenticationFilter&lt;/code&gt; を &lt;code&gt;UsernamePasswordAuthenticationFilter&lt;/code&gt; より前に配置します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; com.example.security;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.context.annotation.Bean;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.context.annotation.Configuration;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.config.annotation.web.builders.HttpSecurity;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.config.http.SessionCreationPolicy;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.web.SecurityFilterChain;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@EnableWebSecurity&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;SecurityConfig&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; JwtAuthenticationFilter jwtAuthenticationFilter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;SecurityConfig&lt;/span&gt;(JwtAuthenticationFilter jwtAuthenticationFilter) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;jwtAuthenticationFilter&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; jwtAuthenticationFilter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Bean&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; SecurityFilterChain &lt;span style="color:#a6e22e"&gt;filterChain&lt;/span&gt;(HttpSecurity http) &lt;span style="color:#66d9ef"&gt;throws&lt;/span&gt; Exception {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;csrf&lt;/span&gt;(csrf &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; csrf.&lt;span style="color:#a6e22e"&gt;disable&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;sessionManagement&lt;/span&gt;(session &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; session.&lt;span style="color:#a6e22e"&gt;sessionCreationPolicy&lt;/span&gt;(SessionCreationPolicy.&lt;span style="color:#a6e22e"&gt;STATELESS&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;authorizeHttpRequests&lt;/span&gt;(auth &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; auth
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;requestMatchers&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/api/auth/login&amp;#34;&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;permitAll&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;anyRequest&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;authenticated&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;addFilterBefore&lt;/span&gt;(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.&lt;span style="color:#a6e22e"&gt;class&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; http.&lt;span style="color:#a6e22e"&gt;build&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="組み込み時に発生する典型的な障害パターン"&gt;組み込み時に発生する典型的な障害パターン
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;1. &lt;code&gt;NoClassDefFoundError: io/jsonwebtoken/Jwts&lt;/code&gt;&lt;/b&gt;
+・&lt;b&gt;原因&lt;/b&gt;: &lt;code&gt;pom.xml&lt;/code&gt; において &lt;code&gt;jjwt-api&lt;/code&gt; に &lt;code&gt;&amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;&lt;/code&gt; が指定されているため、ファットJAR作成時にビルド生成物へ含まれず実行時にクラスが見つからなくなります。
+・&lt;b&gt;解決策&lt;/b&gt;: &lt;code&gt;&amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;&lt;/code&gt; を除去し、ランタイムに必要な推移的依存関係を含めてパッケージングします。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;2. 有効なトークンを送信しても403 Forbiddenが発生する&lt;/b&gt;
+・&lt;b&gt;原因&lt;/b&gt;: フィルター内でのトークン検証後、&lt;code&gt;SecurityContextHolder.getContext().setAuthentication(authentication)&lt;/code&gt; によるコンテキストへの登録が漏れている、あるいはフィルターチェーンでの挿入位置が不適切です。
+・&lt;b&gt;解決策&lt;/b&gt;: &lt;code&gt;addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)&lt;/code&gt; を明示し、検証成功時に必ず &lt;code&gt;SecurityContext&lt;/code&gt; へ認証オブジェクトを格納しているか確認します。&lt;/p&gt;
+&lt;h3 id="ターミナルでの検証プロトコルログ"&gt;ターミナルでの検証プロトコルログ
+&lt;/h3&gt;&lt;p&gt;💡 認証エンドポイントおよび保護されたリソースに対する動作検証ログは以下の通りです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -i -X POST http://localhost:8080/api/auth/login \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -H &amp;#34;Content-Type: application/json&amp;#34; \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -d &amp;#39;{&amp;#34;username&amp;#34;:&amp;#34;admin&amp;#34;,&amp;#34;password&amp;#34;:&amp;#34;secretpassword&amp;#34;}&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: application/json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Date: Wed, 29 Jul 2026 10:00:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Length: 184
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&amp;#34;token&amp;#34;:&amp;#34;eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6InBheW1hcmtldCIsImlhdCI6MTc4NTMxMjAwMCwiZXhwIjoxNzg1MzE1NjAwfQ.example_signature_hash&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -i -X GET http://localhost:8080/api/protected \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -H &amp;#34;Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6InBheW1hcmtldCIsImlhdCI6MTc4NTMxMjAwMCwiZXhwIjoxNzg1MzE1NjAwfQ.example_signature_hash&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: application/json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Date: Wed, 29 Jul 2026 10:01:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&amp;#34;status&amp;#34;:&amp;#34;success&amp;#34;,&amp;#34;data&amp;#34;:&amp;#34;Access granted to protected resource&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;💡 ステートレスなJWT認証構造では、発行されたトークンをサーバー側で即座に失効させることが原則として不可能です。本運用への適用時には、短期間の有効期限（1時間程度）を設定したアクセス・トークンと、永続ストアで管理するリフレッシュ・トークン（Refresh Token）を組み合わせる2段階の制御設計を追加導入することが推奨されます。&lt;/p&gt;</description></item><item><title>React 18とSSEによる高パフォーマンスなデータストリーミングの実装</title><link>https://klifehack.com/p/react18-sse-streaming-implementation/</link><pubDate>Sat, 27 Jun 2026 10:48:23 +0900</pubDate><guid>https://klifehack.com/p/react18-sse-streaming-implementation/</guid><description>&lt;p&gt;React 18 Streaming SSRとEdge Runtimeによる低遅延データストリーミングの実装&lt;/p&gt;
 &lt;p&gt;大規模なレスポンスやAIによるトークン生成など、現代のWebアプリケーションにおいて、全データの受信を待機してからレンダリングを開始する手法は、TTFB（Time to First Byte）の悪化を招き、ユーザー体験を著しく損なう要因となります。特にLLM（大規模言語モデル）の普及に伴い、データを逐次的に送信する「Send Incrementally」の設計思想は、フロントエンド・アーキテクチャにおける必須要件となりつつあります。&lt;/p&gt;
 &lt;p&gt;本稿では、React 18のStreaming SSRとServer-Sent Events（SSE）を組み合わせ、Edge Runtime上で低遅延なデータストリーミングを実現するための実装パターンと、プロキシ環境下でのバッファリング回避といった実務上の摩擦点について解説します。&lt;/p&gt;
 &lt;h2 id="1-react-18-suspenseによるhtmlストリーミング"&gt;1. React 18 SuspenseによるHTMLストリーミング
