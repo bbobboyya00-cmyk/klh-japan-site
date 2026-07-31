@@ -1,4 +1,82 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 23 Jul 2026 10:11:53 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Analysis of EADDRNOTAVAIL Error and TIME_WAIT Optimization in Linux</title><link>https://klifehack.com/en/p/linux-tcp-time-wait-eaddrnotavail-optimization/</link><pubDate>Thu, 23 Jul 2026 10:11:53 +0900</pubDate><guid>https://klifehack.com/en/p/linux-tcp-time-wait-eaddrnotavail-optimization/</guid><description>&lt;h1 id="analysis-of-eaddrnotavail-error-and-kernel-parameter-optimization"&gt;Analysis of EADDRNOTAVAIL Error and Kernel Parameter Optimization
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 31 Jul 2026 10:03:38 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>SSH Brute-Force Attack Log Analysis and Building Dynamic Defense with Fail2ban in Linux Environments</title><link>https://klifehack.com/en/p/ssh-bruteforce-log-analysis-fail2ban-mitigation/</link><pubDate>Fri, 31 Jul 2026 10:03:38 +0900</pubDate><guid>https://klifehack.com/en/p/ssh-bruteforce-log-analysis-fail2ban-mitigation/</guid><description>&lt;p&gt;The default SSH port (TCP 22) of Linux servers exposed to the internet is constantly subjected to dictionary attacks and brute-force attacks by automated botnets. In infrastructure operations where the number of nodes increases, manually updating firewall rules to block attacking IPs leads to human error and reaches its limit in terms of response speed.&lt;/p&gt;
+&lt;p&gt;This article outlines the configuration steps for building an authentication log analysis pipeline recorded in &lt;code&gt;/var/log/auth.log&lt;/code&gt; and deploying an Intrusion Prevention System (IPS) that leverages Fail2ban to dynamically inject packet drop rules into netfilter (iptables).&lt;/p&gt;
+&lt;h2 id="authentication-log-structure-and-text-analysis-pipeline"&gt;Authentication Log Structure and Text Analysis Pipeline
+&lt;/h2&gt;&lt;p&gt;In Debian/Ubuntu-based distributions, SSH authentication events are output to &lt;code&gt;/var/log/auth.log&lt;/code&gt; (or &lt;code&gt;/var/log/secure&lt;/code&gt; in RHEL/CentOS-based systems).&lt;/p&gt;
+&lt;h3 id="attack-log-sample-trace"&gt;Attack Log Sample Trace
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code class="language-syslog" data-lang="syslog"&gt;May 20 14:21:05 server-node sshd[4102]: Failed password for invalid user admin from 192.168.56.120 port 54321 ssh2
+May 20 14:21:07 server-node sshd[4105]: Failed password for invalid user root from 192.168.56.120 port 54322 ssh2
+May 20 14:21:09 server-node sshd[4108]: Failed password for root from 192.168.56.120 port 54323 ssh2
+May 20 14:21:11 server-node sshd[4111]: Accepted password for deployer from 192.168.56.10 port 51100 ssh2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;Failed password&lt;/code&gt; pattern in the log indicates an authentication failure. When &lt;code&gt;invalid user&lt;/code&gt; is included, it denotes an attempt using a username that does not exist in the local &lt;code&gt;/etc/passwd&lt;/code&gt;; when it is not included, it signifies an attack against an existing account.&lt;/p&gt;
+&lt;h3 id="extracting-attacking-ips-via-cli-commands"&gt;Extracting Attacking IPs via CLI Commands
+&lt;/h3&gt;&lt;p&gt;To quickly identify top IP addresses with high attack frequencies from large log volumes, execute a pipeline combining standard Linux utilities.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;grep &lt;span style="color:#e6db74"&gt;&amp;#34;Failed password&amp;#34;&lt;/span&gt; /var/log/auth.log | awk &lt;span style="color:#e6db74"&gt;&amp;#39;{for(i=1;i&amp;amp;lt;=NF;i++) if($i==&amp;#34;from&amp;#34;) print $(i+1)}&amp;#39;&lt;/span&gt; | sort | uniq -c | sort -nr | head -n &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Through &lt;code&gt;awk&lt;/code&gt; loop processing, the field immediately following the &lt;code&gt;from&lt;/code&gt; token is reliably extracted even when column positions vary depending on the presence of &lt;code&gt;invalid user&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="automated-defense-configuration-using-fail2ban"&gt;Automated Defense Configuration Using Fail2ban
+&lt;/h2&gt;&lt;p&gt;Based on threat indicators detected via log analysis, dynamic blocking rules are applied using Fail2ban. To protect package default configuration files, create &lt;code&gt;/etc/fail2ban/jail.local&lt;/code&gt; to override definitions.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[sshd]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;enabled&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;port&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;ssh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;filter&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;sshd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;logpath&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/var/log/auth.log&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;maxretry&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;findtime&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;10m&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;bantime&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;1h&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 &lt;b&gt;Key Parameter Definitions:&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;maxretry&lt;/b&gt;: The maximum number of failed attempts permitted within the specified timeframe.&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;findtime&lt;/b&gt;: The time window for counting failed attempts (10 minutes in the configuration above).&lt;/p&gt;
+&lt;p&gt;・&lt;b&gt;bantime&lt;/b&gt;: The duration for blocking packets once conditions are met (1 hour in the configuration above).&lt;/p&gt;
+&lt;h2 id="defense-in-depth-configuration-for-ssh-service"&gt;Defense-in-Depth Configuration for SSH Service
+&lt;/h2&gt;&lt;p&gt;In addition to deploying an IPS, optimize the configuration of the SSH daemon itself (&lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;) to reduce the attack surface.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Change Port Number&lt;/b&gt;: Change from the default port 22 to a high-numbered port (e.g., &lt;code&gt;22022&lt;/code&gt;) to reduce exposure to wide-area scanners.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Disable Direct Root Login&lt;/b&gt;: Set &lt;code&gt;PermitRootLogin no&lt;/code&gt; to block direct access attempts as a privileged user.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Disable Password Authentication&lt;/b&gt;: Set &lt;code&gt;PasswordAuthentication no&lt;/code&gt; to allow only public key authentication, eliminating dictionary attacks.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;Common troubleshooting scenarios and countermeasures encountered when deploying Fail2ban.&lt;/p&gt;
+&lt;h3 id="1-log-path-identification-issues-in-systemd-environments"&gt;1. Log Path Identification Issues in systemd Environments
+&lt;/h3&gt;&lt;p&gt;In environments such as Ubuntu 22.04 and later or systems where rsyslog is disabled by default, &lt;code&gt;/var/log/auth.log&lt;/code&gt; may not be generated, causing Fail2ban startup to fail.&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Symptom&lt;/b&gt;: The error &lt;code&gt;Have not found any log file for sshd jail&lt;/code&gt; occurs upon starting &lt;code&gt;fail2ban.service&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Solution&lt;/b&gt;: Explicitly specify &lt;code&gt;backend = systemd&lt;/code&gt; in the &lt;code&gt;[sshd]&lt;/code&gt; section of &lt;code&gt;/etc/fail2ban/jail.local&lt;/code&gt; to configure Fail2ban to read logs directly from journald.&lt;/p&gt;
+&lt;h3 id="2-iptablesnftables-backend-conflicts"&gt;2. iptables/nftables Backend Conflicts
+&lt;/h3&gt;&lt;p&gt;Depending on the OS kernel version, the packet filter backend (iptables-legacy vs nftables) may differ, causing BAN rules to fail to inject correctly.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Solution&lt;/b&gt;: Execute &lt;code&gt;fail2ban-client status sshd&lt;/code&gt;. If traffic still passes despite the IP being listed in &lt;code&gt;Banned IP list&lt;/code&gt;, switch &lt;code&gt;banaction&lt;/code&gt; in &lt;code&gt;/etc/fail2ban/jail.conf&lt;/code&gt; from &lt;code&gt;iptables-multiport&lt;/code&gt; to &lt;code&gt;nftables&lt;/code&gt; or &lt;code&gt;nftables-multiport&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;p&gt;Example terminal execution logs for verifying system operating status and BAN rule application status.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# systemctl status fail2ban.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;● fail2ban.service - Fail2ban Service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Loaded: loaded (/lib/systemd/system/fail2ban.service; enabled; vendor preset: enabled)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Active: active (running) since Fri 2026-07-31 09:00:00 UTC; 1h 15m ago
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Main PID: 1234 (fail2ban-server)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Tasks: 5 (limit: 4677)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Memory: 14.5M
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CGroup: /system.slice/fail2ban.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; └─1234 /usr/bin/python3 /usr/bin/fail2ban-server -xf start
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# fail2ban-client status sshd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Status for the jail: sshd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;|- Filter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| |- Currently failed: 2
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| |- Total failed: 28
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| `- File list: /var/log/auth.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;`- Actions
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |- Currently banned: 1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |- Total banned: 3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; `- Banned IP list: 192.168.56.120
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# iptables -L f2b-sshd -n -v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Chain f2b-sshd (1 references)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pkts bytes target prot opt in out source destination 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 6 360 REJECT all -- * * 192.168.56.120 0.0.0.0/0 reject-with icmp-port-unreachable
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 1250 82000 RETURN all -- * * 0.0.0.0/0 0.0.0.0/0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>Analysis of EADDRNOTAVAIL Error and TIME_WAIT Optimization in Linux</title><link>https://klifehack.com/en/p/linux-tcp-time-wait-eaddrnotavail-optimization/</link><pubDate>Thu, 23 Jul 2026 10:11:53 +0900</pubDate><guid>https://klifehack.com/en/p/linux-tcp-time-wait-eaddrnotavail-optimization/</guid><description>&lt;h1 id="analysis-of-eaddrnotavail-error-and-kernel-parameter-optimization"&gt;Analysis of EADDRNOTAVAIL Error and Kernel Parameter Optimization
 &lt;/h1&gt;&lt;p&gt;In systems with microservice architectures or high-frequency API calls, &lt;b&gt;EADDRNOTAVAIL&lt;/b&gt; (Cannot assign requested address) errors may occur when attempting to connect to external resources. This is a typical infrastructure bottleneck caused by the exhaustion of network resources at the OS level, specifically source ports. Ad-hoc manual workarounds increase management costs as the number of nodes grows, ultimately compromising overall system availability.&lt;/p&gt;
 &lt;h2 id="eaddrnotavail-occurrence-mechanism"&gt;EADDRNOTAVAIL Occurrence Mechanism
 &lt;/h2&gt;&lt;p&gt;When an application initiates a new TCP connection, the Linux kernel assigns a &lt;b&gt;4-tuple&lt;/b&gt; (source IP, source port, destination IP, destination port) to identify the connection. The EADDRNOTAVAIL error occurs when the kernel cannot secure the source port required to complete this combination. This is a clear signal that the networking stack is in a resource-exhausted state or that a configuration mismatch has occurred.&lt;/p&gt;
