@@ -1,4 +1,187 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 03 Aug 2026 10:08:22 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementation and Failure Design of the Redis Cache-Aside Pattern in a Spring Boot and PostgreSQL Environment</title><link>https://klifehack.com/en/p/spring-boot-redis-postgresql-cache-aside/</link><pubDate>Mon, 03 Aug 2026 10:08:22 +0900</pubDate><guid>https://klifehack.com/en/p/spring-boot-redis-postgresql-cache-aside/</guid><description>&lt;p&gt;In architectures with increasing database access frequency, concentrating direct queries on relational databases such as PostgreSQL causes latency degradation and resource exhaustion. Especially in systems with a high proportion of read requests, placing an in-memory data store in front of the persistence layer to temporarily cache query results is an effective design.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/posts/</link><description>Recent content in Posts on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 05 Aug 2026 10:05:56 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Architecture and Implementation of Secret Injection in Docker Buildx Bake</title><link>https://klifehack.com/en/p/docker-buildx-bake-secrets-management/</link><pubDate>Wed, 05 Aug 2026 10:05:56 +0900</pubDate><guid>https://klifehack.com/en/p/docker-buildx-bake-secrets-management/</guid><description>&lt;p&gt;With the expansion of container image build pipelines, design patterns for passing private repository access tokens, API keys, and package manager credentials during image construction have become essential. However, credential injection using traditional build arguments (&lt;code&gt;ARG&lt;/code&gt;) or environment variables (&lt;code&gt;ENV&lt;/code&gt;) carries the risk of persisting data as plaintext in image metadata or intermediate layers. This article outlines the architecture and configuration methods for introducing Docker Buildx Bake&amp;rsquo;s secret management mechanism to securely fetch dependencies without leaving sensitive information in build layers.&lt;/p&gt;
+&lt;h2 id="security-challenges-with-traditional-build-arguments"&gt;Security Challenges with Traditional Build Arguments
+&lt;/h2&gt;&lt;p&gt;Injecting tokens using &lt;code&gt;ARG&lt;/code&gt; in a standard &lt;code&gt;Dockerfile&lt;/code&gt; as shown below is considered a severe vulnerability in security audits.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ARG&lt;/span&gt; TOKEN&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; git clone https://$TOKEN@github.com/private/repository.git&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The fundamental issues with this pattern are as follows:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Persistence in layer metadata&lt;/b&gt;: Values set via &lt;code&gt;ARG&lt;/code&gt; and &lt;code&gt;ENV&lt;/code&gt; are explicitly recorded in the image manifest and layer cache history.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Information disclosure via image inspection&lt;/b&gt;: Executing &lt;code&gt;docker history &amp;lt;image-id&amp;gt;&lt;/code&gt; or &lt;code&gt;docker inspect&lt;/code&gt; on the generated container image allows third parties to easily extract plaintext tokens.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Expansion of supply chain risk&lt;/b&gt;: If the image is pushed to a public or shared registry, it directly leads to an incident where infrastructure access permissions are leaked externally.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="operating-principles-of-docker-buildx-bake-secrets"&gt;Operating Principles of Docker Buildx Bake Secrets
+&lt;/h2&gt;&lt;p&gt;The secrets functionality integrated into the BuildKit engine provides sensitive information to running container processes as temporary mount points without writing it to the build context file system.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-------------------+ +----------------------+ +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Secret Source | -----&amp;amp;gt; | Docker Buildx Bake | -----&amp;amp;gt; | Temporary Mount Point |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (File / Host Env) | | Execution Engine | | (/run/secrets/id) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-------------------+ +----------------------+ +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | Executed Build Stage |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | (RUN Command Access) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | Secret Unmounted &amp;amp;amp; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | Excluded from Layers |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="execution-lifecycle"&gt;Execution Lifecycle
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Binding Definition&lt;/b&gt;: In the HCL configuration file (&lt;code&gt;docker-bake.hcl&lt;/code&gt;), specify local files or environment variables on the host as target secrets.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Temporary Mount Injection&lt;/b&gt;: When executing &lt;code&gt;docker buildx bake&lt;/code&gt;, the build engine creates an in-memory temporary mount at &lt;code&gt;/run/secrets/&amp;lt;id&amp;gt;&lt;/code&gt; inside the container.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;In-Memory Processing&lt;/b&gt;: Only the specified &lt;code&gt;RUN&lt;/code&gt; instruction references the corresponding path to perform authentication operations (such as downloading dependent libraries or cloning Git repositories).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Immediate Unmounting&lt;/b&gt;: The mount is released immediately after the completion of the relevant &lt;code&gt;RUN&lt;/code&gt; instruction. The secret contents are never written to intermediate layers or the final image disk.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="configuration-and-implementation-specifications"&gt;Configuration and Implementation Specifications
+&lt;/h2&gt;&lt;h3 id="local-file-based-secret-injection"&gt;Local File-Based Secret Injection
+&lt;/h3&gt;&lt;p&gt;This is the basic format for defining a file on the host as a secret source.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;docker-bake.hcl&lt;/code&gt; configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-hcl" data-lang="hcl"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;target&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;app&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secret &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;token,src&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;token&lt;/span&gt;.&lt;span style="color:#66d9ef"&gt;txt&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Reference in &lt;code&gt;Dockerfile&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;alpine:3.20&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; --mount&lt;span style="color:#f92672"&gt;=&lt;/span&gt;type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;secret,id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;token &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cat /run/secrets/token&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Execution command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker buildx bake app
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="direct-mounting-of-host-environment-variables"&gt;Direct Mounting of Host Environment Variables
+&lt;/h3&gt;&lt;p&gt;To avoid saving private keys or tokens as plaintext files on the local disk, this mode passes host environment variables directly to the container as secrets.&lt;/p&gt;
+&lt;p&gt;Setting host environment variables:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export API_KEY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;abcdef12345&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;docker-bake.hcl&lt;/code&gt; configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-hcl" data-lang="hcl"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;target&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;app&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secret &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;apikey,env&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;API_KEY&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Reference in &lt;code&gt;Dockerfile&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;alpine:3.20&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; --mount&lt;span style="color:#f92672"&gt;=&lt;/span&gt;type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;secret,id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;apikey &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; API_KEY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;cat /run/secrets/apikey&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt; &amp;amp;amp;&amp;amp;amp; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Processing authenticated task...&amp;#34;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="implementation-examples-by-use-case"&gt;Implementation Examples by Use Case
+&lt;/h2&gt;&lt;h3 id="fetching-private-repositories-using-ssh-agent-forwarding"&gt;Fetching Private Repositories Using SSH Agent Forwarding
+&lt;/h3&gt;&lt;p&gt;When performing Git operations using SSH key pairs, specify dedicated SSH mount options in the target.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;docker-bake.hcl&lt;/code&gt; configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-hcl" data-lang="hcl"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;target&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;app&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ssh &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;default&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;Dockerfile&lt;/code&gt; definition:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;alpine:3.20&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; apk add --no-cache git openssh-client&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; mkdir -p -m &lt;span style="color:#ae81ff"&gt;0700&lt;/span&gt; ~/.ssh &amp;amp;amp;&amp;amp;amp; ssh-keyscan github.com &amp;amp;gt;&amp;amp;gt; ~/.ssh/known_hosts&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; --mount&lt;span style="color:#f92672"&gt;=&lt;/span&gt;type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ssh &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; git clone git@github.com:company/project.git&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="github-actions-cicd-pipeline-integration"&gt;GitHub Actions CI/CD Pipeline Integration
+&lt;/h3&gt;&lt;p&gt;This is a configuration example for securely supplying workflow secrets to the build context via Bake in a CI/CD environment.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;.github/workflows/build.yml&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Production Build Pipeline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set up Docker Buildx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;docker/setup-buildx-action@v3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build with Bake&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;TOKEN&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.PRODUCTION_PIPELINE_TOKEN }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker buildx bake production&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;docker-bake.hcl&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-hcl" data-lang="hcl"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;target&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;production&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secret &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;token,env&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;TOKEN&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tags &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;registry.company.com/app:v1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; output &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;image,push&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="audit-and-operational-verification-procedures"&gt;Audit and Operational Verification Procedures
+&lt;/h2&gt;&lt;p&gt;After the build is complete, perform verification in a terminal on the target machine to check whether secrets have leaked into the generated image.&lt;/p&gt;
+&lt;h3 id="1-pre-analysis-of-bake-target-configurations"&gt;1. Pre-Analysis of Bake Target Configurations
+&lt;/h3&gt;&lt;p&gt;Prior to executing the build, output the HCL evaluation results in a JSON structure to verify the bindings.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker buildx bake production --print
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;group&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;default&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;targets&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;production&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;target&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;production&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;context&amp;#34;: &amp;#34;.&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;dockerfile&amp;#34;: &amp;#34;Dockerfile&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;secrets&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id=token,env=TOKEN&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;tags&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;registry.company.com/app:v1&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-layer-analysis-of-container-image-history"&gt;2. Layer Analysis of Container Image History
+&lt;/h3&gt;&lt;p&gt;Scan the build history of the generated image to verify that plaintext secret arguments are not included in the instruction history.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker history registry.company.com/app:v1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;IMAGE CREATED CREATED BY SIZE COMMENT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;a1b2c3d4e5f6 2 minutes ago RUN /bin/sh -c --mount=type=secret,id=token… 0B buildkit.dockerfile.v0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt;missing&amp;gt; 2 minutes ago /bin/sh -c #(nop) WORKDIR /app 0B buildkit.dockerfile.v0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From the output results, safety is proven because the secret string itself is not recorded in the &lt;code&gt;CREATED BY&lt;/code&gt; area at all, leaving only the definition of the mount flags.&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;Incident / Error&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Cause Analysis&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;Remediation Steps&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;&lt;code&gt;secret file token.txt: no such file or directory&lt;/code&gt;&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;The specified file does not exist at the relative path defined in &lt;code&gt;src=&lt;/code&gt; within &lt;code&gt;docker-bake.hcl&lt;/code&gt;.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Verify the path where the file exists relative to the build execution current directory, and correct the &lt;code&gt;src&lt;/code&gt; definition.&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;&lt;code&gt;secret id &amp;quot;token&amp;quot; required&lt;/code&gt;&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;--mount=type=secret,id=X&lt;/code&gt; in &lt;code&gt;Dockerfile&lt;/code&gt; and &lt;code&gt;id=Y&lt;/code&gt; in &lt;code&gt;docker-bake.hcl&lt;/code&gt; do not match.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Align the &lt;code&gt;id&lt;/code&gt; identifier in the HCL and the &lt;code&gt;id&lt;/code&gt; identifier in the Dockerfile to be exactly identical strings.&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;Secret becomes empty in CI environment&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Host environment variables are not correctly exported in the workflow&amp;rsquo;s &lt;code&gt;env:&lt;/code&gt; block.&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Review the CI definition file to ensure environment variables are explicitly passed to steps using the &lt;code&gt;env&lt;/code&gt; key.&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Complete Elimination of &lt;code&gt;ARG&lt;/code&gt; / &lt;code&gt;ENV&lt;/code&gt;&lt;/b&gt;: Never use build arguments for passing credentials that should not be included in the image. Always use &lt;code&gt;--mount=type=secret&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Prohibition of Secret Value Reassignment&lt;/b&gt;: Performing operations to copy and output content obtained inside &lt;code&gt;RUN --mount=type=secret&lt;/code&gt; to &lt;code&gt;ENV&lt;/code&gt; variables or the file system is strictly forbidden, as it will persist in the layer at that point.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Principle of Least Privilege&lt;/b&gt;: Limit tokens injected during builds to the minimum required scope (e.g., read-only permissions) and operate by issuing short-lived temporary tokens.&lt;/missing&gt;&lt;/id&gt;&lt;/image-id&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Implementation and Failure Design of the Redis Cache-Aside Pattern in a Spring Boot and PostgreSQL Environment</title><link>https://klifehack.com/en/p/spring-boot-redis-postgresql-cache-aside/</link><pubDate>Mon, 03 Aug 2026 10:08:22 +0900</pubDate><guid>https://klifehack.com/en/p/spring-boot-redis-postgresql-cache-aside/</guid><description>&lt;p&gt;In architectures with increasing database access frequency, concentrating direct queries on relational databases such as PostgreSQL causes latency degradation and resource exhaustion. Especially in systems with a high proportion of read requests, placing an in-memory data store in front of the persistence layer to temporarily cache query results is an effective design.&lt;/p&gt;
 &lt;p&gt;This article outlines the implementation steps for integrating Redis as a secondary cache in a Spring Boot application using the Cache-Aside pattern, as well as fallback processing during infrastructure failures.&lt;/p&gt;
 &lt;h2 id="architecture-configuration-and-role-allocation"&gt;Architecture Configuration and Role Allocation
 &lt;/h2&gt;&lt;p&gt;To balance data reliability and search performance, the responsibilities of PostgreSQL and Redis are clearly separated.&lt;/p&gt;

@@ -1,4 +1,187 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 27 Jul 2026 10:09:04 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>Helmを用いたKubernetesアプリケーション管理とPrometheus監視スタックの構築</title><link>https://klifehack.com/p/helm-kubernetes-prometheus-grafana-observability/</link><pubDate>Mon, 27 Jul 2026 10:09:04 +0900</pubDate><guid>https://klifehack.com/p/helm-kubernetes-prometheus-grafana-observability/</guid><description>&lt;p&gt;Kubernetesクラスタの運用規模が拡大するにつれ、静的なYAMLマニフェストを手動で個別にデプロイ・管理する手法は設定の肥大化やバージョン管理の混乱を引き起こします。特に複数環境に対する同一構成の適用や、依存関係を持つコンポーネントの一括管理において、抽象化されたパッケージング機構の導入は不可欠です。本稿では、KubernetesのパッケージマネージャーであるHelmを活用したリソースデプロイと、PrometheusおよびGrafanaを中心とした可視化・監視スタックの構築手順について解説します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 05 Aug 2026 10:05:55 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>Docker Buildx Bakeにおける秘密情報注入のアーキテクチャと実装</title><link>https://klifehack.com/p/docker-buildx-bake-secrets-management/</link><pubDate>Wed, 05 Aug 2026 10:05:55 +0900</pubDate><guid>https://klifehack.com/p/docker-buildx-bake-secrets-management/</guid><description>&lt;p&gt;コンテナイメージのビルドパイプライン拡張に伴い、プライベートリポジトリのアクセストークンやAPIキー、パッケージマネージャの認証情報をイメージ構築時に受け渡す設計パターンが不可欠となっています。しかし、従来のビルド引数（&lt;code&gt;ARG&lt;/code&gt;）や環境変数（&lt;code&gt;ENV&lt;/code&gt;）を用いた認証情報の注入は、イメージのメタデータや中間レイヤーにデータが平文のまま永続化するリスクを伴います。本稿では、Docker Buildx Bakeのシークレット管理機構を導入し、ビルドレイヤーへ機密情報を残さずに安全に依存関係を取得するアーキテクチャと設定手法について整理します。&lt;/p&gt;
+&lt;h2 id="従来のビルド引数におけるセキュリティ上の課題"&gt;従来のビルド引数におけるセキュリティ上の課題
+&lt;/h2&gt;&lt;p&gt;標準的な&lt;code&gt;Dockerfile&lt;/code&gt;で以下のように&lt;code&gt;ARG&lt;/code&gt;を利用してトークンを注入する手法は、セキュリティ監査において重大な脆弱性とみなされます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ARG&lt;/span&gt; TOKEN&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; git clone https://$TOKEN@github.com/private/repository.git&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;このパターンの根本的な問題点は以下の通りです。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;レイヤーメタデータへの永続化&lt;/b&gt;: &lt;code&gt;ARG&lt;/code&gt;および&lt;code&gt;ENV&lt;/code&gt;で設定された値は、イメージのマニフェストおよびレイヤーキャッシュの履歴に明示的に記録されます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;イメージ検査による情報漏洩&lt;/b&gt;: 生成されたコンテナイメージに対して &lt;code&gt;docker history &amp;lt;image-id&amp;gt;&lt;/code&gt; や &lt;code&gt;docker inspect&lt;/code&gt; を実行することで、第三者が容易に平文のトークンを抽出可能です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;サプライチェーンリスクの拡大&lt;/b&gt;: 該当イメージがパブリックまたは共有レジストリにプッシュされた場合、インフラのアクセス権限が外部へ漏洩する事故に直結します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="docker-buildx-bake-secretsの動作原理"&gt;Docker Buildx Bake Secretsの動作原理
+&lt;/h2&gt;&lt;p&gt;BuildKitエンジンに統合されたシークレット機能は、機密情報をビルドコンテキストのファイルシステムに書き込むことなく、実行中のコンテナプロセスに一時的なマウントポイントとして提供します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-------------------+ +----------------------+ +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Secret Source | -----&amp;amp;gt; | Docker Buildx Bake | -----&amp;amp;gt; | Temporary Mount Point |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| (File / Host Env) | | Execution Engine | | (/run/secrets/id) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-------------------+ +----------------------+ +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | Executed Build Stage |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | (RUN Command Access) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | Secret Unmounted &amp;amp;amp; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | Excluded from Layers |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-----------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="実行ライフサイクル"&gt;実行ライフサイクル
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;バインディング定義&lt;/b&gt;: HCL設定ファイル（&lt;code&gt;docker-bake.hcl&lt;/code&gt;）において、ホスト上のローカルファイルまたは環境変数をターゲットのシークレットとして指定します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;一時的マウント注入&lt;/b&gt;: &lt;code&gt;docker buildx bake&lt;/code&gt; の実行時、ビルドエンジンはコンテナ内の &lt;code&gt;/run/secrets/&amp;lt;id&amp;gt;&lt;/code&gt; にインメモリの一時的マウントを生成します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;インメモリ処理&lt;/b&gt;: 指定された &lt;code&gt;RUN&lt;/code&gt; 命令のみが該当パスを参照して認証処理（依存ライブラリのダウンロードやGitクローン）を実行します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;即時アンマウント&lt;/b&gt;: 当該 &lt;code&gt;RUN&lt;/code&gt; 命令の完了直後にマウントは解除されます。シークレットの中身が中間レイヤーや最終イメージディスクに書き込まれることはありません。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="設定および実装仕様"&gt;設定および実装仕様
+&lt;/h2&gt;&lt;h3 id="ローカルファイルベースのシークレット注入"&gt;ローカルファイルベースのシークレット注入
+&lt;/h3&gt;&lt;p&gt;ホスト上のファイルをシークレットソースとして定義する基本形式です。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;docker-bake.hcl&lt;/code&gt; の設定:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-hcl" data-lang="hcl"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;target&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;app&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secret &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;token,src&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;token&lt;/span&gt;.&lt;span style="color:#66d9ef"&gt;txt&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Dockerfile` 側での参照:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;alpine:3.20&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; --mount&lt;span style="color:#f92672"&gt;=&lt;/span&gt;type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;secret,id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;token &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cat /run/secrets/token&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実行コマンド:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker buildx bake app
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ホスト環境変数の直接マウント"&gt;ホスト環境変数の直接マウント
+&lt;/h3&gt;&lt;p&gt;ローカルディスクに秘密鍵やトークンを平文ファイルとして保存することを避けるため、ホスト環境変数を直接シークレットとしてコンテナに渡すモードです。&lt;/p&gt;
+&lt;p&gt;ホスト環境変数のセット:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export API_KEY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;abcdef12345&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;docker-bake.hcl` の設定:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-hcl" data-lang="hcl"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;target&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;app&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secret &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;apikey,env&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;API_KEY&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Dockerfile` 側での参照:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;alpine:3.20&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; --mount&lt;span style="color:#f92672"&gt;=&lt;/span&gt;type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;secret,id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;apikey &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; API_KEY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;cat /run/secrets/apikey&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt; &amp;amp;amp;&amp;amp;amp; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Processing authenticated task...&amp;#34;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="ユースケース別実装例"&gt;ユースケース別実装例
+&lt;/h2&gt;&lt;h3 id="sshエージェント転送を利用したプライベートリポジトリ取得"&gt;SSHエージェント転送を利用したプライベートリポジトリ取得
+&lt;/h3&gt;&lt;p&gt;SSHキーペアを用いたGit操作を行う場合、専用のSSHマウントオプションをターゲットに指定します。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;docker-bake.hcl&lt;/code&gt; の設定:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-hcl" data-lang="hcl"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;target&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;app&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ssh &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;default&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Dockerfile` の記述:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;alpine:3.20&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; apk add --no-cache git openssh-client&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; mkdir -p -m &lt;span style="color:#ae81ff"&gt;0700&lt;/span&gt; ~/.ssh &amp;amp;amp;&amp;amp;amp; ssh-keyscan github.com &amp;amp;gt;&amp;amp;gt; ~/.ssh/known_hosts&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; --mount&lt;span style="color:#f92672"&gt;=&lt;/span&gt;type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ssh &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; git clone git@github.com:company/project.git&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="github-actions-cicd-パイプライン統合"&gt;GitHub Actions CI/CD パイプライン統合
+&lt;/h3&gt;&lt;p&gt;CI/CD環境において、ワークフローのシークレットをBake経由で安全にビルドコンテキストへ供給する構成例です。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;.github/workflows/build.yml&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Production Build Pipeline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set up Docker Buildx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;docker/setup-buildx-action@v3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build with Bake&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;TOKEN&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.PRODUCTION_PIPELINE_TOKEN }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker buildx bake production&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;docker-bake.hcl`:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-hcl" data-lang="hcl"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;target&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;production&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secret &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;token,env&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;TOKEN&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tags &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;registry.company.com/app:v1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; output &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;image,push&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="監査および動作検証手順"&gt;監査および動作検証手順
+&lt;/h2&gt;&lt;p&gt;ビルド完了後、生成されたイメージ内にシークレットが混入していないか実機ターミナルにて検証を行います。&lt;/p&gt;
+&lt;h3 id="1-bake-ターゲット設定の事前解析"&gt;1. Bake ターゲット設定の事前解析
+&lt;/h3&gt;&lt;p&gt;ビルド実行前に、HCLの評価結果をJSON構造で出力してバインディングを確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker buildx bake production --print
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;group&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;default&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;targets&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;production&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;target&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;production&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;context&amp;#34;: &amp;#34;.&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;dockerfile&amp;#34;: &amp;#34;Dockerfile&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;secrets&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;id=token,env=TOKEN&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;tags&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;registry.company.com/app:v1&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-コンテナイメージ履歴のレイヤー解析"&gt;2. コンテナイメージ履歴のレイヤー解析
+&lt;/h3&gt;&lt;p&gt;生成されたイメージのビルドヒストリを走査し、平文のシークレット引数が命令履歴に含まれていないか検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker history registry.company.com/app:v1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;IMAGE CREATED CREATED BY SIZE COMMENT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;a1b2c3d4e5f6 2 minutes ago RUN /bin/sh -c --mount=type=secret,id=token… 0B buildkit.dockerfile.v0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt;missing&amp;gt; 2 minutes ago /bin/sh -c #(nop) WORKDIR /app 0B buildkit.dockerfile.v0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;出力結果から、&lt;code&gt;CREATED BY&lt;/code&gt; の領域にシークレットの文字列自体は一切記録されず、マウントフラグの定義のみが残るため安全性が証明されます。&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;発生現象 / エラー&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;原因解析&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;対処手順&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;&lt;code&gt;secret file token.txt: no such file or directory&lt;/code&gt;&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;docker-bake.hcl&lt;/code&gt; で定義した &lt;code&gt;src=&lt;/code&gt; の相対パスに該当ファイルが存在しない。&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ビルド実行カレントディレクトリからのファイル存在パスを確認し、&lt;code&gt;src&lt;/code&gt; の定義を修正する。&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;&lt;code&gt;secret id &amp;quot;token&amp;quot; required&lt;/code&gt;&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;Dockerfile&lt;/code&gt; 内の &lt;code&gt;--mount=type=secret,id=X&lt;/code&gt; と &lt;code&gt;docker-bake.hcl&lt;/code&gt; の &lt;code&gt;id=Y&lt;/code&gt; が一致していない。&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;HCL内の &lt;code&gt;id&lt;/code&gt; 識別子と Dockerfile 内の &lt;code&gt;id&lt;/code&gt; 識別子を完全に同一の文字列にそろえる。&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;b&gt;CI環境でシークレットが空になる&lt;/b&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ホスト環境変数がワークフローの &lt;code&gt;env:&lt;/code&gt; ブロックで正しくエクスポートされていない。&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;CI定義ファイル内で &lt;code&gt;env&lt;/code&gt; キーを用いて環境変数がステップへ明示的に渡されているか見直す。&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;&lt;code&gt;ARG&lt;/code&gt; / &lt;code&gt;ENV&lt;/code&gt; の全廃&lt;/b&gt;: イメージに含めるべきでない認証情報の受け渡しにビルド引数を使用してはなりません。必ず &lt;code&gt;--mount=type=secret&lt;/code&gt; を利用してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;シークレット値の再代入禁止&lt;/b&gt;: &lt;code&gt;RUN --mount=type=secret&lt;/code&gt; 内で取得した内容を &lt;code&gt;ENV&lt;/code&gt; 変数やファイルシステムへコピーして書き出す操作を行うと、その時点でレイヤーに永続化するため厳禁です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;最小権限の原則&lt;/b&gt;: ビルド時に注入するトークンは、必要な範囲（例: 読み取り専用権限）に限定し、短時間で失効する一時トークンを発行して運用してください。&lt;/missing&gt;&lt;/id&gt;&lt;/image-id&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Helmを用いたKubernetesアプリケーション管理とPrometheus監視スタックの構築</title><link>https://klifehack.com/p/helm-kubernetes-prometheus-grafana-observability/</link><pubDate>Mon, 27 Jul 2026 10:09:04 +0900</pubDate><guid>https://klifehack.com/p/helm-kubernetes-prometheus-grafana-observability/</guid><description>&lt;p&gt;Kubernetesクラスタの運用規模が拡大するにつれ、静的なYAMLマニフェストを手動で個別にデプロイ・管理する手法は設定の肥大化やバージョン管理の混乱を引き起こします。特に複数環境に対する同一構成の適用や、依存関係を持つコンポーネントの一括管理において、抽象化されたパッケージング機構の導入は不可欠です。本稿では、KubernetesのパッケージマネージャーであるHelmを活用したリソースデプロイと、PrometheusおよびGrafanaを中心とした可視化・監視スタックの構築手順について解説します。&lt;/p&gt;
 &lt;h2 id="helmの基本構造と動作原理"&gt;Helmの基本構造と動作原理
 &lt;/h2&gt;&lt;p&gt;HelmはGo Template構文をベースとしたテンプレートエンジンと、変数設定ファイル（&lt;code&gt;values.yaml&lt;/code&gt;）を分離することで、動的なマニフェスト生成を実現します。チャートと呼ばれるパッケージ単位でアプリケーションのライフサイクルを管理します。&lt;/p&gt;
 &lt;h3 id="チャートの標準ディレクトリ構造"&gt;チャートの標準ディレクトリ構造
