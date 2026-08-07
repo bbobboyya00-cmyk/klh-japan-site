@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ssh Key Permission Denied on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/ssh-key-permission-denied/</link><description>Recent content in Ssh Key Permission Denied on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 07 Aug 2026 10:05:56 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/ssh-key-permission-denied/index.xml" rel="self" type="application/rss+xml"/><item><title>Docker Buildx BakeのSSHフォワーディングを利用した秘密鍵非保持ビルドの構成パターン</title><link>https://klifehack.com/p/docker-buildx-bake-ssh-forwarding/</link><pubDate>Fri, 07 Aug 2026 10:05:56 +0900</pubDate><guid>https://klifehack.com/p/docker-buildx-bake-ssh-forwarding/</guid><description>&lt;p&gt;インフラストラクチャの自動化およびコンテナ化の過程において、ビルド時に組織内のプライベートGitリポジトリや非公開パッケージ（npm、Pythonホイール等）の引き込みが必要となるケースは一般的です。従来、この問題に対してDockerfile内で &lt;code&gt;COPY&lt;/code&gt; や &lt;code&gt;ADD&lt;/code&gt; 命令を使用し、SSH秘密鍵を直接コンテナ内に配置する運用が見られました。&lt;/p&gt;
+&lt;p&gt;しかし、ビルド手順の後続で鍵ファイルを削除したとしても、中間イメージのレイヤー履歴に秘密鍵が永久に残存するため、&lt;code&gt;docker history&lt;/code&gt; やレイヤー抽出ツールによって認証情報が漏洩するリスクが存在します。このようなセキュリティ上の制約を回避しつつ &lt;code&gt;Permission denied (publickey)&lt;/code&gt; エラーを解決するため、Docker Buildx BakeにおけるSSHフォワーディング機能を用いた構成手法を整理します。&lt;/p&gt;
+&lt;h3 id="sshフォワーディングの動作原理"&gt;SSHフォワーディングの動作原理
+&lt;/h3&gt;&lt;p&gt;Docker Buildx BakeのSSHフォワーディングメカニズムは、ホストマシン上の &lt;code&gt;ssh-agent&lt;/code&gt; ソケットをビルド実行中の特定の &lt;code&gt;RUN&lt;/code&gt; ステップにのみ一時的にマウントします。これにより、鍵ファイルそのものをファイルシステムにコピーすることなく、ソケット経由で暗号化ハンドシェイクを完結させます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[ Host SSH Agent ] ---&amp;amp;gt; ( UNIX Domain Socket ) ---&amp;amp;gt; [ Build Container Mount ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [ Git Authentication ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [ Socket Closed on Exit ]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ビルドステップ終了と同時にソケットマウントは解除されるため、最終的に生成されるイメージレイヤーにはSSH鍵のデータが一切残存しません。&lt;/p&gt;
+&lt;h3 id="設定ファイルの基本構成"&gt;設定ファイルの基本構成
+&lt;/h3&gt;&lt;p&gt;SSHフォワーディングを有効化するには、&lt;code&gt;docker-bake.hcl&lt;/code&gt; と &lt;code&gt;Dockerfile&lt;/code&gt; の双方が正しく連携するよう設定します。&lt;/p&gt;
+&lt;h4 id="1-docker-bakehcl"&gt;1. docker-bake.hcl
+&lt;/h4&gt;&lt;p&gt;ターゲットビルドに対して &lt;code&gt;ssh&lt;/code&gt; パラメータを定義し、デフォルトのソケットバインドを指定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-hcl" data-lang="hcl"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;target&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;app&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; context &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ssh &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;default&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="2-dockerfile"&gt;2. Dockerfile
+&lt;/h4&gt;&lt;p&gt;SSH接続を必要とする &lt;code&gt;RUN&lt;/code&gt; 命令に対し、&lt;code&gt;&amp;ndash;mount=type=ssh&lt;/code&gt; オプションを明示的に付与します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;alpine:3.19&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; apk add --no-cache git openssh-client&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SSHソケットをマウントしてプライベートリポジトリを取得&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; --mount&lt;span style="color:#f92672"&gt;=&lt;/span&gt;type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ssh &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; git clone git@github.com:company/private-repository.git /app&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ローカル環境での実行手順"&gt;ローカル環境での実行手順
+&lt;/h3&gt;&lt;p&gt;🛠️ ホスト環境でビルドを実行する際、&lt;code&gt;ssh-agent&lt;/code&gt; が起動しており、対象の鍵が追加されている必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. SSH Agentの起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;eval &lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;ssh-agent -s&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. 秘密鍵の追加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-add ~/.ssh/id_rsa
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. 登録済み鍵の確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-add -l
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 4. Bakeコマンドの実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker buildx bake app
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="パッケージマネージャー依存関係での応用"&gt;パッケージマネージャー依存関係での応用
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;git clone&lt;/code&gt; だけでなく、SSH経由で取得する非公開依存パッケージのインストール処理にも応用可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;node:20-slim&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; apt-get update &amp;amp;amp;&amp;amp;amp; apt-get install -y --no-install-recommends git openssh-client &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;amp;amp;&amp;amp;amp; rm -rf /var/lib/apt/lists/*&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WORKDIR&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/usr/src/app&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# npm経由でプライベートリポジトリのパッケージをインストール&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; --mount&lt;span style="color:#f92672"&gt;=&lt;/span&gt;type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ssh &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; npm install git+ssh://git@github.com:company/private-pkg.git&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="cicdパイプラインとの統合"&gt;CI/CDパイプラインとの統合
+&lt;/h3&gt;&lt;p&gt;自動化されたCI/CD環境では、リポジトリ内に鍵を直接配置せず、パイプラインのシークレット変数から動的に &lt;code&gt;ssh-agent&lt;/code&gt; へ注入します。&lt;/p&gt;
+&lt;h4 id="github-actions-統合例"&gt;GitHub Actions 統合例
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build Container Image&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;: [ &lt;span style="color:#e6db74"&gt;&amp;#34;main&amp;#34;&lt;/span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout Code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set up Docker Buildx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;docker/setup-buildx-action@v3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Setup SSH Keys&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;webfactory/ssh-agent@v0.9.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ssh-private-key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.SSH_PRIVATE_KEY }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build with Buildx Bake&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker buildx bake app&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="gitlab-ci-統合例"&gt;GitLab CI 統合例
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;build_job&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;stage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;docker:24.0.7&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker:24.0.7-dind&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;before_script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;eval $(ssh-agent -s)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;echo &amp;#34;$SSH_PRIVATE_KEY&amp;#34; | tr -d &amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&amp;#39; | ssh-add -&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker buildx bake app&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;⚠️ 実務において発生する主なエラーと原因、対処ワークフローを整理します。&lt;/p&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;エラー症状&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;主な原因&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;確認コマンド / 対処方法&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;Permission denied (publickey)&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ホストの &lt;code&gt;ssh-agent&lt;/code&gt; に鍵が未登録、またはGitサービス側の公開鍵設定不備&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;ssh-add -l&lt;/code&gt; で鍵の存在を確認し、&lt;code&gt;ssh-add ~/.ssh/id_rsa&lt;/code&gt; を実行&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;SSH_AUTH_SOCK&lt;/code&gt; 関連エラー&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;ホスト上でAgentプロセスが起動していない&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;echo $SSH_AUTH_SOCK&lt;/code&gt; の出力有無を確認し、&lt;code&gt;eval $(ssh-agent -s)&lt;/code&gt; を再実行&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;git: command not found&lt;/code&gt; または &lt;code&gt;ssh: command not found&lt;/code&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;コンテナイメージ側に &lt;code&gt;git&lt;/code&gt; や &lt;code&gt;openssh-client&lt;/code&gt; パッケージが未導入&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;Dockerfileのベースイメージ準備段階で &lt;code&gt;apt&lt;/code&gt; や &lt;code&gt;apk&lt;/code&gt; によるパッケージ追加を実施&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="システム検証プロトコルログ"&gt;システム検証プロトコルログ
+&lt;/h3&gt;&lt;p&gt;ビルド実行時の動作検証、および最終イメージに鍵データが含まれていないことを証明するターミナルログの出力例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ssh-add -l
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2048 SHA256:abc123xyz890... /home/user/.ssh/id_rsa (RSA)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker buildx bake app
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[+] Building 4.2s (8/8) FINISHED
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [internal] load build definition from Dockerfile 0.0s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; transferring dockerfile: 210B 0.0s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [internal] load .dockerignore 0.0s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; transferring context: 2B 0.0s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [internal] load metadata for docker.io/library/alpine:3.19 1.1s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [1/3] FROM docker.io/library/alpine:3.19@sha256:c5b54... 0.0s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [2/3] RUN apk add --no-cache git openssh-client 1.8s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [3/3] RUN --mount=type=ssh git clone git@github.com:company/private-repo.git 1.2s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; exporting to image 0.1s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; exporting layers 0.1s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; writing image sha256:8f431a... 0.0s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker run --rm -it app:latest ls -la /root/.ssh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ls: /root/.ssh: No such file or directory
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;🛠️ &lt;b&gt;1. 最小権限原則の適用&lt;/b&gt;: CI/CD環境へ注入するSSH鍵には、個人の秘密鍵ではなく、特定リポジトリへの読み取り権限のみを付与したデプロイキー（Deploy Keys）を設定してください。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;2. プロトコルの統一&lt;/b&gt;: Dockerfile内のリポジトリ指定には、HTTP(S)形式（&lt;code&gt;https://&amp;hellip;&lt;/code&gt;）ではなく、必ずSSH形式（&lt;code&gt;git@&amp;hellip;&lt;/code&gt;）を使用してください。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;3. Agentのクリーンアップ&lt;/b&gt;: 開発用ホスト環境で作業終了後は &lt;code&gt;ssh-add -D&lt;/code&gt; を使用し、Agent上の秘密鍵メモリを破棄する習慣を推奨します。&lt;/p&gt;</description></item></channel></rss>
