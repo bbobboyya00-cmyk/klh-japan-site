@@ -1,4 +1,116 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 07 Aug 2026 10:05:56 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Docker Buildx BakeのSSHフォワーディングを利用した秘密鍵非保持ビルドの構成パターン</title><link>https://klifehack.com/p/docker-buildx-bake-ssh-forwarding/</link><pubDate>Fri, 07 Aug 2026 10:05:56 +0900</pubDate><guid>https://klifehack.com/p/docker-buildx-bake-ssh-forwarding/</guid><description>&lt;p&gt;インフラストラクチャの自動化およびコンテナ化の過程において、ビルド時に組織内のプライベートGitリポジトリや非公開パッケージ（npm、Pythonホイール等）の引き込みが必要となるケースは一般的です。従来、この問題に対してDockerfile内で &lt;code&gt;COPY&lt;/code&gt; や &lt;code&gt;ADD&lt;/code&gt; 命令を使用し、SSH秘密鍵を直接コンテナ内に配置する運用が見られました。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 09 Aug 2026 10:04:13 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>エアギャップ環境におけるKubespray向けローカルRPMリポジトリの構築手順</title><link>https://klifehack.com/p/airgapped-kubespray-rpm-repository-setup/</link><pubDate>Sun, 09 Aug 2026 10:04:13 +0900</pubDate><guid>https://klifehack.com/p/airgapped-kubespray-rpm-repository-setup/</guid><description>&lt;p&gt;外部ネットワークから完全に隔離されたエアギャップ環境において、Kubesprayを用いたKubernetesクラスタの自動構築を行う場合、ブートストラップ処理やOSレベルの初期化に必要なパッケージ群を事前調達しておく必要があります。インターネット接続が可能な環境から単純に単一のRPMパッケージのみを取得して持ち込んでも、OSのマイナーバージョンや依存関係ツリーの欠損により、プロビジョニング中にパッケージインストールのエラーが発生する事例が多発します。&lt;/p&gt;
+&lt;p&gt;本稿では、Rocky Linux 9.7環境を前提とし、インターネット接続が可能なステージングホスト上で &lt;code&gt;dnf&lt;/code&gt; の依存解決フラグを利用して必要なすべてのRPMパッケージを完全収集し、内部ネットワークのWebサーバー上にローカルYumリポジトリを構築・検証する手順を整理します。&lt;/p&gt;
+&lt;h2 id="1-ステージング環境の準備と依存解決メカニズム"&gt;1. ステージング環境の準備と依存解決メカニズム
+&lt;/h2&gt;&lt;p&gt;インターネットに接続されたステージングホストは、ターゲットとなるエアギャップノードと同じOSディストリビューションおよびアーキテクチャで構成します。パッケージ依存ツリーを走査し、ダウンストリームの全依存関係を漏れなく収集するため、&lt;code&gt;dnf-plugins-core&lt;/code&gt; プラグインを導入した上で &lt;code&gt;dnf download&lt;/code&gt; コマンドを使用します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf install -y dnf-plugins-core
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ペイロード格納用ディレクトリの作成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /data/kubespray-rpms/os
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /data/kubespray-rpms/docker-ce-stable
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="dnf-download-コマンドの主要オプション仕様"&gt;dnf download コマンドの主要オプション仕様
+&lt;/h3&gt;&lt;p&gt;依存関係のダウンロードには以下のフラグを指定します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--resolve&lt;/code&gt;: 指定したパッケージに必要な依存関係グラフを自動的に全件解析します。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--alldeps&lt;/code&gt;: ステージングホスト上に既にインストールされているパッケージであっても、依存ツリーに含まれるすべてのRPMファイルを強制的にダウンロード対象とします。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dnf download --resolve --alldeps --destdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&amp;lt;target_directory&amp;gt; &amp;lt;package_name&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-rpmパッケージの取得手順"&gt;2. RPMパッケージの取得手順
+&lt;/h2&gt;&lt;h3 id="21-os基本パッケージおよびkubernetesネットワーク依存関係のダウンロード"&gt;2.1 OS基本パッケージおよびKubernetesネットワーク依存関係のダウンロード
+&lt;/h3&gt;&lt;p&gt;Ansibleの実行やKubesprayのノードセットアップに必要な基本ツール、ネットワーク制御ユーティリティ、Pythonバインディングを収集します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf download --resolve --alldeps &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --destdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/data/kubespray-rpms/os &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; python3 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; python3-libselinux &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; conntrack-tools &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; socat &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; iproute &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; iproute-tc &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; iptables &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ipset &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ipvsadm &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ethtool &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; chrony &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; rsync &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tar &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; unzip &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; curl &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; openssl &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ca-certificates &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ebtables
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;※ Rocky Linux 9などのEnterprise Linux 9系リポジトリにおいて &lt;code&gt;ebtables&lt;/code&gt; パッケージが提供されていない、あるいは非推奨化されている場合は、対象リストから &lt;code&gt;ebtables&lt;/code&gt; を除外して実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf download --resolve --alldeps &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --destdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/data/kubespray-rpms/os &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; python3 python3-libselinux conntrack-tools socat iproute iproute-tc &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; iptables ipset ipvsadm ethtool chrony rsync tar unzip curl openssl ca-certificates
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-コンテナランタイム依存関係containerdioの取得"&gt;2.2 コンテナランタイム依存関係（containerd.io）の取得
+&lt;/h3&gt;&lt;p&gt;標準のOSリポジトリにはプロダクションレベルの &lt;code&gt;containerd.io&lt;/code&gt; パッケージが含まれていないため、公式のDocker CEリポジトリを登録して取得します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Docker CE Stableリポジトリの追加&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# containerdおよびSELinuxポリシーのダウンロード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf download --resolve --alldeps &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --destdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/data/kubespray-rpms/docker-ce-stable &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; containerd.io &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; container-selinux
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Kubesprayで &lt;code&gt;container_manager: containerd&lt;/code&gt; 構成を採用する場合、フルセットの &lt;code&gt;docker-ce&lt;/code&gt; エンジンは不要であり、&lt;code&gt;containerd.io&lt;/code&gt; および &lt;code&gt;container-selinux&lt;/code&gt; のみで構成可能です。&lt;/p&gt;
+&lt;h2 id="3-アーカイブの作成とローカルリポジトリの展開"&gt;3. アーカイブの作成とローカルリポジトリの展開
+&lt;/h2&gt;&lt;p&gt;取得したパッケージ群の容量を確認し、圧縮アーカイブとしてまとめます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tar czf kubespray-rpms-rocky9.7.tgz kubespray-rpms
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;作成したアーカイブを内部のミラーサーバー（Nginx等）に転送し、ドキュメントルート下に展開します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mkdir -p /usr/share/nginx/html/ROCKY_9.7
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo tar xzf kubespray-rpms-rocky9.7.tgz -C /usr/share/nginx/html/ROCKY_9.7
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;展開後、&lt;code&gt;createrepo_c&lt;/code&gt; ユーティリティを実行してリポジトリのメタデータ（repodata）を生成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo createrepo_c /usr/share/nginx/html/ROCKY_9.7/kubespray-rpms/os
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo createrepo_c /usr/share/nginx/html/ROCKY_9.7/kubespray-rpms/docker-ce-stable
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-クライアントノードの設定と検証"&gt;4. クライアントノードの設定と検証
+&lt;/h2&gt;&lt;p&gt;エアギャップ環境内のターゲットノードにおいて、外部リポジトリ設定を無効化し、作成したローカルリポジトリを参照するよう &lt;code&gt;/etc/yum.repos.d/kubespray-local.repo&lt;/code&gt; を作成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[kubespray-os]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;Kubespray OS RPMs&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;baseurl&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;http://harbor.devstack.co.kr/ROCKY_9.7/kubespray-rpms/os&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;enabled&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;gpgcheck&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[kubespray-containerd]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;Kubespray Containerd RPMs&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;baseurl&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;http://harbor.devstack.co.kr/ROCKY_9.7/kubespray-rpms/docker-ce-stable&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;enabled&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;gpgcheck&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="発生ケース1-ミラーサーバー側に-createrepo_c-が存在しない"&gt;発生ケース1: ミラーサーバー側に &lt;code&gt;createrepo_c&lt;/code&gt; が存在しない
+&lt;/h3&gt;&lt;p&gt;エアギャップ環境内のリポジトリサーバー自身に &lt;code&gt;createrepo_c&lt;/code&gt; コマンドがインストールされていない場合、メタデータの生成が行えず &lt;code&gt;dnf makecache&lt;/code&gt; が失敗します。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;対処手順:&lt;/b&gt;
+インターネット接続のあるステージングホスト側で、あらかじめ &lt;code&gt;createrepo_c&lt;/code&gt; 自体も依存関係を含めて取得し、ペイロードに同梱して持ち込みます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf download --resolve --alldeps &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --destdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/data/kubespray-rpms/os &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; createrepo_c
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="発生ケース2-リポジトリインデックス同期エラーとパッケージ見つからない問題"&gt;発生ケース2: リポジトリインデックス同期エラーとパッケージ見つからない問題
+&lt;/h3&gt;&lt;p&gt;ローカルリポジトリ設定後、&lt;code&gt;dnf list&lt;/code&gt; 実行時に旧キャッシュが残っていると、パッケージが発見できないエラーが発生します。キャッシュのクリアとインデックス再構築を明示的に実行する必要があります。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;検証ログ例:&lt;/b&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dnf clean all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;15 files removed
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dnf makecache
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Kubespray OS RPMs 3.2 MB/s | 2.1 MB 00:00 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Kubespray Containerd RPMs 1.8 MB/s | 12 kB 00:00 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Metadata cache created successfully.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dnf repolist
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;repo id repo name
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubespray-containerd Kubespray Containerd RPMs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubespray-os Kubespray OS RPMs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ dnf list containerd.io conntrack-tools socat
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Available Packages
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;conntrack-tools.x86_64 1.4.7-2.el9 kubespray-os 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;containerd.io.x86_64 1.7.25-3.1.el9 kubespray-containerd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;socat.x86_64 1.7.4.1-5.el9 kubespray-os 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;依存関係の強制全取得&lt;/b&gt;: &lt;code&gt;--alldeps&lt;/code&gt; オプションを付与しない場合、ステージングホストの導入済みパッケージがスキップされ、エアギャップ環境のノードで依存不足が発生するリスクがあります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;コンテナランタイムの分離管理&lt;/b&gt;: &lt;code&gt;containerd.io&lt;/code&gt; はDocker CEリポジトリから個別に取得し、OS標準リポジトリと分離してインデックス化することで、バージョン競合を回避できます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;repodataの事前生成&lt;/b&gt;: リポジトリサーバー上で &lt;code&gt;createrepo_c&lt;/code&gt; によるメタデータ作成を行ってからクライアントに公開することが、健全なYum/DNFパッケージ配布の必須要件となります。&amp;lt;/package_name&amp;gt;&amp;lt;/target_directory&amp;gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Docker Buildx BakeのSSHフォワーディングを利用した秘密鍵非保持ビルドの構成パターン</title><link>https://klifehack.com/p/docker-buildx-bake-ssh-forwarding/</link><pubDate>Fri, 07 Aug 2026 10:05:56 +0900</pubDate><guid>https://klifehack.com/p/docker-buildx-bake-ssh-forwarding/</guid><description>&lt;p&gt;インフラストラクチャの自動化およびコンテナ化の過程において、ビルド時に組織内のプライベートGitリポジトリや非公開パッケージ（npm、Pythonホイール等）の引き込みが必要となるケースは一般的です。従来、この問題に対してDockerfile内で &lt;code&gt;COPY&lt;/code&gt; や &lt;code&gt;ADD&lt;/code&gt; 命令を使用し、SSH秘密鍵を直接コンテナ内に配置する運用が見られました。&lt;/p&gt;
 &lt;p&gt;しかし、ビルド手順の後続で鍵ファイルを削除したとしても、中間イメージのレイヤー履歴に秘密鍵が永久に残存するため、&lt;code&gt;docker history&lt;/code&gt; やレイヤー抽出ツールによって認証情報が漏洩するリスクが存在します。このようなセキュリティ上の制約を回避しつつ &lt;code&gt;Permission denied (publickey)&lt;/code&gt; エラーを解決するため、Docker Buildx BakeにおけるSSHフォワーディング機能を用いた構成手法を整理します。&lt;/p&gt;
 &lt;h3 id="sshフォワーディングの動作原理"&gt;SSHフォワーディングの動作原理
 &lt;/h3&gt;&lt;p&gt;Docker Buildx BakeのSSHフォワーディングメカニズムは、ホストマシン上の &lt;code&gt;ssh-agent&lt;/code&gt; ソケットをビルド実行中の特定の &lt;code&gt;RUN&lt;/code&gt; ステップにのみ一時的にマウントします。これにより、鍵ファイルそのものをファイルシステムにコピーすることなく、ソケット経由で暗号化ハンドシェイクを完結させます。&lt;/p&gt;

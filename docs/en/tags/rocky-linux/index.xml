@@ -1,4 +1,115 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Rocky-Linux on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/rocky-linux/</link><description>Recent content in Rocky-Linux on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 11 Jun 2026 14:17:27 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/rocky-linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Reverse Proxy Migration Procedure from Apache mod_proxy to Nginx Proxy Manager</title><link>https://klifehack.com/en/p/apache-to-npm-migration-guide/</link><pubDate>Thu, 11 Jun 2026 14:17:27 +0900</pubDate><guid>https://klifehack.com/en/p/apache-to-npm-migration-guide/</guid><description>&lt;h1 id="implementation-guide-for-migrating-from-apache-mod_proxy-to-nginx-proxy-manager-on-rocky-linux"&gt;Implementation Guide for Migrating from Apache mod_proxy to Nginx Proxy Manager on Rocky Linux
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Rocky-Linux on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/rocky-linux/</link><description>Recent content in Rocky-Linux on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 09 Aug 2026 10:04:14 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/rocky-linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Procedure for Building a Local RPM Repository for Kubespray in an Air-Gapped Environment</title><link>https://klifehack.com/en/p/airgapped-kubespray-rpm-repository-setup/</link><pubDate>Sun, 09 Aug 2026 10:04:14 +0900</pubDate><guid>https://klifehack.com/en/p/airgapped-kubespray-rpm-repository-setup/</guid><description>&lt;p&gt;When performing automated Kubernetes cluster construction using Kubespray in an air-gapped environment completely isolated from external networks, it is necessary to procure the required packages for bootstrap processing and OS-level initialization in advance. Simply obtaining and bringing in single RPM packages from an internet-connected environment frequently leads to package installation errors during provisioning due to OS minor version mismatches or missing dependency trees.&lt;/p&gt;
+&lt;p&gt;This article outlines the procedure for fully collecting all required RPM packages using the dependency resolution flags of &lt;code&gt;dnf&lt;/code&gt; on an internet-connected staging host, assuming a Rocky Linux 9.7 environment, and building and verifying a local Yum repository on an internal network Web server.&lt;/p&gt;
+&lt;h2 id="1-staging-environment-preparation-and-dependency-resolution-mechanism"&gt;1. Staging Environment Preparation and Dependency Resolution Mechanism
+&lt;/h2&gt;&lt;p&gt;The internet-connected staging host is configured with the same OS distribution and architecture as the target air-gapped nodes. To traverse the package dependency tree and collect all downstream dependencies without omission, the &lt;code&gt;dnf download&lt;/code&gt; command is used after installing the &lt;code&gt;dnf-plugins-core&lt;/code&gt; plugin.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf install -y dnf-plugins-core
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Create payload storage directories&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /data/kubespray-rpms/os
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /data/kubespray-rpms/docker-ce-stable
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="key-option-specifications-for-the-dnf-download-command"&gt;Key Option Specifications for the dnf download Command
+&lt;/h3&gt;&lt;p&gt;Specify the following flags for downloading dependencies:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--resolve&lt;/code&gt;: Automatically analyzes the entire required dependency graph for the specified packages.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--alldeps&lt;/code&gt;: Forces all RPM files included in the dependency tree to be targeted for download, even if the packages are already installed on the staging host.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dnf download --resolve --alldeps --destdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&amp;lt;target_directory&amp;gt; &amp;lt;package_name&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="2-rpm-package-acquisition-procedure"&gt;2. RPM Package Acquisition Procedure
+&lt;/h2&gt;&lt;h3 id="21-downloading-os-base-packages-and-kubernetes-network-dependencies"&gt;2.1 Downloading OS Base Packages and Kubernetes Network Dependencies
+&lt;/h3&gt;&lt;p&gt;Collect the basic tools, network control utilities, and Python bindings required for Ansible execution and Kubespray node setup.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf download --resolve --alldeps &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --destdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/data/kubespray-rpms/os &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; python3 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; python3-libselinux &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; conntrack-tools &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; socat &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; iproute &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; iproute-tc &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; iptables &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ipset &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ipvsadm &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ethtool &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; chrony &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; rsync &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tar &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; unzip &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; curl &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; openssl &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ca-certificates &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ebtables
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;*Note: If the &lt;code&gt;ebtables&lt;/code&gt; package is not provided or is deprecated in Enterprise Linux 9 series repositories such as Rocky Linux 9, exclude &lt;code&gt;ebtables&lt;/code&gt; from the target list before execution.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf download --resolve --alldeps &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --destdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/data/kubespray-rpms/os &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; python3 python3-libselinux conntrack-tools socat iproute iproute-tc &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; iptables ipset ipvsadm ethtool chrony rsync tar unzip curl openssl ca-certificates
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-acquiring-container-runtime-dependencies-containerdio"&gt;2.2 Acquiring Container Runtime Dependencies (containerd.io)
+&lt;/h3&gt;&lt;p&gt;Because the standard OS repositories do not contain a production-level &lt;code&gt;containerd.io&lt;/code&gt; package, register the official Docker CE repository to retrieve it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Add the Docker CE Stable repository&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Download containerd and SELinux policies&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf download --resolve --alldeps &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --destdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/data/kubespray-rpms/docker-ce-stable &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; containerd.io &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; container-selinux
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When adopting the &lt;code&gt;container_manager: containerd&lt;/code&gt; configuration in Kubespray, the full &lt;code&gt;docker-ce&lt;/code&gt; engine set is not required; configuration is possible with only &lt;code&gt;containerd.io&lt;/code&gt; and &lt;code&gt;container-selinux&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="3-creating-an-archive-and-deploying-the-local-repository"&gt;3. Creating an Archive and Deploying the Local Repository
+&lt;/h2&gt;&lt;p&gt;Check the volume of the acquired packages and bundle them as a compressed archive.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd /data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tar czf kubespray-rpms-rocky9.7.tgz kubespray-rpms
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Transfer the created archive to an internal mirror server (e.g., Nginx) and extract it under the document root.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mkdir -p /usr/share/nginx/html/ROCKY_9.7
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo tar xzf kubespray-rpms-rocky9.7.tgz -C /usr/share/nginx/html/ROCKY_9.7
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After extraction, execute the &lt;code&gt;createrepo_c&lt;/code&gt; utility to generate repository metadata (repodata).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo createrepo_c /usr/share/nginx/html/ROCKY_9.7/kubespray-rpms/os
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo createrepo_c /usr/share/nginx/html/ROCKY_9.7/kubespray-rpms/docker-ce-stable
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-client-node-configuration-and-verification"&gt;4. Client Node Configuration and Verification
+&lt;/h2&gt;&lt;p&gt;On the target nodes within the air-gapped environment, disable external repository configurations and create &lt;code&gt;/etc/yum.repos.d/kubespray-local.repo&lt;/code&gt; to reference the created local repository.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[kubespray-os]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;Kubespray OS RPMs&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;baseurl&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;http://harbor.devstack.co.kr/ROCKY_9.7/kubespray-rpms/os&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;enabled&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;gpgcheck&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[kubespray-containerd]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;Kubespray Containerd RPMs&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;baseurl&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;http://harbor.devstack.co.kr/ROCKY_9.7/kubespray-rpms/docker-ce-stable&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;enabled&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;gpgcheck&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="case-1-createrepo_c-does-not-exist-on-the-mirror-server"&gt;Case 1: &lt;code&gt;createrepo_c&lt;/code&gt; Does Not Exist on the Mirror Server
+&lt;/h3&gt;&lt;p&gt;If the &lt;code&gt;createrepo_c&lt;/code&gt; command is not installed on the repository server itself within the air-gapped environment, metadata generation cannot be performed, causing &lt;code&gt;dnf makecache&lt;/code&gt; to fail.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Remediation Procedure:&lt;/b&gt;&lt;br/&gt;On the internet-connected staging host, acquire &lt;code&gt;createrepo_c&lt;/code&gt; itself along with its dependencies in advance, and include it in the payload to bring over.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf download --resolve --alldeps &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --destdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/data/kubespray-rpms/os &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; createrepo_c
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="case-2-repository-index-synchronization-error-and-package-not-found-issues"&gt;Case 2: Repository Index Synchronization Error and Package Not Found Issues
+&lt;/h3&gt;&lt;p&gt;After configuring the local repository, if old cache remains when executing &lt;code&gt;dnf list&lt;/code&gt;, errors indicating missing packages will occur. Explicit execution of cache clearing and index rebuilding is required.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Verification Log Example:&lt;/b&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dnf clean all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;15 files removed
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dnf makecache
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Kubespray OS RPMs 3.2 MB/s | 2.1 MB 00:00 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Kubespray Containerd RPMs 1.8 MB/s | 12 kB 00:00 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Metadata cache created successfully.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dnf repolist
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;repo id repo name
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubespray-containerd Kubespray Containerd RPMs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubespray-os Kubespray OS RPMs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ dnf list containerd.io conntrack-tools socat
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Available Packages
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;conntrack-tools.x86_64 1.4.7-2.el9 kubespray-os 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;containerd.io.x86_64 1.7.25-3.1.el9 kubespray-containerd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;socat.x86_64 1.7.4.1-5.el9 kubespray-os
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Forced Full Dependency Acquisition&lt;/b&gt;: Without the &lt;code&gt;--alldeps&lt;/code&gt; option, packages already installed on the staging host will be skipped, posing a risk of missing dependencies on the nodes in the air-gapped environment.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Isolated Management of Container Runtime&lt;/b&gt;: Version conflicts can be avoided by individually retrieving &lt;code&gt;containerd.io&lt;/code&gt; from the Docker CE repository and indexing it separately from standard OS repositories.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Pre-generation of repodata&lt;/b&gt;: Creating metadata with &lt;code&gt;createrepo_c&lt;/code&gt; on the repository server before making it available to clients is a mandatory requirement for healthy Yum/DNF package distribution.&amp;lt;/package_name&amp;gt;&amp;lt;/target_directory&amp;gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Reverse Proxy Migration Procedure from Apache mod_proxy to Nginx Proxy Manager</title><link>https://klifehack.com/en/p/apache-to-npm-migration-guide/</link><pubDate>Thu, 11 Jun 2026 14:17:27 +0900</pubDate><guid>https://klifehack.com/en/p/apache-to-npm-migration-guide/</guid><description>&lt;h1 id="implementation-guide-for-migrating-from-apache-mod_proxy-to-nginx-proxy-manager-on-rocky-linux"&gt;Implementation Guide for Migrating from Apache mod_proxy to Nginx Proxy Manager on Rocky Linux
 &lt;/h1&gt;&lt;p&gt;This guide outlines the implementation steps for migrating from a traditional configuration using Apache &lt;b&gt;mod_proxy&lt;/b&gt; to Nginx Proxy Manager (NPM) in a Rocky Linux environment. This process covers the transition from initial Apache configuration to container-based operations.&lt;/p&gt;
 &lt;h2 id="initial-reverse-proxy-configuration-with-apache-mod_proxy"&gt;Initial Reverse Proxy Configuration with Apache mod_proxy
 &lt;/h2&gt;&lt;p&gt;Configure Apache HTTP Server (httpd) as a gateway to the Tomcat application server running in the backend.&lt;/p&gt;
