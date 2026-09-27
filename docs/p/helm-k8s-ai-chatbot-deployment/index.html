@@ -1,0 +1,219 @@
+<!doctype html><html lang=ja dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="病院のEMR連携およびOpenAI APIを利用するAIチャットボットを、Helm v3とArgoCDを用いてKubernetes上に安全かつ宣言的に構築する手法を解説します。"><title>医療系AIチャットボットをKubernetesへ展開するHelm v3チャート構成とGitOpsパイプライン</title><link rel=canonical href=https://klifehack.com/p/helm-k8s-ai-chatbot-deployment/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.8f7805ce7358e8689e44e0e2a97c927f1fe96c25c8041cb514944a18b26b406d.css><meta property='og:title' content="医療系AIチャットボットをKubernetesへ展開するHelm v3チャート構成とGitOpsパイプライン"><meta property='og:description' content="病院のEMR連携およびOpenAI APIを利用するAIチャットボットを、Helm v3とArgoCDを用いてKubernetes上に安全かつ宣言的に構築する手法を解説します。"><meta property='og:url' content='https://klifehack.com/p/helm-k8s-ai-chatbot-deployment/'><meta property='og:site_name' content='K-Life Hack | システムアーキテクチャ & DevOps'><meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='kubernetes'><meta property='article:tag' content='helm3'><meta property='article:tag' content='argocd'><meta property='article:tag' content='ingress-nginx'><meta property='article:tag' content='deployment'><meta property='article:published_time' content='2026-09-27T10:08:23+09:00'><meta property='article:modified_time' content='2026-09-27T10:08:23+09:00'><meta name=twitter:title content="医療系AIチャットボットをKubernetesへ展開するHelm v3チャート構成とGitOpsパイプライン"><meta name=twitter:description content="病院のEMR連携およびOpenAI APIを利用するAIチャットボットを、Helm v3とArgoCDを用いてKubernetes上に安全かつ宣言的に構築する手法を解説します。"><script async src="https://www.googletagmanager.com/gtag/js?id=G-4KGC4HJF0E"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-4KGC4HJF0E")}</script><link rel=icon href=/favicon.ico type=image/x-icon><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"K-Life Hack | システムアーキテクチャ \u0026 DevOps","item":"https:\/\/klifehack.com\/"},{"@type":"ListItem","position":2,"name":"Posts","item":"https:\/\/klifehack.com\/posts/"},{"@type":"ListItem","position":3,"name":"医療系AIチャットボットをKubernetesへ展開するHelm v3チャート構成とGitOpsパイプライン","item":"https:\/\/klifehack.com\/p\/helm-k8s-ai-chatbot-deployment\/"}]}</script><link rel=alternate hreflang=ja href=https://klifehack.com/p/helm-k8s-ai-chatbot-deployment/><meta property="og:image" content="https://klifehack.com/img/logo.webp"><meta property="twitter:image" content="https://klifehack.com/img/logo.webp"><style>@media(max-width:640px){.pagination{display:flex!important;flex-wrap:nowrap!important;justify-content:center!important;align-items:center!important;overflow:hidden!important;width:100%!important;padding:15px 0!important;margin:0!important;gap:3px!important;box-sizing:border-box!important}.pagination>*{min-width:28px!important;height:32px!important;padding:0 4px!important;text-decoration:none!important;box-sizing:border-box!important;border-radius:4px!important;flex:initial!important}.pagination>:first-child,.pagination>:last-child,.pagination>.pagination-link{min-width:24px!important;padding:0!important}.pagination svg{width:16px!important;height:16px!important;margin:0!important}.pagination>*{display:none!important}.pagination>:first-child,.pagination>:last-child,.pagination>:nth-child(2),.pagination>:nth-last-child(2),.pagination>.pagination-link,.pagination>.current{display:inline-flex!important}.pagination>.current+*,.pagination>.current+*+*{display:inline-flex!important}.pagination>*:has(+.current),.pagination>*:has(+*+.current){display:inline-flex!important}}</style></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=メニューを開く・閉じる>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/persona_k_ambient.webp width=559 height=559 class=site-logo loading=lazy alt=Avatar></a></figure><div class=site-meta><h1 class=site-name><a href=/>K-Life Hack | システムアーキテクチャ & DevOps</a></h1><h2 class=site-description>ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。</h2></div></header><ol class=menu id=main-menu><li><a href=/search/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1014 0A7 7 0 103 10"/><path d="M21 21l-6-6"/></svg>
+<span>検索</span></a></li><li><a href=/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>ホーム</span></a></li><li><a href=/archives/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6a2 2 0 012-2h14a2 2 0 012 2 2 2 0 01-2 2H5A2 2 0 013 6"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><path d="M10 12h4"/></svg>
+<span>アーカイブ</span></a></li><li><a href=/about/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 108 0A4 4 0 008 7"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>紹介</span></a></li><li><a href=mailto:contact@klifehack.com><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7"/><path d="M3 7l9 6 9-6"/></svg>
+<span>お問い合わせ</span></a></li><li class=menu-bottom-section><ol class=menu><li id=i18n-switch><svg class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<select name=language title=language onchange="window.location.href=this.selectedOptions[0].value"><option value=/p/helm-k8s-ai-chatbot-deployment/ selected>日本語</option><option value=/en/p/helm-k8s-ai-chatbot-deployment/>English</option></select></li><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>ダークモード</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><form action=/search/ class="search-form widget"><p><label>検索</label>
+<input name=keyword required placeholder=入力...>
+<button title=検索>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1014 0A7 7 0 103 10"/><path d="M21 21l-6-6"/></svg></button></p></form><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目次</h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ul><li><a href=#システムアーキテクチャとトポロジ構造>システムアーキテクチャとトポロジ構造</a></li><li><a href=#コアテンプレート設計仕様>コアテンプレート設計仕様</a><ul><li><a href=#1-メタデータ定義-chartyaml>1. メタデータ定義 (<code>Chart.yaml</code>)</a></li><li><a href=#2-環境変数およびリソース定義-valuesyaml>2. 環境変数およびリソース定義 (<code>values.yaml</code>)</a></li><li><a href=#3-ワークロード制御定義-templatesdeploymentyaml>3. ワークロード制御定義 (<code>templates/deployment.yaml</code>)</a></li><li><a href=#4-内部サービスおよび-ingress-露出-templatesserviceyaml-templatesingressyaml>4. 内部サービスおよび Ingress 露出 (<code>templates/service.yaml</code>, <code>templates/ingress.yaml</code>)</a></li><li><a href=#5-openai-設定用-configmap-templatesconfigmapyaml>5. OpenAI 設定用 ConfigMap (<code>templates/configmap.yaml</code>)</a></li></ul></li><li><a href=#emr-認証トークン統合パターン>EMR 認証トークン統合パターン</a></li><li><a href=#gitops-パイプライン構成-argocd-applicationyaml>GitOps パイプライン構成 (<code>argocd-application.yaml</code>)</a></li><li><a href=#トラブルシューティング->トラブルシューティング 🛠️</a><ul><li><a href=#1-nindent-関数適用不備による-yaml-パースエラー>1. <code>nindent</code> 関数適用不備による YAML パースエラー</a></li><li><a href=#2-ingress-の-tls-secret-不整合による-502ssl-エラー>2. Ingress の TLS Secret 不整合による 502/SSL エラー</a></li><li><a href=#3-メモリバックド-emptydir-の書き込み権限エラー>3. メモリバックド emptyDir の書き込み権限エラー</a></li></ul></li><li><a href=#動作検証および検証ログ>動作検証および検証ログ</a></li><li><a href=#設定上の留意事項->設定上の留意事項 💡</a></li></ul></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-category><a href=/categories/devops-logistics/ style=background-color:#cdbeef;color:#1e0f3d>DevOps Logistics</a></div><div class=article-title-wrapper><h2 class=article-title><a href=/p/helm-k8s-ai-chatbot-deployment/>医療系AIチャットボットをKubernetesへ展開するHelm v3チャート構成とGitOpsパイプライン</a></h2><h3 class=article-subtitle>病院のEMR連携およびOpenAI APIを利用するAIチャットボットを、Helm v3とArgoCDを用いてKubernetes上に安全かつ宣言的に構築する手法を解説します。</h3></div><div class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-09-27T10:08:23+09:00>2026/09/27</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span class=article-time--reading>読了時間: 6分</span></div><div class=inline-meta><svg class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<a href=/en/p/helm-k8s-ai-chatbot-deployment/ class=link>English</a></div></div></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span>目次</span></div></summary><nav class=toc-nav><ul><li><a href=#システムアーキテクチャとトポロジ構造>システムアーキテクチャとトポロジ構造</a></li><li><a href=#コアテンプレート設計仕様>コアテンプレート設計仕様</a><ul><li><a href=#1-メタデータ定義-chartyaml>1. メタデータ定義 (<code>Chart.yaml</code>)</a></li><li><a href=#2-環境変数およびリソース定義-valuesyaml>2. 環境変数およびリソース定義 (<code>values.yaml</code>)</a></li><li><a href=#3-ワークロード制御定義-templatesdeploymentyaml>3. ワークロード制御定義 (<code>templates/deployment.yaml</code>)</a></li><li><a href=#4-内部サービスおよび-ingress-露出-templatesserviceyaml-templatesingressyaml>4. 内部サービスおよび Ingress 露出 (<code>templates/service.yaml</code>, <code>templates/ingress.yaml</code>)</a></li><li><a href=#5-openai-設定用-configmap-templatesconfigmapyaml>5. OpenAI 設定用 ConfigMap (<code>templates/configmap.yaml</code>)</a></li></ul></li><li><a href=#emr-認証トークン統合パターン>EMR 認証トークン統合パターン</a></li><li><a href=#gitops-パイプライン構成-argocd-applicationyaml>GitOps パイプライン構成 (<code>argocd-application.yaml</code>)</a></li><li><a href=#トラブルシューティング->トラブルシューティング 🛠️</a><ul><li><a href=#1-nindent-関数適用不備による-yaml-パースエラー>1. <code>nindent</code> 関数適用不備による YAML パースエラー</a></li><li><a href=#2-ingress-の-tls-secret-不整合による-502ssl-エラー>2. Ingress の TLS Secret 不整合による 502/SSL エラー</a></li><li><a href=#3-メモリバックド-emptydir-の書き込み権限エラー>3. メモリバックド emptyDir の書き込み権限エラー</a></li></ul></li><li><a href=#動作検証および検証ログ>動作検証および検証ログ</a></li><li><a href=#設定上の留意事項->設定上の留意事項 💡</a></li></ul></nav></details></aside><section class=article-content><p>医療機関向けシステムのコンテナ運用において、院内電子カルテ（EMR）APIや外部AIエンジンとの連携を行うマイクロサービスをデプロイする場合、環境ごとの設定差分管理や証明書のライフサイクル制御、安全な認証情報の配布が極めて重要な課題となります。手動でマニフェストを書き換える手法や個別の仮想ホスト設定は、ノード拡張やマルチ環境展開時に人為的な操作ミスによる障害を引き起こすリスクが高まります。</p><p>本稿では、Helm v3を用いた医療系AIチャットボット（<code>ai-chatbot</code>）のパッケージングおよび抽象化手法、インメモリ型トークン共有アーキテクチャ、そしてArgoCDによるGitOps継続的デプロイメントの構成仕様について解説します。</p><h2 id=システムアーキテクチャとトポロジ構造>システムアーキテクチャとトポロジ構造</h2><p>対象のワークロードは、クラスタ内部のEMRエンドポイント（<code>https://emr.myhospital.co.kr/api</code>）および外部のOpenAI APIエンジンと通信します。本構成ではインフラ階層を明確に分離し、TLS終端を担うIngress、クラスタ内ルーティングを行うService（ClusterIP）、実体を構成するPodレプリカ群をHelmによって宣言的に制御します。</p><pre tabindex=0><code>ai-chatbot/
+├── Chart.yaml             # チャートメタデータおよび semantic versioning 定義
+├── values.yaml            # デフォルト変数および実行時パラメータ
+└── templates/             # Kubernetes マニフェストテンプレート
+    ├── deployment.yaml    # ポッドオーケストレーション制御
+    ├── service.yaml       # Layer 4 内部ネットワーク抽象化 (ClusterIP)
+    ├── ingress.yaml       # Layer 7 外部ルーティングおよび TLS 終端設定
+    └── configmap.yaml     # 外部 API 設定およびシステムプロンプト定義
+</code></pre><h2 id=コアテンプレート設計仕様>コアテンプレート設計仕様</h2><h3 id=1-メタデータ定義-chartyaml>1. メタデータ定義 (<code>Chart.yaml</code>)</h3><p>Helm 3との互換性を保証するため <code>apiVersion: v2</code> を指定し、アプリケーションのセマンティックバージョニングを設定します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v2</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>name</span>: <span style=color:#ae81ff>ai-chatbot</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>description</span>: <span style=color:#ae81ff>病院向けAIチャットボットHelmチャート</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>type</span>: <span style=color:#ae81ff>application</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>version</span>: <span style=color:#ae81ff>0.1.0</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>appVersion</span>: <span style=color:#e6db74>&#34;1.0.0&#34;</span>
+</span></span></code></pre></div><h3 id=2-環境変数およびリソース定義-valuesyaml>2. 環境変数およびリソース定義 (<code>values.yaml</code>)</h3><p>稼働環境に応じたパラメータ変更を容易にするため、CPU/メモリ要求量、レプリカ数、Ingressホスト名を <code>values.yaml</code> に統一管理します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>replicaCount</span>: <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>image</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>repository</span>: <span style=color:#ae81ff>myregistry/ai-chatbot</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>tag</span>: <span style=color:#ae81ff>latest</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>pullPolicy</span>: <span style=color:#ae81ff>IfNotPresent</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>service</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>type</span>: <span style=color:#ae81ff>ClusterIP</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>port</span>: <span style=color:#ae81ff>80</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>ingress</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>enabled</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>hostname</span>: <span style=color:#ae81ff>chatbot.myhospital.co.kr</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>tls</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>limits</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>cpu</span>: <span style=color:#e6db74>&#34;500m&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>memory</span>: <span style=color:#e6db74>&#34;512Mi&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>requests</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>cpu</span>: <span style=color:#e6db74>&#34;250m&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>memory</span>: <span style=color:#e6db74>&#34;256Mi&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>env</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>EMR_API_URL</span>: <span style=color:#e6db74>&#34;https://emr.myhospital.co.kr/api&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>CHATBOT_LANG</span>: <span style=color:#e6db74>&#34;ko&#34;</span>
+</span></span></code></pre></div><h3 id=3-ワークロード制御定義-templatesdeploymentyaml>3. ワークロード制御定義 (<code>templates/deployment.yaml</code>)</h3><p>リソース制限や環境変数の動的挿入を行います。Helmテンプレート関数の <code>nindent</code> を正しく適用し、YAMLインデントの破損を防止します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: {{ <span style=color:#ae81ff>.Release.Name }}-chatbot</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>replicas</span>: {{ <span style=color:#ae81ff>.Values.replicaCount }}</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>matchLabels</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>app</span>: <span style=color:#ae81ff>ai-chatbot</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>template</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>ai-chatbot</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>containers</span>:
+</span></span><span style=display:flex><span>        - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>chatbot</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>image</span>: <span style=color:#e6db74>&#34;{{ .Values.image.repository }}:{{ .Values.image.tag }}&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>imagePullPolicy</span>: {{ <span style=color:#ae81ff>.Values.image.pullPolicy }}</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>containerPort</span>: <span style=color:#ae81ff>3000</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>env</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>EMR_API_URL</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: {{ <span style=color:#ae81ff>.Values.env.EMR_API_URL | quote }}</span>
+</span></span><span style=display:flex><span>            - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>CHATBOT_LANG</span>
+</span></span><span style=display:flex><span>              <span style=color:#f92672>value</span>: {{ <span style=color:#ae81ff>.Values.env.CHATBOT_LANG | quote }}</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>            {{- <span style=color:#ae81ff>toYaml .Values.resources | nindent 12 }}</span>
+</span></span></code></pre></div><h3 id=4-内部サービスおよび-ingress-露出-templatesserviceyaml-templatesingressyaml>4. 内部サービスおよび Ingress 露出 (<code>templates/service.yaml</code>, <code>templates/ingress.yaml</code>)</h3><p><code>service.yaml</code> により80番ポートからコンテナの3000番ポートへトラフィックを転送し、<code>ingress.yaml</code> によりNGINX Ingress Controller経由のSSLリダイレクトおよびTLS終端を適用します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Service</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: {{ <span style=color:#ae81ff>.Release.Name }}-chatbot</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>type</span>: {{ <span style=color:#ae81ff>.Values.service.type }}</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>selector</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>ai-chatbot</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>protocol</span>: <span style=color:#ae81ff>TCP</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>port</span>: {{ <span style=color:#ae81ff>.Values.service.port }}</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>targetPort</span>: <span style=color:#ae81ff>3000</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>```yaml</span>
+</span></span><span style=display:flex><span>{{- <span style=color:#ae81ff>if .Values.ingress.enabled }}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>networking.k8s.io/v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Ingress</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>name</span>: {{ <span style=color:#ae81ff>.Release.Name }}-chatbot</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>annotations</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>nginx.ingress.kubernetes.io/ssl-redirect</span>: <span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>rules</span>:
+</span></span><span style=display:flex><span>- <span style=color:#f92672>host</span>: {{ <span style=color:#ae81ff>.Values.ingress.hostname }}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>http</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>paths</span>:
+</span></span><span style=display:flex><span>- <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>pathType</span>: <span style=color:#ae81ff>Prefix</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>backend</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>service</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>name</span>: {{ <span style=color:#ae81ff>.Release.Name }}-chatbot</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>port</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>number</span>: {{ <span style=color:#ae81ff>.Values.service.port }}</span>
+</span></span><span style=display:flex><span>{{- <span style=color:#ae81ff>if .Values.ingress.tls }}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>tls</span>:
+</span></span><span style=display:flex><span>- <span style=color:#f92672>hosts</span>:
+</span></span><span style=display:flex><span>- {{ <span style=color:#ae81ff>.Values.ingress.hostname }}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>secretName</span>: <span style=color:#ae81ff>chatbot-tls</span>
+</span></span><span style=display:flex><span>{{- <span style=color:#ae81ff>end }}</span>
+</span></span><span style=display:flex><span>{{- <span style=color:#ae81ff>end }}</span>
+</span></span></code></pre></div><h3 id=5-openai-設定用-configmap-templatesconfigmapyaml>5. OpenAI 設定用 ConfigMap (<code>templates/configmap.yaml</code>)</h3><p>モデル識別子やプロンプトパラメータをアプリケーション本体から切り離して外部化します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ConfigMap</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>name</span>: {{ <span style=color:#ae81ff>.Release.Name }}-chatbot-config</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>labels</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>app</span>: <span style=color:#ae81ff>ai-chatbot</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>data</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>OPENAI_MODEL</span>: <span style=color:#e6db74>&#34;gpt-4o&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>OPENAI_MAX_TOKENS</span>: <span style=color:#e6db74>&#34;2048&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>OPENAI_TEMPERATURE</span>: <span style=color:#e6db74>&#34;0.2&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>SYSTEM_PROMPT</span>: <span style=color:#ae81ff>|</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>You are an AI assistant designed for hospital settings.</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>You assist medical personnel and patients by answering queries based on the hospital&#39;s EMR dataset.</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>Always operate under medical protocol standards.</span>
+</span></span></code></pre></div><h2 id=emr-認証トークン統合パターン>EMR 認証トークン統合パターン</h2><p>医療データ（PHI）の流出を防止するため、EMRアクセストークンは永続ストレージではなくメモリ上にのみ保持する設計を採用します。</p><ul><li><b>Sidecar/InitContainer パターン</b>: 認証サイドカーがEMR認証サーバー（<code>https://emr.myhospital.co.kr</code>）から短寿命JWTトークンを取得します。</li><li><b>In-Memory ボリューム (<code>tmpfs</code>)</b>: 取得したトークンは <code>medium: Memory</code> で構成された <code>emptyDir</code> ボリューム（<code>/var/run/secrets/emr</code>）に書き込まれ、メインのチャットボットコンテナから参照されます。</li><li><b>動的トークン更新</b>: チャットボットアプリケーション層のOAuth2クライアントモジュールが定期的にトークンの有効期限を検証し、Podを再起動することなくメモリ上のJWTを透過的に更新します。</li></ul><h2 id=gitops-パイプライン構成-argocd-applicationyaml>GitOps パイプライン構成 (<code>argocd-application.yaml</code>)</h2><p>ArgoCDを用いてGitリポジトリの状態とクラスタの実体を自動同期します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>argoproj.io/v1alpha1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Application</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>name</span>: <span style=color:#ae81ff>ai-chatbot-prod</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>argocd</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>finalizers</span>:
+</span></span><span style=display:flex><span>- <span style=color:#ae81ff>resources-finalizer.argocd.argoproj.io</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>project</span>: <span style=color:#ae81ff>default</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>source</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>repoURL</span>: <span style=color:#e6db74>&#39;https://github.com/myhospital-org/helm-charts.git&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>targetRevision</span>: <span style=color:#ae81ff>HEAD</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>path</span>: <span style=color:#ae81ff>ai-chatbot</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>helm</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>valueFiles</span>:
+</span></span><span style=display:flex><span>- <span style=color:#ae81ff>values.yaml</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>destination</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>server</span>: <span style=color:#e6db74>&#39;https://kubernetes.default.svc&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>ai-services</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>syncPolicy</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>automated</span>:
+</span></span><span style=display:flex><span><span style=color:#f92672>prune</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>selfHeal</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>syncOptions</span>:
+</span></span><span style=display:flex><span>- <span style=color:#ae81ff>CreateNamespace=true</span>
+</span></span></code></pre></div><h2 id=トラブルシューティング->トラブルシューティング 🛠️</h2><h3 id=1-nindent-関数適用不備による-yaml-パースエラー>1. <code>nindent</code> 関数適用不備による YAML パースエラー</h3><ul><li><b>現象</b>: <code>helm template</code> 実行時に <code>error converting YAML to JSON: yaml: line X: did not find expected key</code> が発生します。</li><li><b>原因</b>: <code>deployment.yaml</code> 内の <code>resources:</code> ブロック直下で <code>nindent</code> のインデント数が合致していない場合、構文エラーが発生します。</li><li><b>対策</b>: <code>{{- toYaml .Values.resources | nindent 12 }}</code> のように、<code>resources</code> キーの配下に入る正確なスペース数（12スペース）を正しく指定します。</li></ul><h3 id=2-ingress-の-tls-secret-不整合による-502ssl-エラー>2. Ingress の TLS Secret 不整合による 502/SSL エラー</h3><ul><li><b>現象</b>: 外部からHTTPSアクセス時にデフォルトのKubernetes Ingress Fake Certificateが返却され、接続が拒否されます。</li><li><b>原因</b>: <code>values.yaml</code> で定義した <code>chatbot-tls</code> Secretが対象のネームスペースに存在しない、またはIngressのhost名と証明書のSAN（Subject Alternative Name）が一致していません。</li><li><b>対策</b>: 証明書管理コンポーネント（cert-manager等）を用いて、ターゲットネームスペース（<code>ai-services</code>）内に正しく <code>chatbot-tls</code> が生成されているかを検証します。</li></ul><h3 id=3-メモリバックド-emptydir-の書き込み権限エラー>3. メモリバックド emptyDir の書き込み権限エラー</h3><ul><li><b>現象</b>: サイドカーコンテナからトークンファイル書き込み時に <code>Permission denied</code> が発生し、Podが <code>CrashLoopBackOff</code> に陥ります。</li><li><b>原因</b>: セキュリティコンテキストで非rootユーザー実行を定義している際、マウントされた <code>emptyDir</code> ボリュームのオーナー権限が一致していません。</li><li><b>対策</b>: <code>securityContext</code> の <code>fsGroup</code> 設定をPod仕様に追加し、書き込み権限を持つGIDを明示的に割り当てます。</li></ul><h2 id=動作検証および検証ログ>動作検証および検証ログ</h2><p>デプロイメント完了後、以下の検証用ターミナルコマンドを実行してオブジェクトの正常性を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>$ helm status chatbot -n ai-services
+</span></span><span style=display:flex><span>NAME: chatbot
+</span></span><span style=display:flex><span>LAST DEPLOYED: Sun Sep 27 10:15:22 2026
+</span></span><span style=display:flex><span>NAMESPACE: ai-services
+</span></span><span style=display:flex><span>STATUS: deployed
+</span></span><span style=display:flex><span>REVISION: 1
+</span></span><span style=display:flex><span>TEST SUITE: None
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>$ kubectl get pods -n ai-services -l app=ai-chatbot -o wide
+</span></span><span style=display:flex><span>NAME                                READY   STATUS    RESTARTS   AGE   IP            NODE           NOMINATED NODE   READINESS GATES
+</span></span><span style=display:flex><span>chatbot-ai-chatbot-67f9b87c-x92zk   1/1     Running   0          2m    10.244.1.45   k8s-worker-01   &lt;none&gt; &lt;none&gt;
+</span></span><span style=display:flex><span>chatbot-ai-chatbot-67f9b87c-z4l8p   1/1     Running   0          2m    10.244.2.89   k8s-worker-02   &lt;none&gt; &lt;none&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>$ kubectl get ingress -n ai-services
+</span></span><span style=display:flex><span>NAME                 CLASS   HOSTS                   ADDRESS        PORTS     AGE
+</span></span><span style=display:flex><span>chatbot-ai-chatbot   nginx   chatbot.myhospital.co.kr   192.168.1.100  80, 443   2m
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>$ curl -I -sS https://chatbot.myhospital.co.kr/
+</span></span><span style=display:flex><span>HTTP/2 200
+</span></span><span style=display:flex><span>server: nginx/1.25.3
+</span></span><span style=display:flex><span>date: Sun, 27 Sep 2026 10:17:45 GMT
+</span></span><span style=display:flex><span>content-type: text/html; charset=utf-8
+</span></span><span style=display:flex><span>strict-transport-security: max-age=15724800; includeSubDomains
+</span></span></code></pre></div><h2 id=設定上の留意事項->設定上の留意事項 💡</h2><ol><li><b>リソース制限の調整</b>: EMR応答の解析処理によりスパイクアクセスが発生する場合、<code>values.yaml</code> の <code>resources.limits.cpu</code> をノードのコア数に応じて適切にチューニングしてください。</li><li><b>プロンプト情報の管理</b>: ConfigMap内のシステムプロンプトの更新はPodの自動再起動を誘発しないため、設定反映にはArgoCDによるローリングアップデートまたはPodの再作成を伴う運用を推奨します。</li><li><b>ネットワークポリシー</b>: 医療データを取り扱う性質上、<code>ai-services</code> ネームスペースに対してEMR認証エンドポイントおよびIngress以外の外部アウトバウンド通信を制限するNetworkPolicyの併用を推奨します。</none></none></none></none></li></ol></section><footer class="article-meta article-footer"><section class=article-tags><a href=/tags/kubernetes/>Kubernetes</a>
+<a href=/tags/helm3/>Helm3</a>
+<a href=/tags/argocd/>Argocd</a>
+<a href=/tags/ingress-nginx/>Ingress-Nginx</a>
+<a href=/tags/deployment/>Deployment</a></section></footer></article><aside><h2 class=section-title>関連するコンテンツ</h2><div class=subsection-list><div class=article-list--tile><article><a href=/p/k8s-config-persistence-strategy/><div class=article-details><h2 class=article-title>Kubernetesにおける設定管理とデータ永続化の抽象化設計</h2></div></a></article><article><a href=/p/helm-kubernetes-prometheus-grafana-observability/><div class=article-details><h2 class=article-title>Helmを用いたKubernetesアプリケーション管理とPrometheus監視スタックの構築</h2></div></a></article><article><a href=/p/docker-compose-to-kubernetes-migration-strategy/><div class=article-details><h2 class=article-title>Docker ComposeからKubernetesへの移行におけるアーキテクチャ設計とNode.jsランタイムの最適化</h2></div></a></article><article><a href=/p/gitaiops-gke-argocd-integration/><div class=article-details><h2 class=article-title>AI協調型GitOpsによる宣言的インフラ管理の設計手法</h2></div></a></article><article><a href=/p/k8s-statefulset-architecture-storage/><div class=article-details><h2 class=article-title>Kubernetes StatefulSetにおける永続データ管理とネットワーク識別子の設計</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><div class=copyright>&copy;
+2026 K-Life Hack | システムアーキテクチャ & DevOps</div><div class=powerby><a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> で構築されています。<br>テーマ <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.0>Stack</a></b> は <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> によって設計されています。</div></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script><div style=text-align:center;margin-top:15px;font-size:.85em;opacity:.6><a href=/privacy-policy/ style="color:inherit;text-decoration:none;margin:0 10px">Privacy Policy</a>
+<a href=/disclaimer/ style="color:inherit;text-decoration:none;margin:0 10px">Disclaimer</a>
+<a href=mailto:contact@klifehack.com style="color:inherit;text-decoration:none;margin:0 10px">Contact</a></div></body></html>
