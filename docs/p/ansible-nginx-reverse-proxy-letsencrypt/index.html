@@ -1,0 +1,231 @@
+<!doctype html><html lang=ja dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Ansibleを使用してNginxリバースプロキシの構築、Let's EncryptによるSSL証明書の自動発行・更新、およびHTTPSリダイレクト設定を自動化する手順とトラブルシューティング。"><title>AnsibleによるNginxリバースプロキシ構築とLet's Encrypt自動化</title><link rel=canonical href=https://klifehack.com/p/ansible-nginx-reverse-proxy-letsencrypt/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.8f7805ce7358e8689e44e0e2a97c927f1fe96c25c8041cb514944a18b26b406d.css><meta property='og:title' content="AnsibleによるNginxリバースプロキシ構築とLet's Encrypt自動化"><meta property='og:description' content="Ansibleを使用してNginxリバースプロキシの構築、Let's EncryptによるSSL証明書の自動発行・更新、およびHTTPSリダイレクト設定を自動化する手順とトラブルシューティング。"><meta property='og:url' content='https://klifehack.com/p/ansible-nginx-reverse-proxy-letsencrypt/'><meta property='og:site_name' content='K-Life Hack | システムアーキテクチャ & DevOps'><meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='ansible'><meta property='article:tag' content='nginx'><meta property='article:tag' content='letsencrypt'><meta property='article:tag' content='certbot'><meta property='article:tag' content='reverse-proxy'><meta property='article:published_time' content='2026-09-29T10:18:30+09:00'><meta property='article:modified_time' content='2026-09-29T10:18:30+09:00'><meta name=twitter:title content="AnsibleによるNginxリバースプロキシ構築とLet's Encrypt自動化"><meta name=twitter:description content="Ansibleを使用してNginxリバースプロキシの構築、Let's EncryptによるSSL証明書の自動発行・更新、およびHTTPSリダイレクト設定を自動化する手順とトラブルシューティング。"><script async src="https://www.googletagmanager.com/gtag/js?id=G-4KGC4HJF0E"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-4KGC4HJF0E")}</script><link rel=icon href=/favicon.ico type=image/x-icon><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"K-Life Hack | システムアーキテクチャ \u0026 DevOps","item":"https:\/\/klifehack.com\/"},{"@type":"ListItem","position":2,"name":"Posts","item":"https:\/\/klifehack.com\/posts/"},{"@type":"ListItem","position":3,"name":"AnsibleによるNginxリバースプロキシ構築とLet\u0027s Encrypt自動化","item":"https:\/\/klifehack.com\/p\/ansible-nginx-reverse-proxy-letsencrypt\/"}]}</script><link rel=alternate hreflang=ja href=https://klifehack.com/p/ansible-nginx-reverse-proxy-letsencrypt/><meta property="og:image" content="https://klifehack.com/img/logo.webp"><meta property="twitter:image" content="https://klifehack.com/img/logo.webp"><style>@media(max-width:640px){.pagination{display:flex!important;flex-wrap:nowrap!important;justify-content:center!important;align-items:center!important;overflow:hidden!important;width:100%!important;padding:15px 0!important;margin:0!important;gap:3px!important;box-sizing:border-box!important}.pagination>*{min-width:28px!important;height:32px!important;padding:0 4px!important;text-decoration:none!important;box-sizing:border-box!important;border-radius:4px!important;flex:initial!important}.pagination>:first-child,.pagination>:last-child,.pagination>.pagination-link{min-width:24px!important;padding:0!important}.pagination svg{width:16px!important;height:16px!important;margin:0!important}.pagination>*{display:none!important}.pagination>:first-child,.pagination>:last-child,.pagination>:nth-child(2),.pagination>:nth-last-child(2),.pagination>.pagination-link,.pagination>.current{display:inline-flex!important}.pagination>.current+*,.pagination>.current+*+*{display:inline-flex!important}.pagination>*:has(+.current),.pagination>*:has(+*+.current){display:inline-flex!important}}</style></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=メニューを開く・閉じる>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/persona_k_ambient.webp width=559 height=559 class=site-logo loading=lazy alt=Avatar></a></figure><div class=site-meta><h1 class=site-name><a href=/>K-Life Hack | システムアーキテクチャ & DevOps</a></h1><h2 class=site-description>ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。</h2></div></header><ol class=menu id=main-menu><li><a href=/search/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1014 0A7 7 0 103 10"/><path d="M21 21l-6-6"/></svg>
+<span>検索</span></a></li><li><a href=/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>ホーム</span></a></li><li><a href=/archives/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6a2 2 0 012-2h14a2 2 0 012 2 2 2 0 01-2 2H5A2 2 0 013 6"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><path d="M10 12h4"/></svg>
+<span>アーカイブ</span></a></li><li><a href=/about/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7a4 4 0 108 0A4 4 0 008 7"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>紹介</span></a></li><li><a href=mailto:contact@klifehack.com><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7"/><path d="M3 7l9 6 9-6"/></svg>
+<span>お問い合わせ</span></a></li><li class=menu-bottom-section><ol class=menu><li id=i18n-switch><svg class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<select name=language title=language onchange="window.location.href=this.selectedOptions[0].value"><option value=/p/ansible-nginx-reverse-proxy-letsencrypt/ selected>日本語</option><option value=/en/p/ansible-nginx-reverse-proxy-letsencrypt/>English</option></select></li><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>ダークモード</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><form action=/search/ class="search-form widget"><p><label>検索</label>
+<input name=keyword required placeholder=入力...>
+<button title=検索>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1014 0A7 7 0 103 10"/><path d="M21 21l-6-6"/></svg></button></p></form><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目次</h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ul><li><a href=#アーキテクチャ設計とアプローチ>アーキテクチャ設計とアプローチ</a></li><li><a href=#ansible-プレイブックの実装>Ansible プレイブックの実装</a><ul><li><a href=#プレイブックファイル-reverse_proxy_sslyml>プレイブックファイル: `reverse_proxy_ssl.yml</a></li><li><a href=#インベントリファイル-inventoryini>インベントリファイル: `inventory.ini</a></li></ul></li><li><a href=#実行手順>実行手順</a></li><li><a href=#troubleshooting>Troubleshooting</a><ul><li><a href=#-1-http-01-チャレンジの検証失敗-unauthorized--connection-refused>🛠️ 1. HTTP-01 チャレンジの検証失敗 (Unauthorized / Connection Refused)</a></li><li><a href=#-2-nginxのデフォルト設定との競合>🛠️ 2. Nginxのデフォルト設定との競合</a></li><li><a href=#-3-webrootディレクトリの権限不足>🛠️ 3. Webrootディレクトリの権限不足</a></li></ul></li><li><a href=#稼働検証とステータス確認>稼働検証とステータス確認</a><ul><li><a href=#nginx-サービスステータスの確認>Nginx サービスステータスの確認</a></li><li><a href=#リッスンポートの確認>リッスンポートの確認</a></li><li><a href=#httpからhttpsへのリダイレクト検証>HTTPからHTTPSへのリダイレクト検証</a></li></ul></li><li><a href=#key-takeaways>Key Takeaways</a></li></ul></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-category><a href=/categories/linux-system-admin/ style=background-color:#efbee4;color:#3d0f33>Linux System Admin</a></div><div class=article-title-wrapper><h2 class=article-title><a href=/p/ansible-nginx-reverse-proxy-letsencrypt/>AnsibleによるNginxリバースプロキシ構築とLet's Encrypt自動化</a></h2><h3 class=article-subtitle>Ansibleを使用してNginxリバースプロキシの構築、Let's EncryptによるSSL証明書の自動発行・更新、およびHTTPSリダイレクト設定を自動化する手順とトラブルシューティング。</h3></div><div class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-09-29T10:18:30+09:00>2026/09/29</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span class=article-time--reading>読了時間: 6分</span></div><div class=inline-meta><svg class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<a href=/en/p/ansible-nginx-reverse-proxy-letsencrypt/ class=link>English</a></div></div></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span>目次</span></div></summary><nav class=toc-nav><ul><li><a href=#アーキテクチャ設計とアプローチ>アーキテクチャ設計とアプローチ</a></li><li><a href=#ansible-プレイブックの実装>Ansible プレイブックの実装</a><ul><li><a href=#プレイブックファイル-reverse_proxy_sslyml>プレイブックファイル: `reverse_proxy_ssl.yml</a></li><li><a href=#インベントリファイル-inventoryini>インベントリファイル: `inventory.ini</a></li></ul></li><li><a href=#実行手順>実行手順</a></li><li><a href=#troubleshooting>Troubleshooting</a><ul><li><a href=#-1-http-01-チャレンジの検証失敗-unauthorized--connection-refused>🛠️ 1. HTTP-01 チャレンジの検証失敗 (Unauthorized / Connection Refused)</a></li><li><a href=#-2-nginxのデフォルト設定との競合>🛠️ 2. Nginxのデフォルト設定との競合</a></li><li><a href=#-3-webrootディレクトリの権限不足>🛠️ 3. Webrootディレクトリの権限不足</a></li></ul></li><li><a href=#稼働検証とステータス確認>稼働検証とステータス確認</a><ul><li><a href=#nginx-サービスステータスの確認>Nginx サービスステータスの確認</a></li><li><a href=#リッスンポートの確認>リッスンポートの確認</a></li><li><a href=#httpからhttpsへのリダイレクト検証>HTTPからHTTPSへのリダイレクト検証</a></li></ul></li><li><a href=#key-takeaways>Key Takeaways</a></li></ul></nav></details></aside><section class=article-content><p>インフラストラクチャのスケールアウトにおいて、手動によるVirtualHostの設定やファイアウォールルールの適用、SSL/TLS証明書の更新作業は、ノード数の増加に伴いヒューマンエラーを誘発する大きな要因となります。特にマルチテナント環境や複数のマイクロサービスを運用する場合、証明書のライフサイクル管理の遅延はサービス停止に直結する致命的なリスクです。本稿では、Ansibleを用いてNginxリバースプロキシの構築から、Let&rsquo;s EncryptによるHTTP-01チャレンジを用いたSSL/TLS証明書の自動発行、およびcronによる自動更新処理までを一貫して自動化する宣言的アプローチについて解説します。</p><h2 id=アーキテクチャ設計とアプローチ>アーキテクチャ設計とアプローチ</h2><p>本構成では、以下のフェーズに分けてインフラストラクチャのプロビジョニングを実行します。</p><ol><li><b>ブートストラップフェーズ</b>: NginxおよびCertbot、必要な依存パッケージのインストール。</li><li><b>HTTP-01 チャレンジ用ルートの確保</b>: ポート80番で一時的なNginx設定をデプロイし、<code>/.well-known/acme-challenge/</code> へのリクエストを特定のWebrootディレクトリ（<code>/var/www/letsencrypt</code>）にマッピング。</li><li><b>証明書の発行</b>: Certbotを非対話モード（Non-interactive）で実行し、Let&rsquo;s EncryptからX.509証明書を取得。</li><li><b>TLS終端とリバースプロキシ設定</b>: ポート443番でのTLS終端（TLS v1.2 / TLS v1.3限定）を有効化し、ポート80番へのアクセスをHTTPSへ恒久的にリダイレクト（301 Moved Permanently）する設定へ移行。</li><li><b>自動更新のスケジュール化</b>: 毎日指定時刻に証明書の更新チェックを行い、更新成功時にNginxをリロードするcronジョブを登録。</li></ol><hr><h2 id=ansible-プレイブックの実装>Ansible プレイブックの実装</h2><p>以下に、リバースプロキシの構築とSSL証明書のライフサイクル管理を自動化する完全なAnsibleプレイブックを示します。</p><h3 id=プレイブックファイル-reverse_proxy_sslyml>プレイブックファイル: `reverse_proxy_ssl.yml</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span>---
+</span></span><span style=display:flex><span>- <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Setup Nginx Reverse Proxy + Let&#39;s Encrypt SSL</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>hosts</span>: <span style=color:#ae81ff>reverse_proxy</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>become</span>: <span style=color:#66d9ef>yes</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>vars</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>domain_name</span>: <span style=color:#e6db74>&#34;example.com&#34;</span>        <span style=color:#75715e># 対象となるドメイン名</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>backend_server</span>: <span style=color:#e6db74>&#34;http://127.0.0.1:8080&#34;</span>   <span style=color:#75715e># 転送先バックエンドサーバー</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>email_for_ssl</span>: <span style=color:#e6db74>&#34;admin@example.com&#34;</span> <span style=color:#75715e># Certbot通知用管理者メールアドレス</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>tasks</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Update apt cache</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>apt</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>update_cache</span>: <span style=color:#66d9ef>yes</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>cache_valid_time</span>: <span style=color:#ae81ff>3600</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 1) Nginxのインストールと起動設定</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Install Nginx</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>apt</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>name</span>: <span style=color:#ae81ff>nginx</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>state</span>: <span style=color:#ae81ff>present</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Ensure nginx running</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>service</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>name</span>: <span style=color:#ae81ff>nginx</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>state</span>: <span style=color:#ae81ff>started</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>enabled</span>: <span style=color:#66d9ef>yes</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 2) Certbotおよび依存パッケージのインストール</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Install Certbot and Nginx plugin</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>apt</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>name</span>:
+</span></span><span style=display:flex><span>          - <span style=color:#ae81ff>certbot</span>
+</span></span><span style=display:flex><span>          - <span style=color:#ae81ff>python3-certbot-nginx</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>state</span>: <span style=color:#ae81ff>present</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 3) リバースプロキシ初期設定 (Port 80)</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Create Nginx reverse proxy config</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>copy</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>dest</span>: <span style=color:#ae81ff>/etc/nginx/sites-available/reverse_proxy.conf</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>content</span>: |<span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          server {
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              listen 80;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              server_name {{ domain_name }};
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              # Let&#39;s Encrypt ACME HTTP-01 チャレンジ用パス
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              location /.well-known/acme-challenge/ {
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  root /var/www/letsencrypt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              }
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              location / {
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  proxy_pass {{ backend_server }};
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  proxy_set_header Host $host;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  proxy_set_header X-Real-IP $remote_addr;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  proxy_set_header X-Forwarded-Proto $scheme;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              }
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          }</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>notify</span>: <span style=color:#ae81ff>Reload Nginx</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Ensure webroot folder for certbot exists</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>file</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/var/www/letsencrypt</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>state</span>: <span style=color:#ae81ff>directory</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>owner</span>: <span style=color:#ae81ff>www-data</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>group</span>: <span style=color:#ae81ff>www-data</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>mode</span>: <span style=color:#e6db74>&#39;0755&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Enable reverse proxy site</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>file</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>src</span>: <span style=color:#ae81ff>/etc/nginx/sites-available/reverse_proxy.conf</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>dest</span>: <span style=color:#ae81ff>/etc/nginx/sites-enabled/reverse_proxy.conf</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>state</span>: <span style=color:#ae81ff>link</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>force</span>: <span style=color:#66d9ef>yes</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>notify</span>: <span style=color:#ae81ff>Reload Nginx</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Remove default nginx site</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>file</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/etc/nginx/sites-enabled/default</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>state</span>: <span style=color:#ae81ff>absent</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>notify</span>: <span style=color:#ae81ff>Reload Nginx</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 4) Let&#39;s Encrypt SSL証明書の取得 (HTTP-01)</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Obtain Let&#39;s Encrypt SSL certificate</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>command</span>: <span style=color:#75715e>&amp;gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ae81ff>certbot certonly --webroot</span>
+</span></span><span style=display:flex><span>        -<span style=color:#ae81ff>w /var/www/letsencrypt</span>
+</span></span><span style=display:flex><span>        -<span style=color:#ae81ff>d {{ domain_name }}</span>
+</span></span><span style=display:flex><span>        --<span style=color:#ae81ff>email {{ email_for_ssl }}</span>
+</span></span><span style=display:flex><span>        --<span style=color:#ae81ff>agree-tos</span>
+</span></span><span style=display:flex><span>        --<span style=color:#66d9ef>no</span>-<span style=color:#ae81ff>eff-email</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>args</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>creates</span>: <span style=color:#e6db74>&#34;/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 5) TLS終端設定およびHTTPSリダイレクト (Port 443)</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Create SSL-enabled Nginx config</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>copy</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>dest</span>: <span style=color:#ae81ff>/etc/nginx/sites-available/ssl_reverse_proxy.conf</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>content</span>: |<span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          server {
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              listen 443 ssl;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              server_name {{ domain_name }};
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              ssl_certificate /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              ssl_certificate_key /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              ssl_protocols TLSv1.2 TLSv1.3;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              location / {
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  proxy_pass {{ backend_server }};
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  proxy_set_header Host $host;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  proxy_set_header X-Real-IP $remote_addr;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                  proxy_set_header X-Forwarded-Proto https;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              }
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          }
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          # HTTPからHTTPSへの301リダイレクト
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          server {
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              listen 80;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              server_name {{ domain_name }};
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              return 301 https://$host$request_uri;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          }</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>notify</span>: <span style=color:#ae81ff>Reload Nginx</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Enable SSL reverse proxy config</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>file</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>src</span>: <span style=color:#ae81ff>/etc/nginx/sites-available/ssl_reverse_proxy.conf</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>dest</span>: <span style=color:#ae81ff>/etc/nginx/sites-enabled/ssl_reverse_proxy.conf</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>state</span>: <span style=color:#ae81ff>link</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>force</span>: <span style=color:#66d9ef>yes</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>notify</span>: <span style=color:#ae81ff>Reload Nginx</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 6) Certbot自動更新のスケジュール設定</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># ----------------------------------------</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Ensure certbot renew cron job exists</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>cron</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>name</span>: <span style=color:#e6db74>&#34;Certbot auto renew&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>job</span>: <span style=color:#e6db74>&#34;certbot renew --quiet --deploy-hook &#39;systemctl reload nginx&#39;&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>minute</span>: <span style=color:#e6db74>&#34;0&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>hour</span>: <span style=color:#e6db74>&#34;3&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>handlers</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Reload Nginx</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>service</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>name</span>: <span style=color:#ae81ff>nginx</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>state</span>: <span style=color:#ae81ff>restarted</span>
+</span></span></code></pre></div><h3 id=インベントリファイル-inventoryini>インベントリファイル: `inventory.ini</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#66d9ef>[reverse_proxy]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>203.0.113.50 ansible_user</span><span style=color:#f92672>=</span><span style=color:#e6db74>ubuntu ansible_ssh_private_key_file=~/.ssh/id_ansible</span>
+</span></span></code></pre></div><hr><h2 id=実行手順>実行手順</h2><p>対象ノードに対してプレイブックを実行するには、以下のコマンドを使用します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>ansible-playbook reverse_proxy_ssl.yml -i inventory.ini
+</span></span></code></pre></div><p>このコマンドを実行すると、システムパッケージの更新からNginxのセットアップ、一時的なHTTP-01チャレンジ用ルーティングを介した証明書取得、そして最終的なTLS終端設定の適用までが自動的に進行します。</p><hr><h2 id=troubleshooting>Troubleshooting</h2><p>本構成を本番環境にデプロイする際、ネットワークや権限の不整合により発生しやすい代表的なエラーと、その解決ワークフローを以下に示します。</p><h3 id=-1-http-01-チャレンジの検証失敗-unauthorized--connection-refused>🛠️ 1. HTTP-01 チャレンジの検証失敗 (Unauthorized / Connection Refused)</h3><ul><li><b>原因</b>: Let&rsquo;s EncryptのACME検証サーバーが、対象ドメインのポート80番にアクセスできない場合に発生します。DNSレコード（Aレコード）の反映遅延、またはセキュリティグループやファイアウォール（ufw、iptables）でポート80番が閉じていることが主な原因です。</li><li><b>対策</b>:</li></ul><ol><li>外部から対象ドメインへの名前解決が正しく行われているか確認します。</li><li>ファイアウォール設定を確認し、ポート80および443へのインバウンドトラフィックを許可します。</li></ol><h3 id=-2-nginxのデフォルト設定との競合>🛠️ 2. Nginxのデフォルト設定との競合</h3><ul><li><b>原因</b>: Ubuntuなどのディストリビューションでは、Nginxインストール時に <code>/etc/nginx/sites-enabled/default</code> が自動的に有効化されます。これが残っていると、ポート80番へのリクエストがデフォルトのサーバーブロックに奪われ、ACMEチャレンジ用のパス（<code>/.well-known/acme-challenge/</code>）に到達しないことがあります。</li><li><b>対策</b>: プレイブック内の <code>Remove default nginx site</code> タスクが正常に実行され、シンボリックリンクが削除されていることを確認してください。</li></ul><h3 id=-3-webrootディレクトリの権限不足>🛠️ 3. Webrootディレクトリの権限不足</h3><ul><li><b>原因</b>: <code>/var/www/letsencrypt</code> ディレクトリに対する書き込み権限が不足していると、Certbotが検証用ファイルを配置できずエラーになります。</li><li><b>対策</b>: ディレクトリの所有者が <code>www-data:www-data</code> であり、パーミッションが <code>0755</code> に設定されていることを確認します。</li></ul><hr><h2 id=稼働検証とステータス確認>稼働検証とステータス確認</h2><p>デプロイ完了後、対象サーバーにSSH接続し、以下のコマンドを用いてシステムの状態とトラフィックの挙動を確認します。</p><h3 id=nginx-サービスステータスの確認>Nginx サービスステータスの確認</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>$ systemctl status nginx
+</span></span><span style=display:flex><span>● nginx.service - A high performance web server and a reverse proxy server
+</span></span><span style=display:flex><span>     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+</span></span><span style=display:flex><span>     Active: active (running) since Tue 2026-09-29 10:00:00 UTC; 5min ago
+</span></span><span style=display:flex><span>   Main PID: 12345 (nginx)
+</span></span><span style=display:flex><span>      Tasks: 2 (limit: 1151)
+</span></span><span style=display:flex><span>     Memory: 8.5M
+</span></span><span style=display:flex><span>        CPU: 45ms
+</span></span><span style=display:flex><span>     CGroup: /system.slice/nginx.service
+</span></span><span style=display:flex><span>             ├─12345 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+</span></span><span style=display:flex><span>             └─12346 nginx: worker process
+</span></span></code></pre></div><h3 id=リッスンポートの確認>リッスンポートの確認</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>$ ss -tulpn | grep -E &#39;80|443&#39;
+</span></span><span style=display:flex><span>tcp   LISTEN 0      511          0.0.0.0:80        0.0.0.0:*    users:((&#34;nginx&#34;,pid=12345,fd=6))
+</span></span><span style=display:flex><span>tcp   LISTEN 0      511          0.0.0.0:443       0.0.0.0:*    users:((&#34;nginx&#34;,pid=12345,fd=7))
+</span></span></code></pre></div><h3 id=httpからhttpsへのリダイレクト検証>HTTPからHTTPSへのリダイレクト検証</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>$ curl -I http://example.com
+</span></span><span style=display:flex><span>HTTP/1.1 301 Moved Permanently
+</span></span><span style=display:flex><span>Server: nginx
+</span></span><span style=display:flex><span>Date: Tue, 29 Sep 2026 10:05:00 GMT
+</span></span><span style=display:flex><span>Content-Type: text/html
+</span></span><span style=display:flex><span>Content-Length: 166
+</span></span><span style=display:flex><span>Connection: keep-alive
+</span></span><span style=display:flex><span>Location: https://example.com/
+</span></span></code></pre></div><hr><h2 id=key-takeaways>Key Takeaways</h2><ul><li>💡 <b>冪等性の担保</b>: <code>creates</code> オプションを使用することで、すでに有効な証明書が存在する場合はCertbotの実行をスキップし、不要なAPIコールとレートリミット到達を防止します。</li><li>💡 <b>セキュアな通信プロトコル</b>: 脆弱性のある古いプロトコル（SSLv3、TLSv1.0、TLSv1.1）を排除し、<code>TLSv1.2</code> および <code>TLSv1.3</code> のみを有効化することで、セキュリティ基準に適合した通信経路を確立します。</li><li>💡 <b>運用の自動化</b>: 毎日午前3時に実行されるcronジョブにより、有効期限が30日未満になった証明書が自動的に更新され、<code>--deploy-hook</code> によってNginxが安全にリロードされます。これにより、手動介入ゼロでの継続的な運用が可能になります。</li></ul></section><footer class="article-meta article-footer"><section class=article-tags><a href=/tags/ansible/>Ansible</a>
+<a href=/tags/nginx/>Nginx</a>
+<a href=/tags/letsencrypt/>Letsencrypt</a>
+<a href=/tags/certbot/>Certbot</a>
+<a href=/tags/reverse-proxy/>Reverse-Proxy</a></section></footer></article><aside><h2 class=section-title>関連するコンテンツ</h2><div class=subsection-list><div class=article-list--tile><article><a href=/p/ubuntu-letsencrypt-apache-ssl/><div class=article-details><h2 class=article-title>Ubuntu 22.04 LTSにおけるApacheおよびNginxのLet's Encrypt導入と自動更新設定</h2></div></a></article><article><a href=/p/nginx-reverse-proxy-apache-rocky-linux/><div class=article-details><h2 class=article-title>Rocky Linux 9におけるNginxリバースプロキシ構成とApacheポート移行手順</h2></div></a></article><article><a href=/p/nginx-proxy-pass-host-header-preservation/><div class=article-details><h2 class=article-title>Nginxリバースプロキシ配下におけるHostヘッダー転送とコンテキスト保持の構成検証</h2></div></a></article><article><a href=/p/nginx-reverse-proxy-implementation-guide/><div class=article-details><h2 class=article-title>NGINXリバースプロキシ構築におけるNginx Proxy Managerと手動構成の実装手法</h2></div></a></article><article><a href=/p/apache-tomcat-mod-proxy-integration/><div class=article-details><h2 class=article-title>mod_proxyによるApache HTTP ServerとTomcatの連携制御手法</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><div class=copyright>&copy;
+2026 K-Life Hack | システムアーキテクチャ & DevOps</div><div class=powerby><a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> で構築されています。<br>テーマ <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.0>Stack</a></b> は <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> によって設計されています。</div></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script><div style=text-align:center;margin-top:15px;font-size:.85em;opacity:.6><a href=/privacy-policy/ style="color:inherit;text-decoration:none;margin:0 10px">Privacy Policy</a>
+<a href=/disclaimer/ style="color:inherit;text-decoration:none;margin:0 10px">Disclaimer</a>
+<a href=mailto:contact@klifehack.com style="color:inherit;text-decoration:none;margin:0 10px">Contact</a></div></body></html>
