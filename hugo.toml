@@ -69,34 +69,38 @@ hasCJKLanguage = true
         type = "disqus"
 
 # =============================================================================
-# [4. 다국어 아키텍처 및 로컬라이징 제어 벨트 - v2606.150 TA]
+# [4. 다국어 아키텍처 및 로컬라이징 제어 벨트 - v2610.260 TA 규격 복구]
 # =============================================================================
 [languages]
   # ---------------------------------------------------------------------------
-  # 일본어 독립 매거진 섹션 (Hugo 최신 표준 동기화 완벽 보존)
+  # 일본어 독립 매거진 섹션
   # ---------------------------------------------------------------------------
   [languages.ja]
-    locale = 'ja'              # 👈 구형 languageCode 대치 (v0.158.0+ 표준 명세)
-    label = '日本語'            # 👈 구형 languageName 대치 (v0.158.0+ 표준 명세)
+    languageCode = 'ja'
+    languageName = '日本語'
     weight = 1
     title = 'K-Life Hack | システムアーキテクチャ & DevOps'
     
     [languages.ja.params]
+        locale = 'ja'
+        label = '日本語'
         [languages.ja.params.sidebar]
             avatar = "img/persona_k_ambient.webp" 
             name = "K-Life Hack"
             subtitle = "ソウル在住のITアーキテクト「K」が綴る、データで読み解く最新の韓国トレンドと洗練された日常。"
 
   # ---------------------------------------------------------------------------
-  # 영어 독립 매거진 섹션 (글로벌 멸균 트랙 최신 동기화 구축)
+  # 영어 독립 매거진 섹션
   # ---------------------------------------------------------------------------
   [languages.en]
-    locale = 'en'              # 👈 구형 languageCode 대치 (v0.158.0+ 표준 명세)
-    label = 'English'          # 👈 구형 languageName 대치 (v0.158.0+ 표준 명세)
+    languageCode = 'en'
+    languageName = 'English'
     weight = 2
     title = 'K-Life Hack | Systems Architecture & DevOps'
     
     [languages.en.params]
+        locale = 'en'
+        label = 'English'
         [languages.en.params.sidebar]
             avatar = "img/persona_k_ambient.webp" 
             name = "K-Life Hack (Global)"
