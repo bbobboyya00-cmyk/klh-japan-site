@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Data-Persistence on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/data-persistence/</link><description>Recent content in Data-Persistence on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 10 Jun 2026 10:06:46 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/data-persistence/index.xml" rel="self" type="application/rss+xml"/><item><title>Dockerイメージのライフサイクル管理とマルチコンテナ構成の技術的考察</title><link>https://klifehack.com/p/docker-image-orchestration-and-persistence/</link><pubDate>Wed, 10 Jun 2026 10:06:46 +0900</pubDate><guid>https://klifehack.com/p/docker-image-orchestration-and-persistence/</guid><description>&lt;h1 id="プロダクション環境におけるdockerインフラの設計と運用イメージ管理からオーケストレーションまで"&gt;プロダクション環境におけるDockerインフラの設計と運用：イメージ管理からオーケストレーションまで
+&lt;/h1&gt;&lt;p&gt;コンテナ運用の核心は、単なるプロセスの隔離ではなく、イメージの配布、データの永続化、そして複数コンテナ間のオーケストレーションをいかに整合性を持って設計するかにあります。本稿では、プロダクション環境を見据えたDockerインフラの構成要素について、実務的な観点から分析します。&lt;/p&gt;
+&lt;h2 id="dockerイメージの識別構造と参照プロトコル"&gt;Dockerイメージの識別構造と参照プロトコル
+&lt;/h2&gt;&lt;p&gt;Dockerイメージは、単一の名称ではなく、そのオリジン、所有権、およびバージョンを定義する厳密なアドレス体系によって識別されます。イメージ参照の構造は以下の要素で構成されます。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Registry Domain&lt;/b&gt;: イメージがホストされているレジストリサーバーのネットワークアドレス。省略時はDocker Hubがデフォルトとなります。
+&lt;b&gt;Repository (Account)&lt;/b&gt;: イメージ作成者、組織、またはプロジェクトに属するネームスペース。
+&lt;b&gt;Image Name&lt;/b&gt;: アプリケーションまたはサービスの具体的な識別子。
+&lt;b&gt;Tag&lt;/b&gt;: バージョンや特定のバリアントを定義する識別子（デフォルトはlatest）。&lt;/p&gt;
+&lt;p&gt;この座標系に不備がある場合、配布フェーズでのアップロード失敗や、CI/CDパイプラインにおける不整合の直接的な原因となります。&lt;/p&gt;
+&lt;h2 id="レジストリ配布における認証とトラブルシューティング"&gt;レジストリ配布における認証とトラブルシューティング
+&lt;/h2&gt;&lt;p&gt;ローカルでビルドしたイメージをパブリックレジストリに配布する際、認証プロトコルとタグ付けの順序が重要です。&lt;/p&gt;
+&lt;h3 id="認証エラーの回避"&gt;認証エラーの回避
+&lt;/h3&gt;&lt;p&gt;Docker Engineとデスクトップ環境間の接続問題により、標準的なターミナルログインが妨げられる場合があります。この場合、ウェブベースの認証フローを利用して資格情報を検証し、Login Succeededを確認する必要があります。ワークフローの整合性を保つため、アカウント識別子を変数（例：$dockerId）として管理することが推奨されます。&lt;/p&gt;
+&lt;h3 id="push権限エラーpermission-deniedの解決"&gt;Push権限エラー（Permission Denied）の解決
+&lt;/h3&gt;&lt;p&gt;docker image push実行時に「Permission Denied」が発生する主な原因は、イメージタグにアカウントネームスペースが含まれていないことです。Docker Engineはネームスペースがない場合、ルートのパブリックネームスペースへのアップロードと解釈し、権限不足で拒否します。解決には、以下の形式で再タグ付けを行う必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# イメージの再タグ付けとプッシュの実行例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker tag local-image:latest $dockerId/repository-name:latest
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker push $dockerId/repository-name:latest
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="プライベートレジストリの構築とセキュリティ制約"&gt;プライベートレジストリの構築とセキュリティ制約
+&lt;/h2&gt;&lt;p&gt;閉域網環境や機密性の高いプロジェクトでは、独自のプライベートレジストリ構築が必要です。レジストリコンテナは以下のパラメータでデプロイされます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# プライベートレジストリの起動コマンド&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -p 5000:5000 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --restart always &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --name registry &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; registry:2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ここで、&amp;ndash;restart alwaysフラグは、ホストの再起動やエンジンの再起動後もレジストリサービスを継続させるために不可欠です。また、Docker EngineはデフォルトでHTTPS通信を強制しますが、ローカルレジストリがHTTPで動作している場合、通信エラーが発生します。この場合、daemon.jsonに以下の設定を追加し、安全でないレジストリとして明示的に許可する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;insecure-registries&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;127.0.0.1:5000&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="マルチステージビルドによる最適化"&gt;マルチステージビルドによる最適化
+&lt;/h2&gt;&lt;p&gt;イメージの肥大化を防ぎ、セキュリティを向上させる手法としてマルチステージビルドが有効です。コンパイル環境と実行環境を分離することで、最終的なイメージから不要なビルドツールや中間依存関係を排除します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-dockerfile" data-lang="dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# マルチステージビルドの構成例&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;golang:1.21-alpine&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; &lt;span style="color:#e6db74"&gt;builder&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WORKDIR&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/app&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; . .&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; go build -o main .&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;alpine:latest&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WORKDIR&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/root&lt;/span&gt;/&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; --from&lt;span style="color:#f92672"&gt;=&lt;/span&gt;builder /app/main .&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CMD&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;./main&amp;#34;&lt;/span&gt;]&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;このアプローチにより、イメージサイズが大幅に削減され、ネットワーク転送速度の向上と、攻撃表面（Attack Surface）の最小化が実現されます。&lt;/p&gt;
+&lt;h2 id="データ永続化volumeとbind-mountの使い分け"&gt;データ永続化：VolumeとBind Mountの使い分け
+&lt;/h2&gt;&lt;p&gt;Dockerコンテナは本質的にステートレス（Stateless）ですが、データの永続化が必要な場合は以下のメカニズムを選択します。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Docker Volume&lt;/b&gt;: Docker Engineによって管理され、ホストのファイルシステムから抽象化されます。データの整合性とポータビリティが高く、データベースファイルやログの保存に適しています。
+&lt;b&gt;Bind Mount&lt;/b&gt;: ホストOSの特定のパスをコンテナに直接マウントします。開発環境におけるソースコードのリアルタイム同期（ホットリロード）に利用されます。&lt;/p&gt;
+&lt;h2 id="docker-composeによるサービスディスカバリ"&gt;Docker Composeによるサービスディスカバリ
+&lt;/h2&gt;&lt;p&gt;分散アプリケーションにおいて、docker-composeは複数のコンテナスタックを一元管理する標準的な手法です。Composeは内部ネットワークを自動的に作成し、組み込みのDNSを提供します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.8&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;web&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;8080:80&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;depends_on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;db&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;db&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;postgres:15-alpine&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;POSTGRES_PASSWORD&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;example_password&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;コンテナ内からnslookup dbを実行することで、揮発的なIPアドレスではなく、サービス名による名前解決が可能であることを確認できます。この抽象化は、マイクロサービスアーキテクチャ（MSA）におけるスケーラビリティの基盤となります。&lt;/p&gt;
+&lt;h2 id="findings"&gt;Findings
+&lt;/h2&gt;&lt;p&gt;コンテナインフラの構築において、イメージレジストリ、永続化ボリューム、およびComposeによるオーケストレーションは相互に依存する三本の柱です。マルチステージビルドによる効率化と、サービスディスカバリを活用したネットワーク設計を組み合わせることで、堅牢で拡張性の高いクラウドネイティブな運用基盤が構築可能となります。&lt;/p&gt;</description></item></channel></rss>

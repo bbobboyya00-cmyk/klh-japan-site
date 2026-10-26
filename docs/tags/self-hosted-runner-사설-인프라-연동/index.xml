@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Self-Hosted Runner 사설 인프라 연동 on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/self-hosted-runner-%EC%82%AC%EC%84%A4-%EC%9D%B8%ED%94%84%EB%9D%BC-%EC%97%B0%EB%8F%99/</link><description>Recent content in Self-Hosted Runner 사설 인프라 연동 on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 05 Oct 2026 10:12:34 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/self-hosted-runner-%EC%82%AC%EC%84%A4-%EC%9D%B8%ED%94%84%EB%9D%BC-%EC%97%B0%EB%8F%99/index.xml" rel="self" type="application/rss+xml"/><item><title>OpenAI Agents APIにおけるセルフホスト型実行環境の統合設計</title><link>https://klifehack.com/p/openai-agents-api-self-hosted-integration/</link><pubDate>Mon, 05 Oct 2026 10:12:34 +0900</pubDate><guid>https://klifehack.com/p/openai-agents-api-self-hosted-integration/</guid><description>&lt;p&gt;エンタープライズのインフラ設計において、LLMエージェントにコード実行権限を付与する際、セキュリティ境界の画定は極めて困難な課題です。パブリックなクラウド上で提供されるマネージドなサンドボックス環境（&lt;code&gt;openai_hosted&lt;/code&gt;など）は、迅速なプロトタイピングには適しているものの、社内のプライベートVPC内リソースへのアクセスや、厳格なデータガバナンス要件を満たすことができません。また、機密性の高いソースコードや内部データを外部のコンテナ環境に転送することは、コンプライアンス上の制約により制限されることが一般的です。&lt;/p&gt;
+&lt;p&gt;このような背景から、OpenAI Agents API（2026年9月パブリックベータ公開）では、コントロールプレーンのオーケストレーション機能をOpenAI側に委ねつつ、実際のコード実行やファイルシステム操作を自社管理下のインフラ上で実行する「セルフホスト型（&lt;code&gt;self_hosted&lt;/code&gt;）」の実行環境モデルが提供されています。本稿では、このセルフホスト環境を安全かつ安定的に構築するためのアーキテクチャ設計、&lt;code&gt;codex exec-server&lt;/code&gt;のデプロイメント手順、および本番運用におけるネットワーク・セキュリティ設計について解説します。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="1-セルフホスト型アーキテクチャの接続モデル"&gt;1. セルフホスト型アーキテクチャの接続モデル
+&lt;/h2&gt;&lt;p&gt;セルフホスト型実行環境の核心は、OpenAIのコントロールプレーンと自社インフラ内で稼働するエージェント実行ノードとの間の「逆方向接続（Outbound-only Connection）」モデルにあります。&lt;/p&gt;
+&lt;p&gt;自社インフラ内にデプロイされた&lt;code&gt;codex exec-server&lt;/code&gt;デーモンは、外部からのインバウンドポートを開放することなく、OpenAIのサーバーに対してアウトバウンドのWebSocket接続（HTTPS/WSS）を確立します。これにより、ファイアウォールのインバウンドルールを変更することなく、安全にタスクの受信と実行結果の返却を行うことが可能です。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;┌────────────────────────────────────────────────────────────────────────┐
+│ OpenAI Control Plane (Cloud) │
+│ - Session Orchestration │
+│ - Context Window Compaction │
+└──────────────────────────────────┬─────────────────────────────────────┘
+ ▲
+ │ Outbound WSS (Port 443)
+ │ (wss://codex-cloud-environments.chatgpt.com)
+┌──────────────────────────────────┴─────────────────────────────────────┐
+│ Customer Private VPC / On-Premise │
+│ ┌──────────────────────────────────────────────────────────────────┐ │
+│ │ codex exec-server Daemon │ │
+│ │ - Runs under restricted &amp;#39;codex-runner&amp;#39; user │ │
+│ │ - Executes local shell, python, and filesystem mutations │ │
+│ │ - Isolated from Master Application API Keys │ │
+│ └──────────────────────────────────────────────────────────────────┘ │
+└────────────────────────────────────────────────────────────────────────┘
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="認証情報の分離設計"&gt;認証情報の分離設計
+&lt;/h3&gt;&lt;p&gt;セキュリティを担保するため、APIキーの権限は厳格に分離されています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;マスターアプリケーションキー:&lt;/b&gt; アプリケーションサーバーが保持し、セッションの作成やライフサイクル管理を行います（&lt;code&gt;api.agents.read&lt;/code&gt;、&lt;code&gt;api.agents.write&lt;/code&gt;、&lt;code&gt;api.responses.write&lt;/code&gt;スコープが必要）。このキーは実行環境内部には一切露出させません。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;環境スコープキー（CODEX_API_KEY）:&lt;/b&gt; &lt;code&gt;codex exec-server&lt;/code&gt;がOpenAIのコントロールプレーンと通信するためだけに利用する、極めて制限されたキーです。このキーにはエージェントの操作やモデル推論の実行権限は付与されていません。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="2-codex-exec-server-のデプロイメント手順"&gt;2. &lt;code&gt;codex exec-server&lt;/code&gt; のデプロイメント手順
+&lt;/h2&gt;&lt;p&gt;自社管理下のLinuxサーバー（Ubuntu 24.04 LTS環境を想定）に、実行デーモンをシステムサービスとして構築します。&lt;/p&gt;
+&lt;h3 id="ステップ-1-依存パッケージのインストールと専用ユーザーの作成"&gt;ステップ 1: 依存パッケージのインストールと専用ユーザーの作成
+&lt;/h3&gt;&lt;p&gt;セキュリティ上の理由から、デーモンはroot以外の専用ユーザーで実行する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Node.js LTS環境のセットアップ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y nodejs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# codex-runner ユーザーの作成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo useradd -m -s /bin/bash codex-runner
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# グローバルパッケージとして codex デーモンをインストール&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo npm install -g @openai/codex@alpha
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ステップ-2-systemd-サービス定義の作成"&gt;ステップ 2: systemd サービス定義の作成
+&lt;/h3&gt;&lt;p&gt;プロセスの永続化と異常終了時の自動再起動を担保するため、&lt;code&gt;/etc/systemd/system/codex-exec-server.service&lt;/code&gt;を以下の通り作成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Unit]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Description&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;Codex Execution Server Daemon&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;After&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;network.target&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Service]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Type&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;simple&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;User&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;codex-runner&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Group&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;codex-runner&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;WorkingDirectory&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/home/codex-runner&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Environment&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;NODE_ENV=production&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Environment&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;CODEX_API_KEY=sk-proj-env-restricted-token-here&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ExecStart&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/usr/bin/codex exec-server \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --remote &amp;#34;https://api.openai.com/v1&amp;#34; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; --environment-id &amp;#34;env_your_registered_environment_id&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;Restart&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;always&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;RestartSec&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;LimitNOFILE&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;65536&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[Install]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;WantedBy&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;multi-user.target&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;```bash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サービスの有効化と起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sudo systemctl daemon-reload&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sudo systemctl enable codex-exec-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sudo systemctl start codex-exec-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="3-python-sdkによるセッション初期化の実装"&gt;3. Python SDKによるセッション初期化の実装
+&lt;/h2&gt;&lt;p&gt;セルフホスト環境が起動したら、アプリケーション側からその環境を指定してセッションを開始します。以下は、ストリーミングモードでタスクを実行するPythonの実装例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; os
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; openai &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OpenAI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# マスターアプリケーションキーを環境変数からロード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;api_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; os&lt;span style="color:#f92672"&gt;.&lt;/span&gt;getenv(&lt;span style="color:#e6db74"&gt;&amp;#34;OPENAI_API_KEY&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; OpenAI(api_key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;api_key) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; client:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# セルフホスト環境IDを指定してセッションを初期化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;beta&lt;span style="color:#f92672"&gt;.&lt;/span&gt;agents&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sessions&lt;span style="color:#f92672"&gt;.&lt;/span&gt;create(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;agent&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;model&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;gpt-6-astra&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;instructions&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Write clean Python code, execute it locally, and return the output.&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;environment&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;self_hosted&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;env_your_registered_environment_id&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;input&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Generate a report of the local system disk usage and list the top 3 directories.&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;stream&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; events:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; event &lt;span style="color:#f92672"&gt;in&lt;/span&gt; events:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# リアルタイムでイベントストリームを処理&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;event_data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; event&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_json(indent&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(event_data, flush&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="4-ライフサイクルダイナミクスとトラフィック制御"&gt;4. ライフサイクルダイナミクスとトラフィック制御
+&lt;/h2&gt;&lt;p&gt;セルフホスト環境におけるエージェントセッションのライフサイクル管理は、コンテナのローリングアップデートやスケーリング時に特有の課題をもたらします。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;セッションの固定性（Session Affinity）:&lt;/b&gt; エージェントのセッションは特定の実行環境ID（&lt;code&gt;environment_id&lt;/code&gt;）に関連付けられます。実行ノードのメンテナンスやコンテナの入れ替え（Replacement）を行う際、稼働中のセッションが存在する場合にノードを即座に破棄すると、実行中のタスクが異常終了します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;無停止スケーリング（Zero-Downtime Scaling）:&lt;/b&gt; 新しいバージョンの実行イメージをデプロイする際は、古いノードへの新規セッション割り当てを停止（Drain）し、既存のセッションが完了するかタイムアウト（デフォルトで1時間の無操作による自動クリーンアップ）に達した後に、古いノードを安全にシャットダウンするローリングアップデート戦略を採用する必要があります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="5-troubleshooting"&gt;5. Troubleshooting
+&lt;/h2&gt;&lt;p&gt;セルフホスト環境の構築および運用時に直面しやすい代表的な障害要因と、その解決策を以下に示します。&lt;/p&gt;
+&lt;h3 id="1-websocket接続の切断と再確立handshake-failures"&gt;1. WebSocket接続の切断と再確立（Handshake Failures）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;事象:&lt;/b&gt; &lt;code&gt;codex exec-server&lt;/code&gt;のログに &lt;code&gt;Connection closed transitionally (code: 1006)&lt;/code&gt; が頻発する。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因:&lt;/b&gt; 社内プロキシや次世代ファイアウォール（NGFW）によるSSL/TLSインスペクションが有効な場合、&lt;code&gt;wss://codex-cloud-environments.chatgpt.com&lt;/code&gt;へのWebSocketハンドシェイクが拒否されることがあります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策:&lt;/b&gt; プロキシサーバー側で、上記ドメインに対するSSL復号化のバイパス設定（SSL Decryption Bypass）を適用してください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-セットアップコマンドの異常終了setup-command-failures"&gt;2. セットアップコマンドの異常終了（Setup Command Failures）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;事象:&lt;/b&gt; セッション作成時に &lt;code&gt;environment.failed&lt;/code&gt; イベントが発生し、タスクが実行されない。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因:&lt;/b&gt; 環境テンプレートで定義された &lt;code&gt;setup_commands&lt;/code&gt; が非ゼロの終了コード（$? != 0）を返すと、環境のプロビジョニングフェーズで即座にエラーとなり、セッションが停止します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策:&lt;/b&gt; 各コマンドの末尾に適切なエラーハンドリングを施すか、冪等性を担保したスクリプト構成に修正してください（例: &lt;code&gt;mkdir -p&lt;/code&gt; の使用、パッケージインストールの &lt;code&gt;-y&lt;/code&gt; フラグ付与）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-権限分離の不備による特権昇格リスク"&gt;3. 権限分離の不備による特権昇格リスク
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;事象:&lt;/b&gt; エージェントがホストOS上のシステムファイルを改ざん、または不要なパッケージをシステム全体にインストールしてしまう。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因:&lt;/b&gt; &lt;code&gt;codex exec-server&lt;/code&gt;を &lt;code&gt;root&lt;/code&gt; ユーザーで起動している、または &lt;code&gt;sudo&lt;/code&gt; 権限が制限なしで付与されている。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策:&lt;/b&gt; 必ず前述の &lt;code&gt;codex-runner&lt;/code&gt; のような非特権ユーザーを作成し、実行ディレクトリ（&lt;code&gt;/workspace&lt;/code&gt;に相当するローカルパス）以外の書き込み権限を剥奪してください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="6-operational-verification"&gt;6. Operational Verification
+&lt;/h2&gt;&lt;p&gt;デプロイ完了後、実行ノードの健全性を確認するための検証コマンドと期待される出力プロトコルログです。&lt;/p&gt;
+&lt;h3 id="サービス稼働状態の確認"&gt;サービス稼働状態の確認
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ systemctl status codex-exec-server
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;● codex-exec-server.service - Codex Execution Server Daemon
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Loaded: loaded (/etc/systemd/system/codex-exec-server.service; enabled; preset: enabled)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Active: active (running) since Mon 2026-10-05 10:00:00 UTC; 15min ago
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Main PID: 12345 (node)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Tasks: 11 (limit: 4915)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Memory: 45.2M
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CPU: 120ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CGroup: /system.slice/codex-exec-server.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└─12345 /usr/bin/node /usr/bin/codex exec-server --remote https://api.openai.com/v1 --environment-id env_your_registered_environment_id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Oct 05 10:00:00 node-01 codex[12345]: [info] Initializing Codex Execution Server...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Oct 05 10:00:01 node-01 codex[12345]: [info] Connecting to remote control plane: wss://codex-cloud-environments.chatgpt.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Oct 05 10:00:02 node-01 codex[12345]: [info] WebSocket connection established successfully. Listening for tasks...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ネットワーク接続状態の確認"&gt;ネットワーク接続状態の確認
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep node
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# インバウンドのリスニングポートが存在しないことを確認（Outboundのみで動作するため、空出力が正常）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tapn | grep -E &amp;#34;(openai|chatgpt)&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ESTAB 0 0 192.168.1.50:54321 104.18.2.10:443 users:((&amp;#34;node&amp;#34;,pid=12345,fd=19))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# OpenAIのコントロールプレーン（ポート443）に対してESTABLISHED状態のコネクションが存在することを確認
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="コントロールプレーンへの疎通確認"&gt;コントロールプレーンへの疎通確認
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I -H &amp;#34;OpenAI-Beta: agents=v1&amp;#34; https://api.openai.com/v1/agents/environments
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/2 200
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;server: cloudflare
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;date: Mon, 05 Oct 2026 10:05:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;content-type: application/json; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="7-operational-notes"&gt;7. Operational Notes
+&lt;/h2&gt;&lt;p&gt;セルフホスト型実行環境を本番運用に投入するにあたり、以下の運用ポリシーを策定することを推奨します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;リソース制限（cgroups）の適用:&lt;/b&gt; エージェントによる無限ループやメモリリークからホストOSを保護するため、systemdサービス定義内で &lt;code&gt;CPUQuota=50%&lt;/code&gt; や &lt;code&gt;MemoryLimit=2G&lt;/code&gt; などのリソース制限を明示的に設定してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;データ保存期間の管理:&lt;/b&gt; セルフホスト環境であっても、コントロールプレーンを通過するセッションの会話履歴や実行ログはOpenAI側に一時的に保持されます。現時点でZero Data Retention（ZDR）はサポートされていないため、個人情報（PII）や極秘データの取り扱いには十分な注意が必要です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;定期的なデーモンの更新:&lt;/b&gt; &lt;code&gt;codex exec-server&lt;/code&gt; はパブリックベータ期間中、頻繁にアップデートが提供されます。パッケージの脆弱性対応およびプロトコル仕様変更に追従するため、週次のメンテナンスウィンドウで &lt;code&gt;@openai/codex&lt;/code&gt; のバージョン更新を確認するパイプラインを構築してください。&lt;/li&gt;
+&lt;/ol&gt;</description></item></channel></rss>

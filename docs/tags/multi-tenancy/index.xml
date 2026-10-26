@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Multi-Tenancy on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/multi-tenancy/</link><description>Recent content in Multi-Tenancy on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 08 Jun 2026 10:02:30 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/multi-tenancy/index.xml" rel="self" type="application/rss+xml"/><item><title>マルチテナントWebホスティングにおけるDocker Composeを用いたリソース隔離と移行の実装</title><link>https://klifehack.com/p/docker-multi-tenant-resource-isolation/</link><pubDate>Mon, 08 Jun 2026 10:02:30 +0900</pubDate><guid>https://klifehack.com/p/docker-multi-tenant-resource-isolation/</guid><description>&lt;h1 id="dockerコンテナ化によるマルチテナント環境のリソース隔離と運用安定性の向上"&gt;Dockerコンテナ化によるマルチテナント環境のリソース隔離と運用安定性の向上
+&lt;/h1&gt;&lt;p&gt;従来のシングルサーバー仮想マシン（VM）環境において、複数のWebサービスがリソースを共有する構成では、特定のサイトでのトラフィック急増がサーバー全体のパフォーマンスを低下させる「Noisy Neighbor（リソース独占）」問題が頻発します。本稿では、この運用リスクを排除し、サービスの安定性と可視性を向上させるための、Dockerベースの独立したコンテナインフラへの移行手順について記述します。&lt;/p&gt;
+&lt;h2 id="従来環境の課題と移行の背景"&gt;従来環境の課題と移行の背景
+&lt;/h2&gt;&lt;p&gt;従来のVM環境では、10個の異なるWebサイトが単一のVM内で動作していました。この構成には以下の技術的負債が存在していました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;単一障害点（SPOF）のリスク&lt;/b&gt;: 1つのサイトに対するDDoS攻撃やスパムボットの活動によりCPU使用率が100%に達すると、残りの9サイトも同時にダウンタイムまたは深刻なレイテンシに見舞われます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;インシデント対応の遅延&lt;/b&gt;: 全サイトが同一のOSおよびプロセス空間を共有しているため、障害発生時にどのサイトが根本原因であるかを迅速に特定することが困難でした。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Docker Composeを用いたコンテナ化への移行により、各サイトを軽量なコンテナとして分離し、物理的なリソース制限（CPU/メモリ）を課すことで、特定のサイトの負荷が他へ波及しない「サンドボックス」環境を構築します。&lt;/p&gt;
+&lt;h2 id="技術的実装手順"&gt;技術的実装手順
+&lt;/h2&gt;&lt;h3 id="1-docker-engineのセットアップ"&gt;1. Docker Engineのセットアップ
+&lt;/h3&gt;&lt;p&gt;ホストシステムにDockerエンジンおよびComposeプラグインをインストールします。これにより、コンテナオーケストレーションの基盤を確立します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Docker Installation for Ubuntu/Debian&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-ディレクトリ構造とストレージの準備"&gt;2. ディレクトリ構造とストレージの準備
+&lt;/h3&gt;&lt;p&gt;プロキシおよび各サイトのデータを管理するためのディレクトリ階層を構築します。ここでは &lt;code&gt;/data&lt;/code&gt; にマウントされたストレージを使用し、永続性とバックアップの効率性を確保します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /data/docker-web/proxy/conf.d
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /data/docker-web/site1/html
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /data/docker-web/site1/logs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /data/docker-web/site2/html
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p /data/docker-web/site2/logs
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-docker-composeによるリソース制限の定義"&gt;3. Docker Composeによるリソース制限の定義
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt; において、&lt;code&gt;deploy.resources.limits&lt;/code&gt; 属性を使用し、各コンテナがホストのリソースを100%消費することを防止します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.8&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;site1&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx:alpine&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;web-site1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/data/docker-web/site1/html:/usr/share/nginx/html&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/data/docker-web/site1/logs:/var/log/nginx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;limits&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;cpus&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;0.50&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;memory&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;512M&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;web-network&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;web-network&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;driver&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;bridge&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="4-nginxリバースプロキシの設定"&gt;4. Nginxリバースプロキシの設定
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;nginx.conf&lt;/code&gt; を使用して、&lt;code&gt;server_name&lt;/code&gt; に基づきリクエストを適切なコンテナへルーティングします。Dockerブリッジネットワーク内では、サービス名がホスト名として機能します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nginx" data-lang="nginx"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;listen&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server_name&lt;/span&gt; &lt;span style="color:#e6db74"&gt;site1.example.com&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_pass&lt;/span&gt; &lt;span style="color:#e6db74"&gt;http://site1:80&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Host&lt;/span&gt; $host;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Real-IP&lt;/span&gt; $remote_addr;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="運用検証とリソース隔離の論理"&gt;運用検証とリソース隔離の論理
+&lt;/h2&gt;&lt;p&gt;デプロイは以下のコマンドで実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose up -d
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この構成により、例えば &lt;code&gt;site1&lt;/code&gt; でトラフィックが急増した場合でも、当該コンテナは設定された &lt;b&gt;0.5 CPUコア&lt;/b&gt; および &lt;b&gt;512MB RAM&lt;/b&gt; の範囲内に物理的に制限されます。これにより、ホスト全体の計算リソースが枯渇することを防ぎ、&lt;code&gt;site2&lt;/code&gt; から &lt;code&gt;site10&lt;/code&gt; までの他サービスは影響を受けずに稼働を継続できます。&lt;/p&gt;
+&lt;p&gt;また、各サイトのログが &lt;code&gt;/data/docker-web/siteX/logs&lt;/code&gt; に分離して出力されるため、異常が発生したサイトの特定と原因分析が迅速化されます。&lt;/p&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Docker Compose V2の仕様&lt;/b&gt;: &lt;code&gt;version&lt;/code&gt; 指定は現在の仕様では任意となっていますが、互換性のために残しています。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;リソース制限のチューニング&lt;/b&gt;: &lt;code&gt;cpus: '0.5'&lt;/code&gt; などの数値は、実際のサービスのベースライン負荷に基づいて調整が必要です。本構成は、マルチテナント環境における最小限の安定性を確保するためのリファレンスモデルです。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ネットワーク分離&lt;/b&gt;: &lt;code&gt;web-network&lt;/code&gt; ブリッジドライバを使用することで、外部からの直接アクセスをプロキシ経由に限定し、セキュリティ境界を明確にしています。&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nixos-Anywhere on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/nixos-anywhere/</link><description>Recent content in Nixos-Anywhere on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 12 Jun 2026 18:24:14 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/nixos-anywhere/index.xml" rel="self" type="application/rss+xml"/><item><title>OCI ARMインスタンスにおけるnixos-anywhereとdiskoを用いたNixOSの宣言的デプロイ</title><link>https://klifehack.com/p/oci-arm-nixos-anywhere-disko-deployment/</link><pubDate>Fri, 12 Jun 2026 18:24:14 +0900</pubDate><guid>https://klifehack.com/p/oci-arm-nixos-anywhere-disko-deployment/</guid><description>&lt;h1 id="oci-armインスタンスにおけるnixos-anywhereを用いたnixosへの完全移行プロセス"&gt;OCI ARMインスタンスにおけるnixos-anywhereを用いたNixOSへの完全移行プロセス
+&lt;/h1&gt;&lt;p&gt;クラウドインフラの運用において、OSレベルの構成管理を宣言的に維持することは、構成ドリフト（Configuration Drift）を防ぐための重要な課題です。特にOracle Cloud Infrastructure (OCI) のARMインスタンスのようなパブリッククラウド環境では、手動によるインストール手順を排除し、再現可能なデプロイメントパイプラインを構築することが求められます。本稿では、&lt;b&gt;nixos-anywhere&lt;/b&gt;と&lt;b&gt;disko&lt;/b&gt;を組み合わせ、既存のUbuntuインスタンスを稼働させたまま、リモートからNixOSへ完全に置換する実装プロセスについて解説します。&lt;/p&gt;
+&lt;h2 id="oci-armインスタンスのプロビジョニング"&gt;OCI ARMインスタンスのプロビジョニング
+&lt;/h2&gt;&lt;p&gt;まず、OCIコンソールからベースとなるARMインスタンスを構築します。このインスタンスは、NixOSインストールプロセスを開始するための踏み台（Bootstrap環境）として機能します。スペックは、Canonical Ubuntu 24.04 Minimal aarch64をイメージに採用し、ShapeはVM.Standard.A1.Flex（Always Free枠内: 4 OCPU, 24 GB RAM）を選択します。ストレージは50GB以上のブートボリュームが推奨されます。&lt;/p&gt;
+&lt;p&gt;インスタンス起動後、ローカル環境から操作を簡略化するために環境変数を設定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export TARGET_HOST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;132.145.x.x&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export SSH_KEY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;~/.ssh/id_rsa&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="構成定義の宣言的記述"&gt;構成定義の宣言的記述
+&lt;/h2&gt;&lt;p&gt;NixOSの構成は、Flakesを使用して管理します。これにより、依存関係のロックと再現性が保証されます。&lt;/p&gt;
+&lt;h3 id="1-flakenix"&gt;1. flake.nix
+&lt;/h3&gt;&lt;p&gt;システムの入力と出力を定義します。ここではnixpkgsの安定版（25.11）とdiskoモジュールを指定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nix" data-lang="nix"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; nixpkgs&lt;span style="color:#f92672"&gt;.&lt;/span&gt;url &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;github:NixOS/nixpkgs/nixos-25.11&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; disko&lt;span style="color:#f92672"&gt;.&lt;/span&gt;url &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;github:nix-community/disko&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; disko&lt;span style="color:#f92672"&gt;.&lt;/span&gt;inputs&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nixpkgs&lt;span style="color:#f92672"&gt;.&lt;/span&gt;follows &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;nixpkgs&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; outputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; { self&lt;span style="color:#f92672"&gt;,&lt;/span&gt; nixpkgs&lt;span style="color:#f92672"&gt;,&lt;/span&gt; disko&lt;span style="color:#f92672"&gt;,&lt;/span&gt; &lt;span style="color:#f92672"&gt;...&lt;/span&gt; }: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; nixosConfigurations&lt;span style="color:#f92672"&gt;.&lt;/span&gt;oci-arm &lt;span style="color:#f92672"&gt;=&lt;/span&gt; nixpkgs&lt;span style="color:#f92672"&gt;.&lt;/span&gt;lib&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nixosSystem {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; system &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;aarch64-linux&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; modules &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; disko&lt;span style="color:#f92672"&gt;.&lt;/span&gt;nixosModules&lt;span style="color:#f92672"&gt;.&lt;/span&gt;disko
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;./configuration.nix&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;./disko.nix&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-diskonix-ディスクパーティション設計"&gt;2. disko.nix (ディスクパーティション設計)
+&lt;/h3&gt;&lt;p&gt;OCIのブートボリューム（通常 /dev/sda）をGPT形式で初期化し、EFIおよびルートパーティションを定義します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nix" data-lang="nix"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; disko&lt;span style="color:#f92672"&gt;.&lt;/span&gt;devices &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; disk &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; main &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; device &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;/dev/sda&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; type &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;disk&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; content &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; type &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;gpt&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; partitions &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ESP &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; size &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;512M&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; type &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;EF00&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; content &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; type &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;filesystem&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; format &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;vfat&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; mountpoint &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;/boot&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; root &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; size &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;100%&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; content &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; type &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;filesystem&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; format &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ext4&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; mountpoint &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;/&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-configurationnix"&gt;3. configuration.nix
+&lt;/h3&gt;&lt;p&gt;OCI環境に最適化したブートローダーとSSHの設定を記述します。&lt;b&gt;efiInstallAsRemovable = true&lt;/b&gt;の設定は、OCIのEFI変数書き込み制限を回避するために重要です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nix" data-lang="nix"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{ pkgs&lt;span style="color:#f92672"&gt;,&lt;/span&gt; &lt;span style="color:#f92672"&gt;...&lt;/span&gt; }: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; boot&lt;span style="color:#f92672"&gt;.&lt;/span&gt;loader&lt;span style="color:#f92672"&gt;.&lt;/span&gt;systemd-boot&lt;span style="color:#f92672"&gt;.&lt;/span&gt;enable &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; boot&lt;span style="color:#f92672"&gt;.&lt;/span&gt;loader&lt;span style="color:#f92672"&gt;.&lt;/span&gt;efi&lt;span style="color:#f92672"&gt;.&lt;/span&gt;canTouchEfiVariables &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; boot&lt;span style="color:#f92672"&gt;.&lt;/span&gt;loader&lt;span style="color:#f92672"&gt;.&lt;/span&gt;grub&lt;span style="color:#f92672"&gt;.&lt;/span&gt;efiInstallAsRemovable &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; services&lt;span style="color:#f92672"&gt;.&lt;/span&gt;openssh&lt;span style="color:#f92672"&gt;.&lt;/span&gt;enable &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; users&lt;span style="color:#f92672"&gt;.&lt;/span&gt;users&lt;span style="color:#f92672"&gt;.&lt;/span&gt;root&lt;span style="color:#f92672"&gt;.&lt;/span&gt;openssh&lt;span style="color:#f92672"&gt;.&lt;/span&gt;authorizedKeys&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keys &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAB...&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; system&lt;span style="color:#f92672"&gt;.&lt;/span&gt;stateVersion &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;25.11&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="リモートデプロイメントの実行"&gt;リモートデプロイメントの実行
+&lt;/h2&gt;&lt;p&gt;nixos-anywhereは、ターゲットホスト上でkexecを実行し、メモリ上に一時的なNixOSインストーラーを展開します。ARMアーキテクチャの場合、明示的にaarch64用のkexecイメージを指定する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nix run github:nix-community/nixos-anywhere -- &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --flake .#oci-arm &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --kexec-url https://github.com/nix-community/nixos-images/releases/download/nixos-unstable/nixos-kexec-installer-aarch64-linux.tar.gz &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; root@$TARGET_HOST
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="ssh-private-key-permission"&gt;SSH Private Key Permission
+&lt;/h3&gt;&lt;p&gt;リモート実行時に Permission denied が発生する場合、秘密鍵の権限が適切でない可能性があります。🛠️ 以下のコマンドで権限を修正してください。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;600&lt;/span&gt; $SSH_KEY
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="out-of-memory-oom-during-kexec"&gt;Out-Of-Memory (OOM) during kexec
+&lt;/h3&gt;&lt;p&gt;メモリ容量が少ないインスタンスで kexec が失敗する場合、ターゲット側で一時的なスワップファイルを有効化することで回避可能です。⚠️&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fallocate -l 2G /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;600&lt;/span&gt; /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkswap /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;swapon /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="disko-partitioning-failure"&gt;Disko Partitioning Failure
+&lt;/h3&gt;&lt;p&gt;既存のパーティションがビジー状態で disko が失敗する場合、kexec 後の環境で lsblk を確認し、マウントされているパーティションをすべて解除してから再試行してください。&lt;/p&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;デプロイ完了後、新しいシステムへの接続を確認し、ハードウェア構成が正しく反映されているか検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@$TARGET_HOST &lt;span style="color:#e6db74"&gt;&amp;#34;lscpu &amp;amp;amp;&amp;amp;amp; lsblk&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;一度インストールが完了すれば、以降の変更は nixos-rebuild switch &amp;ndash;target-host コマンドを通じて、ローカルから宣言的に適用可能となります。&lt;/p&gt;</description></item></channel></rss>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Git-Merge on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/git-merge/</link><description>Recent content in Git-Merge on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 25 Oct 2026 10:35:55 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/git-merge/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub ActionsによるSpring Boot CIパイプライン構築とマージ競合・障害解析</title><link>https://klifehack.com/p/github-actions-ci-pipeline-diagnostics-merge-resolution/</link><pubDate>Sun, 25 Oct 2026 10:35:55 +0900</pubDate><guid>https://klifehack.com/p/github-actions-ci-pipeline-diagnostics-merge-resolution/</guid><description>&lt;p&gt;ソフトウェア開発プロセスにおいて、ローカル環境でのテスト実行のみに依存した変更の適用は、ターゲットブランチへの不安定なコードの混入を引き起こす原因となります。特に複数メンバーでの並行開発下では、Gitブランチ構成の複雑化やコンフリクト解決時の設定誤りによって、CI/CDパイプラインが正常に発火しなくなるリスクが常に存在します。&lt;/p&gt;
+&lt;p&gt;本記事では、GitHub Actionsを活用したSpring Bootプロジェクトの自動ビルド・テスト検証パイプラインの構築手法と、マージ競合の解消過程で発生したワークフローファイルのパス逸脱問題、およびテスト失敗時の診断アーティファクト収集メカニズムについて記述します。&lt;/p&gt;
+&lt;h2 id="github-actionsの基本構造と宣言的パイプライン設計"&gt;GitHub Actionsの基本構造と宣言的パイプライン設計
+&lt;/h2&gt;&lt;p&gt;GitHub Actionsで実行される自動化処理（Workflow）は、リポジトリ内の特定ディレクトリに配置されたYAML宣言ファイルによって定義されます。実行エンジンはエフェメラル（使い捨て）な仮想マシンコンテナ上で稼働するため、依存環境のセットアップや実行ステップを漏れなく明示する必要があります。&lt;/p&gt;
+&lt;h3 id="ディレクトリ構成の厳格な規約"&gt;ディレクトリ構成の厳格な規約
+&lt;/h3&gt;&lt;p&gt;GitHub Actionsのパイプライン定義ファイルは、以下のパスに厳格に配置されている必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.github/workflows/ci.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;このパス構造から外れた場所（例: &lt;code&gt;docs/ci.yml&lt;/code&gt; や &lt;code&gt;.github/ci.yml&lt;/code&gt;）にファイルを配置した場合、GitHubのイベント検知エンジンはこれをワークフロー定義として認識しません。&lt;/p&gt;
+&lt;h3 id="spring-boot-ciワークフローの実装例"&gt;Spring Boot CIワークフローの実装例
+&lt;/h3&gt;&lt;p&gt;以下は、&lt;code&gt;main&lt;/code&gt; ブランチへのコードPushおよびPull Requestをトリガーとして、Gradleビルドとテストを実行する一般的なワークフロー設定です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;CI&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;main]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pull_request&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;main]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-24.04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout Source Code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Provision Temurin JDK 21&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/setup-java@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;distribution&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;temurin&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;java-version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;21&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set Executable Permission for Gradle Wrapper&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;chmod +x ./gradlew&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Execute Automated Unit Tests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./gradlew test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Preserve Test Failure Artifacts&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;failure()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/upload-artifact@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;test-report&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;path&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build/reports/tests/test/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if-no-files-found&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;warn&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="マージ競合とワークフローパス逸脱の復旧処理"&gt;マージ競合とワークフローパス逸脱の復旧処理
+&lt;/h2&gt;&lt;p&gt;機能開発ブランチ（&lt;code&gt;lab/ci&lt;/code&gt;）の運用中に、リモートの &lt;code&gt;main&lt;/code&gt; ブランチ側で並行して変更が加わった場合、Pull Request上でマージ競合（Merge Conflict）が発生します。&lt;/p&gt;
+&lt;h3 id="競合解消とファイルパスの不整合"&gt;競合解消とファイルパスの不整合
+&lt;/h3&gt;&lt;p&gt;ローカル環境でリモートの最新状態を取得し、マージ処理を実施します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git switch lab/ci
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git fetch cicd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge cicd/main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;このマージ処理（Git 3-way merge &lt;code&gt;ort&lt;/code&gt; 戦略）を実行した際、上流ブランチ側の変更履歴によって &lt;code&gt;.github/workflows/ci.yml&lt;/code&gt; が意図せず &lt;code&gt;docs/ci.yml&lt;/code&gt; に移動（Rename）されるケースが発生することがあります。&lt;/p&gt;
+&lt;p&gt;ファイルが &lt;code&gt;docs/&lt;/code&gt; ディレクトリに移動すると、以降のPushイベントでGitHub Actionsがトリガーされなくなります。この状態を解消するには、Gitコマンドを用いて正しいディレクトリへ配置を復元する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 誤ったパスから正規のディレクトリ構造へ移動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git mv docs/ci.yml .github/workflows/ci.yml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 変更のコミットとリモートブランチへのPush&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git commit -m &lt;span style="color:#e6db74"&gt;&amp;#34;fix: restore workflow definition path&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push cicd lab/ci
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="構造的マージ可能性とアプリケーション検証ステータスの分離"&gt;構造的マージ可能性とアプリケーション検証ステータスの分離
+&lt;/h2&gt;&lt;p&gt;Pull Requestの診断画面において、以下の2つのステータスは明確に区別して解釈する必要があります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Gitの構造的マージ可能性（Merge Conflict Status）&lt;/b&gt;: テキストレベルでコミットツリーが結合可能か否かを示します。&lt;code&gt;No conflicts with base branch&lt;/code&gt; と表示されている場合、Gitのファイル結合自体は正常に完了します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;CIステータスチェック（Status Checks）&lt;/b&gt;: アプリケーションのビルドや単体テストが成功したか否かを示します。&lt;code&gt;All checks have failed&lt;/code&gt; の場合、Gitレベルでマージ可能であっても、コードは破損状態にあります。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;ブランチ保護ルール（Branch Protection Rules）が設定されていない場合、テストが失敗している状態であってもGitHubのUI上では Merge ボタンが押し下げ可能な状態となります。品質ゲートとしてのCIを機能させるには、ステータスチェックの成功をマージの必須条件として構成することが要求されます。&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-ワークフローが実行されずno-workflow-runs-foundと表示される"&gt;1. ワークフローが実行されず「No workflow runs found」と表示される
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;原因&lt;/b&gt;: ワークフローファイルの配置パスが &lt;code&gt;.github/workflows/&lt;/code&gt; から外れている、またはYAMLファイルのインデント構文エラーが存在します。&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;対策&lt;/b&gt;: ファイルパスが &lt;code&gt;.github/workflows/*.yml&lt;/code&gt; にあるかを確認します。また、&lt;code&gt;jobs&lt;/code&gt; や &lt;code&gt;steps&lt;/code&gt; のインデント階層（スペース2文字基準）が正しいかを検証します。&lt;/p&gt;
+&lt;h3 id="2-gradleテスト失敗時にコンソールログから詳細原因が特定できない"&gt;2. Gradleテスト失敗時にコンソールログから詳細原因が特定できない
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;原因&lt;/b&gt;: Gradleの標準出力ログだけでは、断片的なアサーション失敗や設定ファイルの読み込みエラーの詳細が出力しきれない場合があります。&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;対策&lt;/b&gt;: &lt;code&gt;actions/upload-artifact@v4&lt;/code&gt; に &lt;code&gt;if: failure()&lt;/code&gt; 条件を付与して設定し、&lt;code&gt;build/reports/tests/test/&lt;/code&gt; 内のHTMLテストレポートをアーティファクトとして保存します。これにより、パイプライン失敗時にブラウザで詳細なスタックトレースを確認できます。&lt;/p&gt;
+&lt;h3 id="3-リモートへpushした際にシークレットリークの警告で処理が拒否される"&gt;3. リモートへPushした際にシークレットリークの警告で処理が拒否される
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;原因&lt;/b&gt;: &lt;code&gt;.env&lt;/code&gt; ファイルやハードコードされたAPIキー、プライベートキーがGitコミット履歴に含まれています。&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;対策&lt;/b&gt;: 該当の秘密情報をコードベースから削除し、&lt;code&gt;.gitignore&lt;/code&gt; に対象ファイルパターンを追加します。過去のコミット履歴に含まれてしまった場合は、認証情報自体を即座に失効・再発行し、&lt;code&gt;GitHub Actions Secrets&lt;/code&gt; などの安全なストアに移行します。&lt;/p&gt;
+&lt;h2 id="検証用ターミナルログ"&gt;検証用ターミナルログ
+&lt;/h2&gt;&lt;p&gt;パイプライン配置の正常化およびローカル環境でのビルド動作検証時のターミナル出力例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ git status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;On branch lab/ci
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Your branch is up to date with &amp;#39;cicd/lab/ci&amp;#39;.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nothing to commit, working tree clean
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -la .github/workflows/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total 12
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drwxr-xr-x 1 runner 1049000 0 Oct 25 10:15 .
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drwxr-xr-x 1 runner 1049000 0 Oct 25 10:15 ..
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-r--r-- 1 runner 1049000 824 Oct 25 10:15 ci.yml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ./gradlew test
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;BUILD SUCCESSFUL in 8s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;4 actionable tasks: 4 executed
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;💡 &lt;b&gt;1. Gitマージ成功とアプリケーション健全性の非等価性&lt;/b&gt;: テキストコンフリクトが発生せずにマージできた場合であっても、ビルドやテストが正常に通過することを意味しません。CIパイプラインによる自動検証が不可欠です。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;2. 設定ファイルの配置規約の遵守&lt;/b&gt;: GitHub Actions等の自動化ツールでは、特定のディレクトリ構造（&lt;code&gt;.github/workflows/&lt;/code&gt;）が実行条件となっているため、ブランチ操作時のファイル移動に注意が必要です。&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;3. 失敗診断アーティファクトの保持&lt;/b&gt;: パイプライン失敗時の原因調査コストを削減するため、単にエラー終了させるのではなく、テストレポート等の診断用ファイルを適切に保存する構成が有効です。&lt;/p&gt;</description></item></channel></rss>

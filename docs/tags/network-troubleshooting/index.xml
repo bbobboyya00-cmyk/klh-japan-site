@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Network-Troubleshooting on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/network-troubleshooting/</link><description>Recent content in Network-Troubleshooting on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 23 Jul 2026 10:11:52 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/network-troubleshooting/index.xml" rel="self" type="application/rss+xml"/><item><title>LinuxにおけるEADDRNOTAVAILエラーの解析とTIME_WAIT最適化</title><link>https://klifehack.com/p/linux-tcp-time-wait-eaddrnotavail-optimization/</link><pubDate>Thu, 23 Jul 2026 10:11:52 +0900</pubDate><guid>https://klifehack.com/p/linux-tcp-time-wait-eaddrnotavail-optimization/</guid><description>&lt;h1 id="eaddrnotavail-エラーの解析とカーネルパラメータの最適化"&gt;EADDRNOTAVAIL エラーの解析とカーネルパラメータの最適化
+&lt;/h1&gt;&lt;p&gt;マイクロサービスアーキテクチャや高頻度なAPIコールを伴うシステムにおいて、外部リソースへの接続試行時に &lt;b&gt;EADDRNOTAVAIL&lt;/b&gt; (Cannot assign requested address) エラーが発生することがあります。これはOSレベルでのネットワークリソース、特に送信元ポートの枯渇に起因する典型的なインフラストラクチャのボトルネックです。手動での場当たり的な対応は、ノード数の増加に伴い管理コストを増大させ、最終的にはシステム全体の可用性を損なう要因となります。&lt;/p&gt;
+&lt;h2 id="eaddrnotavailの発生メカニズム"&gt;EADDRNOTAVAILの発生メカニズム
+&lt;/h2&gt;&lt;p&gt;アプリケーションが新しいTCP接続を開始する際、Linuxカーネルは接続を識別するために &lt;b&gt;4-tuple&lt;/b&gt;（送信元IP、送信元ポート、送信先IP、送信先ポート）を割り当てます。EADDRNOTAVAIL エラーは、カーネルがこの組み合わせを完成させるために必要な送信元ポートを確保できない場合に発生します。これはネットワーキングスタックがリソース枯渇状態にあるか、設定の不整合が生じていることを示す明確なシグナルです。&lt;/p&gt;
+&lt;h2 id="プロダクション環境における主な原因"&gt;プロダクション環境における主な原因
+&lt;/h2&gt;&lt;p&gt;実務上のトラブルシューティングにおいて、以下の要因が頻繁に確認されます。エフェメラルポートの枯渇、大量の &lt;b&gt;TIME_WAIT&lt;/b&gt; ソケットによるポート占有、ネットワークインターフェースに割り当てられていないIPアドレスへの不正なバインド試行、DockerやKubernetesのネットワーク名前空間における競合、そしてアプリケーション側でのソケットクローズ不備によるファイル記述子（FD）のリークが挙げられます。&lt;/p&gt;
+&lt;h2 id="診断プロトコルと実証コマンド"&gt;診断プロトコルと実証コマンド
+&lt;/h2&gt;&lt;p&gt;障害発生時には、カーネルの状態をサンプリングしてボトルネックを特定するプロセスが必要です。🛠️&lt;/p&gt;
+&lt;h3 id="1-エフェメラルポート範囲の確認"&gt;1. エフェメラルポート範囲の確認
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat /proc/sys/net/ipv4/ip_local_port_range
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;デフォルト値（例: 32768 60999）が狭すぎる場合、同時接続数が物理的に制限される要因となります。&lt;/p&gt;
+&lt;h3 id="2-time_wait状態の定量化"&gt;2. TIME_WAIT状態の定量化
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ss -ant | grep TIME-WAIT | wc -l
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この数値が数万単位で推移している場合、ポートの再利用効率を改善するための介入が必要です。&lt;/p&gt;
+&lt;h3 id="3-ソケット統計のサマリー確認"&gt;3. ソケット統計のサマリー確認
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ss -s
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ESTABLISHED と TIME_WAIT の比率を分析し、異常な増加傾向がないか監視を強化します。&lt;/p&gt;
+&lt;h2 id="カーネルパラメータの最適化実装"&gt;カーネルパラメータの最適化実装
+&lt;/h2&gt;&lt;p&gt;特定されたボトルネックに基づき、&lt;code&gt;/etc/sysctl.conf&lt;/code&gt; を編集してパラメータを調整します。これらの設定は、高負荷環境下でのポート再利用性を向上させ、リソースの回転率を最適化します。⚠️&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# エフェメラルポート範囲の拡張&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;net.ipv4.ip_local_port_range &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;65535&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# TIME_WAIT状態のソケットを新しい接続で再利用することを許可&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;net.ipv4.tcp_tw_reuse &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FIN-WAIT-2状態の保持時間を短縮（デフォルト60秒から30秒へ）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;net.ipv4.tcp_fin_timeout &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定の反映&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysctl -p
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting-実務上の留意点"&gt;Troubleshooting: 実務上の留意点
+&lt;/h2&gt;&lt;p&gt;単にポート範囲を拡張するだけでは、根本的な解決に至らない場合があります。&lt;b&gt;tcp_tw_reuse&lt;/b&gt; の適用に関しては、特定のNATトポロジー環境下でタイムスタンプの不整合によりパケットが破棄されるリスクがあるため、ステージング環境での厳密な検証が必須です。また、短寿命の接続を大量に生成するのではなく、Keep-Aliveや接続プーリング（Connection Pooling）を利用してソケットの生成・破棄コストを抑制するアプリケーション側の改修も検討すべきです。さらに、インターフェースが &lt;b&gt;UP&lt;/b&gt; 状態であることを確認し、物理的なレイヤーでの欠陥を排除してください。&lt;/p&gt;
+&lt;h2 id="運用検証ログの例"&gt;運用検証ログの例
+&lt;/h2&gt;&lt;p&gt;設定変更の適用後、システムの整合性とパラメータの反映状況を最終確認するための検証プロセスを実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# ポート範囲の適用確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sysctl net.ipv4.ip_local_port_range
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;net.ipv4.ip_local_port_range = 1024 65535
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# ソケット使用状況のリアルタイム監視
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Total: 1250 (kernel 1300)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;TCP: 850 (estab 400, closed 300, orphaned 0, timewait 150)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 特定プロセスによるファイル記述子の確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls /proc/$(pgrep nginx | head -n 1)/fd | wc -l
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;128
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;EADDRNOTAVAIL は、Linuxカーネルがネットワークリソースの要求を拒否したという重要な警告です。解決には、エフェメラルポート範囲の拡張、TIME_WAIT の挙動分析、およびアプリケーション層でのソケット管理の最適化を組み合わせた多角的なアプローチが求められます。特にコンテナ環境では、ホスト側とコンテナ側のネットワーク名前空間における制限値の乖離に注意し、インフラ全体の整合性を維持することが運用の安定性に直結します。&lt;/p&gt;</description></item></channel></rss>

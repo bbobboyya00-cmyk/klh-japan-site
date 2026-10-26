@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Sshd on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/sshd/</link><description>Recent content in Sshd on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 13 Oct 2026 10:14:11 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/sshd/index.xml" rel="self" type="application/rss+xml"/><item><title>LogwatchとPostfixを用いたシステムログ集約と定期配送の設計</title><link>https://klifehack.com/p/logwatch-postfix-log-monitoring-setup/</link><pubDate>Tue, 13 Oct 2026 10:14:11 +0900</pubDate><guid>https://klifehack.com/p/logwatch-postfix-log-monitoring-setup/</guid><description>&lt;p&gt;インフラストラクチャの台数増加に伴い、各ノードに散在する認証ログやパケット破棄ログを手動で巡回確認する運用は、オペレーションミスの原因となります。集中ログ収集基盤を導入する前段階や、単体ホストの保全性を迅速に担保するアプローチとして、ログ要約ツールによる定期レポートの自動配送は標準的な監査手法の一つです。&lt;/p&gt;
+&lt;p&gt;本稿では、Ubuntu 24.04 LTS環境をベースに、Logwatchによるログ解析およびPostfixを経由した通知パイプラインの構築手順と、運用時に直面する設定上の摩擦要因について整理します。&lt;/p&gt;
+&lt;h2 id="アーキテクチャと動作要件"&gt;アーキテクチャと動作要件
+&lt;/h2&gt;&lt;p&gt;Logwatchは各サービス（SSH, iptables, Apache, Postfix, cron, sudo等）のログファイルを走査し、指定された期間および粒度（Detailレベル）に基づいてテキストまたはHTML形式のサマリーを生成します。生成されたデータは標準出力、ファイル保存、あるいはローカルに常駐するMail Transfer Agent（MTA）経由での外部送信に対応しています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-------------------------------------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Linux Node (Ubuntu 24.04.4 LTS) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| /var/log/auth.log ---+ |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| /var/log/syslog ---+--&amp;amp;gt; [ Logwatch Engine ] |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| /var/log/mail.log ---+ | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| [ /usr/sbin/sendmail ] |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| [ Postfix (MTA) ] |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-------------------------------|-----------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v (SMTP: Port 25/587)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [ Remote Mail Server ]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="パッケージ導入とmta設定"&gt;パッケージ導入とMTA設定
+&lt;/h2&gt;&lt;h3 id="1-logwatchの導入"&gt;1. Logwatchの導入
+&lt;/h3&gt;&lt;p&gt;システムのパッケージリポジトリを更新し、Logwatch本体を導入します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install -y logwatch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;logwatch --version
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-postfixによる配送経路の構成"&gt;2. Postfixによる配送経路の構成
+&lt;/h3&gt;&lt;p&gt;外部宛先にメールを中継・直接送信するため、Postfixおよび補助ユーティリティをセットアップします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install -y postfix mailutils
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;パッケージ設定ダイアログが表示された場合、送信要件に応じて以下を選択します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Internet Site&lt;/b&gt;: ホストから直接宛先MXレコードへSMTP配送を行う場合（SPF/DKIM/逆引きDNSの考慮が必要）。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Internet with smarthost&lt;/b&gt;: 外部のリレーサーバーを経由して配送する場合。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;構成完了後、送信元ドメインの認識を検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo postconf mydomain
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo postconf myhostname
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="レポート生成パラメータと設定ファイル構成"&gt;レポート生成パラメータと設定ファイル構成
+&lt;/h2&gt;&lt;h3 id="即時検証標準出力"&gt;即時検証（標準出力）
+&lt;/h3&gt;&lt;p&gt;ターミナル上で本日の要約を直接確認する場合、以下のフラグを指定して実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo logwatch --detail high --range today --output stdout
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;特定サービスのみを抽出する場合や期間を明示する場合は、&lt;code&gt;--service&lt;/code&gt; および &lt;code&gt;--range&lt;/code&gt; オプションを使用します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SSHサービスのみ抽出&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo logwatch --service sshd --range today --output stdout
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 過去7日間の範囲を指定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo logwatch --range &lt;span style="color:#e6db74"&gt;&amp;#39;between -7 days and today&amp;#39;&lt;/span&gt; --output stdout
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="etclogwatchconflogwatchconf-の定義"&gt;&lt;code&gt;/etc/logwatch/conf/logwatch.conf&lt;/code&gt; の定義
+&lt;/h3&gt;&lt;p&gt;デフォルトの動作パラメータは &lt;code&gt;/etc/logwatch/conf/logwatch.conf&lt;/code&gt; に記述します。配備例は以下の通りです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Logwatch Default Configuration
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Output = mail
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Format = text
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Encode = none
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;MailTo = admin@example.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;MailFrom = logwatch@yourserver.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Detail = High
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Range = yesterday
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 監視対象外とするサービス
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Service = &amp;#34;-cron&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Service = &amp;#34;-ntpd&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;閾値に基づくアラートを構成する場合、個別のサービス設定ファイルをオーバーライドします。ディスク容量の警告基準を変更するには、&lt;code&gt;/etc/logwatch/conf/services/disk_space.conf&lt;/code&gt; を作成・編集します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;disk_space_percent_used_warning = 90
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="自動化とcronスケジューリング"&gt;自動化とcronスケジューリング
+&lt;/h2&gt;&lt;p&gt;Ubuntuではデフォルトで &lt;code&gt;/etc/cron.daily/00logwatch&lt;/code&gt; が配置されます。実行タイミングや配送パラメータを厳密に制御する場合は、標準のデイリージョブを無効化し、&lt;code&gt;crontab&lt;/code&gt; を用いて明示的にスケジュールを登録します。&lt;/p&gt;
+&lt;p&gt;まず単体テストとして、mailコマンド経由およびLogwatch単体でのメール出力を検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 配送パイプラインの疎通テスト&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;Test body&amp;#34;&lt;/span&gt; | mail -s &lt;span style="color:#e6db74"&gt;&amp;#34;MTA Test&amp;#34;&lt;/span&gt; admin@example.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Logwatchによる単発メール送信テスト&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo logwatch --output mail --mailto admin@example.com --detail high --range today
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;検証後、&lt;code&gt;/etc/cron.d/logwatch&lt;/code&gt; または rootのcrontabに以下のように登録します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 毎朝08:00に前日分のレポートを配送
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;0 8 * * * /usr/sbin/logwatch --output mail --mailto admin@example.com --detail high --range yesterday
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;Logwatchの導入およびPostfixとの連携において発生しやすい障害事象と、その切り分け手順を以下に示します。&lt;/p&gt;
+&lt;h3 id="1-メールが外部宛先に到達せずキューに滞留する"&gt;1. メールが外部宛先に到達せずキューに滞留する
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;原因&lt;/b&gt;: クラウドプロバイダやISPによるOutbound Port 25 Blocking（OP25B）、またはPostfixのDNS解決・リレー設定の不備。&lt;/p&gt;
+&lt;p&gt;確認コマンド:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mailq
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo journalctl -u postfix -n &lt;span style="color:#ae81ff"&gt;50&lt;/span&gt; --no-pager
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;キューに &lt;code&gt;Connection timed out&lt;/code&gt; や &lt;code&gt;Network is unreachable&lt;/code&gt; が記録されている場合、Port 25の通信が制限されています。この場合、&lt;code&gt;/etc/postfix/main.cf&lt;/code&gt; 内で &lt;code&gt;relayhost&lt;/code&gt; を定義し、認証付きSMTP（Port 587）経由へ迂回させる必要があります。&lt;/p&gt;
+&lt;h3 id="2-ログファイルのパーミッション拒否permission-denied"&gt;2. ログファイルのパーミッション拒否（Permission Denied）
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;原因&lt;/b&gt;: &lt;code&gt;/var/log&lt;/code&gt; 配下のファイルが特定のグループ（&lt;code&gt;adm&lt;/code&gt; や &lt;code&gt;systemd-journal&lt;/code&gt; など）に制限されており、cron実行ユーザー権限で参照できないケース。&lt;/p&gt;
+&lt;p&gt;対応手順: 実行権限の確認とログディレクトリの権限グループ照合を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ls -l /var/log/auth.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;cronジョブを一般ユーザーで設定している場合は、必ずrootのcrontab（&lt;code&gt;sudo crontab -e&lt;/code&gt;）または &lt;code&gt;/etc/cron.daily/&lt;/code&gt; に配置されていることを確認してください。&lt;/p&gt;
+&lt;h2 id="operational-verification"&gt;Operational Verification
+&lt;/h2&gt;&lt;p&gt;🛠️ 各種デーモンおよびプロセスの正常動作確認、ネットワークリスナーの検査プロトコルは以下の通りです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl status postfix --no-pager
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ss -tulpn | grep :25
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;```&lt;/span&gt;text
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;● postfix@-.service - Postfix Mail Transport Agent &lt;span style="color:#f92672"&gt;(&lt;/span&gt;instance -&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Loaded: loaded &lt;span style="color:#f92672"&gt;(&lt;/span&gt;/usr/lib/systemd/system/postfix@.service; enabled; preset: enabled&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Active: active &lt;span style="color:#f92672"&gt;(&lt;/span&gt;running&lt;span style="color:#f92672"&gt;)&lt;/span&gt; since Tue 2026-10-13 09:12:44 UTC; 2h 15min ago
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Main PID: &lt;span style="color:#ae81ff"&gt;12480&lt;/span&gt; &lt;span style="color:#f92672"&gt;(&lt;/span&gt;master&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Tasks: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#f92672"&gt;(&lt;/span&gt;limit: 4613&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Memory: 4.8M &lt;span style="color:#f92672"&gt;(&lt;/span&gt;peak: 5.2M&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CPU: 120ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CGroup: /system.slice/system-postfix.slice/postfix@-.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├─12480 /usr/lib/postfix/sbin/master -w
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├─12482 qmgr -l -t unix -u
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└─15210 pickup -l -t unix -u
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt; 127.0.0.1:25 0.0.0.0:* users:&lt;span style="color:#f92672"&gt;((&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;master&amp;#34;&lt;/span&gt;,pid&lt;span style="color:#f92672"&gt;=&lt;/span&gt;12480,fd&lt;span style="color:#f92672"&gt;=&lt;/span&gt;13&lt;span style="color:#f92672"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::1&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:25 &lt;span style="color:#f92672"&gt;[&lt;/span&gt;::&lt;span style="color:#f92672"&gt;]&lt;/span&gt;:* users:&lt;span style="color:#f92672"&gt;((&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;master&amp;#34;&lt;/span&gt;,pid&lt;span style="color:#f92672"&gt;=&lt;/span&gt;12480,fd&lt;span style="color:#f92672"&gt;=&lt;/span&gt;14&lt;span style="color:#f92672"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上記のようにPostfixのマスタープロセスがループバックアドレス（127.0.0.1）でリッスンしており、Logwatch実行時にエラーなくパイプラインが終了していれば、日次の監視基盤は正常に稼働しています。&lt;/p&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;💡 Logwatchは軽量かつ依存関係が少ないため、最小構成のLinuxサーバーにおける基本的なセキュリティ監査および死活状況の把握に適しています。ただし、ホスト数が増加した環境では個別のメールレポートを人が判読する負荷が急激に増大します。サーバ群の規模に応じて、LogwatchのHTML出力を集約スクリプトで統合するか、あるいはSyslogプロトコルを用いた集中ログ基盤（Fluentbit、OpenTelemetry、Vector等）への移行を検討する必要があります。&lt;/p&gt;</description></item></channel></rss>

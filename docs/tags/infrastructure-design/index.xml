@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Infrastructure-Design on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/infrastructure-design/</link><description>Recent content in Infrastructure-Design on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 15 Jul 2026 10:11:40 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/infrastructure-design/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubernetesにおける設定管理とデータ永続化の抽象化設計</title><link>https://klifehack.com/p/k8s-config-persistence-strategy/</link><pubDate>Wed, 15 Jul 2026 10:11:40 +0900</pubDate><guid>https://klifehack.com/p/k8s-config-persistence-strategy/</guid><description>&lt;h1 id="kubernetesにおけるpodのライフサイクル管理とデータの永続化戦略"&gt;KubernetesにおけるPodのライフサイクル管理とデータの永続化戦略
+&lt;/h1&gt;&lt;p&gt;Kubernetesを用いたインフラ構成において、Podは本質的に短命（Ephemeral）なリソースとして設計されています。ノードのメンテナンス、ローリングアップデート、あるいは予期せぬシステム障害により、Podは頻繁に破棄され、新しいインスタンスに置き換わります。この動的なライフサイクルにおいて、アプリケーションの設定や生成されたデータをPod内部のファイルシステムに依存させることは、インスタンス再起動時のデータ消失や設定の不整合を招く致命的なリスクとなります。本稿では、アプリケーションのコードと設定を分離し、データの永続性を保証するためのアーキテクチャ設計について詳述します。&lt;/p&gt;
+&lt;h2 id="設定管理の分離configmapの導入"&gt;設定管理の分離：ConfigMapの導入
+&lt;/h2&gt;&lt;p&gt;アプリケーションの動作を制御する環境変数や設定ファイルをコンテナイメージに含める（Baking）手法は、環境ごとのイメージ作成を強いるため、デプロイパイプラインの柔軟性を著しく低下させます。ConfigMapを利用することで、イメージを不変（Immutable）に保ちながら、実行時に設定を注入することが可能になります。&lt;/p&gt;
+&lt;h3 id="configmapの作成と注入"&gt;ConfigMapの作成と注入
+&lt;/h3&gt;&lt;p&gt;まず、実務的な設定データを持つConfigMapを定義します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# リテラルからのConfigMap作成例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl create configmap app-config --from-literal&lt;span style="color:#f92672"&gt;=&lt;/span&gt;APP_ENV&lt;span style="color:#f92672"&gt;=&lt;/span&gt;production --from-literal&lt;span style="color:#f92672"&gt;=&lt;/span&gt;LOG_LEVEL&lt;span style="color:#f92672"&gt;=&lt;/span&gt;info
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;作成されたConfigMapをPodに注入する方法には、主に「環境変数」と「ボリュームマウント」の2種類が存在します。&lt;/p&gt;
+&lt;h4 id="1-環境変数による注入"&gt;1. 環境変数による注入
+&lt;/h4&gt;&lt;p&gt;単純なキー・バリュー形式の設定に適しています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;backend-api&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;api-container&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;backend-service:v1.2.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;APP_ENVIRONMENT&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;valueFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;configMapKeyRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app-config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;APP_ENV&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="2-ボリュームマウントによる注入"&gt;2. ボリュームマウントによる注入
+&lt;/h4&gt;&lt;p&gt;nginx.confやapplication.yamlなどの複雑な設定ファイルを扱う場合に適しています。ConfigMapの内容がファイルとしてディレクトリ内に展開されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;web-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx:1.25&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumeMounts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;config-volume&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mountPath&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/etc/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;config-volume&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;configMap&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app-config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="データ永続化の抽象化pvとpvc"&gt;データ永続化の抽象化：PVとPVC
+&lt;/h2&gt;&lt;p&gt;データベースのストレージやログ出力先など、Podのライフサイクルを超えて維持されるべきデータについては、Persistent Volume (PV) と Persistent Volume Claim (PVC) による抽象化レイヤーを構築します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Persistent Volume (PV)&lt;/b&gt;: クラスター内の物理ストレージ実体。管理者によってプロビジョニングされます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Persistent Volume Claim (PVC)&lt;/b&gt;: ユーザーによるストレージ要求。必要な容量やアクセスモード（ReadWriteOnceなど）を指定します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この分離により、開発者は背後のストレージ基盤（NFS、クラウドのブロックストレージ等）を意識することなく、標準化されたインターフェースで永続ストレージを利用できます。&lt;/p&gt;
+&lt;h2 id="ワークロード管理と自己修復"&gt;ワークロード管理と自己修復
+&lt;/h2&gt;&lt;p&gt;設定とデータが分離されたPodは、コントローラーによって管理されることで真の可用性を獲得します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Deployment&lt;/b&gt;: 指定されたレプリカ数を維持し、ローリングアップデートやロールバックを自動化します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ReplicaSet&lt;/b&gt;: Podの生存状態を監視し、異常終了したPodを即座に再作成する自己修復（Self-healing）メカニズムを提供します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;DaemonSet&lt;/b&gt;: ログ収集エージェントやモニタリングツールなど、すべてのノードで一様に実行されるべきPodの配置を保証します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;実務環境で直面する代表的な課題と解決策を以下に示します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;⚠️ &lt;b&gt;ConfigMap更新の反映遅延&lt;/b&gt;: 環境変数として注入された設定は、Podの再起動なしには更新されません。ボリュームマウントの場合、Kubeletの同期サイクル（デフォルト約1分）に従って更新されますが、アプリケーション側でファイルの変更を監視（Watch）するロジックが必要です。&lt;/li&gt;
+&lt;li&gt;⚠️ &lt;b&gt;PVCのBinding失敗&lt;/b&gt;: PVCがPending状態から遷移しない場合、要求されたaccessModesやstorageClassNameが既存のPVまたはStorageClassと一致しているか確認してください。&lt;/li&gt;
+&lt;li&gt;⚠️ &lt;b&gt;権限エラー&lt;/b&gt;: ボリュームマウントされたディレクトリに対して、コンテナ内の非ルートユーザーが書き込み権限を持たない場合があります。securityContextのfsGroupを設定することで解決可能です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="operational-verifications"&gt;Operational Verifications
+&lt;/h2&gt;&lt;p&gt;デプロイ後の整合性を確認するための標準的な検証コマンドです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# ConfigMapのデータ整合性確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl describe configmap app-config
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# コンテナ内環境変数の注入確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl exec -it backend-api -- env | grep APP_
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;APP_ENVIRONMENT=production
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# ボリュームマウントの状態確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl exec -it web-server -- ls -l /etc/config
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total 0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lrwxrwxrwx 1 root root 14 Jul 15 10:00 APP_ENV -&amp;amp;gt; ..data/APP_ENV
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# PVCのバインド状態確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl get pvc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME STATUS VOLUME CAPACITY ACCESS MODES STORAGECLASS AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;data-claim Bound pvc-550e8400-e29b-41d4-a716-446655440000 10Gi RWO standard 5m
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;p&gt;Kubernetesにおけるリソース管理の本質は、「Podは使い捨てである」という前提に立ち、設定をConfigMapへ、状態をPV/PVCへ外部化することにあります。この疎結合な設計を徹底することで、インフラの変更に対する耐性が高まり、自動化されたスケーリングと自己修復が最大限に機能するクラウドネイティブな環境が実現します。&lt;/p&gt;</description></item></channel></rss>

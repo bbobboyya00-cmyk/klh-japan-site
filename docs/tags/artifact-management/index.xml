@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Artifact-Management on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/artifact-management/</link><description>Recent content in Artifact-Management on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 09 Jul 2026 10:37:04 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/artifact-management/index.xml" rel="self" type="application/rss+xml"/><item><title>Nexus Repositoryを活用したアーティファクト管理の設計手法とパイプライン統合</title><link>https://klifehack.com/p/nexus-repository-artifact-management-design/</link><pubDate>Thu, 09 Jul 2026 10:37:04 +0900</pubDate><guid>https://klifehack.com/p/nexus-repository-artifact-management-design/</guid><description>&lt;h1 id="nexus-repositoryを活用したアーティファクト管理の設計とトラブルシューティング"&gt;Nexus Repositoryを活用したアーティファクト管理の設計とトラブルシューティング
+&lt;/h1&gt;&lt;p&gt;CI/CDパイプラインの自動化が進む現代のインフラ構成において、ソースコード管理（SCM）の最適化だけでは、デプロイメントの整合性と再現性を完全に担保することは困難です。ビルドプロセスによって生成されるバイナリアーティファクト（JAR、WAR、npmパッケージ、Dockerイメージなど）をSCMに直接格納することは、リポジトリの肥大化とパフォーマンス低下を招くため、アンチパターンとされています。これらビルド成果物や外部依存ライブラリを一元管理し、信頼性の高いデリバリーラインを構築するためには、専用のアーティファクトリポジトリの導入が不可欠です。&lt;/p&gt;
+&lt;p&gt;本稿では、Sonatype Nexus Repositoryを中核としたアーティファクト管理アーキテクチャの設計手法、クライアント統合設定、および運用上のボトルネックを解消するためのトラブルシューティング手順について解説します。&lt;/p&gt;
+&lt;h2 id="1-nexus-repositoryの3大トポロジー設計"&gt;1. Nexus Repositoryの3大トポロジー設計
+&lt;/h2&gt;&lt;p&gt;Nexus Repositoryは、役割の異なる3種類のリポジトリタイプ（Hosted、Proxy、Group）を組み合わせることで、効率的なパッケージ配信を実現します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Hosted Repository（ホスト型リポジトリ）&lt;/b&gt;
+組織内部で開発・ビルドされた独自のプライベートパッケージを格納する領域です。外部には公開しない機密性の高いモジュールや、CI/CDパイプラインから直接デプロイされるビルド成果物をホストします。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Proxy Repository（プロキシ型リポジトリ）&lt;/b&gt;
+Maven Central、npmjs.org、Docker Hubなどのパブリックレジストリに対するキャッシュプロキシとして動作します。一度ダウンロードされた依存関係はローカルのBlob Storeにキャッシュされるため、外部ネットワークへのトラフィックを削減し、2回目以降のビルド速度を大幅に向上させます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Group Repository（グループ型リポジトリ）&lt;/b&gt;
+複数のHostedリポジトリとProxyリポジトリを仮想的に1つのエンドポイントとして統合するレイヤーです。開発者やCI/CDクライアントは、この単一のURLのみを参照することで、内部成果物と外部ライブラリの双方に透過的にアクセスできます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-クライアント統合の実装明細"&gt;2. クライアント統合の実装明細
+&lt;/h2&gt;&lt;h3 id="21-maven統合設定-settingsxml"&gt;2.1 Maven統合設定 (&lt;code&gt;settings.xml&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;Mavenビルドにおいて、外部への直接アクセスを遮断し、NexusのGroupリポジトリを経由させるための設定例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;settings&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;xmlns=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;http://maven.apache.org/SETTINGS/1.0.0&amp;#34;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;xmlns:xsi=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;http://www.w3.org/2001/XMLSchema-instance&amp;#34;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;xsi:schemalocation=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;mirrors&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;mirror&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;id&amp;gt;&lt;/span&gt;nexus-group&lt;span style="color:#f92672"&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;mirrorof&amp;gt;&lt;/span&gt;*&lt;span style="color:#f92672"&gt;&amp;lt;/mirrorof&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;Internal Nexus Group Repository&lt;span style="color:#f92672"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;url&amp;gt;&lt;/span&gt;http://nexus.internal.net/repository/maven-public/&lt;span style="color:#f92672"&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/mirror&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/mirrors&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;servers&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;server&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;id&amp;gt;&lt;/span&gt;nexus-group&lt;span style="color:#f92672"&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;username&amp;gt;&lt;/span&gt;deployment-user&lt;span style="color:#f92672"&gt;&amp;lt;/username&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;password&amp;gt;&lt;/span&gt;SecurePassword123!&lt;span style="color:#f92672"&gt;&amp;lt;/password&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/server&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/servers&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/settings&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="22-docker-daemon統合設定-daemonjson"&gt;2.2 Docker Daemon統合設定 (&lt;code&gt;daemon.json&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;プライベートなDockerレジストリとしてNexusを使用する場合、HTTPS化が推奨されますが、検証環境などでHTTP通信を一時的に許可する、あるいはプロキシミラーを指定する場合は以下の設定を適用します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;registry-mirrors&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;https://nexus.internal.net/repository/docker-proxy/&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;insecure-registries&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;nexus.internal.net:5001&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-ライフサイクル管理とクリーンアップポリシー"&gt;3. ライフサイクル管理とクリーンアップポリシー
+&lt;/h2&gt;&lt;p&gt;アーティファクトリポジトリの運用において最も頻発する課題は、ビルド毎に生成される「Snapshot」や一時的なイメージによるストレージ容量の枯渇です。これを防ぐため、以下のライフサイクル管理を自動化する必要があります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;コンポーネント削除ポリシー（Cleanup Policies）の策定&lt;/b&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Snapshot&lt;/code&gt;リポジトリ：過去14日以内に更新がない、かつリリースバージョンではない成果物を自動削除します。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Docker&lt;/code&gt;レジストリ：タグなし（dangling）イメージや、特定の保持期間（例：30日）を超えたイメージのパージを実行します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;&lt;b&gt;Blob Storeのコンパクション（タスクスケジューリング）&lt;/b&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Nexusでは、コンポーネントを削除しただけではディスク容量は解放されません。論理削除されたデータを物理的に削除するため、定期的に「Admin - Compact blob store」タスクを実行するスケジュールを構成します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-トラブルシューティング"&gt;4. トラブルシューティング
+&lt;/h2&gt;&lt;h3 id="-friction-point-1-blob-storeの容量枯渇による書き込みエラー-http-500--read-only-mode"&gt;💡 Friction Point 1: Blob Storeの容量枯渇による書き込みエラー (HTTP 500 / Read-only Mode)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: ディスク使用率が閾値（デフォルトでは90%）を超えると、Nexusはデータ破損を防ぐためにBlob Storeを自動的にRead-onlyモードに移行させます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: 不要なメタデータや古いSnapshotをタスクから手動削除します。さらに、以下の手順でBlob Store of コンパクションタスクを即時実行し、物理ディスク容量を解放します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="-friction-point-2-プロキシリポジトリ経由のsslハンドシェイクエラー-pkix-path-building-failed"&gt;⚠️ Friction Point 2: プロキシリポジトリ経由のSSLハンドシェイクエラー (PKIX path building failed)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: 社内プロキシやSSL可視化アプライアンスが介在する場合、外部レジストリ（Maven Central等）の証明書チェーンが切断され、Nexusが動作するJVMが接続を拒否します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: Nexusの管理画面（&lt;code&gt;Security -&amp;amp;gt; SSL Certificates&lt;/code&gt;）から対象ホストの証明書を直接取得し、Nexusの信頼済み証明書ストア（Truststore）に追加します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="5-運用検証ログ-operational-verifications"&gt;5. 運用検証ログ (Operational Verifications)
+&lt;/h2&gt;&lt;p&gt;インフラ構築後の正常稼働性を確認するための、検証ターミナルログのシミュレーションです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I -u deployment-user:SecurePassword123! http://nexus.internal.net/service/rest/v1/status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Date: Thu, 09 Jul 2026 09:00:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Server: Nexus/3.68.0-01 (OSS)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;X-Content-Type-Options: nosniff
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Length: 0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker login nexus.internal.net:5001 -u deployment-user -p SecurePassword123!
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Login Succeeded
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker pull nexus.internal.net:5001/alpine:3.18
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3.18: Pulling from alpine
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Digest: sha256:48d818124339491250f023456789abcdef1234567890abcdef1234567890ab
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Status: Downloaded newer image for nexus.internal.net:5001/alpine:3.18
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-運用上の注意点-operational-notes"&gt;6. 運用上の注意点 (Operational Notes)
+&lt;/h2&gt;&lt;p&gt;Nexus RepositoryをCI/CDパイプラインに組み込むことは、単なるストレージの確保に留まらず、ビルドの高速化、外部障害への耐性向上、およびサプライチェーンセキュリティの強化に直結します。Hosted、Proxy、Groupの各リポジトリ特性を正しく理解し、適切なクリーンアップポリシーとディスク監視を設計に組み込むことが、長期的な安定運用の鍵となります。&lt;/p&gt;</description></item></channel></rss>

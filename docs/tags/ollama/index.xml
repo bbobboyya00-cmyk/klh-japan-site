@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ollama on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/ollama/</link><description>Recent content in Ollama on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 03 Jul 2026 10:52:53 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/ollama/index.xml" rel="self" type="application/rss+xml"/><item><title>Docker環境におけるOpen WebUIとOllamaを用いたローカルLLM基盤の構築</title><link>https://klifehack.com/p/local-llm-open-webui-ollama-docker/</link><pubDate>Fri, 03 Jul 2026 10:52:53 +0900</pubDate><guid>https://klifehack.com/p/local-llm-open-webui-ollama-docker/</guid><description>&lt;p&gt;ローカル環境での大規模言語モデル（LLM）運用において、ホストOSへの直接的なライブラリ導入は、Pythonの依存関係の競合やGPUドライバとの整合性問題、いわゆる「依存関係の地獄」を招くリスクが極めて高いです。特に、複数のモデルを試行する研究開発フェーズでは、環境の分離と再現性が運用の継続性を左右します。本稿では、推論エンジンであるOllamaと、高度なUIを提供するOpen WebUIをDockerコンテナ上で統合し、セキュアかつポータブルなプライベートAI基盤を構築する手法について記述します。&lt;/p&gt;
+&lt;h2 id="構成の合理性とコンテナ化の意義"&gt;構成の合理性とコンテナ化の意義
+&lt;/h2&gt;&lt;p&gt;Open WebUIをDockerでデプロイすることは、単なる利便性の向上ではなく、インフラ管理における標準的なプラクティスです。コンテナ化により、ホスト側のネットワークスタックやファイルシステムを汚染することなく、永続的なデータボリュームの管理と、ホストゲートウェイを介した推論エンドポイントへの安全なアクセスが可能になります。これにより、OS (OSの再インストール)を伴うような致命的な設定ミスを回避しつつ、スケーラブルなインターフェースを提供できます。&lt;/p&gt;
+&lt;h2 id="デプロイメントワークフロー"&gt;デプロイメント・ワークフロー
+&lt;/h2&gt;&lt;h3 id="1-docker-runtimeの準備と仮想化の検証"&gt;1. Docker Runtimeの準備と仮想化の検証
+&lt;/h3&gt;&lt;p&gt;まず、コンテナランタイムが正常に動作していることを確認します。Windows環境ではWSL2（Windows Subsystem for Linux）のバックエンドが必須となります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;💡 &lt;b&gt;仮想化の有効化:&lt;/b&gt; BIOS/UEFI設定で「Virtualization Technology」（VT-xまたはAMD-V）が有効であることを確認してください。これが無効な場合、Docker Engineの初期化に失敗します。&lt;/li&gt;
+&lt;li&gt;🛠️ &lt;b&gt;バイナリの確認:&lt;/b&gt; ターミナルで以下のコマンドを実行し、パスが通っていることを確認します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker --version
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-open-webuiコンテナの実行"&gt;2. Open WebUIコンテナの実行
+&lt;/h3&gt;&lt;p&gt;ホストマシンでOllamaサービスが稼働していることを前提とし、以下のコマンドでOpen WebUIを起動します。この際、ホストとコンテナ間の通信を確立するためのネットワークフラグが重要となります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d -p 3000:8080 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --add-host&lt;span style="color:#f92672"&gt;=&lt;/span&gt;host.docker.internal:host-gateway &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -v open-webui:/app/backend/data &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --name open-webui &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --restart always &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ghcr.io/open-webui/open-webui:main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;主要パラメータの技術的解説:&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;-p 3000:8080:&lt;/b&gt; ホストの3000番ポートをコンテナ内部の8080番にマッピングします。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;&amp;ndash;add-host=host.docker.internal:host-gateway:&lt;/b&gt; コンテナ内部からホスト側で動作しているOllama APIにアクセスするためのブリッジ設定です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;-v open-webui:/app/backend/data:&lt;/b&gt; チャット履歴やユーザー設定を保持するための名前付きボリュームです。コンテナを破棄してもデータは維持されます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;&amp;ndash;restart always:&lt;/b&gt; システム再起動時やプロセス異常終了時に自動でコンテナを復旧させます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ollamaとの統合とモデル管理"&gt;Ollamaとの統合とモデル管理
+&lt;/h2&gt;&lt;p&gt;コンテナが起動した後、ブラウザからポート3000番にアクセスし、管理者アカウントを作成します。データはローカルのSQLiteまたはPostgreSQLに保存され、外部への漏洩はありません。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;接続確認:&lt;/b&gt; 設定メニューからOllamaの接続ステータスを確認します。host.docker.internal経由で通信が行われます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;モデルのプル:&lt;/b&gt; UI上部のモデル選択から、必要なモデル（例: llama3:8b）を指定してダウンロードします。Llama 3 8Bモデルは約4.7GBのストレージを消費します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;運用中に遭遇する代表的な摩擦点とその解決策を以下に示します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;⚠️ &lt;b&gt;ポート競合 (Port 3000 Conflict):&lt;/b&gt; 他のWebサービスが3000番を使用している場合、-p 3001:8080 のようにホスト側のポートを変更して再デプロイしてください。&lt;/li&gt;
+&lt;li&gt;⚠️ &lt;b&gt;接続拒否 (Connection Refused):&lt;/b&gt; Open WebUIがOllamaに接続できない場合、ホスト側のOllamaが外部接続を許可しているか確認してください。必要に応じて環境変数 OLLAMA_HOST=0.0.0.0 を設定し、サービスを再起動します。&lt;/li&gt;
+&lt;li&gt;⚠️ &lt;b&gt;GPUオフロードの失敗:&lt;/b&gt; 推論速度が極端に遅い（1-2 tokens/s）場合、VRAM容量が不足しているか、OllamaがCPUモードで動作しています。タスクマネージャーの「専用GPUメモリ」を確認し、モデルサイズがVRAM（8GB以下は8Bモデル推奨、16GB以上は70Bモデル検討）に収まっているか検証してください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="稼働状態の検証"&gt;稼働状態の検証
+&lt;/h2&gt;&lt;p&gt;デプロイ完了後、以下のコマンドを使用してコンテナの整合性とネットワークの疎通を確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# コンテナのステータス確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker ps --filter &amp;#34;name=open-webui&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CONTAINER ID IMAGE COMMAND STATUS PORTS NAMES
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;7f8e9d0c1b2a ghcr.io/open-webui/open-webui:main &amp;#34;/app/backend/start.…&amp;#34; Up 15 minutes 0.0.0.0:3000-&amp;amp;gt;8080/tcp open-webui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# ホスト側ポートのリッスン状態確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep :3000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 4096 0.0.0.0:3000 0.0.0.0:* users:((&amp;#34;docker-proxy&amp;#34;,pid=1234,fd=4))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# APIエンドポイントへの疎通確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I http://localhost:3000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: text/html; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Length: 1234
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;ローカルLLM環境の構築は、サブスクリプションコストの削減だけでなく、機密性の高いコードや内部文書を外部APIに送信することなく処理できるというセキュリティ上の大きな利点があります。Dockerによる抽象化レイヤーを維持することで、将来的なハードウェアのアップグレードや、異なる推論バックエンドへの移行も容易になります。特にVRAM 16GB以上の環境では、Llama 3 70Bクラスのモデルを実用的な速度で運用可能であり、高度な推論タスクを完全にオフラインで完結させることが可能です。&lt;/p&gt;</description></item></channel></rss>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Git-Merge on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/git-merge/</link><description>Recent content in Git-Merge on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 25 Oct 2026 10:35:56 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/git-merge/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring Boot CI Pipeline Construction with GitHub Actions: Merge Conflicts and Failure Analysis</title><link>https://klifehack.com/en/p/github-actions-ci-pipeline-diagnostics-merge-resolution/</link><pubDate>Sun, 25 Oct 2026 10:35:56 +0900</pubDate><guid>https://klifehack.com/en/p/github-actions-ci-pipeline-diagnostics-merge-resolution/</guid><description>&lt;p&gt;In the software development process, relying solely on local test execution to apply changes risks introducing unstable code into the target branch. Particularly under concurrent development with multiple team members, there is a constant risk that the CI/CD pipeline will fail to trigger correctly due to complex Git branch structures or misconfigurations during conflict resolution.&lt;/p&gt;
+&lt;p&gt;This article describes how to build an automated build and test verification pipeline for a Spring Boot project using GitHub Actions, as well as the workflow file path displacement issue that occurred during merge conflict resolution and the diagnostic artifact collection mechanism for test failures.&lt;/p&gt;
+&lt;h2 id="basic-structure-of-github-actions-and-declarative-pipeline-design"&gt;Basic Structure of GitHub Actions and Declarative Pipeline Design
+&lt;/h2&gt;&lt;p&gt;Automated processes (Workflows) executed in GitHub Actions are defined by YAML declaration files placed in a specific directory within the repository. Because the execution engine runs on ephemeral virtual machine containers, dependency setup and execution steps must be explicitly defined without omissions.&lt;/p&gt;
+&lt;h3 id="strict-directory-structure-conventions"&gt;Strict Directory Structure Conventions
+&lt;/h3&gt;&lt;p&gt;GitHub Actions pipeline definition files must strictly be placed at the following path:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.github/workflows/ci.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If a file is placed outside this path structure (e.g., &lt;code&gt;docs/ci.yml&lt;/code&gt; or &lt;code&gt;.github/ci.yml&lt;/code&gt;), GitHub&amp;rsquo;s event detection engine will not recognize it as a workflow definition.&lt;/p&gt;
+&lt;h3 id="implementation-example-of-a-spring-boot-ci-workflow"&gt;Implementation Example of a Spring Boot CI Workflow
+&lt;/h3&gt;&lt;p&gt;Below is a standard workflow configuration triggered by code pushes to the &lt;code&gt;main&lt;/code&gt; branch and pull requests, executing Gradle builds and tests.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;CI&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;main]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pull_request&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;main]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-24.04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout Source Code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Provision Temurin JDK 21&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/setup-java@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;distribution&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;temurin&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;java-version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;21&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Set Executable Permission for Gradle Wrapper&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;chmod +x ./gradlew&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Execute Automated Unit Tests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./gradlew test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Preserve Test Failure Artifacts&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;failure()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/upload-artifact@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;test-report&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;path&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build/reports/tests/test/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;if-no-files-found&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;warn&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="merge-conflicts-and-recovery-from-workflow-path-displacement"&gt;Merge Conflicts and Recovery from Workflow Path Displacement
+&lt;/h2&gt;&lt;p&gt;While working on a feature branch (&lt;code&gt;lab/ci&lt;/code&gt;), if changes are introduced concurrently on the remote &lt;code&gt;main&lt;/code&gt; branch, a merge conflict will occur on the Pull Request.&lt;/p&gt;
+&lt;h3 id="conflict-resolution-and-file-path-inconsistency"&gt;Conflict Resolution and File Path Inconsistency
+&lt;/h3&gt;&lt;p&gt;Fetch the latest remote status in the local environment and execute the merge.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git switch lab/ci
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git fetch cicd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge cicd/main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When executing this merge operation (Git 3-way merge &lt;code&gt;ort&lt;/code&gt; strategy), the upstream branch&amp;rsquo;s commit history may unexpectedly cause &lt;code&gt;.github/workflows/ci.yml&lt;/code&gt; to be moved (renamed) to &lt;code&gt;docs/ci.yml&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Once the file is moved to the &lt;code&gt;docs/&lt;/code&gt; directory, subsequent push events will no longer trigger GitHub Actions. To resolve this state, Git commands must be used to restore the file placement to the correct directory.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Move from incorrect path to the standard directory structure&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git mv docs/ci.yml .github/workflows/ci.yml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Commit changes and push to the remote branch&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git commit -m &lt;span style="color:#e6db74"&gt;&amp;#34;fix: restore workflow definition path&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push cicd lab/ci
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="separation-of-structural-mergeability-and-application-verification-status"&gt;Separation of Structural Mergeability and Application Verification Status
+&lt;/h2&gt;&lt;p&gt;On the Pull Request diagnostic screen, the following two statuses must be clearly distinguished and interpreted:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Git Structural Mergeability (Merge Conflict Status)&lt;/b&gt;: Indicates whether the commit tree can be merged at the text level. When &lt;code&gt;No conflicts with base branch&lt;/code&gt; is displayed, Git&amp;rsquo;s file merging itself completes successfully.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;CI Status Checks (Status Checks)&lt;/b&gt;: Indicates whether the application build and unit tests succeeded. In the case of &lt;code&gt;All checks have failed&lt;/code&gt;, even if it is mergeable at the Git level, the code is in a broken state.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If Branch Protection Rules are not configured, the Merge button remains clickable in the GitHub UI even when tests fail. To make CI function effectively as a quality gate, configuring successful status checks as a mandatory condition for merging is required.&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-workflow-does-not-run-and-displays-no-workflow-runs-found"&gt;1. Workflow does not run and displays &amp;ldquo;No workflow runs found&amp;rdquo;
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;Cause&lt;/b&gt;: The workflow file placement path is outside &lt;code&gt;.github/workflows/&lt;/code&gt;, or there is an indentation syntax error in the YAML file.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Solution&lt;/b&gt;: Verify whether the file path is under &lt;code&gt;.github/workflows/*.yml&lt;/code&gt;. Also verify that the indentation hierarchy (based on 2 spaces) for &lt;code&gt;jobs&lt;/code&gt; and &lt;code&gt;steps&lt;/code&gt; is correct.&lt;/p&gt;
+&lt;h3 id="2-unable-to-identify-detailed-causes-from-console-logs-on-gradle-test-failures"&gt;2. Unable to identify detailed causes from console logs on Gradle test failures
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;Cause&lt;/b&gt;: Standard output logs from Gradle alone may not fully output details of fragmented assertion failures or configuration file loading errors.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Solution&lt;/b&gt;: Configure &lt;code&gt;actions/upload-artifact@v4&lt;/code&gt; with the &lt;code&gt;if: failure()&lt;/code&gt; condition to save HTML test reports inside &lt;code&gt;build/reports/tests/test/&lt;/code&gt; as artifacts. This allows inspecting detailed stack traces in a browser upon pipeline failures.&lt;/p&gt;
+&lt;h3 id="3-push-to-remote-rejected-due-to-secret-leak-warnings"&gt;3. Push to remote rejected due to secret leak warnings
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;Cause&lt;/b&gt;: Files such as &lt;code&gt;.env&lt;/code&gt;, hardcoded API keys, or private keys are included in the Git commit history.&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Solution&lt;/b&gt;: Remove the secret information from the codebase and add the target file pattern to &lt;code&gt;.gitignore&lt;/code&gt;. If secrets were included in past commit history, immediately revoke and reissue the credentials, and migrate them to a secure store such as &lt;code&gt;GitHub Actions Secrets&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="terminal-log-for-verification"&gt;Terminal Log for Verification
+&lt;/h2&gt;&lt;p&gt;Example terminal output during the normalization of pipeline placement and verification of build operations in the local environment.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ git status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;On branch lab/ci
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Your branch is up to date with &amp;#39;cicd/lab/ci&amp;#39;.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nothing to commit, working tree clean
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -la .github/workflows/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total 12
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drwxr-xr-x 1 runner 1049000 0 Oct 25 10:15 .
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drwxr-xr-x 1 runner 1049000 0 Oct 25 10:15 ..
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-r--r-- 1 runner 1049000 824 Oct 25 10:15 ci.yml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ./gradlew test
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;BUILD SUCCESSFUL in 8s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;4 actionable tasks: 4 executed
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;💡 &lt;b&gt;1. Non-equivalence of Git Merge Success and Application Health&lt;/b&gt;: Even if a merge completes without text conflicts, it does not imply that builds or tests will pass successfully. Automated verification via CI pipelines is indispensable.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;2. Compliance with Configuration File Placement Conventions&lt;/b&gt;: In automation tools such as GitHub Actions, specific directory structures (&lt;code&gt;.github/workflows/&lt;/code&gt;) serve as execution prerequisites; caution is required regarding file movements during branch operations.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;3. Retention of Failure Diagnostic Artifacts&lt;/b&gt;: To reduce root cause investigation costs during pipeline failures, it is effective to configure the setup to properly save diagnostic files, such as test reports, rather than simply failing with an error.&lt;/p&gt;</description></item></channel></rss>

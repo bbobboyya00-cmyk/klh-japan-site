@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ip-Rule on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/ip-rule/</link><description>Recent content in Ip-Rule on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 21 Oct 2026 10:10:06 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/ip-rule/index.xml" rel="self" type="application/rss+xml"/><item><title>TraefikとCloudflare WARP併用時の非対称ルーティング障害とPBRによるパケット軌道修正</title><link>https://klifehack.com/p/traefik-warp-asymmetric-routing-pbr/</link><pubDate>Wed, 21 Oct 2026 10:10:06 +0900</pubDate><guid>https://klifehack.com/p/traefik-warp-asymmetric-routing-pbr/</guid><description>&lt;p&gt;マルチホーム構成やトンネリングクライアントを同一ホスト上で稼働させるインフラストラクチャにおいて、インバウンドとアウトバウンドの通信経路の不一致（非対称ルーティング）は検知が困難な障害要因となります。特にコンテナ型リバースプロキシを介して外部公開を行いつつ、同一ホストのアウトバウンドトラフィックをプライベートトンネルやVPNでカプセル化する設計では、カーネルのルーティング決定がデフォルトゲートウェイを上書きし、クライアントへのSYN-ACK返信が消失するトラブルが典型的に発生します。&lt;/p&gt;
+&lt;p&gt;本稿では、Dockerブリッジネットワーク上に展開されたTraefikプロキシとCloudflare WARPクライアントのルーティングポリシー競合に起因するパケット不達事象を追跡し、Policy-Based Routing（PBR）による局所的なルーティングテーブル強制適用の検証プロセスを記録します。&lt;/p&gt;
+&lt;h2 id="障害概要とインバウンド経路の検証"&gt;障害概要とインバウンド経路の検証
+&lt;/h2&gt;&lt;p&gt;Telegram連携用クリップボードWebサービス（&lt;code&gt;copy.ds2qgd.dedyn.io&lt;/code&gt;）への外部HTTPSリクエストが突然タイムアウト（&lt;code&gt;ERR_CONNECTION_TIMED_OUT&lt;/code&gt;）に陥る事象が発生しました。コンテナプロセスのダウンやアップストリームアプリケーションの異常を切り離すため、インバウンドパイプラインの各階層を個別に検査しました。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;DNS名前解決&lt;/b&gt;: FQDNがホスト環境のパブリックWAN IPアドレスを正常に指していることを確認。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;コンテナアプリケーション層&lt;/b&gt;: バックエンドのWebサービスコンテナは起動状態にあり、ローカルソケット経由でのHTTP 200レスポンスを確認。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;リバースプロキシ層（Traefik）&lt;/b&gt;: コンテナランタイムおよび動的ルーティング定義、Let&amp;rsquo;s Encrypt TLS証明書ストア、ポートバインディングの状態に異常がないことを確認。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Netfilter / ファイアウォール層&lt;/b&gt;: Dockerエンジンが生成するiptablesの&lt;code&gt;DNAT&lt;/code&gt;ルール、および&lt;code&gt;DOCKER&lt;/code&gt;チェーン内の&lt;code&gt;FORWARD ACCEPT&lt;/code&gt;設定が正常であることを確認。ホスト側UFWにおいてもTCP 443ポートは明示的に許可状態。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;物理インターフェース検証&lt;/b&gt;: ホストの物理NIC（&lt;code&gt;enp4s0&lt;/code&gt;）に対してパケットキャプチャを実行した結果、外部クライアントからの&lt;code&gt;TCP SYN&lt;/code&gt;パケットは境界ルータおよびホストNICに到達していることを確認。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[Client] ---&amp;amp;gt; (TCP 443 SYN) ---&amp;amp;gt; [enp4s0 (Host)] ---&amp;amp;gt; [iptables DNAT] ---&amp;amp;gt; [br-77da1b8f5618] ---&amp;amp;gt; [Traefik 172.20.0.11]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この時点でインバウンド通信はプロキシコンテナまで正常に到達しており、パケットドロップまたは経路喪失がリバースパス（エグレス）側で発生していることが特定されました。&lt;/p&gt;
+&lt;h2 id="根本原因cloudflare-warpによるエグレス非対称ルーティング"&gt;根本原因：Cloudflare WARPによるエグレス非対称ルーティング
+&lt;/h2&gt;&lt;p&gt;ホスト上で稼働するCloudflare WARPのルーティングポリシーテーブルを調査したところ、カーネルのデフォルトリターンパスがWARPの仮想トンネルインターフェース（&lt;code&gt;CloudflareWARP&lt;/code&gt;）側にインターセプトされていました。&lt;/p&gt;
+&lt;h3 id="発生メカニズム"&gt;発生メカニズム
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;想定された正常経路&lt;/b&gt;: Traefikコンテナ（&lt;code&gt;172.20.0.11&lt;/code&gt;） $\rightarrow$ Dockerブリッジ（&lt;code&gt;br-77da1b8f5618&lt;/code&gt;） $\rightarrow$ ホストネットワークスタック $\rightarrow$ 物理NIC（&lt;code&gt;enp4s0&lt;/code&gt;） $\rightarrow$ ローカルゲートウェイ（&lt;code&gt;192.168.1.1&lt;/code&gt;） $\rightarrow$ クライアント&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;実際の偏向経路&lt;/b&gt;: Traefikコンテナ（&lt;code&gt;172.20.0.11&lt;/code&gt;） $\rightarrow$ ホストネットワークスタック $\rightarrow$ &lt;b&gt;Cloudflare WARP仮想インターフェース&lt;/b&gt; $\rightarrow$ WAN&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;外部クライアントから物理NIC（&lt;code&gt;enp4s0&lt;/code&gt;）経由で届いたTCPセッションに対し、サーバーからの&lt;code&gt;SYN-ACK&lt;/code&gt;応答がWARPトンネルを経由して外部に送出されました。この結果、送信元IPアドレスの不一致（NAT不整合）やステートフルファイアウォールによる不正パケット判定を受け、クライアント側および中間経路でパケットが破棄され、接続タイムアウトに至っていました。&lt;/p&gt;
+&lt;h2 id="回避策の検証とpolicy-based-routingpbrの実装"&gt;回避策の検証とPolicy-Based Routing（PBR）の実装
+&lt;/h2&gt;&lt;h3 id="代替案connmarkの評価と破棄"&gt;代替案（CONNMARK）の評価と破棄
+&lt;/h3&gt;&lt;p&gt;初期検証として、TCP 443ポートへの着信パケットにNetfilter接続マーク（&lt;code&gt;CONNMARK 0x80000&lt;/code&gt;）を付与し、&lt;code&gt;fwmark&lt;/code&gt;に基づくポリシールーティングでWARPルールを迂回させる構成を検証しました。しかし、WARPが登録する高優先度のルーティングルールとの優先順位競合により、確立済みセッションの戻りパケットを決定論的に物理インターフェースへ誘導できませんでした。構成ドリフトを防ぐため、このNetfilterルールは速やかにロールバックされました。&lt;/p&gt;
+&lt;h3 id="pbrpolicy-based-routingによる外科的経路指定"&gt;PBR（Policy-Based Routing）による外科的経路指定
+&lt;/h3&gt;&lt;p&gt;TraefikからのHTTPS戻りトラフィックのみを物理ゲートウェイ（&lt;code&gt;main&lt;/code&gt;テーブル）へ強制送出し、それ以外のホストおよびコンテナトラフィックはWARP経由を維持する精密なルーティングルールを適用しました。&lt;/p&gt;
+&lt;h4 id="対象パラメータ"&gt;対象パラメータ
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;送信元IPアドレス: &lt;code&gt;172.20.0.11&lt;/code&gt;（Traefik内部コンテナIP）&lt;/li&gt;
+&lt;li&gt;着信ブリッジインターフェース: &lt;code&gt;br-77da1b8f5618&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;プロトコルおよび送信元ポート: &lt;code&gt;TCP&lt;/code&gt;, &lt;code&gt;sport 443&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;参照ルーティングテーブル: &lt;code&gt;main&lt;/code&gt;（物理ゲートウェイ &lt;code&gt;192.168.1.1&lt;/code&gt; を持つ標準テーブル）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ip rule add from 172.20.0.11 iif br-77da1b8f5618 ipproto tcp sport &lt;span style="color:#ae81ff"&gt;443&lt;/span&gt; table main priority &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;```&lt;/span&gt;yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 参考: プロキシ基盤で使用されているTraefikの構成定義&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;version: &lt;span style="color:#e6db74"&gt;&amp;#34;3.8&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;services:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;traefik:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;image: traefik:v3.1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;container_name: traefik
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;restart: unless-stopped
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;security_opt:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- no-new-privileges:true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ports:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- target: &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;published: &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;protocol: tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mode: host
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- target: &lt;span style="color:#ae81ff"&gt;443&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;published: &lt;span style="color:#ae81ff"&gt;443&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;protocol: tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mode: host
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;networks:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;proxy_net:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ipv4_address: 172.20.0.11
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;volumes:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- /etc/localtime:/etc/localtime:ro
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- /var/run/docker.sock:/var/run/docker.sock:ro
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- ./traefik.yml:/traefik.yml:ro
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- ./acme.json:/acme.json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;networks:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;proxy_net:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;name: proxy_net
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;driver: bridge
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ipam:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;config:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- subnet: 172.20.0.0/24
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gateway: 172.20.0.1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;本構成を本番運用に組み込む際、以下の摩擦点（Friction Points）に対する対処が必要です。&lt;/p&gt;
+&lt;h3 id="1-動的評価スクリプトによる判定の偽陰性false-negative"&gt;1. 動的評価スクリプトによる判定の偽陰性（False-Negative）
+&lt;/h3&gt;&lt;p&gt;ルーティング適用確認時、&lt;code&gt;ip route get&lt;/code&gt;の出力文字列を単純な正規表現でパースしていた検証スクリプトにおいて、出力順序の微細な変化を検知できず異常終了（FAIL）と判定される事象が発生しました。検証機構を自動化する際は、テキストマッチングに過度に依存せず、カーネルの戻り値判定および実際のパケットキャプチャを併用する必要があります。&lt;/p&gt;
+&lt;h3 id="2-ホスト再起動時のルール揮発対策"&gt;2. ホスト再起動時のルール揮発対策
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;ip rule&lt;/code&gt;コマンドで動的に追加したポリシーはカーネルランタイムメモリにのみ保持されるため、ホスト再起動やネットワークデーモンのリロードで消失します。永続化のためには、Netplanまたはsystemd-networkdの設定ファイル、あるいはコンテナ起動前のネットワークフックスクリプトに組み込む必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Netplanにおける永続化設定例 (/etc/netplan/99-traefik-pbr.yaml)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;network&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;renderer&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;networkd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;bridges&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;br-77da1b8f5618&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;routing-policy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;from&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;172.20.0.11&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;/32&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;table&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;254&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;priority&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="検証結果とプロトコルログ"&gt;検証結果とプロトコルログ
+&lt;/h2&gt;&lt;p&gt;ルーティングルールの適用後、ルーティングサブシステムに対するクエリおよび外部セルラー回線経由でのエンドツーエンド通信テストを実施しました。&lt;/p&gt;
+&lt;h3 id="ルーティング照合ログ"&gt;ルーティング照合ログ
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ip rule show
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;0: from all lookup local
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1000: from 172.20.0.11 iif br-77da1b8f5618 ipproto tcp sport 443 lookup main
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;32766: from all lookup main
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;32767: from all lookup default
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ip route get 1.1.1.1 from 172.20.0.11 iif br-77da1b8f5618 ipproto tcp sport 443
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1.1.1.1 from 172.20.0.11 via 192.168.1.1 dev enp4s0 table main
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cache iif br-77da1b8f5618
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="パケットキャプチャおよびハンドシェイク検証"&gt;パケットキャプチャおよびハンドシェイク検証
+&lt;/h3&gt;&lt;p&gt;外部モバイルネットワーク（WAN）から&lt;code&gt;&lt;a class="link" href="https://copy.ds2qgd.dedyn.io" target="_blank" rel="noopener"
+ &gt;https://copy.ds2qgd.dedyn.io&lt;/a&gt;&lt;/code&gt;へアクセスし、ホスト物理NIC（&lt;code&gt;enp4s0&lt;/code&gt;）上で&lt;code&gt;tcpdump&lt;/code&gt;を実行しました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo tcpdump -nn -i enp4s0 port 443
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;listening on enp4s0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;14:22:01.104231 IP 203.0.113.45.54122 &amp;amp;gt; 192.168.1.50.443: Flags [S], seq 382109281, win 65535, options [mss 1460,sackOK,TS val 2831920 ecr 0], length 0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;14:22:01.104412 IP 192.168.1.50.443 &amp;amp;gt; 203.0.113.45.54122: Flags [S.], seq 109283912, ack 382109282, win 65160, options [mss 1460,sackOK,TS val 9481230 ecr 2831920], length 0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;14:22:01.142109 IP 203.0.113.45.54122 &amp;amp;gt; 192.168.1.50.443: Flags [.], ack 1, win 65535, length 0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;14:22:01.144512 IP 203.0.113.45.54122 &amp;amp;gt; 192.168.1.50.443: Flags [P.], seq 1:518, ack 1, win 65535, length 517
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;14:22:01.146201 IP 192.168.1.50.443 &amp;amp;gt; 203.0.113.45.54122: Flags [P.], seq 1:1420, ack 518, win 65160, length 1419
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;14:22:01.210419 IP 203.0.113.45.54122 &amp;amp;gt; 192.168.1.50.443: Flags [F.], seq 518, ack 1420, win 65535, length 0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;14:22:01.210582 IP 192.168.1.50.443 &amp;amp;gt; 203.0.113.45.54122: Flags [F.], seq 1420, ack 519, win 65160, length 0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;14:22:01.248102 IP 203.0.113.45.54122 &amp;amp;gt; 192.168.1.50.443: Flags [.], ack 1421, win 65535, length 0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;8 packets captured
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;8 packets received by filter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;0 packets dropped by kernel
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;外部クライアントとの間で3ウェイハンドシェイク（&lt;code&gt;SYN&lt;/code&gt; $\rightarrow$ &lt;code&gt;SYN-ACK&lt;/code&gt; $\rightarrow$ &lt;code&gt;ACK&lt;/code&gt;）、TLSデータ転送、および正常なセッション終了（&lt;code&gt;FIN-ACK&lt;/code&gt;）が物理NIC（&lt;code&gt;enp4s0&lt;/code&gt;）上で完結し、パケットドロップが0件であることが実証されました。&lt;/p&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;オーバーレイネットワークや常時稼働型トンネルクライアント（WARP、Tailscale、WireGuard等）がホスト上で動作している場合、ルーティングの決定権がトンネル側に偏向するリスクを常に考慮する必要があります。接続タイムアウトが発生した際は、アプリケーションログの調査やプロキシの再起動を無作為に繰り返すのではなく、&lt;code&gt;tcpdump&lt;/code&gt;を用いて物理インターフェースにおける往復パケットの到達状況を切り分け、戻り経路の非対称性を診断することが迅速な復旧につながります。&lt;/p&gt;</description></item></channel></rss>

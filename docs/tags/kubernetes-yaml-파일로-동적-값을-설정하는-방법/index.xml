@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kubernetes Yaml 파일로 동적 값을 설정하는 방법 on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/kubernetes-yaml-%ED%8C%8C%EC%9D%BC%EB%A1%9C-%EB%8F%99%EC%A0%81-%EA%B0%92%EC%9D%84-%EC%84%A4%EC%A0%95%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95/</link><description>Recent content in Kubernetes Yaml 파일로 동적 값을 설정하는 방법 on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 23 Oct 2026 10:30:20 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/kubernetes-yaml-%ED%8C%8C%EC%9D%BC%EB%A1%9C-%EB%8F%99%EC%A0%81-%EA%B0%92%EC%9D%84-%EC%84%A4%EC%A0%95%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95/index.xml" rel="self" type="application/rss+xml"/><item><title>KubernetesにおけるSecretリソースの定義手法とPodへの環境変数注入</title><link>https://klifehack.com/p/k8s-secret-management-pod-environment/</link><pubDate>Fri, 23 Oct 2026 10:30:20 +0900</pubDate><guid>https://klifehack.com/p/k8s-secret-management-pod-environment/</guid><description>&lt;h1 id="kubernetes-secretオブジェクトによる機密情報の安全な管理と構成手法"&gt;Kubernetes Secretオブジェクトによる機密情報の安全な管理と構成手法
+&lt;/h1&gt;&lt;p&gt;&lt;b&gt;Meta Description&lt;/b&gt;: KubernetesにおけるSecretオブジェクトを用いた機密情報の分離管理、CLI/YAMLでの生成手順、Podへの注入パターン、Base64エンコードの注意点およびトラブルシューティングを解説します。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;コンテナ環境において、データベース接続文字列や認証用トークンなどの機密情報をアプリケーションのソースコードやコンテナイメージ内にハードコードすることは、重大なセキュリティリスクを引き起こします。Kubernetesでは、非機密設定をConfigMapで管理する一方、認証情報や暗号化キーなどの感度の高いデータはSecretオブジェクトとして分離管理します。&lt;/p&gt;
+&lt;p&gt;Secretオブジェクトを利用することで、設定データとアプリケーションロジックを分離し、Podに対して環境変数やボリュームとして安全に設定を配備できます。&lt;/p&gt;
+&lt;h2 id="secretオブジェクトの生成手法"&gt;Secretオブジェクトの生成手法
+&lt;/h2&gt;&lt;p&gt;KubernetesにおいてSecretを定義する方法には、CLIコマンドによる宣言的/命令的なアプローチと、YAMLマニフェストを使用するアプローチが存在します。&lt;/p&gt;
+&lt;h3 id="cli命令型コマンドによる生成"&gt;CLI命令型コマンドによる生成
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;kubectl create secret&lt;/code&gt;コマンドを使用すると、データの手動エンコードを行わずに直接Secretを作成できます。&lt;code&gt;--from-literal&lt;/code&gt;フラグを使用することで、システム側で自動的にBase64エンコード処理が行われます。&lt;/p&gt;
+&lt;p&gt;単一の値を登録する構成：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl create secret generic app-secret --from-literal&lt;span style="color:#f92672"&gt;=&lt;/span&gt;DB_HOST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;mysql
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;複数の接続情報をまとめて登録する構成：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl create secret generic app-secret &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --from-literal&lt;span style="color:#f92672"&gt;=&lt;/span&gt;DB_HOST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;mysql &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --from-literal&lt;span style="color:#f92672"&gt;=&lt;/span&gt;DB_USER&lt;span style="color:#f92672"&gt;=&lt;/span&gt;root &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --from-literal&lt;span style="color:#f92672"&gt;=&lt;/span&gt;DB_PASSWORD&lt;span style="color:#f92672"&gt;=&lt;/span&gt;passwrd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="プロパティファイルからの生成"&gt;プロパティファイルからの生成
+&lt;/h3&gt;&lt;p&gt;既存のプロパティファイル（例: &lt;code&gt;app_secret.properties&lt;/code&gt;）が存在する場合、&lt;code&gt;--from-file&lt;/code&gt;フラグを用いて一括でSecretへ変換できます。この場合、ファイル名がKey、ファイルの内容がValueとして自動的にマッピングされます。&lt;/p&gt;
+&lt;p&gt;対象のファイル構成（&lt;code&gt;app_secret.properties&lt;/code&gt;）：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-properties" data-lang="properties"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;DB_HOST&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;mysql&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;DB_USER&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;root&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;DB_PASSWORD&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;passwrd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実行コマンド：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl create secret generic app-secret --from-file&lt;span style="color:#f92672"&gt;=&lt;/span&gt;app_secret.properties
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="yamlマニフェストによる宣言的定義"&gt;YAMLマニフェストによる宣言的定義
+&lt;/h3&gt;&lt;p&gt;GitOpsやCI/CDパイプラインに組み込む場合、YAMLファイルによる定義が一般的です。YAMLマニフェストの&lt;code&gt;data&lt;/code&gt;フィールドに設定を記述する場合、値は事前にBase64でエンコードされている必要があります。&lt;/p&gt;
+&lt;p&gt;Base64エンコード処理（Linux/Unix環境）：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo -n &lt;span style="color:#e6db74"&gt;&amp;#39;mysql&amp;#39;&lt;/span&gt; | base64 &lt;span style="color:#75715e"&gt;# 出力例: bXlzcWw=&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo -n &lt;span style="color:#e6db74"&gt;&amp;#39;root&amp;#39;&lt;/span&gt; | base64 &lt;span style="color:#75715e"&gt;# 出力例: cm9vdA==&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo -n &lt;span style="color:#e6db74"&gt;&amp;#39;passwrd&amp;#39;&lt;/span&gt; | base64 &lt;span style="color:#75715e"&gt;# 出力例: cGFzc3dyZA==&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;マニフェスト定義（&lt;code&gt;secret-data.yaml&lt;/code&gt;）：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;type&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Opaque&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;data&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;DB_HOST&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;bXlzcWw=&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;DB_USER&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;cm9vdA==&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;DB_PASSWORD&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;cGFzc3dyZA==&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;デプロイ実行：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl apply -f secret-data.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="secretの確認と参照デコード"&gt;Secretの確認と参照デコード
+&lt;/h2&gt;&lt;p&gt;デプロイされたSecretの状態を確認するには以下のコマンドを使用します。&lt;/p&gt;
+&lt;p&gt;登録されているSecret一覧の取得：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get secrets
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Secretのメタデータ確認（※実際の値はマスクされて表示されます）：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl describe secret app-secret
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;エンコードされた生のデータを確認する場合：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get secret app-secret -o yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;取得したBase64文字列を元のプレーンテキストに復号確認するには、&lt;code&gt;base64 --decode&lt;/code&gt;を実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo -n &lt;span style="color:#e6db74"&gt;&amp;#39;bXlzcWw=&amp;#39;&lt;/span&gt; | base64 --decode
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="podへのsecret注入構成"&gt;PodへのSecret注入構成
+&lt;/h2&gt;&lt;p&gt;作成したSecretは、Podのコンテナへ環境変数として注入できます。Kubernetes内部で自動的にBase64が復号され、コンテナのアプリケーションからは通常のプレーンテキストとして参照可能になります。&lt;/p&gt;
+&lt;h3 id="全てのkeyを環境変数として一括注入envfrom"&gt;全てのKeyを環境変数として一括注入（envFrom）
+&lt;/h3&gt;&lt;p&gt;Secret内のすべてのキーペアをコンテナ環境変数に読み込ませる構成例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;simple-webapp-color&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;simple-webapp-color&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;simple-webapp-color&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;simple-webapp-color&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;containerPort&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;envFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;secretRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="特定のkeyを選択して注入secretkeyref"&gt;特定のKeyを選択して注入（secretKeyRef）
+&lt;/h3&gt;&lt;p&gt;特定のキーのみを選択し、特定の環境変数名にマッピングする構成例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;simple-webapp-color&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;simple-webapp-color&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;simple-webapp-color&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;DB_PASSWORD&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;valueFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secretKeyRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;DB_PASSWORD&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;Secretの作成および運用時には、いくつかの典型的な設定ミスが発生することがあります。&lt;/p&gt;
+&lt;h3 id="-1-base64エンコード時の末尾改行コード混入"&gt;🛠️ 1. Base64エンコード時の末尾改行コード混入
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;code&gt;echo&lt;/code&gt;コマンドでBase64エンコードを行う際、&lt;code&gt;-n&lt;/code&gt;オプションを付け忘れると改行文字（&lt;code&gt;\n&lt;/code&gt;）が含まれた状態でエンコードされます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 不適切な例（改行が含まれる）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#39;passwrd&amp;#39;&lt;/span&gt; | base64
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 出力: cGFzc3dyZAo=&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 適切な例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo -n &lt;span style="color:#e6db74"&gt;&amp;#39;passwrd&amp;#39;&lt;/span&gt; | base64
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 出力: cGFzc3dyZA==&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;末尾に改行コードが含まれたままSecretを生成すると、アプリケーション側でDB接続を試みた際にパスワード不一致のエラー（&lt;code&gt;Authentication Failed&lt;/code&gt;）が発生する要因となります。&lt;/p&gt;
+&lt;h3 id="-2-環境変数注入における動的更新の反映制限"&gt;🛠️ 2. 環境変数注入における動的更新の反映制限
+&lt;/h3&gt;&lt;p&gt;Podの&lt;code&gt;env&lt;/code&gt;や&lt;code&gt;envFrom&lt;/code&gt;フィールド経由で読み込まれたSecretの値は、Podが起動するタイミングでプロセスに渡されます。したがって、後から&lt;code&gt;kubectl edit secret&lt;/code&gt;などでSecretオブジェクトの値を変更しても、実行中のPod内の環境変数は自動更新されません。&lt;/p&gt;
+&lt;p&gt;更新された設定を反映させるには、ローリングアップデートを実行するか、Podを再起動する必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl rollout restart deployment &amp;lt;deployment-name&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="実行検証ログプロトコル"&gt;実行検証ログプロトコル
+&lt;/h2&gt;&lt;p&gt;Pod起動後、Secretが正しく復号されて環境変数へ注入されているかを検証するコマンドライン出力例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl get secret app-secret
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME TYPE DATA AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app-secret Opaque 3 5m12s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl exec simple-webapp-color -- printenv | grep DB_
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DB_HOST=mysql
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DB_USER=root
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DB_PASSWORD=passwrd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;p&gt;💡 Kubernetesの標準Secretは「暗号化（Encryption）」ではなく単なる「Base64エンコード」である点に注意してください。etcd自体への保管時に暗号化を行うには、Kube-apiserver側で&lt;code&gt;EncryptionConfiguration&lt;/code&gt;を設定するか、外部のシークレット管理ツール（HashiCorp Vaultなど）との連携を検討する必要があります。&lt;/p&gt;
+&lt;p&gt;💡 Secretのリソース定義マニフェスト（YAML）をGitリポジトリへ登録する際は、SOPS (Secrets Opaque Secret) や Sealed Secrets などのツールを用いて暗号化した状態で管理する構成が推奨されます。&lt;/deployment-name&gt;&lt;/p&gt;</description></item></channel></rss>
