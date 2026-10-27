@@ -1,4 +1,98 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 21 Oct 2026 10:10:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Asymmetric Routing Failure When Combining Traefik and Cloudflare WARP, and Packet Trajectory Correction via PBR</title><link>https://klifehack.com/en/p/traefik-warp-asymmetric-routing-pbr/</link><pubDate>Wed, 21 Oct 2026 10:10:07 +0900</pubDate><guid>https://klifehack.com/en/p/traefik-warp-asymmetric-routing-pbr/</guid><description>&lt;p&gt;In infrastructure running multi-homed configurations or tunneling clients on the same host, discrepancies between inbound and outbound communication paths (asymmetric routing) represent failure factors that are difficult to detect. In particular, in designs that expose services externally via containerized reverse proxies while encapsulating outbound traffic from the same host in private tunnels or VPNs, kernel routing decisions typically overwrite the default gateway, resulting in lost SYN-ACK responses to clients.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 27 Oct 2026 10:50:02 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox Backup Server Deduplication Mechanism and Backup Operations Design</title><link>https://klifehack.com/en/p/proxmox-backup-server-architecture-analysis/</link><pubDate>Tue, 27 Oct 2026 10:50:02 +0900</pubDate><guid>https://klifehack.com/en/p/proxmox-backup-server-architecture-analysis/</guid><description>&lt;p&gt;As virtualization infrastructure scales, the proliferation of virtual machines (VMs) and data storage expansion lead to prolonged backup windows. Designs that routinely repeat conventional full image backups inevitably suffer from network bandwidth exhaustion and soaring storage costs, significantly impeding the reduction of RPO (Recovery Point Objective).&lt;/p&gt;
+&lt;p&gt;Proxmox Backup Server (PBS) is a backup solution designed to optimize data transfer and reduce storage consumption. This article outlines the internal architecture of PBS, deduplication mechanisms, encryption boundary constraints, and operational troubleshooting.&lt;/p&gt;
+&lt;h2 id="differential-transfer-and-chunk-based-deduplication-architecture"&gt;Differential Transfer and Chunk-Based Deduplication Architecture
+&lt;/h2&gt;&lt;p&gt;PBS features a differential transfer mechanism leveraging QEMU dirty bitmaps. Because it detects and transfers only modified blocks, bandwidth consumption is significantly reduced.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;+-----------------------------------------------------------------------+
+| Incremental Backup Workflow |
++-----------------------------------------------------------------------+
+| Proxmox VE (Client Side) |
+| 1. Track modified blocks (QEMU dirty bitmaps) |
+| 2. Split modified data into chunk payload |
+| 3. Encrypt / Compress locally |
+| |
+| === Network Bandwidth Transit === |
+| (Transmits ONLY new chunks) |
+| || |
+| \/ |
+| Proxmox Backup Server (Datastore) |
+| 4. Deduplicate against existing chunk catalog |
+| 5. Write new chunks &amp;amp;amp; update snapshot manifest index |
++-----------------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Backup data is split into variable-sized chunks averaging approximately 4MB, and a SHA-256 hash is calculated for each chunk.&lt;/p&gt;
+&lt;h3 id="deduplication-operating-principles"&gt;Deduplication Operating Principles
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Reference Count Optimization&lt;/b&gt;: When a chunk hash that already exists in the same datastore is detected, only the reference count (index manifest) of the existing chunk is updated, avoiding duplicate writes of actual data.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Effectiveness in Multi-VM Environments&lt;/b&gt;: Deduplication benefits are particularly pronounced in multi-VM environments sharing the same base OS image.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Data Compression&lt;/b&gt;: The ZSTD algorithm is employed for data compression.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="deduplication-constraints-imposed-by-encryption-boundaries"&gt;Deduplication Constraints Imposed by Encryption Boundaries
+&lt;/h3&gt;&lt;p&gt;When client-side encryption (AES-256-GCM) is used in PBS, data is encrypted on the Proxmox VE host side prior to transfer. Ciphertexts processed with different encryption keys generate different hash values that cannot be decrypted, even if the source data is identical; therefore, &lt;b&gt;deduplication does not function across different keys&lt;/b&gt;. When designing multi-tenant environments, the tradeoff between security isolation and deduplication efficiency must be evaluated.&lt;/p&gt;
+&lt;h2 id="manifest-index-and-live-restore"&gt;Manifest Index and Live Restore
+&lt;/h2&gt;&lt;p&gt;Unlike traditional incremental backups, PBS maintains an independent manifest file for each backup point.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;+-----------------------------------------------------------------------+
+| Manifest Indexing Architecture |
++-----------------------------------------------------------------------+
+| Snapshot Index (Point-in-Time) |
+| |-- Pointer -&amp;amp;gt; Chunk #00123 (Base OS data) |
+| |-- Pointer -&amp;amp;gt; Chunk #04567 (Application binary) |
+| |-- Pointer -&amp;amp;gt; Chunk #89012 (Modified DB block) |
++-----------------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;During restoration, there is no need to sequentially apply a differential chain; any restore point can be accessed directly in a single pass by reading the chunks referenced by the manifest.&lt;/p&gt;
+&lt;p&gt;Additionally, the &lt;b&gt;Live Restore&lt;/b&gt; feature for QEMU VMs enables immediate VM startup without waiting for full data restoration to complete. When the guest OS issues an access request to an untransferred region, the corresponding chunks are prioritized, fetched over the network, and allocated.&lt;/p&gt;
+&lt;h2 id="data-integrity-verification"&gt;Data Integrity Verification
+&lt;/h2&gt;&lt;p&gt;To address silent data corruption (bit rot) and storage failures, PBS executes periodic verification jobs (Verification Tasks).&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Unencrypted Chunks&lt;/b&gt;: Verified by recalculating SHA-256 hashes.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Encrypted Chunks&lt;/b&gt;: Because the PBS server side does not hold decryption keys, integrity checks are performed using data structure checksums (CRC-32).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;Operational failure patterns in PBS environments and their respective remediation workflows are structured as follows.&lt;/p&gt;
+&lt;h3 id="1-drop-in-deduplication-efficiency-due-to-encryption-key-mismatch"&gt;1. Drop in Deduplication Efficiency Due to Encryption Key Mismatch
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Symptom&lt;/b&gt;: Despite multiple VMs using the identical OS image, storage consumption does not decrease and deduplication does not take effect.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cause&lt;/b&gt;: Individual encryption keys are specified across different PVE nodes or jobs, resulting in mismatched chunk hashes.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Remediation&lt;/b&gt;: Configure shared usage of the same backup key for VM groups within the same tenant or security boundary.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;proxmox-backup-client key create /etc/pve/priv/storage/pbs-shared-key.enc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pvesm set pbs-datastore --encryption-key /etc/pve/priv/storage/pbs-shared-key.enc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-disk-io-and-network-bottlenecks-during-live-restore-execution"&gt;2. Disk I/O and Network Bottlenecks During Live Restore Execution
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Symptom&lt;/b&gt;: Immediately after starting a VM via Live Restore, I/O wait spikes within the guest OS, leading to degraded service responsiveness.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cause&lt;/b&gt;: Guest OS boot processes and runtime accesses concentrate, causing on-demand chunk fetching from the PBS datastore to saturate network bandwidth or IOPS limits.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Remediation&lt;/b&gt;: Ensure a network bandwidth of 10GbE or higher between PBS and PVE, and adopt NVMe/SSD arrays for the PBS datastore. Consider using standard background restoration except during emergencies.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-detection-of-corrupt-chunks-by-verification-jobs"&gt;3. Detection of Corrupt Chunks by Verification Jobs
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Symptom&lt;/b&gt;: A &lt;code&gt;verification failed: chunk does not match integrity check&lt;/code&gt; error is logged during periodic verification jobs.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cause&lt;/b&gt;: Data degradation on storage media or packet corruption during network writes.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Remediation&lt;/b&gt;: Identify corrupted manifests and chunks, then perform replacement via remote sync (Sync Job) or by creating a fresh backup.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;proxmox-backup-manager datastore verify datastore1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;proxmox-backup-manager task log UPID:pbs-server:00001234:00005678:datastore1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-verification-log-protocols"&gt;Operational Verification Log Protocols
+&lt;/h2&gt;&lt;p&gt;Verification logs capture datastore status and network port listening states on a PBS node.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# proxmox-backup-manager datastore status datastore1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;┌────────────┬──────────────┬──────────────┬──────────────┬──────────────┐
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ Name │ Total │ Used │ Available │ History │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;╞════════════╪══════════════╪══════════════╪══════════════╪══════════════╡
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ datastore1 │ 1.96 TiB │ 412.50 GiB │ 1.55 TiB │ Deduplication│
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└────────────┴──────────────┴──────────────┴──────────────┴──────────────┘
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Deduplication Factor: 3.42x
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# ss -tulpn | grep proxmox-backup
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 4096 *:8007 *:* users:((&amp;#34;proxmox-backup-&amp;#34;,pid=1240,fd=6))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# proxmox-backup-client status --repository user@pbs!realm@pbs-server:datastore1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;┌────────────────┬──────────────────────────────────────────┐
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ Field │ Value │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├────────────────┼──────────────────────────────────────────┤
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ datastore │ datastore1 │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ total │ 2153922822144 (1.96 TiB) │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ used │ 442918502400 (412.50 GiB) │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ avail │ 1711004319744 (1.55 TiB) │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└────────────────┴──────────────────────────────────────────┘
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;Proxmox Backup Server balances storage efficiency and restore speed through chunk-based deduplication and differential transfers. However, failing to establish client encryption policies, secure sufficient network bandwidth, and automate periodic verification jobs can hinder rapid recovery during failures. Designing with a thorough understanding of these architectural characteristics and conducting prior validation is recommended.&lt;/p&gt;</description></item><item><title>Asymmetric Routing Failure When Combining Traefik and Cloudflare WARP, and Packet Trajectory Correction via PBR</title><link>https://klifehack.com/en/p/traefik-warp-asymmetric-routing-pbr/</link><pubDate>Wed, 21 Oct 2026 10:10:07 +0900</pubDate><guid>https://klifehack.com/en/p/traefik-warp-asymmetric-routing-pbr/</guid><description>&lt;p&gt;In infrastructure running multi-homed configurations or tunneling clients on the same host, discrepancies between inbound and outbound communication paths (asymmetric routing) represent failure factors that are difficult to detect. In particular, in designs that expose services externally via containerized reverse proxies while encapsulating outbound traffic from the same host in private tunnels or VPNs, kernel routing decisions typically overwrite the default gateway, resulting in lost SYN-ACK responses to clients.&lt;/p&gt;
 &lt;p&gt;This document traces a packet delivery failure caused by routing policy conflicts between a Traefik proxy deployed on a Docker bridge network and a Cloudflare WARP client, and records the verification process of enforcing localized routing tables using Policy-Based Routing (PBR).&lt;/p&gt;
 &lt;h2 id="failure-overview-and-inbound-path-verification"&gt;Failure Overview and Inbound Path Verification
 &lt;/h2&gt;&lt;p&gt;An issue occurred where external HTTPS requests to a Telegram-integrated clipboard web service (&lt;code&gt;copy.ds2qgd.dedyn.io&lt;/code&gt;) suddenly timed out (&lt;code&gt;ERR_CONNECTION_TIMED_OUT&lt;/code&gt;). To isolate container process downtime and upstream application anomalies, each layer of the inbound pipeline was inspected individually.&lt;/p&gt;

@@ -1,4 +1,98 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 25 Oct 2026 10:35:55 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub ActionsによるSpring Boot CIパイプライン構築とマージ競合・障害解析</title><link>https://klifehack.com/p/github-actions-ci-pipeline-diagnostics-merge-resolution/</link><pubDate>Sun, 25 Oct 2026 10:35:55 +0900</pubDate><guid>https://klifehack.com/p/github-actions-ci-pipeline-diagnostics-merge-resolution/</guid><description>&lt;p&gt;ソフトウェア開発プロセスにおいて、ローカル環境でのテスト実行のみに依存した変更の適用は、ターゲットブランチへの不安定なコードの混入を引き起こす原因となります。特に複数メンバーでの並行開発下では、Gitブランチ構成の複雑化やコンフリクト解決時の設定誤りによって、CI/CDパイプラインが正常に発火しなくなるリスクが常に存在します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 27 Oct 2026 10:50:01 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox Backup Serverの重複排除メカニズムとバックアップ運用設計</title><link>https://klifehack.com/p/proxmox-backup-server-architecture-analysis/</link><pubDate>Tue, 27 Oct 2026 10:50:01 +0900</pubDate><guid>https://klifehack.com/p/proxmox-backup-server-architecture-analysis/</guid><description>&lt;p&gt;仮想化基盤の規模拡大に伴い、仮想マシン（VM）の増加とデータストレージの膨張はバックアップウィンドウの長時間化を招きます。従来のフルイメージバックアップを定常的に繰り返す設計では、ネットワーク帯域の枯渇およびストレージコストの増大が避けられず、RPO（目標復旧時点）の短縮を著しく阻害します。&lt;/p&gt;
+&lt;p&gt;Proxmox Backup Server（PBS）は、データ転送の最適化とストレージ使用量の削減を目的として設計されたバックアップソリューションです。本稿では、PBSの内部アーキテクチャ、重複排除のメカニズム、暗号化境界における制約、および運用トラブルシューティングについて整理します。&lt;/p&gt;
+&lt;h2 id="差分転送とchunkベース重複排除アーキテクチャ"&gt;差分転送とChunkベース重複排除アーキテクチャ
+&lt;/h2&gt;&lt;p&gt;PBSは、QEMU dirty bitmapsを活用した差分転送機構を備えています。変更されたブロックのみを検出して転送するため、帯域幅の消費を大幅に抑制できます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;+-----------------------------------------------------------------------+
+| Incremental Backup Workflow |
++-----------------------------------------------------------------------+
+| Proxmox VE (Client Side) |
+| 1. Track modified blocks (QEMU dirty bitmaps) |
+| 2. Split modified data into chunk payload |
+| 3. Encrypt / Compress locally |
+| |
+| === Network Bandwidth Transit === |
+| (Transmits ONLY new chunks) |
+| || |
+| \/ |
+| Proxmox Backup Server (Datastore) |
+| 4. Deduplicate against existing chunk catalog |
+| 5. Write new chunks &amp;amp;amp; update snapshot manifest index |
++-----------------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;バックアップデータは、平均約4MBの可変サイズChunkに分割され、各Chunkに対してSHA-256ハッシュが算出されます。&lt;/p&gt;
+&lt;h3 id="重複排除の動作原則"&gt;重複排除の動作原則
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;参照カウントによる最適化&lt;/b&gt;: 同一データストア内にすでに存在するChunkハッシュが検出された場合、既存Chunkの参照カウント（インデックスマニフェスト）のみを更新し、実データの重複書き込みを行いません。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;マルチVM環境における効果&lt;/b&gt;: 同一のベースOSイメージを共有する複数VM環境において、重複排除の効果が顕著に現れます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;データ圧縮&lt;/b&gt;: データの圧縮にはZSTDアルゴリズムが採用されています。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="暗号化境界による重複排除の制約"&gt;暗号化境界による重複排除の制約
+&lt;/h3&gt;&lt;p&gt;PBSにおけるクライアントサイド暗号化（AES-256-GCM）を使用する場合、データは転送前にProxmox VEホスト側で暗号化されます。異なる暗号化キーで処理された暗号文は、元データが同一であっても暗号解読不能な異なるハッシュ値を生成するため、&lt;b&gt;異なるキー間で重複排除は機能しません&lt;/b&gt;。マルチテナント設計時には、セキュリティ分離と重複排除率のトレードオフを考慮する必要があります。&lt;/p&gt;
+&lt;h2 id="マニフェストインデックスとlive-restore"&gt;マニフェストインデックスとLive Restore
+&lt;/h2&gt;&lt;p&gt;従来の増分バックアップとは異なり、PBSはバックアップポイントごとに独立したマニフェストファイルを保持します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;+-----------------------------------------------------------------------+
+| Manifest Indexing Architecture |
++-----------------------------------------------------------------------+
+| Snapshot Index (Point-in-Time) |
+| |-- Pointer -&amp;amp;gt; Chunk #00123 (Base OS data) |
+| |-- Pointer -&amp;amp;gt; Chunk #04567 (Application binary) |
+| |-- Pointer -&amp;amp;gt; Chunk #89012 (Modified DB block) |
++-----------------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;復元時には差分チェーンを順次適用する必要がなく、マニフェストが参照するChunkを単一パスで直接読み出すことで、任意のリストアポイントへアクセス可能です。&lt;/p&gt;
+&lt;p&gt;また、QEMU VMに対する&lt;b&gt;Live Restore&lt;/b&gt;機能により、全データのリストア完了を待たずにVMを即座に起動できます。ゲストOSが未転送領域へアクセス要求を出した際、該当するChunkがネットワーク経由で優先的に取得・割り当てられます。&lt;/p&gt;
+&lt;h2 id="データ整合性検証verification"&gt;データ整合性検証（Verification）
+&lt;/h2&gt;&lt;p&gt;サイレントデータ破損（Bit Rot）やストレージ障害に対応するため、PBSは定期的な検証ジョブ（Verification Tasks）を実行します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;非暗号化Chunk&lt;/b&gt;: SHA-256ハッシュの再計算による検証。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;暗号化Chunk&lt;/b&gt;: PBSサーバー側は復号キーを保持しないため、データ構造のチェックサム（CRC-32）による完全性確認を実施。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;PBS運用中に発生する代表的な障害パターンと、その対処手順を示します。&lt;/p&gt;
+&lt;h3 id="1-暗号化キーミスマッチによる重複排除率の低下"&gt;1. 暗号化キーミスマッチによる重複排除率の低下
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;事象&lt;/b&gt;: 複数のVMで同一のOSイメージを使用しているにもかかわらず、ストレージ消費量が減少せず重複排除が効かない。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: 異なるPVEノードまたはジョブで個別の暗号化キーが指定されており、Chunkのハッシュが一致していない。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: 同一テナントまたは同一セキュリティ境界内のVMグループに対して、同一のバックアップキーを共有設定する。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;proxmox-backup-client key create /etc/pve/priv/storage/pbs-shared-key.enc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pvesm set pbs-datastore --encryption-key /etc/pve/priv/storage/pbs-shared-key.enc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-live-restore実行時のディスクioおよびネットワークボトルネック"&gt;2. Live Restore実行時のディスクI/Oおよびネットワークボトルネック
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;事象&lt;/b&gt;: Live RestoreでVMを起動した直後、ゲストOS内部でI/O Waitが高騰しサービス応答が低下する。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: ゲストOSの起動プロセスやランタイムアクセスが集中し、PBSデータストアからのオンデマンドChunk取得が帯域・IOPSの上限に達している。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: PBSとPVE間のネットワーク帯域を10GbE以上に確保し、PBSのデータストアにNVMe/SSDアレイを採用する。緊急時以外は通常のバックグラウンドリストアの利用を検討する。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-verificationジョブによるcorrupt-chunkの検出"&gt;3. VerificationジョブによるCorrupt Chunkの検出
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;事象&lt;/b&gt;: 定期検証ジョブにて &lt;code&gt;verification failed: chunk does not match integrity check&lt;/code&gt; エラーがログに記録される。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: ストレージメディアのデータ劣化またはネットワーク書き込み時のパケット破損。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: 破損マニフェストおよびChunkを特定し、リモート同期（Sync Job）または最新バックアップによる置き換えを実施する。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;proxmox-backup-manager datastore verify datastore1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;proxmox-backup-manager task log UPID:pbs-server:00001234:00005678:datastore1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="運用検証ログプロトコル"&gt;運用検証ログプロトコル
+&lt;/h2&gt;&lt;p&gt;PBSノードにおけるデータストア状況およびポートリスニングの検証ログ例を以下に示します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# proxmox-backup-manager datastore status datastore1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;┌────────────┬──────────────┬──────────────┬──────────────┬──────────────┐
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ Name │ Total │ Used │ Available │ History │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;╞════════════╪══════════════╪══════════════╪══════════════╪══════════════╡
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ datastore1 │ 1.96 TiB │ 412.50 GiB │ 1.55 TiB │ Deduplication│
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└────────────┴──────────────┴──────────────┴──────────────┴──────────────┘
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Deduplication Factor: 3.42x
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# ss -tulpn | grep proxmox-backup
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 4096 *:8007 *:* users:((&amp;#34;proxmox-backup-&amp;#34;,pid=1240,fd=6))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# proxmox-backup-client status --repository user@pbs!realm@pbs-server:datastore1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;┌────────────────┬──────────────────────────────────────────┐
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ Field │ Value │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├────────────────┼──────────────────────────────────────────┤
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ datastore │ datastore1 │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ total │ 2153922822144 (1.96 TiB) │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ used │ 442918502400 (412.50 GiB) │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ avail │ 1711004319744 (1.55 TiB) │
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└────────────────┴──────────────────────────────────────────┘
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;Proxmox Backup Serverは、Chunkベースの重複排除と差分転送により、ストレージ効率とリストア速度の両立を実現します。ただし、クライアント暗号化の適用方針、ネットワーク帯域の確保、および定期的なVerificationジョブの自動化を行わなければ、障害発生時の迅速な復旧を阻害する要因となります。アーキテクチャの特性を理解した設計と事前検証を推奨します。&lt;/p&gt;</description></item><item><title>GitHub ActionsによるSpring Boot CIパイプライン構築とマージ競合・障害解析</title><link>https://klifehack.com/p/github-actions-ci-pipeline-diagnostics-merge-resolution/</link><pubDate>Sun, 25 Oct 2026 10:35:55 +0900</pubDate><guid>https://klifehack.com/p/github-actions-ci-pipeline-diagnostics-merge-resolution/</guid><description>&lt;p&gt;ソフトウェア開発プロセスにおいて、ローカル環境でのテスト実行のみに依存した変更の適用は、ターゲットブランチへの不安定なコードの混入を引き起こす原因となります。特に複数メンバーでの並行開発下では、Gitブランチ構成の複雑化やコンフリクト解決時の設定誤りによって、CI/CDパイプラインが正常に発火しなくなるリスクが常に存在します。&lt;/p&gt;
 &lt;p&gt;本記事では、GitHub Actionsを活用したSpring Bootプロジェクトの自動ビルド・テスト検証パイプラインの構築手法と、マージ競合の解消過程で発生したワークフローファイルのパス逸脱問題、およびテスト失敗時の診断アーティファクト収集メカニズムについて記述します。&lt;/p&gt;
 &lt;h2 id="github-actionsの基本構造と宣言的パイプライン設計"&gt;GitHub Actionsの基本構造と宣言的パイプライン設計
 &lt;/h2&gt;&lt;p&gt;GitHub Actionsで実行される自動化処理（Workflow）は、リポジトリ内の特定ディレクトリに配置されたYAML宣言ファイルによって定義されます。実行エンジンはエフェメラル（使い捨て）な仮想マシンコンテナ上で稼働するため、依存環境のセットアップや実行ステップを漏れなく明示する必要があります。&lt;/p&gt;
