@@ -1,4 +1,133 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ss on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/ss/</link><description>Recent content in Ss on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 09 Oct 2026 10:46:32 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/ss/index.xml" rel="self" type="application/rss+xml"/><item><title>Ping疎通可能でもTCP接続が失敗する境界領域のトラブルシューティング</title><link>https://klifehack.com/p/ping-ok-tcp-connection-failed-troubleshooting/</link><pubDate>Fri, 09 Oct 2026 10:46:32 +0900</pubDate><guid>https://klifehack.com/p/ping-ok-tcp-connection-failed-troubleshooting/</guid><description>&lt;p&gt;インフラストラクチャの運用において、「Pingは通るが、サーバーへの接続（SSHやHTTPなど）が失敗する」という事象は頻繁に発生します。ICMPによるL3レベルの疎通確認のみに依存し、L4以上のトランスポート層やL7アプリケーション層の検証を怠ることは、障害復旧の遅延や誤った原因特定を招く要因となります。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ss on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/ss/</link><description>Recent content in Ss on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 29 Oct 2026 10:51:09 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/ss/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux環境におけるネットワーク障害解析とパケットフロー診断の実践</title><link>https://klifehack.com/p/linux-network-diagnostics-packet-analysis/</link><pubDate>Thu, 29 Oct 2026 10:51:09 +0900</pubDate><guid>https://klifehack.com/p/linux-network-diagnostics-packet-analysis/</guid><description>&lt;p&gt;本番運用のインフラ基盤において、ホスト間通信の遮断や不定期なタイムアウトが発生した際、場当たり的なサービスの再起動や無計画なルーティング変更を行うと、障害範囲の拡大や揮発性フォレンジック証拠の消失を招きます。特にマルチNIC構成やオーバーレイネットワークが介在するシステムでは、物理リンク、OSカーネルのルーティングテーブル、ホスト型パケットフィルタリング、そしてトランスポート層（TCP/UDP）の各段階において障害要因が複雑に絡み合います。本稿では、決定論的かつ再現性のある検証手順に基づき、Linux環境におけるネットワーク障害の切り分け手順とパケットトレース手法を整理します。&lt;/p&gt;
+&lt;h2 id="-階層型アプローチによる障害ドメインの局所化"&gt;💡 階層型アプローチによる障害ドメインの局所化
+&lt;/h2&gt;&lt;p&gt;ネットワーク異常の検知時は、下位層（L1/L2）から上位層（L7）へ向かうボトムアップ検証、または症状に応じたミドルアウト検証により、調査対象を論理的に絞り込む必要があります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+---------------------------------------------------------------------------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Standard Diagnostic Progression Flow |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+---------------------------------------------------------------------------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| 1. Physical Link &amp;amp;amp; NIC State |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| 2. Layer 3: IP Address &amp;amp;amp; CIDR Subnet Alignment |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| 3. Layer 2/3: ARP Resolution &amp;amp;amp; Next-Hop Gateway Reachability |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| 4. Routing Table &amp;amp;amp; Egress Interface Selection |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| 5. Layer 4: TCP/UDP Port Listeners &amp;amp;amp; Connection State Tracking |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| 6. Packet Filtering: Local, Host-Level, and Perimetric Firewalls |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| 7. Name Resolution: DNS Recursion &amp;amp;amp; Query Path |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| 8. Layer 7: TLS Negotiation, HTTP Semantics &amp;amp;amp; Application Upstreams |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| 9. Deep Packet Inspection: tcpdump Capture &amp;amp;amp; Flow Trajectory Analysis |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+---------------------------------------------------------------------------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="1-インターフェース状態およびlayer-3アドレス設定の検証"&gt;1. インターフェース状態およびLayer 3アドレス設定の検証
+&lt;/h3&gt;&lt;p&gt;通信障害が発生した場合、まずNIC（Network Interface Controller）の物理キャリア状態と割り当てられたIP/サブネットマスクを確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ip -br link
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ip link show ens160
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ethtool ens160
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;ip -br link&lt;/code&gt; でステータスが &lt;code&gt;DOWN&lt;/code&gt; の場合、または &lt;code&gt;ethtool&lt;/code&gt; の出力で &lt;code&gt;Link detected: no&lt;/code&gt; となっている場合は、ハイパーバイザ仮想スイッチのポートグループ、VLANタグ、または物理層のケーブリングに問題が存在します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ip -br addr
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;サブネットマスク（CIDRプレフィックス）の誤認には特に留意する必要があります。本来 &lt;code&gt;/24&lt;/code&gt; であるべき設定が誤って &lt;code&gt;/16&lt;/code&gt; に定義された場合、隣接しないセグメント宛のトラフィックが直接接続（Link Scope）と見なされ、デフォルトゲートウェイを経由せずにARP要求をローカルブロードキャストするため、パケットが宛先に到達せずドロップします。&lt;/p&gt;
+&lt;h3 id="2-カーネルルーティングテーブルとarp解決の確認"&gt;2. カーネルルーティングテーブルとARP解決の確認
+&lt;/h3&gt;&lt;p&gt;送信元ノードからパケットがどのインターフェースを経由して送出されるかを特定するため、カーネルの転送決定を直接照会します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ip route
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ip route get 192.168.20.50
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実行結果から、選択されたネクストホップゲートウェイ（&lt;code&gt;via&lt;/code&gt;）、送出インターフェース（&lt;code&gt;dev&lt;/code&gt;）、および送信元IPアドレス（&lt;code&gt;src&lt;/code&gt;）を正確に把握します。複数NICを搭載したマルチホーム構成では、非対称ルーティングによって戻りパケットが別経路を通り、途中のステートフルファイアウォールで破棄されるケースが存在します。&lt;/p&gt;
+&lt;p&gt;次に、ネクストホップのLayer 2アドレスが解決されているかを確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ip neigh show
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ステータスが &lt;code&gt;INCOMPLETE&lt;/code&gt; または &lt;code&gt;FAILED&lt;/code&gt; の場合、ARP要求に対する応答が得られていません。スイッチ側のVLAN不整合や物理的な通信途絶、IP重複を疑う必要があります。&lt;/p&gt;
+&lt;h3 id="3-layer-4ソケットリスナーとプロトコルの切り分け"&gt;3. Layer 4ソケットリスナーとプロトコルの切り分け
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;ping&lt;/code&gt; によるICMP疎通が成功しても、TCP/UDPによるアプリケーション通信が成立するとは限りません。ICMP（Echo Request/Reply）はトランスポート層のポート概念を持たないためです。&lt;/p&gt;
+&lt;p&gt;クライアントからのポート到達性を確認するには、タイムアウトを指定して &lt;code&gt;nc&lt;/code&gt;（netcat）を実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nc -zv -w &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; 192.168.20.50 &lt;span style="color:#ae81ff"&gt;443&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;サーバー側では、ソケットが意図したインターフェースおよびポートで待ち受けているかを検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ss -lntp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;バインドアドレスが &lt;code&gt;127.0.0.1:8080&lt;/code&gt; のようにループバックに制限されている場合、外部ノードからの通信はすべてカーネルによって拒否（TCP RST）されます。外部公開が必要なデーモンは &lt;code&gt;0.0.0.0&lt;/code&gt; または指定の物理NICのアドレスにバインドされている必要があります。&lt;/p&gt;
+&lt;h3 id="4-パケットフィルタリングnftables--firewalldの確認"&gt;4. パケットフィルタリング（nftables / firewalld）の確認
+&lt;/h3&gt;&lt;p&gt;ソケットが正常にリスン状態であっても通信が成立しない場合、ホストレベルのパケットフィルタを検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo firewall-cmd --state
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo firewall-cmd --list-all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo nft list ruleset
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;フィルタリング設定の点検時は、デーモンの稼働状態のみならず、インフラ設計に基づいたインターフェースゾーン、ソースIP制限、プロトコルポートの許可ルールを精査します。&lt;/p&gt;
+&lt;h2 id="-tcpdumpを用いたパケットキャプチャとフロー解析"&gt;🛠️ tcpdumpを用いたパケットキャプチャとフロー解析
+&lt;/h2&gt;&lt;p&gt;各種コマンドによる静的確認で原因が特定できない場合、&lt;code&gt;tcpdump&lt;/code&gt; を用いてネットワークインターフェースを通過するフレームを直接捕捉します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo tcpdump -nn -i ens160 &lt;span style="color:#e6db74"&gt;&amp;#39;host 192.168.20.50 and tcp port 443&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;-nn`: ホスト名解決およびポート番号のサービス名解決を無効化し、名前解決遅延を防止します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-i ens160&lt;/code&gt;: キャプチャ対象のインターフェースを指定します。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;'host ... and tcp port ...'&lt;/code&gt;: BPF（Berkeley Packet Filter）によるトラフィックの絞り込みを行います。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;詳細解析用のPCAPファイルを出力する場合は、パケット数上限を指定し、適切な権限管理を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo tcpdump -nn -i ens160 -s &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; -c &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt; -w /tmp/network-debug.pcap &lt;span style="color:#e6db74"&gt;&amp;#39;host 192.168.20.50 and tcp port 443&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo chmod &lt;span style="color:#ae81ff"&gt;600&lt;/span&gt; /tmp/network-debug.pcap
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="tcpハンドシェイクのシグネチャによる障害要因の特定"&gt;TCPハンドシェイクのシグネチャによる障害要因の特定
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Client (192.168.10.10) Server (192.168.20.50)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |-------------- [SYN] Seq=0 ------------------&amp;amp;gt;| Step 1: Connection Request
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |&amp;amp;lt;--------- [SYN, ACK] Seq=0 Ack=1 ------------| Step 2: Acknowledgment &amp;amp;amp; Sync
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |-------------- [ACK] Seq=1 Ack=1 ------------&amp;amp;gt;| Step 3: Handshake Established
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |========= Established / Data Transfer ========|
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;キャプチャログ内のTCPフラグ遷移により、ボトルネックの発生箇所を特定できます。&lt;/p&gt;
+&lt;h4 id="パターン1-syn再送とサイレントドロップ無応答"&gt;パターン1: SYN再送とサイレントドロップ（無応答）
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.10.52000 &amp;amp;gt; 192.168.20.50.443: Flags [S], seq 1001, win 64240, length 0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.10.52000 &amp;amp;gt; 192.168.20.50.443: Flags [S], seq 1001, win 64240, length 0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;クライアントから &lt;code&gt;Flags [S]&lt;/code&gt; が送信されているものの応答がない場合、中間経路のネットワークファイアウォール（クラウドSecurity Group、NACL等）によるドロップ、経路ブラックホール、あるいは非対称ルーティングによる戻りパケットの消失が疑われます。&lt;/p&gt;
+&lt;h4 id="パターン2-即時tcp-rst接続拒否"&gt;パターン2: 即時TCP RST（接続拒否）
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.10.52000 &amp;amp;gt; 192.168.20.50.443: Flags [S], seq 1001, length 0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.20.50.443 &amp;amp;gt; 192.168.10.10.52000: Flags [R.], seq 0, ack 1002, length 0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ターゲットホストから即座に &lt;code&gt;Flags [R.]&lt;/code&gt; が返却される場合、パケットは宛先ホストに到達していますが、該当ポートでリスンしているプロセスが存在しないか、OSの接続バックログキューが枯渇している、またはパケットフィルタが明示的な &lt;code&gt;REJECT&lt;/code&gt;（&lt;code&gt;&amp;ndash;reject-with tcp-reset&lt;/code&gt;）を返していることを示します。&lt;/p&gt;
+&lt;h4 id="パターン3-ハンドシェイク完了後の停止"&gt;パターン3: ハンドシェイク完了後の停止
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;Flags [S]&lt;/code&gt;、&lt;code&gt;Flags [S.]&lt;/code&gt;、&lt;code&gt;Flags [.]&lt;/code&gt; が正常に成立した後にデータ通信が途絶する場合、Layer 4の疎通に問題はなく、TLSハンドシェイクの不一致（SNI設定や証明書失効）、またはLayer 7プロキシ（Nginx等のリバースプロキシ）とバックエンド間の通信不全が原因となります。&lt;/p&gt;
+&lt;h2 id="-troubleshooting"&gt;⚠️ Troubleshooting
+&lt;/h2&gt;&lt;p&gt;実際の障害対応現場において頻出するシチュエーションごとの対処手順を以下に示します。&lt;/p&gt;
+&lt;h3 id="1-http-502-bad-gateway-の発生とアップストリーム接続診断"&gt;1. HTTP 502 Bad Gateway の発生とアップストリーム接続診断
+&lt;/h3&gt;&lt;p&gt;クライアントからリバースプロキシまでは到達しているものの、プロキシからバックエンド（FastAPIやGoアプリケーション等）への接続が切断されている場合に発生します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# プロキシサーバー上からバックエンドのリスナーを確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nc -zv -w &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; 127.0.0.1 &lt;span style="color:#ae81ff"&gt;8000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ss -lntp | grep &lt;span style="color:#e6db74"&gt;&amp;#39;:8000&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# バックエンドプロセスの状態およびログ調査&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo journalctl -u backend-service --since &lt;span style="color:#e6db74"&gt;&amp;#34;10 minutes ago&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo tail -n &lt;span style="color:#ae81ff"&gt;50&lt;/span&gt; /var/log/nginx/error.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Nginxのエラーログに &lt;code&gt;connect() failed (111: Connection refused)&lt;/code&gt; が記録されている場合、バックエンドプロセスのダウンまたはバインドアドレスの不整合（IPv6 &lt;code&gt;[::1]&lt;/code&gt; と IPv4 &lt;code&gt;127.0.0.1&lt;/code&gt; の齟齬）が発生しています。&lt;code&gt;upstream timed out (110: Connection timed out)&lt;/code&gt; の場合は、バックエンド処理のデッドロックやDB起因の遅延が原因となります。&lt;/p&gt;
+&lt;h3 id="2-キャプチャ時におけるハードウェアオフロードアーティファクト"&gt;2. キャプチャ時におけるハードウェアオフロードアーティファクト
+&lt;/h3&gt;&lt;p&gt;NIC上で &lt;code&gt;TSO&lt;/code&gt;（TCP Segmentation Offload）や &lt;code&gt;TX Checksum Offload&lt;/code&gt; が有効な場合、&lt;code&gt;tcpdump&lt;/code&gt; 上でチェックサムエラーや MTU（1500バイト）を超過する巨大パケットが観測されることがあります。これはカーネルがNICにフレーム処理をオフロードした直後にパケットをキャプチャするために生じる見かけ上の動作であり、パケット破損ではありません。正確な実フレーム状態を検証する場合は、受信側ホストまたはネットワークタップ側でのキャプチャが必要です。&lt;/p&gt;
+&lt;h2 id="ログデータ"&gt;ログデータ
+&lt;/h2&gt;&lt;p&gt;各レイヤーの診断時に取得される代表的なターミナル出力例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ip -br link
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lo UNKNOWN 00:00:00:00:00:00 &amp;lt;loopback,up,lower_up&amp;gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ens160 UP 00:50:56:bb:01:1a &amp;lt;broadcast,multicast,up,lower_up&amp;gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ens192 DOWN 00:50:56:bb:02:2b &amp;lt;broadcast,multicast&amp;gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ip route get 192.168.20.50
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.20.50 via 192.168.10.1 dev ens160 src 192.168.10.10 uid 1000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cache 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ip neigh show
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;192.168.10.1 dev ens160 lladdr 00:11:22:33:44:55 REACHABLE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo ss -lntp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;LISTEN 0 128 0.0.0.0:22 0.0.0.0:* users:((&amp;#34;sshd&amp;#34;,pid=1024,fd=3))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;LISTEN 0 128 127.0.0.1:8080 0.0.0.0:* users:((&amp;#34;java&amp;#34;,pid=2450,fd=45))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;LISTEN 0 511 0.0.0.0:443 0.0.0.0:* users:((&amp;#34;nginx&amp;#34;,pid=1820,fd=6))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ nc -zv -w 3 192.168.20.50 443
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Ncat: Version 7.92 ( https://nmap.org/ncat )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Ncat: Connected to 192.168.20.50:443.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Ncat: 0 bytes sent, 0 bytes received in 0.02 seconds.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="-operational-notes"&gt;🛠️ Operational Notes
+&lt;/h2&gt;&lt;p&gt;本番稼働中のホストでネットワーク解析を実施する際は、以下の制約事項を遵守する必要があります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;BPFフィルタの厳格化&lt;/b&gt;: 高トラフィックな環境で無条件の &lt;code&gt;tcpdump&lt;/code&gt; を実行すると、CPU利用率の高騰やログ領域の枯渇を招くため、必ずIPとポートを指定し、&lt;code&gt;-c&lt;/code&gt; オプションで取得パケット数を制限します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;揮発情報の保護&lt;/b&gt;: ネットワーク設定の修正や再起動を行う前に、&lt;code&gt;ip route&lt;/code&gt;、&lt;code&gt;ip neigh&lt;/code&gt;、&lt;code&gt;ss&lt;/code&gt; の出力を記録し、障害発生時のステート情報を保全します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;レイヤー分離の徹底&lt;/b&gt;: Pingの成功/失敗のみで経路全体の良否を判断せず、L3（ルーティング）、L4（ポート/ソケット）、L7（アプリケーションプロトコル）を個別に切り分けることが、障害復旧への最短経路となります。&amp;lt;/broadcast,multicast&amp;gt;&amp;lt;/broadcast,multicast,up,lower_up&amp;gt;&amp;lt;/loopback,up,lower_up&amp;gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Ping疎通可能でもTCP接続が失敗する境界領域のトラブルシューティング</title><link>https://klifehack.com/p/ping-ok-tcp-connection-failed-troubleshooting/</link><pubDate>Fri, 09 Oct 2026 10:46:32 +0900</pubDate><guid>https://klifehack.com/p/ping-ok-tcp-connection-failed-troubleshooting/</guid><description>&lt;p&gt;インフラストラクチャの運用において、「Pingは通るが、サーバーへの接続（SSHやHTTPなど）が失敗する」という事象は頻繁に発生します。ICMPによるL3レベルの疎通確認のみに依存し、L4以上のトランスポート層やL7アプリケーション層の検証を怠ることは、障害復旧の遅延や誤った原因特定を招く要因となります。&lt;/p&gt;
 &lt;p&gt;ICMPエコーテストは低レイテンシかつパケットロス0%で成功している状態を示します。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ping 192.168.10.100
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PING 192.168.10.100 &lt;span style="color:#f92672"&gt;(&lt;/span&gt;192.168.10.100&lt;span style="color:#f92672"&gt;)&lt;/span&gt; 56&lt;span style="color:#f92672"&gt;(&lt;/span&gt;84&lt;span style="color:#f92672"&gt;)&lt;/span&gt; bytes of data.
