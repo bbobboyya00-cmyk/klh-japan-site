@@ -1,4 +1,108 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 29 Oct 2026 10:51:09 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux環境におけるネットワーク障害解析とパケットフロー診断の実践</title><link>https://klifehack.com/p/linux-network-diagnostics-packet-analysis/</link><pubDate>Thu, 29 Oct 2026 10:51:09 +0900</pubDate><guid>https://klifehack.com/p/linux-network-diagnostics-packet-analysis/</guid><description>&lt;p&gt;本番運用のインフラ基盤において、ホスト間通信の遮断や不定期なタイムアウトが発生した際、場当たり的なサービスの再起動や無計画なルーティング変更を行うと、障害範囲の拡大や揮発性フォレンジック証拠の消失を招きます。特にマルチNIC構成やオーバーレイネットワークが介在するシステムでは、物理リンク、OSカーネルのルーティングテーブル、ホスト型パケットフィルタリング、そしてトランスポート層（TCP/UDP）の各段階において障害要因が複雑に絡み合います。本稿では、決定論的かつ再現性のある検証手順に基づき、Linux環境におけるネットワーク障害の切り分け手順とパケットトレース手法を整理します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 31 Oct 2026 10:59:10 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>AWS環境における単一EC2とCertbotを用いたSSL証明書自動化とインフラ保守プロトコル</title><link>https://klifehack.com/p/aws-ec2-certbot-ssl-setup/</link><pubDate>Sat, 31 Oct 2026 10:59:10 +0900</pubDate><guid>https://klifehack.com/p/aws-ec2-certbot-ssl-setup/</guid><description>&lt;p&gt;大規模なアプリケーションアクセスに対応するApplication Load Balancer（ALB）の導入前段階におけるスタンドアロン構成や、初期構築コストを抑えたAWSインフラ構築において、手動による証明書更新や曖昧なネットワーク設計はサービス停止を招く直接的な原因となります。特に単一のEC2インスタンス上にWebサーバーとデータベースを同居させる構成では、最小権限の原則に準拠したセキュリティグループの定義、CertbotによるSSL/TLS証明書の自動更新パイプライン、ならびに定期的なバックアップ機構を厳格に実装する必要があります。&lt;/p&gt;
+&lt;p&gt;本稿では、AWSにおけるネットワーク境界の設計から、EC2インスタンスの初期化、Certbotを用いた証明書更新の自動化、およびS3バケットへのDBダンプ自動転送に至る具体手順と、実務運用上で発生し得る技術的トラブルシューティングを体系的に整理します。&lt;/p&gt;
+&lt;h2 id="1-ネットワーク境界とセキュリティグループの設定"&gt;1. ネットワーク境界とセキュリティグループの設定
+&lt;/h2&gt;&lt;p&gt;Virtual Private Cloud（VPC）およびサブネットの適切な分離は、クラウドインフラストラクチャにおけるセキュリティの基盤です。本構成では &lt;code&gt;10.0.0.0/16&lt;/code&gt; CIDRブロックを適用し、パブリックサブネットとプライベートサブネットの境界を明確に分離します。&lt;/p&gt;
+&lt;h3 id="-セキュリティグループstatefulの設定要件"&gt;🛠️ セキュリティグループ（Stateful）の設定要件
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Web Server Security Group (&lt;code&gt;sg-web&lt;/code&gt;)&lt;/b&gt;:&lt;/li&gt;
+&lt;li&gt;HTTP (Port 80): 送信元 &lt;code&gt;0.0.0.0/0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;HTTPS (Port 443): 送信元 &lt;code&gt;0.0.0.0/0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;SSH (Port 22): 送信元 &lt;code&gt;&amp;amp;lt;管理者IP&amp;amp;gt;/32&lt;/code&gt;（&lt;code&gt;0.0.0.0/0&lt;/code&gt; による全開放は厳禁）&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Database Security Group (&lt;code&gt;sg-db&lt;/code&gt;)&lt;/b&gt;:&lt;/li&gt;
+&lt;li&gt;MySQL (Port 3306) または PostgreSQL (Port 5432): 送信元IPアドレス直接指定ではなく &lt;code&gt;sg-web&lt;/code&gt; のセキュリティグループIDを紐付け&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-ec2インスタンスのプロビジョニングと初期化"&gt;2. EC2インスタンスのプロビジョニングと初期化
+&lt;/h2&gt;&lt;p&gt;Ubuntu LTSをベースとしたEC2インスタンスの起動後、リモート接続用キーペアの権限変更を実施し、システムタイムゾーンの最適化およびメモリ枯渇によるOOM Panicを回避するためのスワップ領域作成を実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;400&lt;/span&gt; my-key.pem
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh -i my-key.pem ubuntu@&amp;lt;ec2_public_ip&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# タイムゾーンの設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo timedatectl set-timezone Asia/Tokyo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# スワップ領域の作成（2GB）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo fallocate -l 2G /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo chmod &lt;span style="color:#ae81ff"&gt;600&lt;/span&gt; /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mkswap /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo swapon /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#39;/swapfile swap swap defaults 0 0&amp;#39;&lt;/span&gt; | sudo tee -a /etc/fstab
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-certbotによるssltls証明書の発行と自動更新"&gt;3. CertbotによるSSL/TLS証明書の発行と自動更新
+&lt;/h2&gt;&lt;p&gt;AWS Certificate Manager（ACM）はALBとの連携が前提となるため、単一EC2構成ではLet&amp;rsquo;s Encrypt（Certbot）を適用し、Nginx上で直接SSL/TLSハンドシェイクを完了させます。&lt;/p&gt;
+&lt;h3 id="-certbotのセットアップ手順"&gt;💡 Certbotのセットアップ手順
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install certbot python3-certbot-nginx -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 証明書の発行とNginx自動設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot --nginx -d example.com -d www.example.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s Encryptの証明書有効期限は90日間です。Certbotのパッケージ導入時に &lt;code&gt;systemd&lt;/code&gt; タイマー（&lt;code&gt;certbot.timer&lt;/code&gt;）が自動で登録され、1日2回の更新検証が実行されます。手動による動作検証を行う場合は、以下のドライランコマンドを実施します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot renew --dry-run
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-データベースバックアップとs3同期の自動化"&gt;4. データベースバックアップとS3同期の自動化
+&lt;/h2&gt;&lt;p&gt;単一障害点（SPOF）に起因するデータ消失リスクを抑えるため、EC2内部で生成されたDBダンプをAWS CLI経由でS3バケットへ自動転送するバックアップスクリプトを構築します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# /usr/local/bin/db-backup.sh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SET_DATE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;date +%Y%m%d_%H%M%S&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;BACKUP_DIR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/tmp/db_backups&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FILE_NAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;db_backup_&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;SET_DATE&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;.sql.gz&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;S3_BUCKET&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;s3://my-db-backup-bucket-prod&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;BACKUP_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# DBダンプの生成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mysqldump -u root -p&lt;span style="color:#e6db74"&gt;&amp;#39;DB_PASSWORD_HERE&amp;#39;&lt;/span&gt; --all-databases | gzip &amp;amp;gt; &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;BACKUP_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;/&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;FILE_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# S3への転送&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws s3 cp &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;BACKUP_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;/&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;FILE_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt; &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;S3_BUCKET&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;/&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;FILE_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ローカル一時ファイルの削除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rm -f &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;BACKUP_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;/&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;FILE_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;作成したスクリプトに対して実行権限を付与し、&lt;code&gt;crontab&lt;/code&gt; に登録して定時実行を行います。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;0 3 * * * /usr/local/bin/db-backup.sh &amp;amp;gt; /dev/null 2&amp;amp;gt;&amp;amp;amp;1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;S3バケット側ではライフサイクルルールを設定し、作成から30日が経過したオブジェクトを自動的に削除することでストレージコストの最適化を図ります。&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="-1-certbot更新チャレンジの失敗http-01-challenge-failure"&gt;⚠️ 1. Certbot更新チャレンジの失敗（HTTP-01 Challenge Failure）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: &lt;code&gt;certbot renew&lt;/code&gt; 実行時に &lt;code&gt;Timeout during connect (HTTP)&lt;/code&gt; や &lt;code&gt;404 Not Found&lt;/code&gt; のエラーが返却される。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: セキュリティグループ側で Port 80 のインバウンド通信が開放されていない、または Nginx 内での &lt;code&gt;.well-known/acme-challenge/&lt;/code&gt; に対するルーティング設定が不正である。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: セキュリティグループのインバウンドルールに Port 80 が開いているか確認します。Nginx設定ファイル（&lt;code&gt;/etc/nginx/sites-available/default&lt;/code&gt;）における静的ファイルのパス参照を再検証し、&lt;code&gt;certbot --nginx&lt;/code&gt; プラグインの設定を復旧させます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="-2-cron経由におけるaws-cli転送の失敗"&gt;⚠️ 2. cron経由におけるAWS CLI転送の失敗
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: 手動でのスクリプト実行ではS3へ正常にアップロードされるが、cronによる自動実行時にアップロードがスキップされる。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: cron実行環境における環境変数 &lt;code&gt;PATH&lt;/code&gt; および &lt;code&gt;AWS_CONFIG_FILE&lt;/code&gt; のパスが正しく参照できていない。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: スクリプト内部で &lt;code&gt;/usr/local/bin/aws&lt;/code&gt; のようにフルパス記述を行うか、スクリプト先頭で &lt;code&gt;export PATH=$PATH:/usr/local/bin&lt;/code&gt; および &lt;code&gt;export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials&lt;/code&gt; を明示的に宣言します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="-3-パッケージ更新時におけるoomクラッシュ"&gt;⚠️ 3. パッケージ更新時におけるOOMクラッシュ
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: &lt;code&gt;apt update &amp;amp;amp;&amp;amp;amp; apt upgrade&lt;/code&gt; の実行中にコンソールが応答停止（Hang）する。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: t3.microなどの小規模インスタンスにおいて物理メモリが枯渇し、LinuxカーネルのOOM Killerが作動する。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: アップデート実行前に &lt;code&gt;swapon --show&lt;/code&gt; コマンドを使用し、スワップ領域が正常に割り当てられているか確認します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="verification-protocols"&gt;Verification Protocols
+&lt;/h2&gt;&lt;p&gt;各種コンポーネントの構築完了後、サービスおよび自動更新タイマーの稼働状態を以下の検証コマンドにて確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ systemctl status certbot.timer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;● certbot.timer - Run certbot twice daily
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Active: active (waiting) since Sun 2026-10-25 09:00:12 KST; 6 days ago
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Trigger: Sat 2026-10-31 18:42:11 KST; 4h 12min left
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Triggers: ● certbot.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep -E &amp;#39;:(80|443)&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 512 0.0.0.0:80 0.0.0.0:* users:((&amp;#34;nginx&amp;#34;,pid=1234,fd=6))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 512 0.0.0.0:443 0.0.0.0:* users:((&amp;#34;nginx&amp;#34;,pid=1234,fd=7))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ swapon --show
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME TYPE BASE_SIZE USED PRIO
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/swapfile file 2G 128M -2
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I https://example.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/2 200
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;server: nginx/1.18.0 (Ubuntu)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;date: Sat, 31 Oct 2026 14:30:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;content-type: text/html
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;strict-transport-security: max-age=31536000; includeSubDomains
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;OSパッチ管理&lt;/b&gt;: 全パッケージに対する一括更新（&lt;code&gt;apt upgrade -y&lt;/code&gt;）は、既存の依存ライブラリを破損させるリスクを伴います。セキュリティパッチ適用（&lt;code&gt;dnf update --security&lt;/code&gt; または &lt;code&gt;unattended-upgrades&lt;/code&gt;）に限定した運用方針を維持してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;証明書有効期限の監視&lt;/b&gt;: 自動更新タイマーが正常に動作している場合でも、ドメインのDNS設定変更や外部ネットワーク制限により更新処理が失敗するケースが存在します。証明書の有効期限が30日未満になった際にアラートを発出する外部モニタリング（Prometheus Blackbox Exporter等）の統合を強く推奨します。&amp;lt;/ec2_public_ip&amp;gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Linux環境におけるネットワーク障害解析とパケットフロー診断の実践</title><link>https://klifehack.com/p/linux-network-diagnostics-packet-analysis/</link><pubDate>Thu, 29 Oct 2026 10:51:09 +0900</pubDate><guid>https://klifehack.com/p/linux-network-diagnostics-packet-analysis/</guid><description>&lt;p&gt;本番運用のインフラ基盤において、ホスト間通信の遮断や不定期なタイムアウトが発生した際、場当たり的なサービスの再起動や無計画なルーティング変更を行うと、障害範囲の拡大や揮発性フォレンジック証拠の消失を招きます。特にマルチNIC構成やオーバーレイネットワークが介在するシステムでは、物理リンク、OSカーネルのルーティングテーブル、ホスト型パケットフィルタリング、そしてトランスポート層（TCP/UDP）の各段階において障害要因が複雑に絡み合います。本稿では、決定論的かつ再現性のある検証手順に基づき、Linux環境におけるネットワーク障害の切り分け手順とパケットトレース手法を整理します。&lt;/p&gt;
 &lt;h2 id="-階層型アプローチによる障害ドメインの局所化"&gt;💡 階層型アプローチによる障害ドメインの局所化
 &lt;/h2&gt;&lt;p&gt;ネットワーク異常の検知時は、下位層（L1/L2）から上位層（L7）へ向かうボトムアップ検証、または症状に応じたミドルアウト検証により、調査対象を論理的に絞り込む必要があります。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+---------------------------------------------------------------------------------------------------+

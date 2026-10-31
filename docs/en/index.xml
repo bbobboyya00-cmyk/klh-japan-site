@@ -1,4 +1,108 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 29 Oct 2026 10:51:10 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Practical Network Troubleshooting and Packet Flow Diagnostics in Linux Environments</title><link>https://klifehack.com/en/p/linux-network-diagnostics-packet-analysis/</link><pubDate>Thu, 29 Oct 2026 10:51:10 +0900</pubDate><guid>https://klifehack.com/en/p/linux-network-diagnostics-packet-analysis/</guid><description>&lt;p&gt;When inter-host communication is interrupted or intermittent timeouts occur in production infrastructure, haphazard service restarts or unplanned routing changes can expand the scope of the failure and result in the loss of volatile forensic evidence. Particularly in systems involving multi-NIC configurations or overlay networks, failure causes are complexly intertwined across physical links, OS kernel routing tables, host-based packet filtering, and the transport layer (TCP/UDP). This article outlines procedures for isolating network failures and packet tracing methods in Linux environments based on a deterministic and reproducible verification methodology.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 31 Oct 2026 10:59:12 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>SSL Certificate Automation and Infrastructure Maintenance Protocol Using a Single EC2 and Certbot in an AWS Environment</title><link>https://klifehack.com/en/p/aws-ec2-certbot-ssl-setup/</link><pubDate>Sat, 31 Oct 2026 10:59:12 +0900</pubDate><guid>https://klifehack.com/en/p/aws-ec2-certbot-ssl-setup/</guid><description>&lt;p&gt;In standalone configurations prior to introducing an Application Load Balancer (ALB) to handle high-volume application traffic, or in AWS infrastructure setups aimed at minimizing initial build costs, manual certificate renewals and ambiguous network designs directly cause service outages. Particularly in configurations where a web server and a database coexist on a single EC2 instance, strict implementation is required for security group definitions conforming to the principle of least privilege, an automated SSL/TLS certificate renewal pipeline via Certbot, and a periodic backup mechanism.&lt;/p&gt;
+&lt;p&gt;This document systematically organizes the concrete procedures ranging from network perimeter design in AWS, EC2 instance initialization, automated certificate renewal using Certbot, to automated DB dump transfers to an S3 bucket, alongside technical troubleshooting for issues that may arise in production operations.&lt;/p&gt;
+&lt;h2 id="1-network-perimeter-and-security-group-configuration"&gt;1. Network Perimeter and Security Group Configuration
+&lt;/h2&gt;&lt;p&gt;Proper segregation of Virtual Private Clouds (VPCs) and subnets forms the foundation of cloud infrastructure security. This configuration applies a &lt;code&gt;10.0.0.0/16&lt;/code&gt; CIDR block, clearly separating the boundary between public and private subnets.&lt;/p&gt;
+&lt;h3 id="-security-group-stateful-configuration-requirements"&gt;🛠️ Security Group (Stateful) Configuration Requirements
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Web Server Security Group (&lt;code&gt;sg-web&lt;/code&gt;)&lt;/b&gt;:&lt;/li&gt;
+&lt;li&gt;HTTP (Port 80): Source &lt;code&gt;0.0.0.0/0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;HTTPS (Port 443): Source &lt;code&gt;0.0.0.0/0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;SSH (Port 22): Source &lt;code&gt;&amp;lt;admin ip=&amp;quot;&amp;quot;&amp;gt;/32&lt;/code&gt; (Fully open to &lt;code&gt;0.0.0.0/0&lt;/code&gt; is strictly prohibited)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Database Security Group (&lt;code&gt;sg-db&lt;/code&gt;)&lt;/b&gt;:&lt;/li&gt;
+&lt;li&gt;MySQL (Port 3306) or PostgreSQL (Port 5432): Associate with the security group ID of &lt;code&gt;sg-web&lt;/code&gt; rather than specifying source IP addresses directly&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-ec2-instance-provisioning-and-initialization"&gt;2. EC2 Instance Provisioning and Initialization
+&lt;/h2&gt;&lt;p&gt;After launching an Ubuntu LTS-based EC2 instance, modify the permissions of the key pair for remote access, optimize the system time zone, and create a swap space to avoid OOM panics caused by memory exhaustion.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;400&lt;/span&gt; my-key.pem
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh -i my-key.pem ubuntu@&amp;lt;ec2_public_ip&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Set the timezone&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo timedatectl set-timezone Asia/Tokyo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Create swap space (2GB)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo fallocate -l 2G /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo chmod &lt;span style="color:#ae81ff"&gt;600&lt;/span&gt; /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mkswap /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo swapon /swapfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#39;/swapfile swap swap defaults 0 0&amp;#39;&lt;/span&gt; | sudo tee -a /etc/fstab
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-ssltls-certificate-issuance-and-automated-renewal-via-certbot"&gt;3. SSL/TLS Certificate Issuance and Automated Renewal via Certbot
+&lt;/h2&gt;&lt;p&gt;Because AWS Certificate Manager (ACM) requires integration with an ALB, a single-EC2 configuration applies Let&amp;rsquo;s Encrypt (Certbot) to terminate the SSL/TLS handshake directly on Nginx.&lt;/p&gt;
+&lt;h3 id="-certbot-setup-procedure"&gt;💡 Certbot Setup Procedure
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install certbot python3-certbot-nginx -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Certificate issuance and automatic Nginx configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot --nginx -d example.com -d www.example.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The validity period of a Let&amp;rsquo;s Encrypt certificate is 90 days. When the Certbot package is installed, a &lt;code&gt;systemd&lt;/code&gt; timer (&lt;code&gt;certbot.timer&lt;/code&gt;) is automatically registered, executing renewal checks twice daily. To perform manual operational verification, execute the following dry-run command.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo certbot renew --dry-run
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-automation-of-database-backups-and-s3-synchronization"&gt;4. Automation of Database Backups and S3 Synchronization
+&lt;/h2&gt;&lt;p&gt;To mitigate the risk of data loss resulting from a Single Point of Failure (SPOF), construct a backup script that automatically transfers DB dumps generated inside the EC2 instance to an S3 bucket via the AWS CLI.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# /usr/local/bin/db-backup.sh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SET_DATE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;date +%Y%m%d_%H%M%S&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;BACKUP_DIR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/tmp/db_backups&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FILE_NAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;db_backup_&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;SET_DATE&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;.sql.gz&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;S3_BUCKET&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;s3://my-db-backup-bucket-prod&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;BACKUP_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Generate database dump&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mysqldump -u root -p&lt;span style="color:#e6db74"&gt;&amp;#39;DB_PASSWORD_HERE&amp;#39;&lt;/span&gt; --all-databases | gzip &amp;amp;gt; &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;BACKUP_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;/&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;FILE_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Transfer to S3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws s3 cp &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;BACKUP_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;/&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;FILE_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt; &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;S3_BUCKET&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;/&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;FILE_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Delete local temporary file&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rm -f &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;BACKUP_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;/&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;FILE_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Grant execution permissions to the created script and register it in &lt;code&gt;crontab&lt;/code&gt; for scheduled execution.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;0 3 * * * /usr/local/bin/db-backup.sh &amp;amp;gt; /dev/null 2&amp;amp;gt;&amp;amp;amp;1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Configure a lifecycle rule on the S3 bucket to automatically delete objects 30 days after creation, thereby optimizing storage costs.&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="-1-certbot-renewal-challenge-failure-http-01-challenge-failure"&gt;⚠️ 1. Certbot Renewal Challenge Failure (HTTP-01 Challenge Failure)
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Symptom&lt;/b&gt;: &lt;code&gt;Timeout during connect (HTTP)&lt;/code&gt; or &lt;code&gt;404 Not Found&lt;/code&gt; errors are returned when running &lt;code&gt;certbot renew&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cause&lt;/b&gt;: Inbound traffic on Port 80 is not open in the security group, or routing configuration for &lt;code&gt;.well-known/acme-challenge/&lt;/code&gt; in Nginx is incorrect.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Resolution&lt;/b&gt;: Verify that Port 80 is open in the security group inbound rules. Re-verify static file path references in the Nginx configuration file (&lt;code&gt;/etc/nginx/sites-available/default&lt;/code&gt;) and restore the configuration for the &lt;code&gt;certbot --nginx&lt;/code&gt; plugin.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="-2-aws-cli-transfer-failure-via-cron"&gt;⚠️ 2. AWS CLI Transfer Failure via cron
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Symptom&lt;/b&gt;: Files upload successfully to S3 during manual script execution, but uploads are skipped during automated execution by cron.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cause&lt;/b&gt;: The environment variable &lt;code&gt;PATH&lt;/code&gt; and the path to &lt;code&gt;AWS_CONFIG_FILE&lt;/code&gt; are not properly resolved within the cron execution environment.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Resolution&lt;/b&gt;: Use full-path notation such as &lt;code&gt;/usr/local/bin/aws&lt;/code&gt; within the script, or explicitly declare &lt;code&gt;export PATH=$PATH:/usr/local/bin&lt;/code&gt; and &lt;code&gt;export AWS_SHARED_CREDENTIALS_FILE=/home/ubuntu/.aws/credentials&lt;/code&gt; at the beginning of the script.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="-3-oom-crash-during-package-updates"&gt;⚠️ 3. OOM Crash During Package Updates
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Symptom&lt;/b&gt;: The console hangs during the execution of &lt;code&gt;apt update &amp;amp;amp;&amp;amp;amp; apt upgrade&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cause&lt;/b&gt;: Physical memory is exhausted on small instances such as t3.micro, triggering the Linux kernel&amp;rsquo;s OOM Killer.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Resolution&lt;/b&gt;: Prior to executing updates, use the &lt;code&gt;swapon --show&lt;/code&gt; command to verify that swap space is properly allocated.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="verification-protocols"&gt;Verification Protocols
+&lt;/h2&gt;&lt;p&gt;After completing the setup of each component, verify the operational status of services and automated renewal timers using the following verification commands.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ systemctl status certbot.timer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;● certbot.timer - Run certbot twice daily
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Active: active (waiting) since Sun 2026-10-25 09:00:12 KST; 6 days ago
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Trigger: Sat 2026-10-31 18:42:11 KST; 4h 12min left
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Triggers: ● certbot.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep -E &amp;#39;:(80|443)&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 512 0.0.0.0:80 0.0.0.0:* users:((&amp;#34;nginx&amp;#34;,pid=1234,fd=6))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 512 0.0.0.0:443 0.0.0.0:* users:((&amp;#34;nginx&amp;#34;,pid=1234,fd=7))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ swapon --show
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME TYPE BASE_SIZE USED PRIO
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/swapfile file 2G 128M -2
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I https://example.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/2 200
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;server: nginx/1.18.0 (Ubuntu)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;date: Sat, 31 Oct 2026 14:30:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;content-type: text/html
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;strict-transport-security: max-age=31536000; includeSubDomains
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;OS Patch Management&lt;/b&gt;: Batch updates for all packages (&lt;code&gt;apt upgrade -y&lt;/code&gt;) carry the risk of breaking existing dependency libraries. Maintain an operational policy restricted to security patch applications (&lt;code&gt;dnf update --security&lt;/code&gt; or &lt;code&gt;unattended-upgrades&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Certificate Expiration Monitoring&lt;/b&gt;: Even when the automated renewal timer operates properly, scenarios exist where renewal processing fails due to domain DNS configuration changes or external network restrictions. Integrating external monitoring (such as Prometheus Blackbox Exporter) that triggers an alert when certificate validity falls below 30 days is strongly recommended.&amp;lt;/ec2_public_ip&amp;gt;&lt;/admin&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Practical Network Troubleshooting and Packet Flow Diagnostics in Linux Environments</title><link>https://klifehack.com/en/p/linux-network-diagnostics-packet-analysis/</link><pubDate>Thu, 29 Oct 2026 10:51:10 +0900</pubDate><guid>https://klifehack.com/en/p/linux-network-diagnostics-packet-analysis/</guid><description>&lt;p&gt;When inter-host communication is interrupted or intermittent timeouts occur in production infrastructure, haphazard service restarts or unplanned routing changes can expand the scope of the failure and result in the loss of volatile forensic evidence. Particularly in systems involving multi-NIC configurations or overlay networks, failure causes are complexly intertwined across physical links, OS kernel routing tables, host-based packet filtering, and the transport layer (TCP/UDP). This article outlines procedures for isolating network failures and packet tracing methods in Linux environments based on a deterministic and reproducible verification methodology.&lt;/p&gt;
 &lt;h2 id="-hierarchical-approach-to-localizing-the-failure-domain"&gt;💡 Hierarchical Approach to Localizing the Failure Domain
 &lt;/h2&gt;&lt;p&gt;When detecting network anomalies, it is necessary to logically narrow down the investigation scope through bottom-up verification from lower layers (L1/L2) to upper layers (L7), or middle-out verification depending on the symptoms.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+---------------------------------------------------------------------------------------------------+
