@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Crontab-Ssh-Execution on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/crontab-ssh-execution/</link><description>Recent content in Crontab-Ssh-Execution on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 03 Nov 2026 11:00:52 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/crontab-ssh-execution/index.xml" rel="self" type="application/rss+xml"/><item><title>Causes and Remediation Structure for Scripts That Succeed in SSH Interactive Shells But Silently Fail in crontab</title><link>https://klifehack.com/en/p/crontab-ssh-script-silent-failure/</link><pubDate>Tue, 03 Nov 2026 11:00:52 +0900</pubDate><guid>https://klifehack.com/en/p/crontab-ssh-script-silent-failure/</guid><description>&lt;p&gt;In the process of infrastructure construction and operation automation, a phenomenon frequently occurs where a script that completes normally when executed manually from an SSH terminal halts without output or silently fails when scheduled via &lt;code&gt;crontab&lt;/code&gt;. This issue stems from discrepancies in the initialization lifecycle and environment variables between an interactive shell and a non-interactive subshell executed via a daemon process.&lt;/p&gt;
+&lt;p&gt;This article explains the environment isolation mechanism during &lt;code&gt;cron&lt;/code&gt; execution and outlines the procedures for enforcing absolute paths, managing file execution permissions, and setting up log redirection streams.&lt;/p&gt;
+&lt;h2 id="structural-differences-between-ssh-interactive-environments-and-crontab-execution-environments"&gt;Structural Differences Between SSH Interactive Environments and crontab Execution Environments
+&lt;/h2&gt;&lt;p&gt;The decisive difference between manual execution and &lt;code&gt;cron&lt;/code&gt; execution lies in the environment variables and configuration files loaded at shell startup.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-------------------------------------------------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| SSH Interactive Shell Session |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Load files: ~/.bashrc, ~/.bash_profile, /etc/profile |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| PATH includes: /usr/local/bin, /usr/bin, /bin, user defined paths, etc. |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-------------------------------------------------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-------------------------------------------------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Cron Daemon Execution Environment |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Load files: Minimal cron default parameters |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| PATH defaults to: /usr/bin:/bin |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+-------------------------------------------------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When a user logs in via SSH, initialization scripts such as &lt;code&gt;~/.bashrc&lt;/code&gt; and &lt;code&gt;/etc/profile&lt;/code&gt; are evaluated, loading extended &lt;code&gt;PATH&lt;/code&gt; settings and custom environment variables. On the other hand, the &lt;code&gt;cron&lt;/code&gt; daemon executes jobs in a non-interactive subshell with minimal environment variables applied (in many cases, only &lt;code&gt;PATH=/usr/bin:/bin&lt;/code&gt;). Consequently, scripts that depend on environment variables or binaries located outside standard paths fail during lookup.&lt;/p&gt;
+&lt;h2 id="3-step-diagnostic-and-resolution-framework"&gt;3-Step Diagnostic and Resolution Framework
+&lt;/h2&gt;&lt;h3 id="1-applying-absolute-paths-to-all-commands-and-scripts"&gt;1. Applying Absolute Paths to All Commands and Scripts
+&lt;/h3&gt;&lt;p&gt;Using relative paths in &lt;code&gt;cron&lt;/code&gt; configurations causes discrepancies in current working directory interpretation at execution time, leading to errors.&lt;/p&gt;
+&lt;p&gt;Example of failure using relative paths:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;* * * * * python main.py
+* * * * * ./scripts/backup.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Configuration example explicitly specifying absolute paths:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;* * * * * /usr/bin/python3 /home/user/project/main.py
+* * * * * /bin/bash /home/user/scripts/backup.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If file reading via relative paths (e.g., &lt;code&gt;cat ./config.json&lt;/code&gt;) is performed inside a script, an error will occur because the execution directory defaults to the user&amp;rsquo;s home directory (&lt;code&gt;/home/user&lt;/code&gt;). If necessary, insert a directory change operation at the beginning of the script or use full paths.&lt;/p&gt;
+&lt;p&gt;To check the absolute path of a binary, run the &lt;code&gt;which&lt;/code&gt; command in an interactive shell.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;which python3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;which bash
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-verification-of-file-execution-permissions-chmod-and-shebang"&gt;2. Verification of File Execution Permissions (chmod) and Shebang
+&lt;/h3&gt;&lt;p&gt;Even if a script file has read permissions, if execution permission (&lt;code&gt;+x&lt;/code&gt;) is not granted, &lt;code&gt;cron&lt;/code&gt; cannot execute the process.&lt;/p&gt;
+&lt;p&gt;Checking permission status:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ls -l /home/user/scripts/backup.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If execution permission is not granted, assign the permission using the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x /home/user/scripts/backup.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In addition, explicitly state a shebang specifying the appropriate interpreter on the first line of the shell script.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-implementation-of-dedicated-log-redirection-streams"&gt;3. Implementation of Dedicated Log Redirection Streams
+&lt;/h3&gt;&lt;p&gt;By default, &lt;code&gt;cron&lt;/code&gt; does not display standard output (&lt;code&gt;stdout&lt;/code&gt;) and standard error (&lt;code&gt;stderr&lt;/code&gt;) on the terminal. If a local MTA (Mail Transfer Agent) is not configured, error logs are discarded without being recorded.&lt;/p&gt;
+&lt;p&gt;To continuously record execution results and error logs to a file, add redirection syntax to &lt;code&gt;crontab&lt;/code&gt;.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;* * * * * /bin/bash /home/user/scripts/backup.sh &amp;amp;gt;&amp;amp;gt; /home/user/cron.log 2&amp;amp;gt;&amp;amp;amp;1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;🛠️ &lt;b&gt;Structural Breakdown of Log Redirection:&lt;/b&gt;
+・&lt;code&gt;&amp;amp;gt;&amp;amp;gt; /home/user/cron.log&lt;/code&gt;: Redirects standard output (file descriptor 1) to the log file in append mode.
+・&lt;code&gt;2&amp;amp;gt;&amp;amp;amp;1&lt;/code&gt;: Merges standard error (file descriptor 2) into the same stream as standard output.&lt;/p&gt;
+&lt;h2 id="explicit-declaration-of-cron-environment-variables-and-virtual-environment-activation"&gt;Explicit Declaration of Cron Environment Variables and Virtual Environment Activation
+&lt;/h2&gt;&lt;p&gt;Defining global environment variables at the top of the &lt;code&gt;crontab&lt;/code&gt; file makes it possible to simplify full path descriptions on individual execution lines.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+SHELL=/bin/bash
+
+* * * * * backup.sh &amp;amp;gt;&amp;amp;gt; /home/user/cron.log 2&amp;amp;gt;&amp;amp;amp;1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When invoking a script that uses a Python virtual environment (&lt;code&gt;venv&lt;/code&gt; or &lt;code&gt;conda&lt;/code&gt;), directly specifying the Python binary path within the virtual environment is a reliable configuration approach.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-cron" data-lang="cron"&gt;* * * * * /home/user/myenv/bin/python /home/user/work/script.py &amp;amp;gt;&amp;amp;gt; /home/user/cron.log 2&amp;amp;gt;&amp;amp;amp;1
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="case-1-permission-denied-or-silent-failure-during-cron-execution"&gt;Case 1: Permission Denied or Silent Failure During cron Execution
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;Cause&lt;/b&gt;: Insufficient permissions on the script to be executed or binaries called within it, or missing shebang.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Remediation Procedure&lt;/b&gt;: Reconfigure permissions using &lt;code&gt;chmod +x&lt;/code&gt; and verify the presence of &lt;code&gt;#!/bin/bash&lt;/code&gt; on the first line of the script.&lt;/p&gt;
+&lt;h3 id="case-2-cron-execution-records-are-not-displayed-in-system-logs"&gt;Case 2: Cron Execution Records Are Not Displayed in System Logs
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;Cause&lt;/b&gt;: Output to &lt;code&gt;/var/log/cron.log&lt;/code&gt; is disabled by distribution configurations.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Remediation Procedure&lt;/b&gt;: Check &lt;code&gt;/etc/rsyslog.d/50-default.conf&lt;/code&gt;, uncomment the &lt;code&gt;# cron.*&lt;/code&gt; line, and execute &lt;code&gt;systemctl restart rsyslog&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id="case-3-failure-to-read-external-files-referenced-within-the-script"&gt;Case 3: Failure to Read External Files Referenced Within the Script
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;Cause&lt;/b&gt;: The current working directory during &lt;code&gt;cron&lt;/code&gt; execution differs from what is expected.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Remediation Procedure&lt;/b&gt;: Incorporate directory change logic such as &lt;code&gt;cd &amp;quot;$(dirname &amp;quot;$0&amp;quot;)&amp;quot;&lt;/code&gt; at the beginning of the script, or change all referenced file paths to absolute paths.&lt;/p&gt;
+&lt;h2 id="system-operation-verification-logs"&gt;System Operation Verification Logs
+&lt;/h2&gt;&lt;p&gt;Below is an example of system operation verification logs including permission checks, log output settings, and &lt;code&gt;CRON&lt;/code&gt; job verification via syslog.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -l /home/user/scripts/backup.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-r--r-- 1 user group 450 Nov 3 10:00 /home/user/scripts/backup.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ chmod +x /home/user/scripts/backup.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -l /home/user/scripts/backup.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rwxr-xr-x 1 user group 450 Nov 3 10:01 /home/user/scripts/backup.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ grep CRON /var/log/syslog | tail -n 3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Nov 3 10:02:01 server CRON[12345]: (user) CMD (/bin/bash /home/user/scripts/backup.sh &amp;amp;gt;&amp;amp;gt; /home/user/cron.log 2&amp;amp;gt;&amp;amp;amp;1)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Nov 3 10:03:01 server CRON[12411]: (user) CMD (/bin/bash /home/user/scripts/backup.sh &amp;amp;gt;&amp;amp;gt; /home/user/cron.log 2&amp;amp;gt;&amp;amp;amp;1)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ tail -f /home/user/cron.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[2026-11-03 10:02:01] Starting backup process...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[2026-11-03 10:02:02] Backup completed successfully.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th style="text-align: left"&gt;Diagnostic Area&lt;/th&gt;
+ &lt;th style="text-align: left"&gt;Action Item&lt;/th&gt;
+ &lt;th style="text-align: left"&gt;Syntax / Verification Syntax&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;b&gt;Path Definition&lt;/b&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Absolute path specification for binaries and targets&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;/usr/bin/python3 /home/user/project/main.py&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;b&gt;Execution Permissions&lt;/b&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Granting execution permissions to script files&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;chmod +x /home/user/scripts/backup.sh&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;b&gt;Header Definition&lt;/b&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Explicit declaration of an appropriate shebang&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;#!/bin/bash&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;b&gt;Output Control&lt;/b&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Combined redirection of stdout (1) and stderr (2)&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;&amp;amp;gt;&amp;amp;gt; /home/user/cron.log 2&amp;amp;gt;&amp;amp;amp;1&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;b&gt;Environment Variables&lt;/b&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Declaration of &lt;code&gt;PATH&lt;/code&gt; and &lt;code&gt;SHELL&lt;/code&gt; at the top of &lt;code&gt;crontab -e&lt;/code&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;b&gt;Virtual Environment&lt;/b&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Direct specification of binary within venv environment&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;/home/user/myenv/bin/python&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;</description></item></channel></rss>
