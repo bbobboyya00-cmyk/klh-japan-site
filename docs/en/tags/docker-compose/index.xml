@@ -1,4 +1,140 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker-Compose on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/docker-compose/</link><description>Recent content in Docker-Compose on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 03 Oct 2026 10:14:29 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/docker-compose/index.xml" rel="self" type="application/rss+xml"/><item><title>Self-Hosting Dify with Docker and Caddy: Setup and Security Hardening Design</title><link>https://klifehack.com/en/p/dify-self-hosting-docker-caddy-hardening/</link><pubDate>Sat, 03 Oct 2026 10:14:29 +0900</pubDate><guid>https://klifehack.com/en/p/dify-self-hosting-docker-caddy-hardening/</guid><description>&lt;p&gt;The demand for self-hosting Dify, an LLM orchestration tool, is rapidly growing to bypass functional limitations of the public cloud version (such as constraints on the number of applications that can be created and knowledge pipelines). However, operating in a local environment introduces availability challenges such as machine sleep, dynamic IPs, and firewall traversal. Establishing a practical production environment can be achieved by deploying Dify using Docker on a 24/7 Linux VPS, along with automated HTTPS and security hardening via Caddy.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker-Compose on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/docker-compose/</link><description>Recent content in Docker-Compose on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 05 Nov 2026 10:44:20 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/docker-compose/index.xml" rel="self" type="application/rss+xml"/><item><title>Automated TLS-Enabled Edge Server Configuration using MacBook and Docker Caddy</title><link>https://klifehack.com/en/p/macbook-docker-caddy-tls-reverse-proxy/</link><pubDate>Thu, 05 Nov 2026 10:44:20 +0900</pubDate><guid>https://klifehack.com/en/p/macbook-docker-caddy-tls-reverse-proxy/</guid><description>&lt;p&gt;To safely expose local devices externally in an on-premises or edge environment, establishing domain name resolution, router packet routing, and an automated TLS certificate renewal mechanism is essential. Conventional dynamic VirtualHost configurations or certbot-based cron management methods suffer from a rapid increase in configuration complexity as node count grows, posing a risk of service disruptions due to certificate renewal failures.&lt;/p&gt;
+&lt;p&gt;This article explains an end-to-end architecture that establishes automated HTTPS encrypted communication by deploying Docker and a Caddy reverse proxy on a MacBook host, integrated with public DNS (such as Gabia) and port forwarding.&lt;/p&gt;
+&lt;h2 id="architecture-configuration-and-traffic-flow"&gt;Architecture Configuration and Traffic Flow
+&lt;/h2&gt;&lt;p&gt;Requests to public domains are routed to the application layer inside the container in the following order:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[Client Browser]
+ │
+ ▼
+[Public DNS Resolution] (Gabia A Record)
+ │
+ ▼
+[Public WAN IP] (ISP Router / Gateway)
+ │
+ ▼
+[Port Forwarding] (External 80/443 -&amp;amp;gt; MacBook LAN IP)
+ │
+ ▼
+[MacBook Host OS] (Home Server)
+ │
+ ▼
+[Caddy Reverse Proxy Container] (Port 80 / 443 / 443 UDP)
+ │
+ ▼
+[Application Container] (Bridge Network: custom-proxy)
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="1-network-infrastructure-and-port-forwarding"&gt;1. Network Infrastructure and Port Forwarding
+&lt;/h2&gt;&lt;p&gt;The MacBook within the local network is assigned a private IPv4 address via DHCP. To allow external traffic to reach the MacBook, port forwarding must be configured on the ISP router (gateway).&lt;/p&gt;
+&lt;h3 id="checking-public-wan-ip-and-double-nat"&gt;Checking Public WAN IP and Double NAT
+&lt;/h3&gt;&lt;p&gt;Run the following command in the MacBook terminal to obtain the externally exposed public IPv4 address:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl ifconfig.me
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Log into the router management interface and verify that the displayed WAN IP address matches the output of &lt;code&gt;curl ifconfig.me&lt;/code&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Double NAT Note&lt;/b&gt;: If the router&amp;rsquo;s WAN IP differs from the &lt;code&gt;ifconfig.me&lt;/code&gt; result, a Double NAT topology exists where an upstream modem or router is present. In this scenario, external packets will not reach the MacBook unless port forwarding is also configured on the upstream gateway.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="router-port-forwarding-rules"&gt;Router Port Forwarding Rules
+&lt;/h3&gt;&lt;p&gt;Add the following forwarding rules in the router management interface:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;HTTP&lt;/b&gt;: External Port &lt;code&gt;80&lt;/code&gt; -&amp;gt; MacBook Private IP / Internal Port &lt;code&gt;80&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;HTTPS&lt;/b&gt;: External Port &lt;code&gt;443&lt;/code&gt; -&amp;gt; MacBook Private IP / Internal Port &lt;code&gt;443&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="necessity-of-opening-port-80"&gt;Necessity of Opening Port 80
+&lt;/h4&gt;&lt;p&gt;Even if the application exclusively uses HTTPS (443), port &lt;code&gt;80&lt;/code&gt; must remain open. Caddy automatically retrieves TLS certificates from Let&amp;rsquo;s Encrypt / ZeroSSL using the ACME (Automated Certificate Management Environment) protocol. This is required because the Certificate Authority accesses port &lt;code&gt;80&lt;/code&gt; of the domain during the HTTP-01 challenge verification process.&lt;/p&gt;
+&lt;h2 id="2-dns-record-configuration-and-propagation-verification"&gt;2. DNS Record Configuration and Propagation Verification
+&lt;/h2&gt;&lt;p&gt;Configure an A record pointing to the obtained public IPv4 address from the management console of your public DNS service (such as Gabia).&lt;/p&gt;
+&lt;h3 id="dns-records-to-configure"&gt;DNS Records to Configure
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Host &lt;code&gt;@&lt;/code&gt; / Type &lt;code&gt;A&lt;/code&gt; / Value &lt;code&gt;[Public IPv4 Address]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Host &lt;code&gt;www&lt;/code&gt; / Type &lt;code&gt;A&lt;/code&gt; / Value &lt;code&gt;[Public IPv4 Address]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Host &lt;code&gt;*&lt;/code&gt; / Type &lt;code&gt;A&lt;/code&gt; / Value &lt;code&gt;[Public IPv4 Address]&lt;/code&gt; (Wildcard for subdomains)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="verification-of-dns-propagation"&gt;Verification of DNS Propagation
+&lt;/h3&gt;&lt;p&gt;Verify whether the configured records have propagated correctly using the &lt;code&gt;dig&lt;/code&gt; utility:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Query using the local default DNS&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dig +short your-domain.com A
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Directly query Cloudflare&amp;#39;s public DNS (1.1.1.1)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dig @1.1.1.1 your-domain.com A +short
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If &lt;code&gt;NXDOMAIN&lt;/code&gt; or &lt;code&gt;SERVFAIL&lt;/code&gt; is returned, DNS record propagation is not complete. Wait until the response matches the router&amp;rsquo;s public IP address.&lt;/p&gt;
+&lt;h2 id="3-reverse-proxy-configuration-with-docker-and-caddy"&gt;3. Reverse Proxy Configuration with Docker and Caddy
+&lt;/h2&gt;&lt;p&gt;While Nginx requires combining &lt;code&gt;certbot&lt;/code&gt; or external timers for TLS certificate acquisition and auto-renewal, Caddy handles certificate requests, verification, and automated renewal natively as a single unit.&lt;/p&gt;
+&lt;h3 id="definition-of-docker-composeyml"&gt;Definition of `docker-compose.yml
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;caddy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;caddy:2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;caddy-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;restart&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;unless-stopped&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;80:80&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;443:443&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;443:443/udp&amp;#34;&lt;/span&gt; &lt;span style="color:#75715e"&gt;# For HTTP/3 (QUIC) support&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;./Caddyfile:/etc/caddy/Caddyfile:ro&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;./data/caddy:/data&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;./data/config:/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;custom-proxy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;custom-proxy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;external&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;custom-proxy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="infrastructure-configuration-notes"&gt;Infrastructure Configuration Notes
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;External Network (&lt;code&gt;external: true&lt;/code&gt;)&lt;/b&gt;:
+By manually pre-creating the &lt;code&gt;custom-proxy&lt;/code&gt; network via CLI, backend containers spawned from other independent &lt;code&gt;docker-compose.yml&lt;/code&gt; projects can also join the same proxy network.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker network create custom-proxy
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;TLS Data Persistence (&lt;code&gt;./data/caddy&lt;/code&gt;)&lt;/b&gt;:
+Obtained certificates, private keys, and ACME account information are saved in the &lt;code&gt;/data&lt;/code&gt; volume. Deleting this directory forces new certificate issuance upon every container restart, creating a risk of hitting Let&amp;rsquo;s Encrypt duplicate issuance Rate Limits and causing temporary service unavailability.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="caddyfile-creation-and-routing-configuration"&gt;&lt;code&gt;Caddyfile&lt;/code&gt; Creation and Routing Configuration
+&lt;/h3&gt;&lt;p&gt;Create a test &lt;code&gt;Caddyfile&lt;/code&gt; to verify proxy operations:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-caddyfile" data-lang="caddyfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;your-domain.com {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;respond&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Home Server is running!&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Start the container:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker-compose up -d
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When forwarding to a backend application container in a production environment, configure the &lt;code&gt;reverse_proxy&lt;/code&gt; directive as follows:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-caddyfile" data-lang="caddyfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;your-domain.com {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;reverse_proxy&lt;/span&gt; my-app:&lt;span style="color:#ae81ff"&gt;3000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With this setup, HTTP/HTTPS access to &lt;code&gt;your-domain.com&lt;/code&gt; is automatically proxied to port &lt;code&gt;3000&lt;/code&gt; of the &lt;code&gt;my-app&lt;/code&gt; container on the internal Docker network &lt;code&gt;custom-proxy&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-connection-failure-due-to-hairpin-nat-nat-loopback"&gt;1. Connection Failure due to Hairpin NAT (NAT Loopback)
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Symptom&lt;/b&gt;: Access via the domain works normally from external networks (such as mobile cellular connections), but accessing &lt;code&gt;https://your-domain.com&lt;/code&gt; from a device within the same LAN results in a timeout or connection error.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Cause&lt;/b&gt;: If a commercial router does not support Hairpin NAT (NAT Loopback), packets sent by clients inside the LAN to the router&amp;rsquo;s own public IP cannot be looped back and forwarded internally, causing the packets to be dropped.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Resolution and Countermeasures&lt;/b&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Always perform connection testing from an external network (mobile data communication or tethering).&lt;/li&gt;
+&lt;li&gt;For access within the LAN, bypass this issue by implementing a split-DNS configuration where a local DNS server (such as Pi-hole) or hosts file resolves the domain name directly to the MacBook&amp;rsquo;s private IP address.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-system-operational-status-and-verification-logs"&gt;2. System Operational Status and Verification Logs
+&lt;/h3&gt;&lt;p&gt;The following are example output results for network socket status, Docker container status, DNS response, and HTTP response after system deployment:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker ps --format &amp;#34;table {{.Names}}	{{.Status}}	{{.Ports}}&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAMES STATUS PORTS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;caddy-server Up 12 minutes 0.0.0.0:80-&amp;amp;gt;80/tcp, 0.0.0.0:443-&amp;amp;gt;443/tcp, 0.0.0.0:443-&amp;amp;gt;443/udp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep -E &amp;#39;:(80|443)&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 4096 0.0.0.0:80 0.0.0.0:* users:((&amp;#34;docker-proxy&amp;#34;,pid=14201,fd=4))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 4096 0.0.0.0:443 0.0.0.0:* users:((&amp;#34;docker-proxy&amp;#34;,pid=14225,fd=4))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;udp UNCONN 0 0 0.0.0.0:443 0.0.0.0:* users:((&amp;#34;docker-proxy&amp;#34;,pid=14249,fd=4))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ dig @1.1.1.1 your-domain.com A +short
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;203.0.113.42
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I https://your-domain.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/2 200 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;server: Caddy
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;content-type: text/plain; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;date: Thu, 05 Nov 2026 10:15:30 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;💡 &lt;b&gt;Necessity of Port 80 in ACME Verification&lt;/b&gt;: To achieve TLS automation, port forwarding for port &lt;code&gt;80&lt;/code&gt; (used for the HTTP-01 challenge) is essential alongside port &lt;code&gt;443&lt;/code&gt; for HTTPS communication.&lt;/li&gt;
+&lt;li&gt;⚠️ &lt;b&gt;Retention of Data Volumes&lt;/b&gt;: To avoid Let&amp;rsquo;s Encrypt rate limits, persistence of Caddy&amp;rsquo;s &lt;code&gt;/data&lt;/code&gt; directory is critically important.&lt;/li&gt;
+&lt;li&gt;🛠️ &lt;b&gt;Network Isolation Design&lt;/b&gt;: Utilizing Docker external networks (&lt;code&gt;external: true&lt;/code&gt;) enables secure and flexible communication between Caddy and multiple independent service containers.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Self-Hosting Dify with Docker and Caddy: Setup and Security Hardening Design</title><link>https://klifehack.com/en/p/dify-self-hosting-docker-caddy-hardening/</link><pubDate>Sat, 03 Oct 2026 10:14:29 +0900</pubDate><guid>https://klifehack.com/en/p/dify-self-hosting-docker-caddy-hardening/</guid><description>&lt;p&gt;The demand for self-hosting Dify, an LLM orchestration tool, is rapidly growing to bypass functional limitations of the public cloud version (such as constraints on the number of applications that can be created and knowledge pipelines). However, operating in a local environment introduces availability challenges such as machine sleep, dynamic IPs, and firewall traversal. Establishing a practical production environment can be achieved by deploying Dify using Docker on a 24/7 Linux VPS, along with automated HTTPS and security hardening via Caddy.&lt;/p&gt;
 &lt;p&gt;This note explains the infrastructure design and concrete implementation procedures based on Dify &lt;code&gt;v1.17.x&lt;/code&gt; and Caddy &lt;code&gt;v2.11.x&lt;/code&gt; to securely expose the application to the outside world via a reverse proxy while ensuring host machine security.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="1-system-architecture-design"&gt;1. System Architecture Design

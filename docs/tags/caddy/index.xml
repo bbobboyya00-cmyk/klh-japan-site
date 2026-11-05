@@ -1,4 +1,140 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Caddy on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/caddy/</link><description>Recent content in Caddy on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 03 Oct 2026 10:14:28 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/caddy/index.xml" rel="self" type="application/rss+xml"/><item><title>DockerとCaddyによるDifyセルフホスト環境の構築とセキュリティ硬化設計</title><link>https://klifehack.com/p/dify-self-hosting-docker-caddy-hardening/</link><pubDate>Sat, 03 Oct 2026 10:14:28 +0900</pubDate><guid>https://klifehack.com/p/dify-self-hosting-docker-caddy-hardening/</guid><description>&lt;p&gt;LLMオーケストレーションツールであるDifyをセルフホストする要求は、パブリッククラウド版の機能制限（作成可能なアプリケーション数やナレッジパイプラインの制約）を回避するために急速に高まっています。しかし、ローカル環境での運用は、マシンのスリープや動的IP、ファイアウォール越えといった可用性の課題を伴います。24時間稼働するLinux VPS上にDockerを用いてDifyを構築し、Caddyによる自動HTTPS化とセキュリティ硬化を施すことで、実用的な運用環境を確立できます。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Caddy on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/caddy/</link><description>Recent content in Caddy on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 05 Nov 2026 10:44:19 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/caddy/index.xml" rel="self" type="application/rss+xml"/><item><title>MacBookとDocker Caddyによる自動TLS対応エッジサーバー構成</title><link>https://klifehack.com/p/macbook-docker-caddy-tls-reverse-proxy/</link><pubDate>Thu, 05 Nov 2026 10:44:19 +0900</pubDate><guid>https://klifehack.com/p/macbook-docker-caddy-tls-reverse-proxy/</guid><description>&lt;p&gt;オンプロミスやエッジ環境においてローカル機器を外部へ安全に公開するには、ドメイン名の名前解決、ルーターのパケットルーティング、そしてTLS証明書の自動更新メカニズムの構築が不可欠です。従来の動的なVirtualHost設定やCertbotに基づくcron管理方式は、ノード数が増加するにつれて設定の複雑性が急増し、証明書更新の失敗によるサービス中断を引き起こすリスクがあります。&lt;/p&gt;
+&lt;p&gt;本稿では、MacBookホスト上にDockerとCaddyリバースプロキシを構築し、パブリックDNS（Gabia等）およびポートフォワーディングを連携させることで、自動HTTPS暗号化通信を確立するエンドツーエンドのアーキテクチャについて解説します。&lt;/p&gt;
+&lt;h2 id="アーキテクチャ構成とトラフィックフロー"&gt;アーキテクチャ構成とトラフィックフロー
+&lt;/h2&gt;&lt;p&gt;パブリックドメインへのリクエストは、以下の順序でコンテナ内部のアプリケーション層へルーティングされます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[クライアントブラウザ]
+ │
+ ▼
+[パブリックDNS解決] (Gabia Aレコード)
+ │
+ ▼
+[パブリックWAN IP] (ISPルーター / ゲートウェイ)
+ │
+ ▼
+[ポートフォワーディング処理] (外部 80/443 -&amp;amp;gt; MacBook LAN IP)
+ │
+ ▼
+[MacBook ホストOS] (ホームサーバー)
+ │
+ ▼
+[Caddy リバースプロキシコンテナ] (ポート 80 / 443 / 443 UDP)
+ │
+ ▼
+[アプリケーションコンテナ] (Bridge Network: custom-proxy)
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="1-ネットワークインフラとポートフォワーディング"&gt;1. ネットワークインフラとポートフォワーディング
+&lt;/h2&gt;&lt;p&gt;ローカルネットワーク内のMacBookはDHCPによりプライベートIPv4アドレスを割り当てられています。外部からのトラフィックをMacBookへ到達させるには、ISPルーター（ゲートウェイ）でポートフォワーディングを設定する必要があります。&lt;/p&gt;
+&lt;h3 id="パブリックwan-ipの確認とdouble-natのチェック"&gt;パブリックWAN IPの確認とDouble NATのチェック
+&lt;/h3&gt;&lt;p&gt;MacBookのターミナルで以下のコマンドを実行し、外部に露出しているパブリックIPv4アドレスを取得します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl ifconfig.me
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ルーターの管理画面にログインし、表示されているWAN IPアドレスが &lt;code&gt;curl ifconfig.me&lt;/code&gt; の出力結果と一致することを確認します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Double NATの注意事項&lt;/b&gt;: ルーターのWAN IPと &lt;code&gt;ifconfig.me&lt;/code&gt; の結果が異なる場合、上位に別のモデムやルーターが存在するDouble NAT構成となっています。この場合、上位ゲートウェイ側でもポートフォワーディングを設定しなければ、外部からのパケットがMacBookに到達しません。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="ルーターのポート転送ルール"&gt;ルーターのポート転送ルール
+&lt;/h3&gt;&lt;p&gt;ルーターの管理画面にて以下の転送ルールを追加します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;HTTP&lt;/b&gt;: 外部ポート &lt;code&gt;80&lt;/code&gt; -&amp;gt; MacBookのプライベートIP / 内部ポート &lt;code&gt;80&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;HTTPS&lt;/b&gt;: 外部ポート &lt;code&gt;443&lt;/code&gt; -&amp;gt; MacBookのプライベートIP / 内部ポート &lt;code&gt;443&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="ポート80開放の必要性"&gt;ポート80開放の必要性
+&lt;/h4&gt;&lt;p&gt;アプリケーションがHTTPS（443）のみを使用する場合でも、ポート &lt;code&gt;80&lt;/code&gt; は開放しておく必要があります。CaddyはACME（Automated Certificate Management Environment）プロトコルを用いてLet&amp;rsquo;s Encrypt / ZeroSSLからTLS証明書を自動取得します。このHTTP-01チャレンジの検証プロセスにおいて、認証局がドメインのポート &lt;code&gt;80&lt;/code&gt; にアクセスするためです。&lt;/p&gt;
+&lt;h2 id="2-dnsレコードの設定と伝播検証"&gt;2. DNSレコードの設定と伝播検証
+&lt;/h2&gt;&lt;p&gt;パブリックDNSサービス（Gabiaなど）の管理コンソールから、取得したパブリックIPv4アドレスを指向するAレコードを設定します。&lt;/p&gt;
+&lt;h3 id="設定するdnsレコード"&gt;設定するDNSレコード
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;ホスト &lt;code&gt;@&lt;/code&gt; / タイプ &lt;code&gt;A&lt;/code&gt; / 値 &lt;code&gt;[パブリックIPv4アドレス]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;ホスト &lt;code&gt;www&lt;/code&gt; / タイプ &lt;code&gt;A&lt;/code&gt; / 値 &lt;code&gt;[パブリックIPv4アドレス]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;ホスト &lt;code&gt;*&lt;/code&gt; / タイプ &lt;code&gt;A&lt;/code&gt; / 値 &lt;code&gt;[パブリックIPv4アドレス]&lt;/code&gt; (サブドメイン用ワイルドカード)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="dns伝播の検証"&gt;DNS伝播の検証
+&lt;/h3&gt;&lt;p&gt;設定したレコードが正しく反映されているかを &lt;code&gt;dig&lt;/code&gt; ユーティリティで確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ローカルのデフォルトDNSで検索&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dig +short your-domain.com A
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# CloudflareのパブリックDNS (1.1.1.1) に対して直接問い合わせ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dig @1.1.1.1 your-domain.com A +short
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;NXDOMAIN&lt;code&gt;や&lt;/code&gt;SERVFAIL` が返される場合は、DNSレコードの伝播が完了していません。応答がルーターのパブリックIPアドレスと一致するまで待機します。&lt;/p&gt;
+&lt;h2 id="3-dockerおよびcaddyによるリバースプロキシ構成"&gt;3. DockerおよびCaddyによるリバースプロキシ構成
+&lt;/h2&gt;&lt;p&gt;NginxではTLS証明書の取得や自動更新に &lt;code&gt;certbot&lt;/code&gt; や外部タイマーを組み合わせる必要がありますが、CaddyはACMEを用いた証明書の要求・検証・自動更新を単体で完結させます。&lt;/p&gt;
+&lt;h3 id="docker-composeyml-の定義"&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt; の定義
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;caddy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;caddy:2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;caddy-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;restart&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;unless-stopped&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;80:80&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;443:443&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;443:443/udp&amp;#34;&lt;/span&gt; &lt;span style="color:#75715e"&gt;# HTTP/3 (QUIC) サポート用&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;./Caddyfile:/etc/caddy/Caddyfile:ro&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;./data/caddy:/data&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;./data/config:/config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;custom-proxy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;custom-proxy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;external&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;custom-proxy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="インフラ設定上の留意点"&gt;インフラ設定上の留意点
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;外部ネットワーク (&lt;code&gt;external: true&lt;/code&gt;)&lt;/b&gt;:
+&lt;code&gt;custom-proxy&lt;/code&gt; ネットワークを事前にCLIから手動作成しておくことで、他の独立した &lt;code&gt;docker-compose.yml&lt;/code&gt; プロジェクトから発行されたバックエンドコンテナも同一のプロキシネットワークに参加させることができます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker network create custom-proxy
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;TLSデータの永続化 (&lt;code&gt;./data/caddy&lt;/code&gt;)&lt;/b&gt;:
+&lt;code&gt;/data&lt;/code&gt; ボリュームには取得した証明書や秘密鍵、ACMEアカウント情報が保存されます。このディレクトリを削除すると、コンテナ再起動のたびに新規の証明書を発行することになり、Let&amp;rsquo;s Encryptの重複発行レートリミット（Rate Limit）に達して一時的にアクセス不可となる危険性があります。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="caddyfile-の作成とルーティング設定"&gt;&lt;code&gt;Caddyfile&lt;/code&gt; の作成とルーティング設定
+&lt;/h3&gt;&lt;p&gt;プロキシ動作を確認するためのテスト用 &lt;code&gt;Caddyfile&lt;/code&gt; を作成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-caddyfile" data-lang="caddyfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;your-domain.com {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;respond&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Home Server is running!&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;コンテナを起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker-compose up -d
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実運用環境でバックエンドアプリケーションコンテナへ転送する場合は、以下のように &lt;code&gt;reverse_proxy&lt;/code&gt; ディレクティブを設定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-caddyfile" data-lang="caddyfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;your-domain.com {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;reverse_proxy&lt;/span&gt; my-app:&lt;span style="color:#ae81ff"&gt;3000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;これで &lt;code&gt;your-domain.com&lt;/code&gt; へのHTTP/HTTPSアクセスは、Docker内部ネットワーク &lt;code&gt;custom-proxy&lt;/code&gt; 上の &lt;code&gt;my-app&lt;/code&gt; コンテナの &lt;code&gt;3000&lt;/code&gt; 番ポートへ自動的にプロキシされます。&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-hairpin-nat-nat-loopback-による接続障害"&gt;1. Hairpin NAT (NAT Loopback) による接続障害
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;問題現象&lt;/b&gt;: 外部ネットワーク（モバイルセルラー回線等）からはドメイン経由で正常にアクセスできるが、同一LAN内のデバイスから &lt;code&gt;https://your-domain.com&lt;/code&gt; にアクセスするとタイムアウトや接続エラーが発生する。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;原因&lt;/b&gt;: 市販のルーターが Hairpin NAT（NAT Loopback）に対応していない場合、LAN内部のクライアントがルーター自身のパブリックIP宛てに送ったパケットを内部へ折り返して転送できず、パケットが破棄されます。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;解決手順と対処法&lt;/b&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;接続検証は必ず外部ネットワーク（モバイルデータ通信やテザリング）から実施してください。&lt;/li&gt;
+&lt;li&gt;LAN内部からのアクセスにおいては、ローカルDNSサーバー（Pi-hole等）や hosts ファイルでドメイン名をMacBookのプライベートIPへ直接解決させるスプリットDNS構成をとることで回避できます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-システム稼働状態および検証ログ"&gt;2. システム稼働状態および検証ログ
+&lt;/h3&gt;&lt;p&gt;システム構築後のネットワークソケット状態、Dockerコンテナ状態、DNSレスポンス、HTTPレスポンスの出力結果例は以下の通りです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker ps --format &amp;#34;table {{.Names}}	{{.Status}}	{{.Ports}}&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAMES STATUS PORTS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;caddy-server Up 12 minutes 0.0.0.0:80-&amp;amp;gt;80/tcp, 0.0.0.0:443-&amp;amp;gt;443/tcp, 0.0.0.0:443-&amp;amp;gt;443/udp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep -E &amp;#39;:(80|443)&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 4096 0.0.0.0:80 0.0.0.0:* users:((&amp;#34;docker-proxy&amp;#34;,pid=14201,fd=4))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 4096 0.0.0.0:443 0.0.0.0:* users:((&amp;#34;docker-proxy&amp;#34;,pid=14225,fd=4))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;udp UNCONN 0 0 0.0.0.0:443 0.0.0.0:* users:((&amp;#34;docker-proxy&amp;#34;,pid=14249,fd=4))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ dig @1.1.1.1 your-domain.com A +short
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;203.0.113.42
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -I https://your-domain.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/2 200 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;server: Caddy
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;content-type: text/plain; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;date: Thu, 05 Nov 2026 10:15:30 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="key-takeaways"&gt;Key Takeaways
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;💡 &lt;b&gt;ACME検証におけるポート80の必須性&lt;/b&gt;: TLS自動化を実現するためには、HTTPS通信用の &lt;code&gt;443&lt;/code&gt; ポートだけでなく、HTTP-01チャレンジ用の &lt;code&gt;80&lt;/code&gt; ポートのポートフォワーディングが不可欠です。&lt;/li&gt;
+&lt;li&gt;⚠️ &lt;b&gt;データボリュームの保持&lt;/b&gt;: Let&amp;rsquo;s Encryptのレートリミット回避のため、Caddyの &lt;code&gt;/data&lt;/code&gt; ディレクトリの永続化は極めて重要です。&lt;/li&gt;
+&lt;li&gt;🛠️ &lt;b&gt;ネットワーク分離の設計&lt;/b&gt;: Dockerの外部ネットワーク (&lt;code&gt;external: true&lt;/code&gt;) を活用することで、Caddyと複数の独立したサービスコンテナ間を安全かつ柔軟に疎通させることが可能となります。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>DockerとCaddyによるDifyセルフホスト環境の構築とセキュリティ硬化設計</title><link>https://klifehack.com/p/dify-self-hosting-docker-caddy-hardening/</link><pubDate>Sat, 03 Oct 2026 10:14:28 +0900</pubDate><guid>https://klifehack.com/p/dify-self-hosting-docker-caddy-hardening/</guid><description>&lt;p&gt;LLMオーケストレーションツールであるDifyをセルフホストする要求は、パブリッククラウド版の機能制限（作成可能なアプリケーション数やナレッジパイプラインの制約）を回避するために急速に高まっています。しかし、ローカル環境での運用は、マシンのスリープや動的IP、ファイアウォール越えといった可用性の課題を伴います。24時間稼働するLinux VPS上にDockerを用いてDifyを構築し、Caddyによる自動HTTPS化とセキュリティ硬化を施すことで、実用的な運用環境を確立できます。&lt;/p&gt;
 &lt;p&gt;本稿では、Dify &lt;code&gt;v1.17.x&lt;/code&gt; および Caddy &lt;code&gt;v2.11.x&lt;/code&gt; をベースに、ホストマシンのセキュリティを担保しつつ、リバースプロキシを介して安全に外部公開するためのインフラ設計と具体的な実装手順を解説します。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="1-システムアーキテクチャ設計"&gt;1. システムアーキテクチャ設計
