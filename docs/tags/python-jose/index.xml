@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python-Jose on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/python-jose/</link><description>Recent content in Python-Jose on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 07 Nov 2026 11:00:52 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/python-jose/index.xml" rel="self" type="application/rss+xml"/><item><title>python-joseの脆弱性CVE-2026-120459・CVE-2026-85394とFastAPI認証層のPyJWT移行指針</title><link>https://klifehack.com/p/fastapi-jwt-python-jose-migration/</link><pubDate>Sat, 07 Nov 2026 11:00:52 +0900</pubDate><guid>https://klifehack.com/p/fastapi-jwt-python-jose-migration/</guid><description>&lt;p&gt;マイクロサービスやAPIゲートウェイにおける認証認可基盤では、トークン検証処理の堅牢性がシステム全体のセキュリティ境界を規定します。特にステートレスなJWT（JSON Web Token）検証では、ライブラリ内部の実装挙動や鍵の解釈ロジックに僅かでも不備が存在すると、認可バイパスや特権昇格に直結する脆弱性を抱えることになります。これまでFastAPIなどの主要フレームワークのチュートリアルで長年採用されてきた&lt;code&gt;python-jose&lt;/code&gt;において、空文字HMAC秘密鍵の許容や公開鍵アルゴリズム混同攻撃を許容する脆弱性が報告されました。上流リポジトリの保守が事実上停止している状況下において、本番環境の認証基盤を安全に維持するための移行手順と技術的背景を詳解します。&lt;/p&gt;
+&lt;h2 id="脆弱性の技術的背景とメカニズム"&gt;脆弱性の技術的背景とメカニズム
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;python-jose&lt;/code&gt;バージョン3.5.0以前のすべてのバージョンにおいて、以下の2件の重大な脆弱性が存在することが確認されています。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;CVE-2026-120459&lt;/b&gt;: 長さゼロ（空文字列）のHMAC秘密鍵の許容&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;CVE-2026-85394&lt;/b&gt;: DERエンコードされたバイナリ公開鍵入力によるアルゴリズム混同攻撃&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="cve-2026-120459-空文字hmac鍵による検証バイパス"&gt;CVE-2026-120459: 空文字HMAC鍵による検証バイパス
+&lt;/h3&gt;&lt;p&gt;対称鍵暗号アルゴリズム（HS256、HS384、HS512）では、サーバー側のみが知る秘密鍵の存在を前提として署名検証を行います。しかし&lt;code&gt;python-jose&lt;/code&gt;のHMAC実装クラス（&lt;code&gt;jose.backends.native.HMACKey&lt;/code&gt;および&lt;code&gt;jose.backends.cryptography_backend.CryptographyHMACKey&lt;/code&gt;）では、入力キーの型チェックや文字列エンコードの処理を行っているものの、バイト長が0より大きいかを検証するバリデーションが完全に欠落していました。&lt;/p&gt;
+&lt;p&gt;この欠陥により、環境変数の未定義フォールバック等で秘密鍵が&lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;（空文字列）として評価された場合、攻撃者は空文字列で署名した任意のクレームペイロードを作成し、正規の署名としてサーバーに受容させることが可能になります。&lt;code&gt;algorithms=[&amp;quot;HS256&amp;quot;]&lt;/code&gt;のようにアルゴリズムを明示的に制限していても、鍵の長さやエントロピーそのものは検証されないため、この脆弱性を防ぐことはできません。&lt;/p&gt;
+&lt;h3 id="cve-2026-85394-der公開鍵によるアルゴリズム混同"&gt;CVE-2026-85394: DER公開鍵によるアルゴリズム混同
+&lt;/h3&gt;&lt;p&gt;RS256などの非対称暗号では、秘密鍵で署名し公開鍵で検証します。公開鍵はクライアントや外部に公開される情報です。攻撃者が既知の公開鍵を取得し、JWTヘッダーの&lt;code&gt;alg&lt;/code&gt;を&lt;code&gt;HS256&lt;/code&gt;に書き換えた上で、公開鍵のバイナリデータをHMACの秘密鍵として署名を生成する手法が「アルゴリズム混同攻撃」です。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;code&gt;python-jose&lt;/code&gt;は過去にCVE-2024-33663への対策として、テキスト形式のPEMヘッダー（&lt;code&gt;-----BEGIN ...&lt;/code&gt;）をHMAC鍵として拒否するガードを導入しました。しかし、公開鍵がバイナリ形式のDERエンコーディング（&lt;code&gt;bytes&lt;/code&gt;）で渡された場合、この正規表現ベースのチェックを完全に迂回してしまいます。さらに、&lt;code&gt;python-jose&lt;/code&gt;の&lt;code&gt;jwt.decode()&lt;/code&gt;は&lt;code&gt;algorithms&lt;/code&gt;引数が未指定の場合にデフォルトで&lt;code&gt;None&lt;/code&gt;となり、アルゴリズムの検証自体をスキップします。これにより、公開鍵を用いたHMAC署名が正当なものとして検証されてしまいます。&lt;/p&gt;
+&lt;h2 id="依存関係スキャンにおける検知の死角"&gt;依存関係スキャンにおける検知の死角
+&lt;/h2&gt;&lt;p&gt;一般的なCI/CDパイプラインに導入されている自動脆弱性スキャナー（&lt;code&gt;pip-audit&lt;/code&gt;やDependabotなど）において、これら2つのCVEに対するメタデータの非同期が発生しています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[CVE-2026-85394]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - GHSA-3qf3-8w2g-rqmx (Reviewed)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - PYSEC-2026-4298 としてPyPIにマッピング
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - 一般的なスキャナーで検出可能
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[CVE-2026-120459]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - GHSA-7jv8-hwmh-86qc (Unreviewed)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - PyPIの脆弱性フィードに未反映
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - Google OSVではGitコミット範囲にのみ限定され、パッケージバージョンに紐付かない
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - pip-audit等でスルーされるリスクが存在
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;自動監査ツールがCVE-2026-85394のみを検知し、「DER形式の公開鍵は扱っていないため安全」と判断して対応を見送った場合、PyPIメタデータに登録されていないCVE-2026-120459（空文字秘密鍵リスク）を見落とす危険性があります。&lt;/p&gt;
+&lt;h2 id="リポジトリ内の依存調査と暫定防御策"&gt;リポジトリ内の依存調査と暫定防御策
+&lt;/h2&gt;&lt;p&gt;本番コードベースおよび推移的依存関係（Transitive Dependencies）において、&lt;code&gt;python-jose&lt;/code&gt;が利用されているかを即時に確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ソースコード内の直接インポートの探索&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;grep -rnE &lt;span style="color:#e6db74"&gt;&amp;#34;(from|import) jose&amp;#34;&lt;/span&gt; --include&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;*.py&amp;#34;&lt;/span&gt; .
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 依存マニフェストの確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;grep -n &lt;span style="color:#e6db74"&gt;&amp;#34;python-jose&amp;#34;&lt;/span&gt; requirements*.txt pyproject.toml poetry.lock uv.lock
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 逆引き依存ツリーの確認 (uv または pipdeptree)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv tree --invert --package python-jose
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pipdeptree --reverse --packages python-jose
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;🛠️ 直ちにコードベースを書き換えられない環境では、アプリケーション起動時におけるフェイルファスト検証を導入し、脆弱性の発火前提条件を無力化します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; os
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; field_validator
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic_settings &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseSettings
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. 起動時環境変数チェック&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RAW_SECRET &lt;span style="color:#f92672"&gt;=&lt;/span&gt; os&lt;span style="color:#f92672"&gt;.&lt;/span&gt;environ&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get(&lt;span style="color:#e6db74"&gt;&amp;#34;SECRET_KEY&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; RAW_SECRET &lt;span style="color:#f92672"&gt;or&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; RAW_SECRET&lt;span style="color:#f92672"&gt;.&lt;/span&gt;strip():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;RuntimeError&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;CRITICAL: SECRET_KEY環境変数が未設定または空文字です。プロセスを停止します。&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. Pydantic Settingsによるエントロピー担保&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;SecuritySettings&lt;/span&gt;(BaseSettings):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secret_key: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@field_validator&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;secret_key&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@classmethod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;validate_key_length&lt;/span&gt;(cls, v: str) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; v &lt;span style="color:#f92672"&gt;or&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; v&lt;span style="color:#f92672"&gt;.&lt;/span&gt;strip() &lt;span style="color:#f92672"&gt;or&lt;/span&gt; len(v) &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;lt; &lt;span style="color:#ae81ff"&gt;32&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ValueError&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;SECRET_KEYは32文字以上の十分なエントロピーを持つ必要があります。&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="pyjwtへの移行実装"&gt;PyJWTへの移行実装
+&lt;/h2&gt;&lt;p&gt;FastAPIの公式ドキュメント（PR #11589以降）でも標準採用されている&lt;code&gt;PyJWT&lt;/code&gt;（バージョン2.15.0以上）への移行を実施します。&lt;code&gt;PyJWT&lt;/code&gt;の初期バージョン（2.13.0や2.14.0）には個別のDoSや鍵混同の脆弱性が存在したため、必ず&lt;code&gt;&amp;amp;gt;=2.15.0&lt;/code&gt;を指定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# パッケージの入れ替え&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip uninstall -y python-jose
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install &lt;span style="color:#e6db74"&gt;&amp;#34;pyjwt&amp;amp;gt;=2.15.0&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# uvを使用している場合&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv remove python-jose
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv add &lt;span style="color:#e6db74"&gt;&amp;#34;pyjwt&amp;amp;gt;=2.15.0&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="apiシグネチャの差異とリファクタリング"&gt;APIシグネチャの差異とリファクタリング
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;python-jose&lt;/code&gt;と&lt;code&gt;PyJWT&lt;/code&gt;では、引数の指定方法および例外クラス階層が異なります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 移行前: python-jose (3.5.0)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; jose &lt;span style="color:#f92672"&gt;import&lt;/span&gt; JWTError, jwt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; HTTPException, status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;credentials_exception &lt;span style="color:#f92672"&gt;=&lt;/span&gt; HTTPException(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; status_code&lt;span style="color:#f92672"&gt;=&lt;/span&gt;status&lt;span style="color:#f92672"&gt;.&lt;/span&gt;HTTP_401_UNAUTHORIZED,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; detail&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;認証情報を検証できませんでした&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; headers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;&amp;#34;WWW-Authenticate&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Bearer&amp;#34;&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; payload &lt;span style="color:#f92672"&gt;=&lt;/span&gt; jwt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;decode(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; token,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SECRET_KEY,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; algorithms&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;HS256&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; options&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;&amp;#34;leeway&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; JWTError:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; credentials_exception
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;これを以下の完全な&lt;code&gt;PyJWT&lt;/code&gt;実装へ書き換えます。&lt;code&gt;leeway&lt;/code&gt;が第一級のキーワード引数となり、例外ハンドリングのスコープが変更されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 移行後: PyJWT &amp;amp;gt;= 2.15.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jwt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; jwt.exceptions &lt;span style="color:#f92672"&gt;import&lt;/span&gt; InvalidTokenError, PyJWTError
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; HTTPException, status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;credentials_exception &lt;span style="color:#f92672"&gt;=&lt;/span&gt; HTTPException(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; status_code&lt;span style="color:#f92672"&gt;=&lt;/span&gt;status&lt;span style="color:#f92672"&gt;.&lt;/span&gt;HTTP_401_UNAUTHORIZED,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; detail&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;認証情報を検証できませんでした&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; headers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;&amp;#34;WWW-Authenticate&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Bearer&amp;#34;&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# algorithmsパラメータは必須指定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; payload &lt;span style="color:#f92672"&gt;=&lt;/span&gt; jwt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;decode(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; token,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SECRET_KEY,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; algorithms&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;HS256&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; leeway&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; InvalidTokenError:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# ExpiredSignatureError, DecodeError などを一括捕捉&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; credentials_exception
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; PyJWTError &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; err:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# InvalidKeyError（秘密鍵不正）などシステム起因のエラーログ記録&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; HTTPException(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; status_code&lt;span style="color:#f92672"&gt;=&lt;/span&gt;status&lt;span style="color:#f92672"&gt;.&lt;/span&gt;HTTP_500_INTERNAL_SERVER_ERROR,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; detail&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;トークン検証構成に致命的な不整合が存在します&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ) &lt;span style="color:#f92672"&gt;from&lt;/span&gt; err
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="移行後に予期せぬ401-unauthorizedが多発する"&gt;移行後に予期せぬ401 Unauthorizedが多発する
+&lt;/h3&gt;&lt;p&gt;💡 &lt;code&gt;python-jose&lt;/code&gt;では&lt;code&gt;algorithms&lt;/code&gt;引数が省略可能（デフォルト&lt;code&gt;None&lt;/code&gt;）であったため、アルゴリズム指定を忘れたコードが稼働していた可能性があります。&lt;code&gt;PyJWT&lt;/code&gt;では&lt;code&gt;algorithms&lt;/code&gt;引数の指定が実質的に必須化されており、未指定の場合は&lt;code&gt;DecodeError&lt;/code&gt;が発生します。&lt;code&gt;DecodeError&lt;/code&gt;は&lt;code&gt;InvalidTokenError&lt;/code&gt;を継承しているため、上記の一般的な401ハンドラーで捕捉され、ログを残さず認証失敗として返却される事象が発生します。呼び出し側の&lt;code&gt;jwt.decode()&lt;/code&gt;すべてに&lt;code&gt;algorithms=[&amp;quot;HS256&amp;quot;]&lt;/code&gt;等の明示的な指定が存在するか確認してください。&lt;/p&gt;
+&lt;h3 id="秘密鍵が空の場合の500-internal-server-errorハンドリング"&gt;秘密鍵が空の場合の500 Internal Server Errorハンドリング
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;code&gt;PyJWT&lt;/code&gt;は空文字列のHMACキーが渡されると&lt;code&gt;InvalidKeyError&lt;/code&gt;を送出します。この例外は&lt;code&gt;InvalidTokenError&lt;/code&gt;のサブクラスではなく&lt;code&gt;PyJWTError&lt;/code&gt;を直接継承しています。そのため、&lt;code&gt;except InvalidTokenError:&lt;/code&gt;ブロックだけを定義していると例外が捕捉されず、FastAPI内部で未ハンドリングの500エラーとして表面化します。起動時の環境変数検証を徹底することで、実行時における本例外の発生を抑止する必要があります。&lt;/p&gt;
+&lt;h3 id="依存パッケージ導入後のターミナル検証ログ"&gt;依存パッケージ導入後のターミナル検証ログ
+&lt;/h3&gt;&lt;p&gt;パッケージ更新および不要な推移的依存の削除が正常に行われたことを確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ pip show python-jose
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;WARNING: Package(s) not found: python-jose
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ pip show pyjwt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Name: PyJWT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Version: 2.15.1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Summary: JSON Web Token implementation in Python
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Home-page: https://github.com/jpadilla/pyjwt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Author: Jose Padilla
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;License: MIT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Location: /opt/venv/lib/python3.11/site-packages
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Requires: cryptography
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Required-by: 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ python -c &amp;#34;import jwt; print(jwt.__version__)&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2.15.1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;python-jose&lt;/code&gt;のリポジトリオーナーは保守を継続する意志がないことを公言しており、未マージのプルリクエスト（PR #422など）も放置されています。適切な鍵運用（32バイト以上のランダムな秘密鍵を用い、アルゴリズムを明示）が行われているシステムであれば直ちに外部攻撃を許すわけではありませんが、上流のパッチ供給が完全に停止したセキュリティクリティカルなライブラリを稼働させ続けることは運用上の負債となります。FastAPIエコシステムにおいて標準となっている&lt;code&gt;PyJWT &amp;amp;gt;= 2.15.0&lt;/code&gt;への移行、または要件に応じた&lt;code&gt;joserfc&lt;/code&gt;や&lt;code&gt;Authlib&lt;/code&gt;への切り替えを速やかに完了させてください。&lt;/p&gt;</description></item></channel></rss>
