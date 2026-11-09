@@ -1,4 +1,128 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 07 Nov 2026 11:00:53 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Vulnerabilities CVE-2026-120459 and CVE-2026-85394 in python-jose and PyJWT Migration Guidelines for FastAPI Authentication Layer</title><link>https://klifehack.com/en/p/fastapi-jwt-python-jose-migration/</link><pubDate>Sat, 07 Nov 2026 11:00:53 +0900</pubDate><guid>https://klifehack.com/en/p/fastapi-jwt-python-jose-migration/</guid><description>&lt;p&gt;In authentication and authorization infrastructures for microservices and API gateways, the robustness of token verification processes defines the security boundary of the entire system. Especially in stateless JWT (JSON Web Token) verification, even a slight defect in the internal implementation behavior of a library or key interpretation logic directly leads to vulnerabilities such as authorization bypass or privilege escalation. In &lt;code&gt;python-jose&lt;/code&gt;, which has long been used in tutorials for major frameworks such as FastAPI, vulnerabilities that allow empty-string HMAC secret keys and public key algorithm confusion attacks have been reported. Under circumstances where maintenance of the upstream repository has virtually ceased, this article details the technical background and migration procedures required to securely maintain production authentication infrastructure.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 09 Nov 2026 11:20:09 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>Redis Caching Strategies and Failure Mitigation Design in High-Load Web Environments</title><link>https://klifehack.com/en/p/redis-caching-strategies-concurrency-architecture/</link><pubDate>Mon, 09 Nov 2026 11:20:09 +0900</pubDate><guid>https://klifehack.com/en/p/redis-caching-strategies-concurrency-architecture/</guid><description>&lt;p&gt;In phases where web system traffic increases, the concentration of repetitive read queries against a relational database management system (RDBMS) becomes a primary factor leading to disk I/O saturation and database connection pool exhaustion. An architecture that relies solely on scaling up the storage layer inevitably suffers from deteriorating latency and escalating costs. To eliminate bottlenecks in highly concurrent environments, it is necessary to standardize a caching architecture that offloads read traffic by placing Redis, an in-memory data store, in front of the persistence layer.&lt;/p&gt;
+&lt;p&gt;This document compiles technical verification results regarding the rationale for adopting Redis in web infrastructure, selection criteria for key caching topologies, cache stampede prevention, and memory limit management.&lt;/p&gt;
+&lt;h2 id="read-load-localization-and-redis-characteristics"&gt;Read Load Localization and Redis Characteristics
+&lt;/h2&gt;&lt;p&gt;Because Redis retains and processes all data in main memory, it maintains sub-millisecond response latency compared to standard RDBMSs that involve disk seeks. Furthermore, its native support for diverse data structures—rather than operating merely as a simple key-value store—serves as an architectural advantage in system design.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;String&lt;/b&gt;: Caching serialized object data and JSON strings&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Hash&lt;/b&gt;: Structured retention of objects with multiple fields and discrete updates of specific fields&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;List / Set&lt;/b&gt;: Implementation of queue structures and unique user membership checks&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Sorted Set (ZSet)&lt;/b&gt;: Score-based real-time aggregation and sliding-window rate limiter implementations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;By leveraging these data structures, Redis can do more than serve as a repository for query results; it can efficiently consolidate distributed infrastructure responsibilities such as session persistence and rate limiting.&lt;/p&gt;
+&lt;h2 id="cache-pattern-design-and-trade-offs"&gt;Cache Pattern Design and Trade-offs
+&lt;/h2&gt;&lt;p&gt;A cache access pattern suited to the requirements must be defined by balancing data consistency, fault tolerance, and overall system complexity.&lt;/p&gt;
+&lt;h3 id="cache-aside-lazy-loading-pattern"&gt;Cache-Aside (Lazy Loading) Pattern
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+--------+ 1. Read Request +-----------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Client | ------------------------&amp;amp;gt; | Application |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+--------+ +-----------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | ^
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2. Check Cache | | 5. Return Data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+ |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | Redis | ---------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+ (Cache Hit)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Cache Miss | 3. Query DB
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | RDBMS |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 4. Set Cache (TTL) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | Redis |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the Cache-Aside pattern, the application first queries Redis for data. If the cache exists (Cache Hit), that value is returned immediately to the client. If the cache does not exist (Cache Miss), data is fetched from the backend RDBMS, written to Redis with a TTL, and then returned in the response.&lt;/p&gt;
+&lt;p&gt;A key characteristic of this pattern is that even if a Redis node temporarily goes down, total service outage can be avoided as long as the application maintains fallback to the RDBMS. In addition, because only requested data is loaded into the cache, the memory footprint is kept to a minimum.&lt;/p&gt;
+&lt;h3 id="write-through-and-write-back-patterns"&gt;Write-Through and Write-Back Patterns
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Write-Through&lt;/b&gt;: The application writes to the cache, and the cache layer performs a synchronous write to the RDBMS within the same transaction. While data consistency is ensured, dual write overhead occurs for every update operation.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Write-Back (Write-Behind)&lt;/b&gt;: Writes are executed only to Redis, and a response is returned immediately. Persistence to the underlying storage layer is flushed asynchronously in batches by a background process. While this maximizes write throughput, it entails the risk of losing unflushed data if the Redis instance crashes abnormally.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="fault-tolerance-design-and-operational-countermeasures"&gt;Fault Tolerance Design and Operational Countermeasures
+&lt;/h2&gt;&lt;h3 id="mitigating-cache-stampede-thundering-herd"&gt;Mitigating Cache Stampede (Thundering Herd)
+&lt;/h3&gt;&lt;p&gt;The moment the TTL of an extremely high-traffic key expires, numerous concurrent worker threads detect a Cache Miss simultaneously and issue identical queries concurrently to the RDBMS. This causes a sudden spike in database CPU utilization and cascades into connection timeouts.&lt;/p&gt;
+&lt;p&gt;To prevent this issue, fixed-value TTL configurations should be avoided, and expiration times configured with randomized variation (Jitter) should be introduced.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; random
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; redis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;client &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redis&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Redis(host&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;127.0.0.1&amp;#39;&lt;/span&gt;, port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;6379&lt;/span&gt;, db&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_user_profile&lt;/span&gt;(user_id: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cache_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;user:&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;user_id&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;:profile&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cached_data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get(cache_key)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; cached_data &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; cached_data&lt;span style="color:#f92672"&gt;.&lt;/span&gt;decode(&lt;span style="color:#e6db74"&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Database fallback simulation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; db_data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; fetch_from_database(user_id)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Base TTL: 3600 seconds, Jitter: 0-300 seconds&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; base_ttl &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3600&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; jitter &lt;span style="color:#f92672"&gt;=&lt;/span&gt; random&lt;span style="color:#f92672"&gt;.&lt;/span&gt;randint(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; effective_ttl &lt;span style="color:#f92672"&gt;=&lt;/span&gt; base_ttl &lt;span style="color:#f92672"&gt;+&lt;/span&gt; jitter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setex(cache_key, effective_ttl, db_data)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; db_data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;fetch_from_database&lt;/span&gt;(user_id: str) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;{{\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;id&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;: &lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;user_id&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;status&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;: &lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;active&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;}}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Probabilistically dispersing the TTL reduces the risk of all requests executing the fallback process simultaneously.&lt;/p&gt;
+&lt;h3 id="memory-exhaustion-oom-countermeasures-and-eviction-policies"&gt;Memory Exhaustion (OOM) Countermeasures and Eviction Policies
+&lt;/h3&gt;&lt;p&gt;Continuing operations without configuring an upper limit on cache capacity leads to excessive host memory consumption, triggering process termination by the OS OOM Killer or new write errors. The physical memory limit and eviction policy must be explicitly specified in redis.conf.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;# Maximum memory allocation limit
+maxmemory 2147483648
+
+# Eviction policy settings
+# Available: volatile-lru, allkeys-lru, volatile-lfu, allkeys-lfu, noeviction
+maxmemory-policy allkeys-lru
+
+# LRU / LFU sampling precision
+maxmemory-samples 5
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;allkeys-lru&lt;/b&gt;: Evicts keys starting from the least recently used. Suitable for general web workloads adhering to the Pareto principle.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;allkeys-lfu&lt;/b&gt;: Evaluates access frequency using a logarithmic access counter and evicts low-frequency keys. Useful for preventing keys accessed in transient one-off bursts from being retained.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;noeviction&lt;/b&gt;: The default setting, where write operations return an OOM command not allowed error when the memory limit is reached. This behavior should be avoided when using Redis as a temporary caching layer.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-oom-error-upon-reaching-memory-limit"&gt;1. OOM Error Upon Reaching Memory Limit
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Symptom:&lt;/b&gt; The following errors occur continuously on the application side during SET operations to Redis.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(error) OOM command not allowed when used memory &amp;amp;gt; &amp;#39;maxmemory&amp;#39;.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;Root Cause Analysis:&lt;/b&gt; maxmemory-policy remained configured as noeviction, and additions of new keys or data updates were attempted while the limit had been reached.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Action Taken:&lt;/b&gt; Issued the CONFIG SET command to the running Redis instance to dynamically change the eviction policy, followed by persisting the change to the configuration file.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis-cli config set maxmemory-policy allkeys-lru
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis-cli config rewrite
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-connection-latency-due-to-tcp-connection-backlog-limitation"&gt;2. Connection Latency Due to TCP Connection Backlog Limitation
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Symptom:&lt;/b&gt; During traffic spikes, connection establishment latency to Redis increases, and Connection Timeouts are logged on the client side.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Root Cause Analysis:&lt;/b&gt; Occurs when the kernel&amp;rsquo;s socket listen backlog setting (net.core.somaxconn) is low and cannot accommodate Redis&amp;rsquo;s tcp-backlog (default: 511).&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Action Taken:&lt;/b&gt; Modify kernel parameters on the host OS to expand the socket queue length.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo sysctl -w net.core.somaxconn&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2048&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;net.core.somaxconn = 2048&amp;#34;&lt;/span&gt; | sudo tee -a /etc/sysctl.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="verification-results-and-operational-status"&gt;Verification Results and Operational Status
+&lt;/h2&gt;&lt;p&gt;To verify consistency in the infrastructure layer after applying the configurations, memory utilization, connection listeners, and eviction statistics of the Redis process were retrieved via the terminal.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli info memory
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Memory
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory:1845493760
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_human:1.72G
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_rss:1924526080
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_rss_human:1.79G
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;maxmemory:2147483648
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;maxmemory_human:2.00G
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;maxmemory_policy:allkeys-lru
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mem_fragmentation_ratio:1.04
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli info stats | grep evicted
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;evicted_keys:142095
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep 6379
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 2048 127.0.0.1:6379 0.0.0.0:* users:((&amp;#34;redis-server&amp;#34;,pid=10421,fd=6))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It was confirmed that used_memory was maintained within the configured 2.00GB limit, and that autonomous memory boundary management under the allkeys-lru policy functioned properly as evidenced by the increase in evicted_keys.&lt;/p&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;Deploying a Redis cache as a single instance is an approach that offers immediate efficacy in mitigating RDBMS read load. However, to prevent the caching layer itself from becoming a single point of failure (SPOF), implementing redundant failover mechanisms is mandatory in subsequent operational phases.&lt;/p&gt;
+&lt;p&gt;As future milestones, it is necessary to build a highly fault-tolerant data platform by verifying Redis cluster configurations utilizing StatefulSets in Kubernetes environments, as well as automatic master failover mechanisms using Sentinel.&lt;/p&gt;</description></item><item><title>Vulnerabilities CVE-2026-120459 and CVE-2026-85394 in python-jose and PyJWT Migration Guidelines for FastAPI Authentication Layer</title><link>https://klifehack.com/en/p/fastapi-jwt-python-jose-migration/</link><pubDate>Sat, 07 Nov 2026 11:00:53 +0900</pubDate><guid>https://klifehack.com/en/p/fastapi-jwt-python-jose-migration/</guid><description>&lt;p&gt;In authentication and authorization infrastructures for microservices and API gateways, the robustness of token verification processes defines the security boundary of the entire system. Especially in stateless JWT (JSON Web Token) verification, even a slight defect in the internal implementation behavior of a library or key interpretation logic directly leads to vulnerabilities such as authorization bypass or privilege escalation. In &lt;code&gt;python-jose&lt;/code&gt;, which has long been used in tutorials for major frameworks such as FastAPI, vulnerabilities that allow empty-string HMAC secret keys and public key algorithm confusion attacks have been reported. Under circumstances where maintenance of the upstream repository has virtually ceased, this article details the technical background and migration procedures required to securely maintain production authentication infrastructure.&lt;/p&gt;
 &lt;h2 id="technical-background-and-mechanisms-of-the-vulnerabilities"&gt;Technical Background and Mechanisms of the Vulnerabilities
 &lt;/h2&gt;&lt;p&gt;In all versions of &lt;code&gt;python-jose&lt;/code&gt; prior to and including version 3.5.0, the presence of the following two critical vulnerabilities has been confirmed:&lt;/p&gt;
 &lt;ol&gt;

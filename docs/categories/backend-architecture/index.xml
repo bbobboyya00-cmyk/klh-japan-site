@@ -1,4 +1,128 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 07 Nov 2026 11:00:52 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>python-joseの脆弱性CVE-2026-120459・CVE-2026-85394とFastAPI認証層のPyJWT移行指針</title><link>https://klifehack.com/p/fastapi-jwt-python-jose-migration/</link><pubDate>Sat, 07 Nov 2026 11:00:52 +0900</pubDate><guid>https://klifehack.com/p/fastapi-jwt-python-jose-migration/</guid><description>&lt;p&gt;マイクロサービスやAPIゲートウェイにおける認証認可基盤では、トークン検証処理の堅牢性がシステム全体のセキュリティ境界を規定します。特にステートレスなJWT（JSON Web Token）検証では、ライブラリ内部の実装挙動や鍵の解釈ロジックに僅かでも不備が存在すると、認可バイパスや特権昇格に直結する脆弱性を抱えることになります。これまでFastAPIなどの主要フレームワークのチュートリアルで長年採用されてきた&lt;code&gt;python-jose&lt;/code&gt;において、空文字HMAC秘密鍵の許容や公開鍵アルゴリズム混同攻撃を許容する脆弱性が報告されました。上流リポジトリの保守が事実上停止している状況下において、本番環境の認証基盤を安全に維持するための移行手順と技術的背景を詳解します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/backend-architecture/</link><description>Recent content in Backend Architecture on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 09 Nov 2026 11:20:07 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/backend-architecture/index.xml" rel="self" type="application/rss+xml"/><item><title>高負荷Web環境におけるRedisキャッシュ戦略と障害抑止設計</title><link>https://klifehack.com/p/redis-caching-strategies-concurrency-architecture/</link><pubDate>Mon, 09 Nov 2026 11:20:07 +0900</pubDate><guid>https://klifehack.com/p/redis-caching-strategies-concurrency-architecture/</guid><description>&lt;p&gt;Webシステムのトラフィックが増大する局面において、リレーショナルデータベース（RDBMS）に対する反復的な参照クエリの集中は、ディスクI/Oの飽和およびデータベース接続コネクションプールの枯渇を招く主要因となります。ストレージ層のスケールアップのみに依存する構成では、レイテンシの悪化およびコスト肥大化が避けられません。高並行処理環境におけるボトルネックを解消するため、インメモリデータストアであるRedisを永続化層の前段に配置し、読み取り負荷をオフロードするキャッシュアーキテクチャの標準化が必要です。&lt;/p&gt;
+&lt;p&gt;本稿では、WebインフラにおけるRedisの採用根拠、主要なキャッシュトポロジーの選定基準、キャッシュスタンピード対策、ならびにメモリ上限管理について技術的な検証結果を整理します。&lt;/p&gt;
+&lt;h2 id="参照負荷の局所化とredisの特性"&gt;参照負荷の局所化とRedisの特性
+&lt;/h2&gt;&lt;p&gt;Redisは全データを主メモリ上に保持して処理を行うため、ディスクシークを伴う一般的なRDBMSと比較してサブミリ秒単位の応答レイテンシを維持します。また、単なるKey-Valueストアにとどまらず、多様なデータ構造をネイティブにサポートしている点がシステム設計上の強みとなります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;String&lt;/b&gt;: オブジェクトのシリアライズデータやJSON文字列のキャッシュ&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Hash&lt;/b&gt;: 複数フィールドを持つオブジェクトの構造化保持および特定フィールドの単体更新&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;List / Set&lt;/b&gt;: キュー構造の実現やユニークユーザーの所属判定&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Sorted Set (ZSet)&lt;/b&gt;: スコアに基づくリアルタイム集計、スライディングウィンドウ型レートリミッターの実装&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらのデータ構造を活用することで、単なるクエリ結果の保管庫にとどまらず、セッション永続化やレートリミットといった分散インフラの責務を効率的に集約できます。&lt;/p&gt;
+&lt;h2 id="キャッシュパターンの設計とトレードオフ"&gt;キャッシュパターンの設計とトレードオフ
+&lt;/h2&gt;&lt;p&gt;データ整合性、耐障害性、システム全体の複雑性のバランスを考慮し、要件に適したキャッシュアクセスパターンを定義する必要があります。&lt;/p&gt;
+&lt;h3 id="cache-aside-lazy-loading-パターン"&gt;Cache-Aside (Lazy Loading) パターン
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+--------+ 1. Read Request +-----------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| Client | ------------------------&amp;amp;gt; | Application |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+--------+ +-----------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | ^
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2. Check Cache | | 5. Return Data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+ |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | Redis | ---------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+ (Cache Hit)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Cache Miss | 3. Query DB
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | RDBMS |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 4. Set Cache (TTL) |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | Redis |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; +-------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Cache-Asideパターンでは、アプリケーションがまずRedisへデータを問い合わせます。キャッシュが存在する場合（Cache Hit）はその値を直ちにクライアントへ返却します。キャッシュが存在しない場合（Cache Miss）はバックエンドのRDBMSからデータを取得し、RedisにTTL付きで書き込んだ後に応答を返します。&lt;/p&gt;
+&lt;p&gt;このパターンの特徴は、Redisノードが一時的にダウンした場合でも、アプリケーション側がRDBMSへのフォールバックを維持していればサービス全損を回避できる点にあります。また、リクエストされたデータのみがキャッシュにロードされるため、メモリフットプリントを最小限に抑えられます。&lt;/p&gt;
+&lt;h3 id="write-through-および-write-back-パターン"&gt;Write-Through および Write-Back パターン
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Write-Through&lt;/b&gt;: アプリケーションがキャッシュに対して書き込みを行い、キャッシュ層が同一トランザクション内でRDBMSへ同期書き込みを実施します。データ整合性が担保される一方、更新処理ごとに2重の書き込みオーバーヘッドが発生します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Write-Back (Write-Behind)&lt;/b&gt;: 書き込みをRedisのみに行い、即座に応答を返します。永続化層への反映はバックグラウンドプロセスが非同期かつバッチ単位でフラッシュします。書き込みスループットを最大化できますが、Redisインスタンスが異常停止した際に未フラッシュのデータが失われるリスクを内包します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="耐障害性設計と運用上の対策"&gt;耐障害性設計と運用上の対策
+&lt;/h2&gt;&lt;h3 id="cache-stampede-thundering-herd-の抑制"&gt;Cache Stampede (Thundering Herd) の抑制
+&lt;/h3&gt;&lt;p&gt;アクセス頻度の極めて高いキーのTTLが切れた瞬間、並行する多数のワーカースレッドが一斉にCache Missを検知し、同一クエリをRDBMSへ同時発行する現象が発生します。これにより、データベースCPUの急騰や接続タイムアウトの連鎖が引き起こされます。&lt;/p&gt;
+&lt;p&gt;この問題を防ぐため、固定値のTTL設定を避け、乱数による揺らぎ（Jitter）を導入した有効期限設定を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; random
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; redis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;client &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redis&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Redis(host&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;127.0.0.1&amp;#39;&lt;/span&gt;, port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;6379&lt;/span&gt;, db&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_user_profile&lt;/span&gt;(user_id: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cache_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;user:&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;user_id&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;:profile&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cached_data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get(cache_key)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; cached_data &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; cached_data&lt;span style="color:#f92672"&gt;.&lt;/span&gt;decode(&lt;span style="color:#e6db74"&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Database fallback simulation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; db_data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; fetch_from_database(user_id)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# Base TTL: 3600 seconds, Jitter: 0-300 seconds&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; base_ttl &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3600&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; jitter &lt;span style="color:#f92672"&gt;=&lt;/span&gt; random&lt;span style="color:#f92672"&gt;.&lt;/span&gt;randint(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; effective_ttl &lt;span style="color:#f92672"&gt;=&lt;/span&gt; base_ttl &lt;span style="color:#f92672"&gt;+&lt;/span&gt; jitter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setex(cache_key, effective_ttl, db_data)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; db_data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;fetch_from_database&lt;/span&gt;(user_id: str) &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;{{\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;id&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;: &lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;user_id&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;status&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;: &lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;active&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\&amp;#34;}}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;TTLを確率論的に分散させることで、全リクエストが同時にフォールバック処理を実行するリスクを低減させます。&lt;/p&gt;
+&lt;h3 id="メモリ枯渇-oom-対策とエビクションポリシー"&gt;メモリ枯渇 (OOM) 対策とエビクションポリシー
+&lt;/h3&gt;&lt;p&gt;キャッシュ容量の上限を設けずに運用を継続すると、ホストメモリを過大消費し、OSのOOM Killerによるプロセス強制終了や新規書き込みエラーを招きます。&lt;code&gt;redis.conf&lt;/code&gt;にて物理メモリ上限とエビクションポリシーを明示的に指定します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-conf" data-lang="conf"&gt;# Maximum memory allocation limit
+maxmemory 2147483648
+
+# Eviction policy settings
+# Available: volatile-lru, allkeys-lru, volatile-lfu, allkeys-lfu, noeviction
+maxmemory-policy allkeys-lru
+
+# LRU / LFU sampling precision
+maxmemory-samples 5
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;allkeys-lru&lt;/b&gt;: アクセス頻度の低いキーから順次削除します。パレートの法則に従う一般的なWebワークロードに適しています。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;allkeys-lfu&lt;/b&gt;: 対数アクセスカウンターを用いてアクセス頻度を評価し、低頻度のキーを削除します。突発的な単発アクセスによるキー保持を回避する場合に有用です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;noeviction&lt;/b&gt;: デフォルト設定であり、メモリ上限時に書き込み処理が&lt;code&gt;OOM command not allowed&lt;/code&gt;エラーを返します。一時的なキャッシュ層として利用する場合は避けるべき挙動です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-メモリ上限到達に伴うoomエラー"&gt;1. メモリ上限到達に伴うOOMエラー
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;事象:&lt;/b&gt; アプリケーション側でRedisへのSET操作時に以下のエラーが連続発生する。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(error) OOM command not allowed when used memory &amp;amp;gt; &amp;#39;maxmemory&amp;#39;.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;原因分析:&lt;/b&gt; &lt;code&gt;maxmemory-policy&lt;/code&gt;が&lt;code&gt;noeviction&lt;/code&gt;のまま設定されており、上限値に達した状態で新しいキーの追加またはデータ更新が試行されたためです。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;対応手順:&lt;/b&gt; 実行中のRedisインスタンスに対して&lt;code&gt;CONFIG SET&lt;/code&gt;コマンドを投入し、エビクションポリシーを動的に変更後、設定ファイルへ永続化します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis-cli config set maxmemory-policy allkeys-lru
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis-cli config rewrite
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-tcpコネクションバックログの制限による接続遅延"&gt;2. TCPコネクションバックログの制限による接続遅延
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;事象:&lt;/b&gt; スパイクアクセス時にRedisへの接続確立レイテンシが増大し、クライアント側でConnection Timeoutが記録される。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;原因分析:&lt;/b&gt; カーネルのソケット受信キュー設定（&lt;code&gt;net.core.somaxconn&lt;/code&gt;）が低く、Redisの&lt;code&gt;tcp-backlog&lt;/code&gt;（デフォルト511）を満たせていない場合に発生します。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;対応手順:&lt;/b&gt; ホストOS側のカーネルパラメータを修正し、ソケットキュー長を拡張します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo sysctl -w net.core.somaxconn&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2048&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;net.core.somaxconn = 2048&amp;#34;&lt;/span&gt; | sudo tee -a /etc/sysctl.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="検証結果と稼働ステータス"&gt;検証結果と稼働ステータス
+&lt;/h2&gt;&lt;p&gt;設定適用後のインフラ層における整合性を確認するため、Redisプロセスのメモリ利用率、接続リスナー、およびエビクション統計をターミナルから取得します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli info memory
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Memory
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory:1845493760
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_human:1.72G
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_rss:1924526080
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_rss_human:1.79G
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;maxmemory:2147483648
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;maxmemory_human:2.00G
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;maxmemory_policy:allkeys-lru
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mem_fragmentation_ratio:1.04
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli info stats | grep evicted
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;evicted_keys:142095
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ss -tulpn | grep 6379
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tcp LISTEN 0 2048 127.0.0.1:6379 0.0.0.0:* users:((&amp;#34;redis-server&amp;#34;,pid=10421,fd=6))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;used_memory&lt;/code&gt;が設定した2.00GBの上限内で維持され、&lt;code&gt;evicted_keys&lt;/code&gt;の増加によって&lt;code&gt;allkeys-lru&lt;/code&gt;ポリシーによるメモリ枠組みの自己制御が機能していることを確認しました。&lt;/p&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;単一インスタンスによるRedisキャッシュ導入は、RDBMSの参照負荷軽減に対して即効性を持つアプローチです。しかし、キャッシュ層自体の単一障害点（SPOF）化を防ぐためには、今後の運用フェーズにおいてフェイルオーバー機能の多重化が必須となります。&lt;/p&gt;
+&lt;p&gt;今後のマイルストーンとして、Kubernetes環境でのStatefulSetを活用したRedisクラスタ構成の検証、ならびにSentinelを用いた自動マスター切り替え機構の検証を進め、耐障害性の高いデータ基盤を構築する必要があります。&lt;/p&gt;</description></item><item><title>python-joseの脆弱性CVE-2026-120459・CVE-2026-85394とFastAPI認証層のPyJWT移行指針</title><link>https://klifehack.com/p/fastapi-jwt-python-jose-migration/</link><pubDate>Sat, 07 Nov 2026 11:00:52 +0900</pubDate><guid>https://klifehack.com/p/fastapi-jwt-python-jose-migration/</guid><description>&lt;p&gt;マイクロサービスやAPIゲートウェイにおける認証認可基盤では、トークン検証処理の堅牢性がシステム全体のセキュリティ境界を規定します。特にステートレスなJWT（JSON Web Token）検証では、ライブラリ内部の実装挙動や鍵の解釈ロジックに僅かでも不備が存在すると、認可バイパスや特権昇格に直結する脆弱性を抱えることになります。これまでFastAPIなどの主要フレームワークのチュートリアルで長年採用されてきた&lt;code&gt;python-jose&lt;/code&gt;において、空文字HMAC秘密鍵の許容や公開鍵アルゴリズム混同攻撃を許容する脆弱性が報告されました。上流リポジトリの保守が事実上停止している状況下において、本番環境の認証基盤を安全に維持するための移行手順と技術的背景を詳解します。&lt;/p&gt;
 &lt;h2 id="脆弱性の技術的背景とメカニズム"&gt;脆弱性の技術的背景とメカニズム
 &lt;/h2&gt;&lt;p&gt;&lt;code&gt;python-jose&lt;/code&gt;バージョン3.5.0以前のすべてのバージョンにおいて、以下の2件の重大な脆弱性が存在することが確認されています。&lt;/p&gt;
 &lt;ol&gt;
