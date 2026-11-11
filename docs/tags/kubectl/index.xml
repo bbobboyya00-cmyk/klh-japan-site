@@ -1,4 +1,209 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kubectl on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/kubectl/</link><description>Recent content in Kubectl on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 27 Jul 2026 10:09:04 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/kubectl/index.xml" rel="self" type="application/rss+xml"/><item><title>Helmを用いたKubernetesアプリケーション管理とPrometheus監視スタックの構築</title><link>https://klifehack.com/p/helm-kubernetes-prometheus-grafana-observability/</link><pubDate>Mon, 27 Jul 2026 10:09:04 +0900</pubDate><guid>https://klifehack.com/p/helm-kubernetes-prometheus-grafana-observability/</guid><description>&lt;p&gt;Kubernetesクラスタの運用規模が拡大するにつれ、静的なYAMLマニフェストを手動で個別にデプロイ・管理する手法は設定の肥大化やバージョン管理の混乱を引き起こします。特に複数環境に対する同一構成の適用や、依存関係を持つコンポーネントの一括管理において、抽象化されたパッケージング機構の導入は不可欠です。本稿では、KubernetesのパッケージマネージャーであるHelmを活用したリソースデプロイと、PrometheusおよびGrafanaを中心とした可視化・監視スタックの構築手順について解説します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kubectl on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/kubectl/</link><description>Recent content in Kubectl on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 11 Nov 2026 11:00:34 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/kubectl/index.xml" rel="self" type="application/rss+xml"/><item><title>Kubebuilderによる独自CRD設計とコントローラー実装の基本検証</title><link>https://klifehack.com/p/kubebuilder-crd-controller-implementation/</link><pubDate>Wed, 11 Nov 2026 11:00:34 +0900</pubDate><guid>https://klifehack.com/p/kubebuilder-crd-controller-implementation/</guid><description>&lt;p&gt;Kubernetesクラスタを運用する過程において、標準のPodやService、Deploymentといったプリミティブのみでは、ドメイン固有のライフサイクル管理や宣言的状態の維持を自動化しきれない課題が生じます。シェルスクリプトや外部スクリプトを用いたアドホックな操作はヒューマンエラーや状態ドリフトを招きやすいため、KubernetesのControl Plane自体に独自のリソース型を登録し、APIサーバー経由で直接ライフサイクルを管理するオペレーターパターンの適用が必要となります。&lt;/p&gt;
+&lt;p&gt;本稿では、Kubebuilderフレームワークを活用し、カスタムリソース定義（CRD）のスキーマ策定から、Reconcileループによる状態追従コントローラーの実装とローカル環境での疎通検証までを整理します。&lt;/p&gt;
+&lt;h2 id="1-kubernetes拡張アーキテクチャの構成要素"&gt;1. Kubernetes拡張アーキテクチャの構成要素
+&lt;/h2&gt;&lt;p&gt;Kubernetesの拡張機構は、宣言された仕様（Desired State）と実際のシステム状態（Actual State）を一致させるフィードバック制御モデルに基づいています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Custom Resource (CR):&lt;/b&gt; ユーザーが定義するカスタムオブジェクトのインスタンス。データはクラスタのストレージ基盤であるetcdへ永続化され、APIサーバー経由でCRUD操作が可能となります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Custom Resource Definition (CRD):&lt;/b&gt; CRのOpenAPI v3スキーマを定義する設計図。フィールドの型検証、必須チェック、ステータスサブリソースの有無を規定します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Controller:&lt;/b&gt; 指定したリソースのイベント（作成・更新・削除）を監視し、&lt;code&gt;Reconcile()&lt;/code&gt;関数を無限ループ構造で実行して差分を解消する自律型プロセスです。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="開発フレームワークの選択特性"&gt;開発フレームワークの選択特性
+&lt;/h3&gt;&lt;p&gt;Kubernetesのコントローラー実装には主にKubebuilderとOperator SDKが存在します。両者の特徴は以下の通りです。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th style="text-align: left"&gt;項目&lt;/th&gt;
+ &lt;th style="text-align: left"&gt;Kubebuilder&lt;/th&gt;
+ &lt;th style="text-align: left"&gt;Operator SDK&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;主要メンテナ&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Kubernetes SIGs&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Operator Framework (CNCF/Red Hat)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;対応言語&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Go&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Go, Ansible, Helm&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;守備範囲&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;スキャフォールディング、コード生成、テスト&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;スキャフォールディング、OLM統合、パッケージング&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;構造的関係&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;コントローラー実装の標準コア&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Goベース実装のエンジンとして内部でKubebuilderを採用&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;本実装では、依存関係を最小限に抑えGo言語の純粋なコントローラーロジックを迅速に検証するため、Kubebuilderを採用します。&lt;/p&gt;
+&lt;h2 id="2-プロジェクトの初期化とapiスキーマ定義"&gt;2. プロジェクトの初期化とAPIスキーマ定義
+&lt;/h2&gt;&lt;p&gt;まず作業ディレクトリを作成し、プロジェクトのドメインとリポジトリモジュール名を指定してスキャフォールディングを実施します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir cinema-operator &amp;amp;amp;&amp;amp;amp; cd cinema-operator
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubebuilder init --domain cinema.com --repo cinema.com/operator
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;次に、グループ名&lt;code&gt;entertainment&lt;/code&gt;、バージョン&lt;code&gt;v1&lt;/code&gt;、Kind名&lt;code&gt;Movie&lt;/code&gt;のAPIリソース構造を生成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubebuilder create api --group entertainment --version v1 --kind Movie
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;生成された&lt;code&gt;api/v1/movie_types.go&lt;/code&gt;を編集し、&lt;code&gt;MovieSpec&lt;/code&gt;にドメイン固有のフィールドを宣言します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;metav1&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;k8s.io/apimachinery/pkg/apis/meta/v1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;MovieSpec&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Title&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;title,omitempty&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Genre&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;genre,omitempty&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;RunningTime&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;runningTime,omitempty&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;IsReleased&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;bool&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;isReleased,omitempty&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;MovieStatus&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 状態管理用のステータスフィールドを必要に応じて追記&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// +kubebuilder:object:root=true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// +kubebuilder:subresource:status&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Movie&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;metav1&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TypeMeta&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;,inline&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;metav1&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ObjectMeta&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;metadata,omitempty&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Spec&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;MovieSpec&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;spec,omitempty&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Status&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;MovieStatus&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;status,omitempty&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// +kubebuilder:object:root=true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;MovieList&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;metav1&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TypeMeta&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;,inline&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;metav1&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ListMeta&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;metadata,omitempty&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Items&lt;/span&gt; []&lt;span style="color:#a6e22e"&gt;Movie&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;items&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;init&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;SchemeBuilder&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Register&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;amp&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;Movie&lt;/span&gt;{}, &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;amp&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;MovieList&lt;/span&gt;{})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="3-コントローラーのreconcileロジック実装"&gt;3. コントローラーのReconcileロジック実装
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;internal/controller/movie_controller.go&lt;/code&gt;にイベント検知時の処理フローを実装します。APIサーバーから該当リソースのインスタンスを取得し、存在しない場合はNotFoundエラーを無視してループを終了します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;controller&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;context&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;k8s.io/apimachinery/pkg/runtime&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;ctrl&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;sigs.k8s.io/controller-runtime&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;sigs.k8s.io/controller-runtime/pkg/client&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;sigs.k8s.io/controller-runtime/pkg/log&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;entertainmentv1&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;cinema.com/operator/api/v1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;MovieReconciler&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;client&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Client&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Scheme&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;runtime&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Scheme&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// +kubebuilder:rbac:groups=entertainment.cinema.com,resources=movies,verbs=get;list;watch;create;update;patch;delete&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// +kubebuilder:rbac:groups=entertainment.cinema.com,resources=movies/status,verbs=get;update;patch&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;r&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;MovieReconciler&lt;/span&gt;) &lt;span style="color:#a6e22e"&gt;Reconcile&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;context&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Context&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;req&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ctrl&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Request&lt;/span&gt;) (&lt;span style="color:#a6e22e"&gt;ctrl&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Result&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;error&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;logger&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;FromContext&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;movie&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;entertainmentv1&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Movie&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Get&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;req&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NamespacedName&lt;/span&gt;, &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;amp&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;movie&lt;/span&gt;); &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ctrl&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Result&lt;/span&gt;{}, &lt;span style="color:#a6e22e"&gt;client&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;IgnoreNotFound&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;logger&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Info&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Reconciling Movie resource&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;movie&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Name&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Title&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;movie&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Spec&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Title&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Genre&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;movie&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Spec&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Genre&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;RunningTime&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;movie&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Spec&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;RunningTime&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;IsReleased&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;movie&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Spec&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;IsReleased&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ctrl&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Result&lt;/span&gt;{}, &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;r&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;MovieReconciler&lt;/span&gt;) &lt;span style="color:#a6e22e"&gt;SetupWithManager&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;mgr&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ctrl&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Manager&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;error&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ctrl&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewControllerManagedBy&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;mgr&lt;/span&gt;).
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;For&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;amp&lt;/span&gt;;&lt;span style="color:#a6e22e"&gt;entertainmentv1&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Movie&lt;/span&gt;{}).
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Complete&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-マニフェスト生成とローカルエンドポイント検証"&gt;4. マニフェスト生成とローカルエンドポイント検証
+&lt;/h2&gt;&lt;p&gt;Go構造体に付与されたマーカーコメント（&lt;code&gt;+kubebuilder:...&lt;/code&gt;）からCRDマニフェストファイルを自動生成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;make manifests
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;生成されたマニフェストファイル&lt;code&gt;config/crd/bases/entertainment.cinema.com_movies.yaml&lt;/code&gt;を検証用APIサーバーに対して適用します。以下は開発検証用に一時コンテナを立ち上げてリソースを登録する手順です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d --name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;k8s-api --net&lt;span style="color:#f92672"&gt;=&lt;/span&gt;host &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; registry.k8s.io/kube-apiserver:v1.19.0 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; kube-apiserver --etcd-servers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;http://127.0.0.1:8888 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --authorization-mode&lt;span style="color:#f92672"&gt;=&lt;/span&gt;AlwaysAllow --bind-address&lt;span style="color:#f92672"&gt;=&lt;/span&gt;0.0.0.0 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --insecure-port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8080&lt;/span&gt; --secure-port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;6444&lt;/span&gt; --allow-privileged&lt;span style="color:#f92672"&gt;=&lt;/span&gt;true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl --server&lt;span style="color:#f92672"&gt;=&lt;/span&gt;http://127.0.0.1:8080 apply -f config/crd/bases/entertainment.cinema.com_movies.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;定義したスキーマに適合するCRインスタンスマニフェスト&lt;code&gt;movie-sample.yaml&lt;/code&gt;を記述します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;entertainment.cinema.com/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Movie&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;the-outlaws&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;title&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;The Outlaws 4&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;genre&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runningTime&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;109&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;isReleased&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;クラスタへCRを登録します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl --server&lt;span style="color:#f92672"&gt;=&lt;/span&gt;http://127.0.0.1:8080 apply -f movie-sample.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;コントローラープロセスを起動し、APIサーバーと同期させます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export KUBERNETES_MASTER&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;http://127.0.0.1:8080&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;make run
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-troubleshooting"&gt;5. Troubleshooting
+&lt;/h2&gt;&lt;h3 id="crd適用時のスキーマ検証エラー"&gt;CRD適用時のスキーマ検証エラー
+&lt;/h3&gt;&lt;p&gt;CRDを適用する際、Kubebuilderタグの記述誤りや型の不一致により以下のエラーが発生することがあります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;error: unable to recognize &amp;#34;config/crd/bases/entertainment.cinema.com_movies.yaml&amp;#34;: no matches for kind &amp;#34;CustomResourceDefinition&amp;#34; in version &amp;#34;apiextensions.k8s.io/v1&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この場合、接続先APIサーバーのバージョンがCRDのAPI仕様（&lt;code&gt;v1&lt;/code&gt;または&lt;code&gt;v1beta1&lt;/code&gt;）と合致しているか確認が必要です。旧バージョン互換性が必要な場合は、&lt;code&gt;Makefile&lt;/code&gt;内のController-tools生成オプションで&lt;code&gt;crd:crdVersions=v1beta1&lt;/code&gt;を指定し直します。&lt;/p&gt;
+&lt;h3 id="rbac権限不足によるreconcile失敗"&gt;RBAC権限不足によるReconcile失敗
+&lt;/h3&gt;&lt;p&gt;コントローラーを実クラスタ環境のPodとして実行する場合、ServiceAccountのRoleBinding不足により、以下のようなアクセス拒否が発生します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ERROR controllers.Movie unable to fetch Movie {&amp;#34;error&amp;#34;: &amp;#34;movies.entertainment.cinema.com is forbidden: User \&amp;#34;system:serviceaccount:cinema-system:cinema-operator\&amp;#34; cannot get resource \&amp;#34;movies\&amp;#34; in API group \&amp;#34;entertainment.cinema.com\&amp;#34;&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この事象は、Goコード内のRBACマーカー（&lt;code&gt;// +kubebuilder:rbac:groups=...&lt;/code&gt;）が不足しているか、生成後のRole設定が適用されていないことに起因します。マーカーを修正後、&lt;code&gt;make manifests&lt;/code&gt;を再実行し、生成されたClusterRole/Roleマニフェストを再デプロイしてください。&lt;/p&gt;
+&lt;h2 id="6-検証ログと実行プロトコル"&gt;6. 検証ログと実行プロトコル
+&lt;/h2&gt;&lt;p&gt;CRの適用およびコントローラーの起動ログを確認し、Reconcile処理が正常に実行されていることを検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl --server=http://127.0.0.1:8080 get crd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME CREATED AT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;movies.entertainment.cinema.com 2026-11-11T09:12:44Z
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl --server=http://127.0.0.1:8080 get movie the-outlaws -o yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apiVersion: entertainment.cinema.com/v1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kind: Movie
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;metadata:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: the-outlaws
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; namespace: default
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;spec:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; genre: Action
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; isReleased: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; runningTime: 109
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; title: The Outlaws 4
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ make run
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/home/user/cinema-operator/bin/controller-gen rbac:roleName=manager-role crd webhook paths=&amp;#34;./...&amp;#34; output:crd:artifacts:config=config/crd/bases
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go run ./cmd/main.go
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-11-11T09:15:02.114Z INFO controller-runtime.metrics Metrics server is starting to listen {&amp;#34;addr&amp;#34;: &amp;#34;:8080&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-11-11T09:15:02.115Z INFO Starting server {&amp;#34;path&amp;#34;: &amp;#34;/metrics&amp;#34;, &amp;#34;kind&amp;#34;: &amp;#34;metrics&amp;#34;, &amp;#34;addr&amp;#34;: &amp;#34;[::]:8080&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-11-11T09:15:02.116Z INFO Starting EventSource {&amp;#34;controller&amp;#34;: &amp;#34;movie&amp;#34;, &amp;#34;controllerGroup&amp;#34;: &amp;#34;entertainment.cinema.com&amp;#34;, &amp;#34;controllerKind&amp;#34;: &amp;#34;Movie&amp;#34;, &amp;#34;source&amp;#34;: &amp;#34;kind source: *v1.Movie&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-11-11T09:15:02.116Z INFO Starting Controller {&amp;#34;controller&amp;#34;: &amp;#34;movie&amp;#34;, &amp;#34;controllerGroup&amp;#34;: &amp;#34;entertainment.cinema.com&amp;#34;, &amp;#34;controllerKind&amp;#34;: &amp;#34;Movie&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-11-11T09:15:02.218Z INFO Starting workers {&amp;#34;controller&amp;#34;: &amp;#34;movie&amp;#34;, &amp;#34;controllerGroup&amp;#34;: &amp;#34;entertainment.cinema.com&amp;#34;, &amp;#34;controllerKind&amp;#34;: &amp;#34;Movie&amp;#34;, &amp;#34;worker count&amp;#34;: 1}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2026-11-11T09:15:02.219Z INFO Reconciling Movie resource {&amp;#34;controller&amp;#34;: &amp;#34;movie&amp;#34;, &amp;#34;controllerGroup&amp;#34;: &amp;#34;entertainment.cinema.com&amp;#34;, &amp;#34;controllerKind&amp;#34;: &amp;#34;Movie&amp;#34;, &amp;#34;Movie&amp;#34;: {&amp;#34;name&amp;#34;:&amp;#34;the-outlaws&amp;#34;,&amp;#34;namespace&amp;#34;:&amp;#34;default&amp;#34;}, &amp;#34;namespace&amp;#34;: &amp;#34;default&amp;#34;, &amp;#34;name&amp;#34;: &amp;#34;the-outlaws&amp;#34;, &amp;#34;reconcileID&amp;#34;: &amp;#34;84e3d179-8ab3-4c91-921c-cb9716ebff12&amp;#34;, &amp;#34;Name&amp;#34;: &amp;#34;the-outlaws&amp;#34;, &amp;#34;Title&amp;#34;: &amp;#34;The Outlaws 4&amp;#34;, &amp;#34;Genre&amp;#34;: &amp;#34;Action&amp;#34;, &amp;#34;RunningTime&amp;#34;: 109, &amp;#34;IsReleased&amp;#34;: true}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="7-crdとannotationの設計上の分離"&gt;7. CRDとAnnotationの設計上の分離
+&lt;/h2&gt;&lt;p&gt;Kubernetesにおいて独自データを保持する手段として、Annotationの利用とCRDの新設の二通りが検討対象となります。両者の境界線はシステムの責務設計に直結します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;CRD:&lt;/b&gt; システムの厳格なスキーマ検証を伴い、APIエンドポイントとして型を確立したい場合に使用します。Reconcileループを通じて別リソース（Pod、Job、外部クラウドサービスなど）を能動的に作成・更新・削除するオペレーターパターンの構築にはCRDが必須です。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Annotation:&lt;/b&gt; 単なる付随情報、外部監査用のメタデータ、または非構造化テキストの一時的な保持に限定して使用します。APIサーバーによる型バリデーションは行われません。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;カスタムリソースとコントローラーの設計時は、Reconcile処理が冪等（Idempotent）であることを保証しなければなりません。Kubernetesのイベント通知機構はAt-Least-Once配信モデルであるため、同一のオブジェクトに対してReconcileが複数回連続して呼び出されても、重複作成や状態不整合が発生しないロジック構成を維持する必要があります。&lt;/p&gt;</description></item><item><title>Helmを用いたKubernetesアプリケーション管理とPrometheus監視スタックの構築</title><link>https://klifehack.com/p/helm-kubernetes-prometheus-grafana-observability/</link><pubDate>Mon, 27 Jul 2026 10:09:04 +0900</pubDate><guid>https://klifehack.com/p/helm-kubernetes-prometheus-grafana-observability/</guid><description>&lt;p&gt;Kubernetesクラスタの運用規模が拡大するにつれ、静的なYAMLマニフェストを手動で個別にデプロイ・管理する手法は設定の肥大化やバージョン管理の混乱を引き起こします。特に複数環境に対する同一構成の適用や、依存関係を持つコンポーネントの一括管理において、抽象化されたパッケージング機構の導入は不可欠です。本稿では、KubernetesのパッケージマネージャーであるHelmを活用したリソースデプロイと、PrometheusおよびGrafanaを中心とした可視化・監視スタックの構築手順について解説します。&lt;/p&gt;
 &lt;h2 id="helmの基本構造と動作原理"&gt;Helmの基本構造と動作原理
 &lt;/h2&gt;&lt;p&gt;HelmはGo Template構文をベースとしたテンプレートエンジンと、変数設定ファイル（&lt;code&gt;values.yaml&lt;/code&gt;）を分離することで、動的なマニフェスト生成を実現します。チャートと呼ばれるパッケージ単位でアプリケーションのライフサイクルを管理します。&lt;/p&gt;
 &lt;h3 id="チャートの標準ディレクトリ構造"&gt;チャートの標準ディレクトリ構造
