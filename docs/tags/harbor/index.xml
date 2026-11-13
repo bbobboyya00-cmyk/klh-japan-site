@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Harbor on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/tags/harbor/</link><description>Recent content in Harbor on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 13 Nov 2026 11:32:57 +0900</lastBuildDate><atom:link href="https://klifehack.com/tags/harbor/index.xml" rel="self" type="application/rss+xml"/><item><title>エアギャップクラスタ向けGitLab CIとHarborレジストリ連携パイプライン実装</title><link>https://klifehack.com/p/airgap-gitlab-ci-harbor-pipeline/</link><pubDate>Fri, 13 Nov 2026 11:32:57 +0900</pubDate><guid>https://klifehack.com/p/airgap-gitlab-ci-harbor-pipeline/</guid><description>&lt;p&gt;インターネット接続が制限または完全に切断されたエアギャップ環境では、外部のパブリックレジストリ（Docker HubやQuay.ioなど）へのアウトバウンド通信がファイアウォールによって遮断されます。このようなインフラストラクチャにおいてKubesprayを用いたKubernetesクラスタを運用する場合、コンテナイメージの依存解決にパブリックエンドポイントが含まれていると、ビルドパイプラインがタイムアウトや名前解決エラーにより停止することになります。コンテナビルドプロセスの再現性を確保し、意図しない外部ネットワークリクエストを排除するには、内部プライベートレジストリを前提条件とした静的検証ゲートおよび閉域環境専用のパイプライン構成が不可欠となります。&lt;/p&gt;
+&lt;p&gt;本稿では、内部レジストリである「Harbor」を基盤とし、Kubesprayクラスタへデプロイするワークロードイメージを安全に生成・検証・配布するためのGitLab CI/CDパイプラインの実装仕様を整理します。&lt;/p&gt;
+&lt;h2 id="パイプライン全体構造と実行基盤パラメータ"&gt;パイプライン全体構造と実行基盤パラメータ
+&lt;/h2&gt;&lt;p&gt;対象環境では、GitLab Runner自体も閉域ネットワーク内に配置し、&lt;code&gt;docker&lt;/code&gt;および&lt;code&gt;offline&lt;/code&gt;の実行タグによってターゲットノードを制約します。パイプライン全体で使用するグローバル設定は以下の通りです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;stages&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;validate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;variables&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HARBOR_REGISTRY&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;harbor.devstack.co.kr:8443&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HARBOR_PROJECT&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;kubespray&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;IMAGE_NAME&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;nginx-app&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;$HARBOR_REGISTRY/$HARBOR_PROJECT/ci/docker:29.1.4-cli&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="設定パラメータの仕様"&gt;設定パラメータの仕様
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;&lt;code&gt;stages&lt;/code&gt; 定義:&lt;/b&gt; &lt;code&gt;validate&lt;/code&gt;（リポジトリ内のDockerfileが内部レジストリのベースイメージを正しく参照しているかを検査する静的検証フェーズ）および &lt;code&gt;build&lt;/code&gt;（内部Harborへの認証、コミット情報に基づくイメージタグの生成、コンテナイメージのビルドおよびプッシュ、環境変数のメタデータ出力を行うフェーズ）で構成します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;&lt;code&gt;variables&lt;/code&gt; 定義:&lt;/b&gt; &lt;code&gt;HARBOR_REGISTRY&lt;/code&gt;にはプライベートHarborのFQDNおよびTLS通信ポート（&lt;code&gt;harbor.devstack.co.kr:8443&lt;/code&gt;）を指定し、&lt;code&gt;HARBOR_PROJECT&lt;/code&gt;にはKubespray用アーティファクトを分離・収容するプロジェクト名前空間（&lt;code&gt;kubespray&lt;/code&gt;）を設定します。また&lt;code&gt;IMAGE_NAME&lt;/code&gt;として生成対象のワークロードコンテナイメージ名（&lt;code&gt;nginx-app&lt;/code&gt;）を定義します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;実行イメージ (&lt;code&gt;image&lt;/code&gt;):&lt;/b&gt; ランナーコンテナ自体もパブリックレジストリに依存せず、&lt;code&gt;harbor.devstack.co.kr:8443/kubespray/ci/docker:29.1.4-cli&lt;/code&gt;から取得します。バージョンを&lt;code&gt;29.1.4-cli&lt;/code&gt;に固定することで、CLIオプションの挙動差分によるビルド失敗を防止します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="ステージ別ジョブ詳細設計"&gt;ステージ別ジョブ詳細設計
+&lt;/h2&gt;&lt;h3 id="1-dockerfileの静的検証ジョブ-validatedockerfile"&gt;1. Dockerfileの静的検証ジョブ (&lt;code&gt;validate:dockerfile&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;ビルドプロセスに突入する前に、外部レジストリを参照する不正な&lt;code&gt;FROM&lt;/code&gt;句が混入していないかを検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;validate:dockerfile&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;stage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;validate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;offline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;test -f Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;grep -q &amp;#34;$HARBOR_REGISTRY&amp;#34; Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;echo &amp;#34;Dockerfile validation passed&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 &lt;code&gt;test -f Dockerfile&lt;/code&gt; でルートディレクトリにおけるDockerfileの存在を確認し、&lt;code&gt;grep -q &amp;ldquo;$HARBOR_REGISTRY&amp;rdquo; Dockerfile&lt;/code&gt; によってベースイメージ参照行に &lt;code&gt;harbor.devstack.co.kr:8443&lt;/code&gt; が含まれているかを検査します。外部リポジトリ（例: &lt;code&gt;FROM nginx:latest&lt;/code&gt;）を直接指定した記述が存在する場合、終了ステータスが非ゼロとなり、後続のビルドジョブ実行を即時に遮断します。&lt;/p&gt;
+&lt;h3 id="2-ビルドおよびレジストリ配布ジョブ-buildpush"&gt;2. ビルドおよびレジストリ配布ジョブ (&lt;code&gt;build:push&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;コンテナのビルド、認証情報の安全な引き渡し、外部リクエストの物理的抑制、動的メタデータのパイプライン連携を担います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;build:push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;stage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;offline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;before_script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker version&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;echo &amp;#34;$HARBOR_PASSWORD&amp;#34; | docker login &amp;#34;$HARBOR_REGISTRY&amp;#34; -u &amp;#34;$HARBOR_USER&amp;#34; --password-stdin&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [ -n &amp;#34;$CI_COMMIT_TAG&amp;#34; ]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_TAG=&amp;#34;$CI_COMMIT_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_TAG=&amp;#34;sha-$CI_COMMIT_SHORT_SHA&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_URI=&amp;#34;$HARBOR_REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:$IMAGE_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_TAG=$IMAGE_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_URI=$IMAGE_URI&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker build --pull=false -t &amp;#34;$IMAGE_URI&amp;#34; .
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker push &amp;#34;$IMAGE_URI&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_TAG=$IMAGE_TAG&amp;#34; &amp;amp;gt; build.env
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_URI=$IMAGE_URI&amp;#34; &amp;amp;gt;&amp;amp;gt; build.env&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;artifacts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;reports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;dotenv&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build.env&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;expire_in&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;7&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;days&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;$CI_COMMIT_BRANCH == &amp;#34;master&amp;#34;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;$CI_COMMIT_TAG&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="実装上の技術的要点"&gt;実装上の技術的要点
+&lt;/h4&gt;&lt;p&gt;🛠️ &lt;b&gt;認証情報の秘匿化:&lt;/b&gt; &lt;code&gt;echo &amp;ldquo;$HARBOR_PASSWORD&amp;rdquo; | docker login &amp;hellip; &amp;ndash;password-stdin&lt;/code&gt; を使用し、コマンドライン引数経由でのパスワード露出（プロセスツリーやRunnerログへの平文出力）を防止します。
+⚙️ &lt;b&gt;動的タグ判定ロジック:&lt;/b&gt; リリースタグ発行時（&lt;code&gt;$CI_COMMIT_TAG&lt;/code&gt;）はそのタグ名をそのまま採用し、ブランチコミット時は &lt;code&gt;sha-&amp;lt;短縮ハッシュ&amp;gt;&lt;/code&gt; 形式でユニークなイミュータブルタグを割り当てます。
+⚠️ &lt;b&gt;外部通信抑制フラグ (&lt;code&gt;&amp;ndash;pull=false&lt;/code&gt;):&lt;/b&gt; 通常の &lt;code&gt;docker build&lt;/code&gt; はローカルにキャッシュが存在してもリモートリポジトリへ最新レイヤーの問い合わせを行う挙動をとる場合があります。&lt;code&gt;&amp;ndash;pull=false&lt;/code&gt; を明示的に指定することで、閉域環境において不要な外部プローブ通信による遅延やタイムアウトエラーを完全に遮断します。
+📦 &lt;b&gt;下流パイプラインへの変数伝播:&lt;/b&gt; &lt;code&gt;build.env&lt;/code&gt; ファイルに &lt;code&gt;IMAGE_TAG&lt;/code&gt; と &lt;code&gt;IMAGE_URI&lt;/code&gt; を出力し、GitLabの &lt;code&gt;artifacts:reports:dotenv&lt;/code&gt; 機能を通じて後続のデプロイパイプライン（KubesprayのPlaybook実行ジョブ等）へ渡します。&lt;/p&gt;
+&lt;h2 id="統合設定ファイル-gitlab-ciyml"&gt;統合設定ファイル (&lt;code&gt;.gitlab-ci.yml&lt;/code&gt;)
+&lt;/h2&gt;&lt;p&gt;全ジョブを統合した完全なパイプライン構成は以下の通りです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;stages&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;validate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;variables&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HARBOR_REGISTRY&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;harbor.devstack.co.kr:8443&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HARBOR_PROJECT&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;kubespray&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;IMAGE_NAME&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;nginx-app&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;$HARBOR_REGISTRY/$HARBOR_PROJECT/ci/docker:29.1.4-cli&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;validate:dockerfile&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;stage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;validate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;offline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;test -f Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;grep -q &amp;#34;$HARBOR_REGISTRY&amp;#34; Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;echo &amp;#34;Dockerfile validation passed&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;build:push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;stage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;offline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;before_script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker version&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;echo &amp;#34;$HARBOR_PASSWORD&amp;#34; | docker login &amp;#34;$HARBOR_REGISTRY&amp;#34; -u &amp;#34;$HARBOR_USER&amp;#34; --password-stdin&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [ -n &amp;#34;$CI_COMMIT_TAG&amp;#34; ]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_TAG=&amp;#34;$CI_COMMIT_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_TAG=&amp;#34;sha-$CI_COMMIT_SHORT_SHA&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_URI=&amp;#34;$HARBOR_REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:$IMAGE_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_TAG=$IMAGE_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_URI=$IMAGE_URI&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker build --pull=false -t &amp;#34;$IMAGE_URI&amp;#34; .
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker push &amp;#34;$IMAGE_URI&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_TAG=$IMAGE_TAG&amp;#34; &amp;amp;gt; build.env
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_URI=$IMAGE_URI&amp;#34; &amp;amp;gt;&amp;amp;gt; build.env&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;artifacts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;reports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;dotenv&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build.env&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;expire_in&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;7&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;days&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;$CI_COMMIT_BRANCH == &amp;#34;master&amp;#34;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;$CI_COMMIT_TAG&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;閉域網環境のCI実行で発生しやすい代表的な障害要因と対処方法を記録します。&lt;/p&gt;
+&lt;h3 id="1-非標準ポート8443でのtlsx509証明書検証エラー"&gt;1. 非標準ポート（8443）でのTLS/x509証明書検証エラー
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;障害事象:&lt;/b&gt; Harborがポート8443を使用し、社内プライベート認証局（CA）による自己署名証明書で保護されている場合、&lt;code&gt;docker login&lt;/code&gt; 実行時に以下のエラーが発生してジョブが停止します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Error response from daemon: Get &amp;#34;https://harbor.devstack.co.kr:8443/v2/&amp;#34;: x509: certificate signed by unknown authority
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;対処手順:&lt;/b&gt; Runnerホスト上のDockerデーモンに内部ルートCA証明書を配置します。Dockerは &lt;code&gt;/etc/docker/certs.d/&amp;lt;レジストリホスト名:ポート&amp;gt;/ca.crt&lt;/code&gt; のパスを自動参照します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mkdir -p /etc/docker/certs.d/harbor.devstack.co.kr:8443
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo cp /path/to/internal-ca.crt /etc/docker/certs.d/harbor.devstack.co.kr:8443/ca.crt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl restart docker
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2---pullfalse-指定時におけるベースレイヤー消失エラー"&gt;2. &lt;code&gt;--pull=false&lt;/code&gt; 指定時におけるベースレイヤー消失エラー
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;障害事象:&lt;/b&gt; Dockerfile内のベースイメージがRunnerホストのローカルキャッシュに存在しない状態で &lt;code&gt;&amp;ndash;pull=false&lt;/code&gt; を指定すると、以下のようにビルドが失敗します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ERROR: failed to solve: harbor.devstack.co.kr:8443/kubespray/base-nginx:1.25: not found: image not present locally and --pull=false set
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;対処手順:&lt;/b&gt; ジョブ実行前に必要なベースイメージをHarborから確実にローカルプールへフェッチする処理を &lt;code&gt;before_script&lt;/code&gt; に追加するか、初回ビルド時に明示的なイメージ事前ロードを実施してください。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker pull harbor.devstack.co.kr:8443/kubespray/base-nginx:1.25
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="実行検証ログ例"&gt;実行検証ログ例
+&lt;/h3&gt;&lt;p&gt;正常に動作したパイプラインノードにおける認証およびプッシュログの記録です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Client:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Version: 29.1.4
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; API version: 1.47
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Go version: go1.22.8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Git commit: 06f9d74
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Built: Wed Nov 12 18:22:10 2026
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; OS/Arch: linux/amd64
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Context: default
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Server:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Engine:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Version: 29.1.4
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; API version: 1.47 (minimum version 1.12)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Go version: go1.22.8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Git commit: a3f9e2b
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Built: Wed Nov 12 18:21:45 2026
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; OS/Arch: linux/amd64
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Experimental: false
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ echo &amp;#34;$HARBOR_PASSWORD&amp;#34; | docker login &amp;#34;$HARBOR_REGISTRY&amp;#34; -u &amp;#34;$HARBOR_USER&amp;#34; --password-stdin
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Configure a credential helper to remove this warning. See
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Login Succeeded
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ IMAGE_TAG=&amp;#34;sha-3b8c1a9e&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ IMAGE_URI=&amp;#34;harbor.devstack.co.kr:8443/kubespray/nginx-app:sha-3b8c1a9e&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker build --pull=false -t &amp;#34;$IMAGE_URI&amp;#34; .
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[+] Building 1.2s (6/6) FINISHED
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [internal] load build definition from Dockerfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; transferring dockerfile: 312B
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [internal] load metadata for harbor.devstack.co.kr:8443/kubespray/base-nginx:1.25
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [1/2] FROM harbor.devstack.co.kr:8443/kubespray/base-nginx:1.25
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [2/2] COPY ./html /usr/share/nginx/html
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; exporting to image
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; exporting layers
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; writing image sha256:7f4a21e69b0dc881cb31e5f84918e9c60e42fbe5aa65825cfd9d06b12a8ff93a
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; naming to harbor.devstack.co.kr:8443/kubespray/nginx-app:sha-3b8c1a9e
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker push &amp;#34;$IMAGE_URI&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;The push refers to repository [harbor.devstack.co.kr:8443/kubespray/nginx-app]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3f8b091fca1e: Pushed
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;e6b8b0934c22: Layer already exists
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sha-3b8c1a9e: digest: sha256:4d7b29a28e7529841f4812a0f6b3e9491ac9480dcbe82f8a50f3b4dc36f018e6 size: 739
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;🛠️ &lt;b&gt;GitLab Runnerのタグ管理:&lt;/b&gt; 閉域環境のRunnerには必ず &lt;code&gt;docker&lt;/code&gt; および &lt;code&gt;offline&lt;/code&gt; のタグを付与し、インターネット接続可能な共用Runnerへビルド要求がルーティングされないよう分離を維持してください。
+⚠️ &lt;b&gt;dotenvアーティファクトの有効期限:&lt;/b&gt; &lt;code&gt;expire_in: 7 days&lt;/code&gt; を設定しているため、7日以上経過した過去ジョブのメタデータを再参照するパイプラインを組む場合は、外部KeyValueストアへの保管やGitコミットへのコミットバック機構を検討する必要があります。
+💡 &lt;b&gt;Harbor側のクォータ管理:&lt;/b&gt; Kubesprayプロジェクトではタグなし中間レイヤーや古いコミットSHAイメージが蓄積しやすいため、Harbor側でタグ保持ポリシー（例: 直近20タグ保持、あるいは一定期間経過後の自動クリーンアップ）を設定しておく必要があります。&lt;/p&gt;</description></item></channel></rss>

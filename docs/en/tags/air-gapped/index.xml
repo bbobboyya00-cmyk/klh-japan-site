@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Air-Gapped on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/air-gapped/</link><description>Recent content in Air-Gapped on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 13 Nov 2026 11:32:58 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/air-gapped/index.xml" rel="self" type="application/rss+xml"/><item><title>GitLab CI and Harbor Registry Integration Pipeline Implementation for Air-Gapped Clusters</title><link>https://klifehack.com/en/p/airgap-gitlab-ci-harbor-pipeline/</link><pubDate>Fri, 13 Nov 2026 11:32:58 +0900</pubDate><guid>https://klifehack.com/en/p/airgap-gitlab-ci-harbor-pipeline/</guid><description>&lt;p&gt;In air-gapped environments where internet connectivity is restricted or completely disconnected, outbound communication to external public registries (such as Docker Hub or Quay.io) is blocked by firewalls. When operating a Kubernetes cluster using Kubespray in such infrastructure, if container image dependency resolution includes public endpoints, the build pipeline will halt due to timeouts or name resolution errors. To ensure reproducibility in the container build process and eliminate unintended external network requests, a static validation gate with an internal private registry as a prerequisite and a pipeline configuration dedicated to isolated environments are essential.&lt;/p&gt;
+&lt;p&gt;This article outlines the implementation specifications of a GitLab CI/CD pipeline designed to securely generate, validate, and distribute workload images deployed to a Kubespray cluster, built upon the internal registry &amp;ldquo;Harbor&amp;rdquo;.&lt;/p&gt;
+&lt;h2 id="overall-pipeline-architecture-and-execution-base-parameters"&gt;Overall Pipeline Architecture and Execution Base Parameters
+&lt;/h2&gt;&lt;p&gt;In the target environment, the GitLab Runner itself is placed within the isolated network, constraining target nodes via the &lt;code&gt;docker&lt;/code&gt; and &lt;code&gt;offline&lt;/code&gt; execution tags. The global configuration used across the entire pipeline is as follows:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;stages&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;validate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;variables&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HARBOR_REGISTRY&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;harbor.devstack.co.kr:8443&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HARBOR_PROJECT&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;kubespray&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;IMAGE_NAME&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;nginx-app&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;$HARBOR_REGISTRY/$HARBOR_PROJECT/ci/docker:29.1.4-cli&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="configuration-parameter-specifications"&gt;Configuration Parameter Specifications
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;&lt;code&gt;stages&lt;/code&gt; definition:&lt;/b&gt; Composed of &lt;code&gt;validate&lt;/code&gt; (a static validation phase to inspect whether the Dockerfile in the repository correctly references the base image from the internal registry) and &lt;code&gt;build&lt;/code&gt; (a phase that performs authentication against the internal Harbor, image tag generation based on commit metadata, container image build and push, and environment variable metadata output).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;&lt;code&gt;variables&lt;/code&gt; definition:&lt;/b&gt; Specifies the private Harbor&amp;rsquo;s FQDN and TLS communication port (&lt;code&gt;harbor.devstack.co.kr:8443&lt;/code&gt;) in &lt;code&gt;HARBOR_REGISTRY&lt;/code&gt;, and sets the project namespace (&lt;code&gt;kubespray&lt;/code&gt;) to isolate and store Kubespray artifacts in &lt;code&gt;HARBOR_PROJECT&lt;/code&gt;. Additionally, defines the target workload container image name (&lt;code&gt;nginx-app&lt;/code&gt;) in &lt;code&gt;IMAGE_NAME&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Execution image (&lt;code&gt;image&lt;/code&gt;):&lt;/b&gt; The runner container itself does not rely on a public registry and is pulled from &lt;code&gt;harbor.devstack.co.kr:8443/kubespray/ci/docker:29.1.4-cli&lt;/code&gt;. Pinning the version to &lt;code&gt;29.1.4-cli&lt;/code&gt; prevents build failures caused by behavioral discrepancies in CLI options.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="detailed-job-design-by-stage"&gt;Detailed Job Design by Stage
+&lt;/h2&gt;&lt;h3 id="1-dockerfile-static-validation-job-validatedockerfile"&gt;1. Dockerfile Static Validation Job (&lt;code&gt;validate:dockerfile&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;Before entering the build process, validate whether unauthorized &lt;code&gt;FROM&lt;/code&gt; clauses referencing external registries have been introduced.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;validate:dockerfile&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;stage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;validate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;offline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;test -f Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;grep -q &amp;#34;$HARBOR_REGISTRY&amp;#34; Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;echo &amp;#34;Dockerfile validation passed&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;💡 &lt;code&gt;test -f Dockerfile&lt;/code&gt; verifies the existence of the Dockerfile in the root directory, and &lt;code&gt;grep -q &amp;ldquo;$HARBOR_REGISTRY&amp;rdquo; Dockerfile&lt;/code&gt; inspects whether the base image reference line contains &lt;code&gt;harbor.devstack.co.kr:8443&lt;/code&gt;. If a statement directly specifying an external repository (e.g., &lt;code&gt;FROM nginx:latest&lt;/code&gt;) exists, the exit status becomes non-zero, immediately blocking subsequent build job execution.&lt;/p&gt;
+&lt;h3 id="2-build-and-registry-distribution-job-buildpush"&gt;2. Build and Registry Distribution Job (&lt;code&gt;build:push&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;Handles container builds, secure credentials delivery, physical suppression of external requests, and pipeline integration of dynamic metadata.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;build:push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;stage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;offline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;before_script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker version&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;echo &amp;#34;$HARBOR_PASSWORD&amp;#34; | docker login &amp;#34;$HARBOR_REGISTRY&amp;#34; -u &amp;#34;$HARBOR_USER&amp;#34; --password-stdin&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [ -n &amp;#34;$CI_COMMIT_TAG&amp;#34; ]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_TAG=&amp;#34;$CI_COMMIT_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_TAG=&amp;#34;sha-$CI_COMMIT_SHORT_SHA&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_URI=&amp;#34;$HARBOR_REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:$IMAGE_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_TAG=$IMAGE_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_URI=$IMAGE_URI&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker build --pull=false -t &amp;#34;$IMAGE_URI&amp;#34; .
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker push &amp;#34;$IMAGE_URI&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_TAG=$IMAGE_TAG&amp;#34; &amp;amp;gt; build.env
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_URI=$IMAGE_URI&amp;#34; &amp;amp;gt;&amp;amp;gt; build.env&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;artifacts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;reports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;dotenv&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build.env&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;expire_in&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;7&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;days&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;$CI_COMMIT_BRANCH == &amp;#34;master&amp;#34;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;$CI_COMMIT_TAG&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="technical-implementation-highlights"&gt;Technical Implementation Highlights
+&lt;/h4&gt;&lt;p&gt;🛠️ &lt;b&gt;Credential Obfuscation:&lt;/b&gt; Uses &lt;code&gt;echo &amp;ldquo;$HARBOR_PASSWORD&amp;rdquo; | docker login &amp;hellip; &amp;ndash;password-stdin&lt;/code&gt; to prevent password exposure via command-line arguments (plaintext output to process trees or Runner logs).&lt;/p&gt;
+&lt;p&gt;⚙️ &lt;b&gt;Dynamic Tag Logic:&lt;/b&gt; When a release tag is created (&lt;code&gt;$CI_COMMIT_TAG&lt;/code&gt;), that tag name is used directly. For branch commits, a unique immutable tag in the format &lt;code&gt;sha-&amp;lt;short-hash&amp;gt;&lt;/code&gt; is assigned.&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;External Communication Suppression Flag (&lt;code&gt;&amp;ndash;pull=false&lt;/code&gt;):&lt;/b&gt; Standard &lt;code&gt;docker build&lt;/code&gt; may query the remote repository for the latest layer even if a local cache exists. Explicitly specifying &lt;code&gt;&amp;ndash;pull=false&lt;/code&gt; completely blocks delays and timeout errors caused by unnecessary external probe requests in an isolated environment.&lt;/p&gt;
+&lt;p&gt;📦 &lt;b&gt;Variable Propagation to Downstream Pipelines:&lt;/b&gt; Outputs &lt;code&gt;IMAGE_TAG&lt;/code&gt; and &lt;code&gt;IMAGE_URI&lt;/code&gt; to the &lt;code&gt;build.env&lt;/code&gt; file, passing them to subsequent deployment pipelines (such as Kubespray Playbook execution jobs) via GitLab&amp;rsquo;s &lt;code&gt;artifacts:reports:dotenv&lt;/code&gt; feature.&lt;/p&gt;
+&lt;h2 id="integrated-configuration-file-gitlab-ciyml"&gt;Integrated Configuration File (&lt;code&gt;.gitlab-ci.yml&lt;/code&gt;)
+&lt;/h2&gt;&lt;p&gt;The complete pipeline configuration integrating all jobs is as follows:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;stages&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;validate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;variables&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HARBOR_REGISTRY&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;harbor.devstack.co.kr:8443&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HARBOR_PROJECT&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;kubespray&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;IMAGE_NAME&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;nginx-app&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;$HARBOR_REGISTRY/$HARBOR_PROJECT/ci/docker:29.1.4-cli&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;validate:dockerfile&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;stage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;validate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;offline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;test -f Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;grep -q &amp;#34;$HARBOR_REGISTRY&amp;#34; Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;echo &amp;#34;Dockerfile validation passed&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;build:push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;stage&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;offline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;before_script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;docker version&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;echo &amp;#34;$HARBOR_PASSWORD&amp;#34; | docker login &amp;#34;$HARBOR_REGISTRY&amp;#34; -u &amp;#34;$HARBOR_USER&amp;#34; --password-stdin&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;script&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [ -n &amp;#34;$CI_COMMIT_TAG&amp;#34; ]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_TAG=&amp;#34;$CI_COMMIT_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_TAG=&amp;#34;sha-$CI_COMMIT_SHORT_SHA&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; IMAGE_URI=&amp;#34;$HARBOR_REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:$IMAGE_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_TAG=$IMAGE_TAG&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_URI=$IMAGE_URI&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker build --pull=false -t &amp;#34;$IMAGE_URI&amp;#34; .
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; docker push &amp;#34;$IMAGE_URI&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_TAG=$IMAGE_TAG&amp;#34; &amp;amp;gt; build.env
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;IMAGE_URI=$IMAGE_URI&amp;#34; &amp;amp;gt;&amp;amp;gt; build.env&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;artifacts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;reports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;dotenv&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;build.env&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;expire_in&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;7&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;days&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;$CI_COMMIT_BRANCH == &amp;#34;master&amp;#34;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;if&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;$CI_COMMIT_TAG&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;Documents common failure modes and resolution steps encountered during CI execution in isolated network environments.&lt;/p&gt;
+&lt;h3 id="1-tlsx509-certificate-verification-error-on-non-standard-port-8443"&gt;1. TLS/x509 Certificate Verification Error on Non-Standard Port (8443)
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Failure Symptom:&lt;/b&gt; If Harbor uses port 8443 and is secured by a self-signed certificate from an internal private certificate authority (CA), executing &lt;code&gt;docker login&lt;/code&gt; fails with the following error and halts the job:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Error response from daemon: Get &amp;#34;https://harbor.devstack.co.kr:8443/v2/&amp;#34;: x509: certificate signed by unknown authority
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;Resolution Steps:&lt;/b&gt; Place the internal root CA certificate on the Docker daemon of the Runner host. Docker automatically references the path &lt;code&gt;/etc/docker/certs.d/&amp;lt;registry-hostname:port&amp;gt;/ca.crt&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mkdir -p /etc/docker/certs.d/harbor.devstack.co.kr:8443
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo cp /path/to/internal-ca.crt /etc/docker/certs.d/harbor.devstack.co.kr:8443/ca.crt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl restart docker
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-missing-base-layer-error-when---pullfalse-is-specified"&gt;2. Missing Base Layer Error When &lt;code&gt;--pull=false&lt;/code&gt; Is Specified
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Failure Symptom:&lt;/b&gt; If &lt;code&gt;&amp;ndash;pull=false&lt;/code&gt; is specified while the base image referenced in the Dockerfile does not exist in the local cache of the Runner host, the build fails as follows:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ERROR: failed to solve: harbor.devstack.co.kr:8443/kubespray/base-nginx:1.25: not found: image not present locally and --pull=false set
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;b&gt;Resolution Steps:&lt;/b&gt; Add a step in &lt;code&gt;before_script&lt;/code&gt; to pre-fetch the necessary base image from Harbor into the local pool before job execution, or explicitly preload the image prior to the initial build.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker pull harbor.devstack.co.kr:8443/kubespray/base-nginx:1.25
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="execution-verification-log-example"&gt;Execution Verification Log Example
+&lt;/h3&gt;&lt;p&gt;Log output recording authentication and push operations on a successfully executed pipeline node.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Client:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Version: 29.1.4
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; API version: 1.47
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Go version: go1.22.8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Git commit: 06f9d74
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Built: Wed Nov 12 18:22:10 2026
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; OS/Arch: linux/amd64
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Context: default
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Server:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Engine:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Version: 29.1.4
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; API version: 1.47 (minimum version 1.12)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Go version: go1.22.8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Git commit: a3f9e2b
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Built: Wed Nov 12 18:21:45 2026
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; OS/Arch: linux/amd64
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Experimental: false
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ echo &amp;#34;$HARBOR_PASSWORD&amp;#34; | docker login &amp;#34;$HARBOR_REGISTRY&amp;#34; -u &amp;#34;$HARBOR_USER&amp;#34; --password-stdin
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Configure a credential helper to remove this warning. See
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Login Succeeded
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ IMAGE_TAG=&amp;#34;sha-3b8c1a9e&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ IMAGE_URI=&amp;#34;harbor.devstack.co.kr:8443/kubespray/nginx-app:sha-3b8c1a9e&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker build --pull=false -t &amp;#34;$IMAGE_URI&amp;#34; .
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[+] Building 1.2s (6/6) FINISHED
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [internal] load build definition from Dockerfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; transferring dockerfile: 312B
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [internal] load metadata for harbor.devstack.co.kr:8443/kubespray/base-nginx:1.25
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [1/2] FROM harbor.devstack.co.kr:8443/kubespray/base-nginx:1.25
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; [2/2] COPY ./html /usr/share/nginx/html
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; exporting to image
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; exporting layers
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; writing image sha256:7f4a21e69b0dc881cb31e5f84918e9c60e42fbe5aa65825cfd9d06b12a8ff93a
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; =&amp;amp;gt; =&amp;amp;gt; naming to harbor.devstack.co.kr:8443/kubespray/nginx-app:sha-3b8c1a9e
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker push &amp;#34;$IMAGE_URI&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;The push refers to repository [harbor.devstack.co.kr:8443/kubespray/nginx-app]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3f8b091fca1e: Pushed
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;e6b8b0934c22: Layer already exists
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sha-3b8c1a9e: digest: sha256:4d7b29a28e7529841f4812a0f6b3e9491ac9480dcbe82f8a50f3b4dc36f018e6 size: 739
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;🛠️ &lt;b&gt;GitLab Runner Tag Management:&lt;/b&gt; Ensure Runners in isolated environments are always assigned the &lt;code&gt;docker&lt;/code&gt; and &lt;code&gt;offline&lt;/code&gt; tags to maintain isolation and prevent build requests from being routed to shared Runners with internet connectivity.&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;dotenv Artifact Expiration:&lt;/b&gt; Because &lt;code&gt;expire_in: 7 days&lt;/code&gt; is configured, if building pipelines that re-reference metadata from historical jobs older than 7 days, consideration must be given to storing data in an external key-value store or implementing a commit-back mechanism to Git.&lt;/p&gt;
+&lt;p&gt;💡 &lt;b&gt;Quota Management on Harbor:&lt;/b&gt; Untagged intermediate layers and old commit SHA images accumulate easily in Kubespray projects. Therefore, tag retention policies (e.g., retaining the last 20 tags or automatic cleanup after a specified period) must be configured on Harbor.&lt;/p&gt;</description></item></channel></rss>
