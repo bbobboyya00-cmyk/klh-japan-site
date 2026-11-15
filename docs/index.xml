@@ -1,4 +1,177 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 13 Nov 2026 11:32:57 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>エアギャップクラスタ向けGitLab CIとHarborレジストリ連携パイプライン実装</title><link>https://klifehack.com/p/airgap-gitlab-ci-harbor-pipeline/</link><pubDate>Fri, 13 Nov 2026 11:32:57 +0900</pubDate><guid>https://klifehack.com/p/airgap-gitlab-ci-harbor-pipeline/</guid><description>&lt;p&gt;インターネット接続が制限または完全に切断されたエアギャップ環境では、外部のパブリックレジストリ（Docker HubやQuay.ioなど）へのアウトバウンド通信がファイアウォールによって遮断されます。このようなインフラストラクチャにおいてKubesprayを用いたKubernetesクラスタを運用する場合、コンテナイメージの依存解決にパブリックエンドポイントが含まれていると、ビルドパイプラインがタイムアウトや名前解決エラーにより停止することになります。コンテナビルドプロセスの再現性を確保し、意図しない外部ネットワークリクエストを排除するには、内部プライベートレジストリを前提条件とした静的検証ゲートおよび閉域環境専用のパイプライン構成が不可欠となります。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sun, 15 Nov 2026 11:52:03 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Keycloakアイデンティティブローカーを経由したKubernetes OIDC認証とRBAC統合設計</title><link>https://klifehack.com/p/k8s-oidc-keycloak-rbac-integration/</link><pubDate>Sun, 15 Nov 2026 11:52:03 +0900</pubDate><guid>https://klifehack.com/p/k8s-oidc-keycloak-rbac-integration/</guid><description>&lt;p&gt;Kubernetesクラスタの運用において、組織規模の拡大に伴い複数存在するIdentity Provider（Azure ADやAuthentikなど）と&lt;code&gt;kubectl&lt;/code&gt;のシングルサインオン（SSO）統合が求められます。しかし、各制御プレーンの&lt;code&gt;kube-apiserver&lt;/code&gt;をアップストリームのIdPへ直接バインドする構成では、IdP側のスキーマ変更やテナント移行が全クラスタの再設定に直結し、設定の拡散や運用オーバーヘッドの増大を引き起こします。&lt;/p&gt;
+&lt;p&gt;この課題に対処するため、中間レイヤーとしてKeycloakをOpenID Connect（OIDC）アイデンティティブローカーとして導入し、認証基盤と制御プレーンを疎結合化する構成を策定します。本稿では、&lt;code&gt;kube-apiserver&lt;/code&gt;のOIDCフラグ設定からグループクレームの透過パース、細粒度RBACポリシーの適用および検証手順までを整理します。&lt;/p&gt;
+&lt;h2 id="1-制御プレーンにおける-kube-apiserver-oidc統合設定"&gt;1. 制御プレーンにおける kube-apiserver OIDC統合設定
+&lt;/h2&gt;&lt;p&gt;Kubernetes APIサーバーでJWTトークンを検証するには、すべてのコントロールプレーンノード上の &lt;code&gt;/etc/kubernetes/manifests/kube-apiserver.yaml&lt;/code&gt; にOIDC認証パラメータを追加します。スタティックPodマニフェストを更新すると、&lt;code&gt;kube-apiserver&lt;/code&gt; Podは自動的に再起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;command&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;kube-apiserver&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - --&lt;span style="color:#ae81ff"&gt;oidc-issuer-url=https://keycloak.example.local/realms/kubernetes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - --&lt;span style="color:#ae81ff"&gt;oidc-client-id=kubernetes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - --&lt;span style="color:#ae81ff"&gt;oidc-username-claim=preferred_username&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - --&lt;span style="color:#ae81ff"&gt;oidc-groups-claim=groups&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - --&lt;span style="color:#ae81ff"&gt;oidc-ca-file=/etc/kubernetes/pki/keycloak-ca.crt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Keycloakが社内プライベート認証局（CA）で運用されている場合、該当するCA証明書を全コントロールプレーンノードの &lt;code&gt;/etc/kubernetes/pki/keycloak-ca.crt&lt;/code&gt; に配置する必要があります。証明書パスが不適切な場合、&lt;code&gt;kube-apiserver&lt;/code&gt; の初期化プロセスが停止します。&lt;/p&gt;
+&lt;h2 id="2-アップストリームグループクレームの伝播構成"&gt;2. アップストリームグループクレームの伝播構成
+&lt;/h2&gt;&lt;p&gt;Keycloak側でユーザーグループを手動二重管理する事態を防ぐため、アップストリームIdPが発行するグループ情報をJWTへ直接透過させます。設定は3つのレイヤーで同期させる必要があります。&lt;/p&gt;
+&lt;h3 id="layer-1-アップストリームidpのグループシリアライズauthentikの例"&gt;Layer 1: アップストリームIdPのグループシリアライズ（Authentikの例）
+&lt;/h3&gt;&lt;p&gt;アップストリームIdP側のカスタムスコープ式を定義し、グループ属性をカンマ区切りの文字列型または配列形式でサニタイズします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;.&lt;/span&gt;join([group&lt;span style="color:#f92672"&gt;.&lt;/span&gt;name &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; group &lt;span style="color:#f92672"&gt;in&lt;/span&gt; request&lt;span style="color:#f92672"&gt;.&lt;/span&gt;user&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ak_groups&lt;span style="color:#f92672"&gt;.&lt;/span&gt;all()])
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="layer-2-keycloak-identity-provider-スコープ設定"&gt;Layer 2: Keycloak Identity Provider スコープ設定
+&lt;/h3&gt;&lt;p&gt;Keycloak管理コンソールにて &lt;code&gt;Identity Providers&lt;/code&gt; -&amp;gt; 該当Providerを選択 -&amp;gt; &lt;code&gt;Advanced Settings&lt;/code&gt; -&amp;gt; &lt;code&gt;Scopes&lt;/code&gt; に以下を指定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;profile email groups
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="layer-3-keycloak-client-protocol-mapper設定"&gt;Layer 3: Keycloak Client Protocol Mapper設定
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;kubernetes&lt;/code&gt; クライアントの設定配下でMapperを追加し、Incomingの &lt;code&gt;groups&lt;/code&gt; 属性をOutgoing JWTの &lt;code&gt;groups&lt;/code&gt; クレーム（JSON Array形式）へ変換します。&lt;/p&gt;
+&lt;h2 id="3-クライアントサイド認証と-kubelogin-によるトークン検証"&gt;3. クライアントサイド認証と kubelogin によるトークン検証
+&lt;/h2&gt;&lt;p&gt;ヘッドレス環境やコマンドライン操作を行う端末では、&lt;code&gt;kubelogin&lt;/code&gt; プラグインを使用してOAuth 2.0 Device Code Flow経由で認証を実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# バイナリのインストールと配置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -LO https://github.com/int128/kubelogin/releases/latest/download/kubelogin_linux_amd64.zip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;unzip kubelogin_linux_amd64.zip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo mv kubelogin /usr/local/bin/kubectl-oidc_login
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;デバイスコードフローによるトークン取得とペイロードデコード検証を実施します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl oidc-login get-token &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --oidc-issuer-url&lt;span style="color:#f92672"&gt;=&lt;/span&gt;https://keycloak.example.local/realms/kubernetes &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --oidc-client-id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;kubernetes &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --oidc-client-secret&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&amp;lt;client_secret&amp;gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --oidc-extra-scope&lt;span style="color:#f92672"&gt;=&lt;/span&gt;groups &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --certificate-authority&lt;span style="color:#f92672"&gt;=&lt;/span&gt;./keycloak-ca.crt &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --grant-type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;device-code &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | jq -r &lt;span style="color:#e6db74"&gt;&amp;#39;.status.token&amp;#39;&lt;/span&gt; | cut -d. -f2 | base64 -d 2&amp;amp;gt;/dev/null &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; | jq &lt;span style="color:#e6db74"&gt;&amp;#39;{preferred_username, groups}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;期待される抽出結果:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;preferred_username&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;john.doe@example.com&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;groups&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;k8s-dev&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="4-細粒度rbacポリシーの定義"&gt;4. 細粒度RBACポリシーの定義
+&lt;/h2&gt;&lt;p&gt;取得した &lt;code&gt;groups&lt;/code&gt; クレームに基づいてアクセス権限を分離します。本設計では &lt;code&gt;k8s-admin&lt;/code&gt;（全権限）と &lt;code&gt;k8s-dev&lt;/code&gt;（特定ネームスペース限定参照権限およびNode参照権限）の2層構造を採用します。&lt;/p&gt;
+&lt;h3 id="41-クラスタ管理者向け-clusterrolebinding"&gt;4.1 クラスタ管理者向け ClusterRoleBinding
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl create clusterrolebinding oidc-k8s-admin &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --clusterrole&lt;span style="color:#f92672"&gt;=&lt;/span&gt;cluster-admin &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --group&lt;span style="color:#f92672"&gt;=&lt;/span&gt;k8s-admin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="42-開発者向けネームスペース限定-role--rolebinding"&gt;4.2 開発者向けネームスペース限定 Role / RoleBinding
+&lt;/h3&gt;&lt;p&gt;開発用ネームスペース &lt;code&gt;team-a&lt;/code&gt; 内でのみ参照を許可するマニフェストです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Role&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;namespace-viewer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;team-a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;apiGroups&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;apps&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;batch&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;resources&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;*&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;verbs&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;get&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;list&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;watch&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RoleBinding&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;k8s-dev-viewer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;team-a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;subjects&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Group&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;k8s-dev&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;apiGroup&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;roleRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Role&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;namespace-viewer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;apiGroup&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="43-開発者向けクラスタリソースnodeの参照権限分離"&gt;4.3 開発者向けクラスタリソース（Node）の参照権限分離
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;Node&lt;/code&gt; はネームスペースに属さないリソースであるため、クラスタレベルの &lt;code&gt;ClusterRole&lt;/code&gt; と &lt;code&gt;ClusterRoleBinding&lt;/code&gt; が必要です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ClusterRole&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;node-viewer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;apiGroups&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;resources&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;nodes&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;verbs&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;get&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;list&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;watch&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ClusterRoleBinding&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;k8s-dev-node-viewer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;subjects&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Group&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;k8s-dev&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;apiGroup&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;roleRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ClusterRole&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;node-viewer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;apiGroup&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rbac.authorization.k8s.io&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="5-クライアント-kubeconfig-の構成と-selfsubjectaccessreview-による監査"&gt;5. クライアント Kubeconfig の構成と SelfSubjectAccessReview による監査
+&lt;/h2&gt;&lt;p&gt;開発者端末で自動認証を維持するため、Execヘルパー形式で &lt;code&gt;kubeconfig&lt;/code&gt; を構成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. クラスタ接続情報の登録&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl config set-cluster my-k8s &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --server&lt;span style="color:#f92672"&gt;=&lt;/span&gt;https://api.k8s.example.local:6443 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --certificate-authority&lt;span style="color:#f92672"&gt;=&lt;/span&gt;./cluster-ca.crt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. Exec認証ヘルパーの設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl config set-credentials oidc-user &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --exec-api-version&lt;span style="color:#f92672"&gt;=&lt;/span&gt;client.authentication.k8s.io/v1beta1 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --exec-command&lt;span style="color:#f92672"&gt;=&lt;/span&gt;kubectl &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --exec-arg&lt;span style="color:#f92672"&gt;=&lt;/span&gt;oidc-login --exec-arg&lt;span style="color:#f92672"&gt;=&lt;/span&gt;get-token &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --exec-arg&lt;span style="color:#f92672"&gt;=&lt;/span&gt;--oidc-issuer-url&lt;span style="color:#f92672"&gt;=&lt;/span&gt;https://keycloak.example.local/realms/kubernetes &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --exec-arg&lt;span style="color:#f92672"&gt;=&lt;/span&gt;--oidc-client-id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;kubernetes &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --exec-arg&lt;span style="color:#f92672"&gt;=&lt;/span&gt;--oidc-extra-scope&lt;span style="color:#f92672"&gt;=&lt;/span&gt;groups &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --exec-arg&lt;span style="color:#f92672"&gt;=&lt;/span&gt;--grant-type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;device-code
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. コンテキストのバインド&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl config set-context my-k8s --cluster&lt;span style="color:#f92672"&gt;=&lt;/span&gt;my-k8s --user&lt;span style="color:#f92672"&gt;=&lt;/span&gt;oidc-user
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl config use-context my-k8s
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;権限判定の動作確認は &lt;code&gt;SelfSubjectAccessReview&lt;/code&gt; APIを利用して実行します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -sk https://api.k8s.example.local:6443/apis/authorization.k8s.io/v1/selfsubjectaccessreviews &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -H &lt;span style="color:#e6db74"&gt;&amp;#34;Authorization: Bearer &lt;/span&gt;$TOKEN&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -H &lt;span style="color:#e6db74"&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -d &lt;span style="color:#e6db74"&gt;&amp;#39;{
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;apiVersion&amp;#34;: &amp;#34;authorization.k8s.io/v1&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;kind&amp;#34;: &amp;#34;SelfSubjectAccessReview&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;spec&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;resourceAttributes&amp;#34;: {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;namespace&amp;#34;: &amp;#34;kube-system&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;verb&amp;#34;: &amp;#34;get&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;resource&amp;#34;: &amp;#34;pods&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }&amp;#39;&lt;/span&gt; | jq &lt;span style="color:#e6db74"&gt;&amp;#39;.status.allowed&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;p&gt;認証ブローカー構成時に発生する主な不具合パターンと解決策を以下に整理します。&lt;/p&gt;
+&lt;h3 id="1-reverse-proxy配下での無限リダイレクトループ"&gt;1. Reverse Proxy配下での無限リダイレクトループ
+&lt;/h3&gt;&lt;p&gt;ロードバランサー等でTLS終端を行う環境において、Keycloakがプロキシヘッダーを認識できず、HTTPコンテキストとして判定してSecureクッキー属性を削除することが原因です。Gateway APIを利用している場合は、&lt;code&gt;HTTPRoute&lt;/code&gt; リソースにて &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; ヘッダーを注入します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;gateway.networking.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;HTTPRoute&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-route&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;filters&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;type&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RequestHeaderModifier&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;requestHeaderModifier&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;set&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;X-Forwarded-Proto&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;https&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;X-Forwarded-Port&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;443&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-トークン内の-groups-クレームが-null-になる現象"&gt;2. トークン内の groups クレームが null になる現象
+&lt;/h3&gt;&lt;p&gt;リクエスト時の &lt;code&gt;groups&lt;/code&gt; スコープ指定漏れ、またはKeycloakプロトコルマッパーでの配列変換ミスマッチが原因です。Authentik側でグループ名を文字列に結合して送信するか、Keycloakの Mapper 設定で &lt;code&gt;Multivalued&lt;/code&gt; オプションを有効化してください。&lt;/p&gt;
+&lt;h3 id="3-pkix-path-building-failed-エラー"&gt;3. PKIX Path Building Failed エラー
+&lt;/h3&gt;&lt;p&gt;Upstream IdPの証明書検証時に、中間CA証明書がKeycloakのTruststoreに登録されていない場合に発生します。サーバー証明書ではなく発行元ルート/中間CA証明書をKeycloak側にインポートする必要があります。&lt;/p&gt;
+&lt;h3 id="動作検証プロトコルログ"&gt;動作検証プロトコルログ
+&lt;/h3&gt;&lt;p&gt;コントロールプレーンノードでの Pod 正常性および API レスポンス検証のログ出力例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl get pod -n kube-system -l component=kube-apiserver
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY STATUS RESTARTS AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kube-apiserver-control-plane-01 1/1 Running 0 4m12s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -skI https://api.k8s.example.local:6443/livez
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/2 200 
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;content-type: text/plain; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;x-content-type-options: nosniff
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;date: Sun, 15 Nov 2026 10:15:30 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;p&gt;💡 &lt;b&gt;アーキテクチャの疎結合化&lt;/b&gt;: Keycloakを中間ブローカーとして配置することで、アップストリームIdPの移行時にもKubernetes制御プレーン側の再設定を一切不要にできます。&lt;/p&gt;
+&lt;p&gt;⚠️ &lt;b&gt;クレーム伝播の整合性&lt;/b&gt;: &lt;code&gt;groups&lt;/code&gt; クレームの正常な伝播には、IdP側のスコープ定義、Keycloakにおけるプロトコルマッピング、&lt;code&gt;kube-apiserver&lt;/code&gt; のフラグ定義の3箇所が正確に一致している必要があります。&lt;/p&gt;
+&lt;p&gt;🛠️ &lt;b&gt;クラスタ範囲リソースの明示的分離&lt;/b&gt;: ネームスペースに非依存な &lt;code&gt;Node&lt;/code&gt; などのクラスタリソースの参照権限には、ネームスペース固有の &lt;code&gt;Role&lt;/code&gt; ではなく &lt;code&gt;ClusterRoleBinding&lt;/code&gt; の個別定義が必須となります。&amp;lt;/client_secret&amp;gt;&lt;/p&gt;</description></item><item><title>エアギャップクラスタ向けGitLab CIとHarborレジストリ連携パイプライン実装</title><link>https://klifehack.com/p/airgap-gitlab-ci-harbor-pipeline/</link><pubDate>Fri, 13 Nov 2026 11:32:57 +0900</pubDate><guid>https://klifehack.com/p/airgap-gitlab-ci-harbor-pipeline/</guid><description>&lt;p&gt;インターネット接続が制限または完全に切断されたエアギャップ環境では、外部のパブリックレジストリ（Docker HubやQuay.ioなど）へのアウトバウンド通信がファイアウォールによって遮断されます。このようなインフラストラクチャにおいてKubesprayを用いたKubernetesクラスタを運用する場合、コンテナイメージの依存解決にパブリックエンドポイントが含まれていると、ビルドパイプラインがタイムアウトや名前解決エラーにより停止することになります。コンテナビルドプロセスの再現性を確保し、意図しない外部ネットワークリクエストを排除するには、内部プライベートレジストリを前提条件とした静的検証ゲートおよび閉域環境専用のパイプライン構成が不可欠となります。&lt;/p&gt;
 &lt;p&gt;本稿では、内部レジストリである「Harbor」を基盤とし、Kubesprayクラスタへデプロイするワークロードイメージを安全に生成・検証・配布するためのGitLab CI/CDパイプラインの実装仕様を整理します。&lt;/p&gt;
 &lt;h2 id="パイプライン全体構造と実行基盤パラメータ"&gt;パイプライン全体構造と実行基盤パラメータ
 &lt;/h2&gt;&lt;p&gt;対象環境では、GitLab Runner自体も閉域ネットワーク内に配置し、&lt;code&gt;docker&lt;/code&gt;および&lt;code&gt;offline&lt;/code&gt;の実行タグによってターゲットノードを制約します。パイプライン全体で使用するグローバル設定は以下の通りです。&lt;/p&gt;
