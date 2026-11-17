@@ -1,4 +1,146 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker-Compose on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/docker-compose/</link><description>Recent content in Docker-Compose on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 05 Nov 2026 10:44:20 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/docker-compose/index.xml" rel="self" type="application/rss+xml"/><item><title>Automated TLS-Enabled Edge Server Configuration using MacBook and Docker Caddy</title><link>https://klifehack.com/en/p/macbook-docker-caddy-tls-reverse-proxy/</link><pubDate>Thu, 05 Nov 2026 10:44:20 +0900</pubDate><guid>https://klifehack.com/en/p/macbook-docker-caddy-tls-reverse-proxy/</guid><description>&lt;p&gt;To safely expose local devices externally in an on-premises or edge environment, establishing domain name resolution, router packet routing, and an automated TLS certificate renewal mechanism is essential. Conventional dynamic VirtualHost configurations or certbot-based cron management methods suffer from a rapid increase in configuration complexity as node count grows, posing a risk of service disruptions due to certificate renewal failures.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker-Compose on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/docker-compose/</link><description>Recent content in Docker-Compose on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 17 Nov 2026 10:47:44 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/docker-compose/index.xml" rel="self" type="application/rss+xml"/><item><title>Nginx Reverse Proxy Design and Port Binding in a Next.js / NestJS Multi-Container Architecture</title><link>https://klifehack.com/en/p/nginx-reverse-proxy-docker-multi-tier/</link><pubDate>Tue, 17 Nov 2026 10:47:44 +0900</pubDate><guid>https://klifehack.com/en/p/nginx-reverse-proxy-docker-multi-tier/</guid><description>&lt;p&gt;Co-locating frontend and backend roles on a single application server and individually exposing public ports introduces bottlenecks in scaling out components and maintaining security. Particularly in microservice architectures and decoupled frontend/backend architectures, centralizing endpoints and isolating internal networks are essential. This document outlines the design and verification procedures for a multi-tier container architecture that decouples the frontend (Next.js), backend (NestJS), and database (MySQL), integrating Nginx as a unified entry point for ingress traffic.&lt;/p&gt;
+&lt;h2 id="network-configuration-and-container-topology"&gt;Network Configuration and Container Topology
+&lt;/h2&gt;&lt;p&gt;In this configuration, all external requests are received by the Nginx reverse proxy (Port 80) and routed to the appropriate service on the internal Docker bridge network based on the URI path. Application containers do not bind directly to the host&amp;rsquo;s public network ports; instead, they communicate using service name resolution provided by Docker&amp;rsquo;s internal DNS.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Docker Network (Bridge Interface)
+│
+├── nginx (Ingress / Routing Layer)
+├── frontend (Next.js Application)
+├── backend (NestJS API Engine)
+└── database (MySQL Instance)
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="container-configuration-file-docker-composeyml"&gt;Container Configuration File (docker-compose.yml)
+&lt;/h3&gt;&lt;p&gt;In the service definitions, the &lt;code&gt;ports&lt;/code&gt; section is restricted exclusively to Nginx, allowing other containers to communicate only within &lt;code&gt;app-network&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.8&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app-network&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;driver&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;bridge&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;database&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;mysql:8.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;database&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;MYSQL_ROOT_PASSWORD&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rootpassword&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;MYSQL_DATABASE&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app_db&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;app-network&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;backend&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;context&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./backend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;dockerfile&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;backend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;DATABASE_HOST&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;database&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;DATABASE_PORT&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3306&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;PORT&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;4000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;depends_on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;database&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;app-network&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;frontend&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;context&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./frontend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;dockerfile&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;frontend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;PORT&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;app-network&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;nginx&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx:alpine&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;80:80&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;depends_on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;frontend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;backend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;app-network&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="nginx-reverse-proxy-configuration-details"&gt;Nginx Reverse Proxy Configuration Details
+&lt;/h2&gt;&lt;p&gt;In Nginx, requests with the &lt;code&gt;/api/&lt;/code&gt; prefix are forwarded to the backend container (&lt;code&gt;backend:4000&lt;/code&gt;), and all other root requests (&lt;code&gt;/&lt;/code&gt;) are forwarded to the frontend container (&lt;code&gt;frontend:3000&lt;/code&gt;).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nginx" data-lang="nginx"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;upstream&lt;/span&gt; &lt;span style="color:#e6db74"&gt;frontend&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server&lt;/span&gt; frontend:&lt;span style="color:#ae81ff"&gt;3000&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;upstream&lt;/span&gt; &lt;span style="color:#e6db74"&gt;backend&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server&lt;/span&gt; backend:&lt;span style="color:#ae81ff"&gt;4000&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;listen&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server_name&lt;/span&gt; &lt;span style="color:#e6db74"&gt;localhost&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/api/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_pass&lt;/span&gt; &lt;span style="color:#e6db74"&gt;http://backend/api/&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_http_version&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;&lt;span style="color:#e6db74"&gt;.1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Upgrade&lt;/span&gt; $http_upgrade;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Connection&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;upgrade&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Host&lt;/span&gt; $host;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_cache_bypass&lt;/span&gt; $http_upgrade;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Real-IP&lt;/span&gt; $remote_addr;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-For&lt;/span&gt; $proxy_add_x_forwarded_for;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-Proto&lt;/span&gt; $scheme;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_pass&lt;/span&gt; &lt;span style="color:#e6db74"&gt;http://frontend&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_http_version&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;&lt;span style="color:#e6db74"&gt;.1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Upgrade&lt;/span&gt; $http_upgrade;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Connection&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;upgrade&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Host&lt;/span&gt; $host;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_cache_bypass&lt;/span&gt; $http_upgrade;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Real-IP&lt;/span&gt; $remote_addr;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-For&lt;/span&gt; $proxy_add_x_forwarded_for;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-Proto&lt;/span&gt; $scheme;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="distinguishing-internal-states-in-port-binding"&gt;Distinguishing Internal States in Port Binding
+&lt;/h2&gt;&lt;p&gt;When architecting container networks, it is critical to accurately distinguish between a container port&amp;rsquo;s exposed state (Exposed) and its published state to host interfaces (Published).&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Unpublished Internal State (&lt;code&gt;80/tcp&lt;/code&gt;):&lt;/b&gt; The socket is LISTENing only on the container&amp;rsquo;s internal network stack. Direct connections from outside the Docker network (the host OS or external clients) are rejected.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Published External State (&lt;code&gt;0.0.0.0:80-&amp;amp;gt;80/tcp&lt;/code&gt;):&lt;/b&gt; Port 80 on all network interfaces of the host OS (&lt;code&gt;0.0.0.0&lt;/code&gt;) is forwarded to port 80 inside the container. This enables traffic arriving via public IPs, such as on AWS EC2 or through an ALB, to be correctly forwarded into the infrastructure.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="operational-verification-and-status-checks"&gt;Operational Verification and Status Checks
+&lt;/h2&gt;&lt;p&gt;Following deployment, verify the container run states and the integrity of HTTP responses from the terminal.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker compose ps
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME IMAGE COMMAND SERVICE CREATED STATUS PORTS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;backend app-backend &amp;#34;docker-entrypoint.s…&amp;#34; backend 5 minutes ago Up 5 minutes 4000/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;database mysql:8.0 &amp;#34;docker-entrypoint.s…&amp;#34; database 5 minutes ago Up 5 minutes 3306/tcp, 33060/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;frontend app-frontend &amp;#34;docker-entrypoint.s…&amp;#34; frontend 5 minutes ago Up 5 minutes 3000/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nginx nginx:alpine &amp;#34;/docker-entrypoint.…&amp;#34; nginx 5 minutes ago Up 5 minutes 0.0.0.0:80-&amp;amp;gt;80/tcp, :::80-&amp;amp;gt;80/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -i http://localhost/api/posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Server: nginx/1.25.3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Date: Mon, 17 Nov 2026 10:00:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: application/json; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Length: 124
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Connection: keep-alive
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;X-Powered-By: Express
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1--502-bad-gateway-error-during-nginx-startup"&gt;1. ⚠️ 502 Bad Gateway Error During Nginx Startup
+&lt;/h3&gt;&lt;p&gt;If the application initialization of the upstream backend or frontend containers is not complete when the Nginx container starts, Nginx will fail name resolution or connection establishment and return a &lt;code&gt;502 Bad Gateway&lt;/code&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Cause:&lt;/b&gt; While container startup order can be managed via &lt;code&gt;depends_on&lt;/code&gt;, the Docker engine alone does not guarantee readiness at the application layer.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Resolution:&lt;/b&gt; Configure a dynamic resolver in the Nginx &lt;code&gt;upstream&lt;/code&gt; block, or integrate health check logic to allow proxy traffic only after dependencies are verified as healthy.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2--proxy-pass-mismatch-due-to-trailing-slash-in-uri"&gt;2. ⚠️ Proxy Pass Mismatch Due to Trailing Slash in URI
+&lt;/h3&gt;&lt;p&gt;The presence or absence of a trailing slash in the &lt;code&gt;proxy_pass&lt;/code&gt; directive changes the URI path forwarding behavior.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;proxy_pass http://backend/api/;&lt;/code&gt; (with trailing slash): The matched &lt;code&gt;location /api/&lt;/code&gt; portion is replaced, forwarding to &lt;code&gt;http://backend/api/posts&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;proxy_pass http://backend;&lt;/code&gt; (without trailing slash): The original request URI is appended in its entirety.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If a misconfiguration results in a &lt;code&gt;404 Not Found&lt;/code&gt; on the backend, verify consistency between the trailing slash in &lt;code&gt;proxy_pass&lt;/code&gt; and the NestJS global prefix configuration.&lt;/p&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;🛠️ &lt;b&gt;Infrastructure Health Verification Criteria:&lt;/b&gt; Rather than merely checking that containers are in the &lt;code&gt;Up&lt;/code&gt; state, define ALB target group health check endpoints and L7 response codes (&lt;code&gt;HTTP 200 OK&lt;/code&gt;) routed through the proxy as monitoring metrics.&lt;/li&gt;
+&lt;li&gt;🛠️ &lt;b&gt;Least-Privilege Port Publishing Policy:&lt;/b&gt; Restrict host port exposure exclusively to Nginx (the proxy tier) and isolate backend and database containers strictly within the internal bridge network to minimize the attack surface.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Automated TLS-Enabled Edge Server Configuration using MacBook and Docker Caddy</title><link>https://klifehack.com/en/p/macbook-docker-caddy-tls-reverse-proxy/</link><pubDate>Thu, 05 Nov 2026 10:44:20 +0900</pubDate><guid>https://klifehack.com/en/p/macbook-docker-caddy-tls-reverse-proxy/</guid><description>&lt;p&gt;To safely expose local devices externally in an on-premises or edge environment, establishing domain name resolution, router packet routing, and an automated TLS certificate renewal mechanism is essential. Conventional dynamic VirtualHost configurations or certbot-based cron management methods suffer from a rapid increase in configuration complexity as node count grows, posing a risk of service disruptions due to certificate renewal failures.&lt;/p&gt;
 &lt;p&gt;This article explains an end-to-end architecture that establishes automated HTTPS encrypted communication by deploying Docker and a Caddy reverse proxy on a MacBook host, integrated with public DNS (such as Gabia) and port forwarding.&lt;/p&gt;
 &lt;h2 id="architecture-configuration-and-traffic-flow"&gt;Architecture Configuration and Traffic Flow
 &lt;/h2&gt;&lt;p&gt;Requests to public domains are routed to the application layer inside the container in the following order:&lt;/p&gt;

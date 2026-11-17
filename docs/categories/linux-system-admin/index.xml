@@ -1,4 +1,146 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 03 Nov 2026 11:00:51 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>SSH対話型シェルで成功するスクリプトがcrontabでサイレント失敗する原因と対処構造</title><link>https://klifehack.com/p/crontab-ssh-script-silent-failure/</link><pubDate>Tue, 03 Nov 2026 11:00:51 +0900</pubDate><guid>https://klifehack.com/p/crontab-ssh-script-silent-failure/</guid><description>&lt;p&gt;インフラ構築や運用自動化の過程において、手動でSSHターミナルから実行した際には正常に終了するスクリプトが、&lt;code&gt;crontab&lt;/code&gt;によるスケジューリング実行時には無出力のまま停止、あるいはサイレントに失敗する現象は頻繁に発生します。この問題は、インタラクティブシェルとデモンプロセス経由の非対話型サブシェルにおける初期化ライフサイクルおよび環境変数の不一致に起因します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 17 Nov 2026 10:47:43 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Next.js・NestJSマルチコンテナ構成におけるNginxリバースプロキシの設計とポートバインディング</title><link>https://klifehack.com/p/nginx-reverse-proxy-docker-multi-tier/</link><pubDate>Tue, 17 Nov 2026 10:47:43 +0900</pubDate><guid>https://klifehack.com/p/nginx-reverse-proxy-docker-multi-tier/</guid><description>&lt;p&gt;単一のアプリケーションサーバーにフロントエンドとバックエンドの役割を同居させ、パブリックポートを個別に開放する構成は、コンポーネントのスケールアウトやセキュリティの維持においてボトルネックとなります。特にマイクロサービス構成やフロント・バック分離アーキテクチャでは、エンドポイントの一元化と内部ネットワークの隔離が必須となります。本稿では、フロントエンド（Next.js）、バックエンド（NestJS）、データベース（MySQL）を分離し、Nginxをイングラストラフィックの統一エントリポイントとして統合した多層コンテナ構成の設計と検証手順を整理します。&lt;/p&gt;
+&lt;h2 id="ネットワーク構成とコンテナトポロジー"&gt;ネットワーク構成とコンテナトポロジー
+&lt;/h2&gt;&lt;p&gt;本構成では、外部からのリクエストをすべてNginxリバースプロキシ（Port 80）で受け取り、URIパスに基づいて内部Dockerブリッジネットワーク上の適切なサービスへとルーティングします。各アプリケーションコンテナは直接ホストのネットワークポートをパブリックにバインドせず、Docker内部DNSによるサービス名解決を利用して通信します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Docker Network (Bridge Interface)
+│
+├── nginx (Ingress / Routing Layer)
+├── frontend (Next.js Application)
+├── backend (NestJS API Engine)
+└── database (MySQL Instance)
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="コンテナ構成ファイル-docker-composeyml"&gt;コンテナ構成ファイル (docker-compose.yml)
+&lt;/h3&gt;&lt;p&gt;サービス定義では、&lt;code&gt;ports&lt;/code&gt; セクションをNginxのみに限定し、他コンテナは &lt;code&gt;app-network&lt;/code&gt; 内部でのみ通信可能な状態にします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.8&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;app-network&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;driver&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;bridge&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;database&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;mysql:8.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;database&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;MYSQL_ROOT_PASSWORD&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rootpassword&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;MYSQL_DATABASE&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;app_db&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;app-network&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;backend&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;context&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./backend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;dockerfile&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;backend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;DATABASE_HOST&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;database&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;DATABASE_PORT&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3306&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;PORT&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;4000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;depends_on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;database&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;app-network&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;frontend&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;build&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;context&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./frontend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;dockerfile&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Dockerfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;frontend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;PORT&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;app-network&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;nginx&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx:alpine&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;nginx&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;80:80&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;depends_on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;frontend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;backend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;app-network&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="nginx-リバースプロキシの設定詳細"&gt;Nginx リバースプロキシの設定詳細
+&lt;/h2&gt;&lt;p&gt;Nginxでは、&lt;code&gt;/api/&lt;/code&gt; プレフィックスの付いたリクエストをバックエンドコンテナ（&lt;code&gt;backend:4000&lt;/code&gt;）へ、それ以外のルートリクエスト（&lt;code&gt;/&lt;/code&gt;）をフロントエンドコンテナ（&lt;code&gt;frontend:3000&lt;/code&gt;）へ転送します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-nginx" data-lang="nginx"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;upstream&lt;/span&gt; &lt;span style="color:#e6db74"&gt;frontend&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server&lt;/span&gt; frontend:&lt;span style="color:#ae81ff"&gt;3000&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;upstream&lt;/span&gt; &lt;span style="color:#e6db74"&gt;backend&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server&lt;/span&gt; backend:&lt;span style="color:#ae81ff"&gt;4000&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;server&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;listen&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;server_name&lt;/span&gt; &lt;span style="color:#e6db74"&gt;localhost&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/api/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_pass&lt;/span&gt; &lt;span style="color:#e6db74"&gt;http://backend/api/&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_http_version&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;&lt;span style="color:#e6db74"&gt;.1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Upgrade&lt;/span&gt; $http_upgrade;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Connection&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;upgrade&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Host&lt;/span&gt; $host;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_cache_bypass&lt;/span&gt; $http_upgrade;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Real-IP&lt;/span&gt; $remote_addr;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-For&lt;/span&gt; $proxy_add_x_forwarded_for;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-Proto&lt;/span&gt; $scheme;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;location&lt;/span&gt; &lt;span style="color:#e6db74"&gt;/&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_pass&lt;/span&gt; &lt;span style="color:#e6db74"&gt;http://frontend&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_http_version&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;&lt;span style="color:#e6db74"&gt;.1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Upgrade&lt;/span&gt; $http_upgrade;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Connection&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;upgrade&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;Host&lt;/span&gt; $host;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_cache_bypass&lt;/span&gt; $http_upgrade;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Real-IP&lt;/span&gt; $remote_addr;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-For&lt;/span&gt; $proxy_add_x_forwarded_for;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;proxy_set_header&lt;/span&gt; &lt;span style="color:#e6db74"&gt;X-Forwarded-Proto&lt;/span&gt; $scheme;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="ポートバインディングにおける内部状態の区別"&gt;ポートバインディングにおける内部状態の区別
+&lt;/h2&gt;&lt;p&gt;コンテナネットワークを構築する際、コンテナ内部ポートの開放状態（Exposed）とホストインターフェースへの公開状態（Published）の違いを正確に把握する必要があります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;未公開の内部状態 (&lt;code&gt;80/tcp&lt;/code&gt;):&lt;/b&gt; ソケットはコンテナ内部のネットワークスタックでのみLISTENしています。Dockerネットワーク外部（ホストOSやクライアント）からの直接接続は拒否されます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;公開された外部状態 (&lt;code&gt;0.0.0.0:80-&amp;amp;gt;80/tcp&lt;/code&gt;):&lt;/b&gt; ホストOSの全ネットワークインターフェース（&lt;code&gt;0.0.0.0&lt;/code&gt;）のポート80がコンテナ内部のポート80へ転送されます。これにより、AWS EC2などのパブリックIPまたはALB経由のトラフィックが正しくインフラ内部へと転送されます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="稼働検証とステータス確認"&gt;稼働検証とステータス確認
+&lt;/h2&gt;&lt;p&gt;デプロイ後、コンテナの稼働状態およびHTTPレスポンスの完全性をターミナル上で確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ docker compose ps
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME IMAGE COMMAND SERVICE CREATED STATUS PORTS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;backend app-backend &amp;#34;docker-entrypoint.s…&amp;#34; backend 5 minutes ago Up 5 minutes 4000/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;database mysql:8.0 &amp;#34;docker-entrypoint.s…&amp;#34; database 5 minutes ago Up 5 minutes 3306/tcp, 33060/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;frontend app-frontend &amp;#34;docker-entrypoint.s…&amp;#34; frontend 5 minutes ago Up 5 minutes 3000/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nginx nginx:alpine &amp;#34;/docker-entrypoint.…&amp;#34; nginx 5 minutes ago Up 5 minutes 0.0.0.0:80-&amp;amp;gt;80/tcp, :::80-&amp;amp;gt;80/tcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -i http://localhost/api/posts
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Server: nginx/1.25.3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Date: Mon, 17 Nov 2026 10:00:00 GMT
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Type: application/json; charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content-Length: 124
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Connection: keep-alive
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;X-Powered-By: Express
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1--nginx起動時の502-bad-gatewayエラー"&gt;1. ⚠️ Nginx起動時の502 Bad Gatewayエラー
+&lt;/h3&gt;&lt;p&gt;Nginxコンテナ起動時にアップストリームとなるバックエンドまたはフロントエンドコンテナのアプリケーション初期化が完了していない場合、Nginxは名前解決または接続確立に失敗し &lt;code&gt;502 Bad Gateway&lt;/code&gt; を返します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;原因:&lt;/b&gt; コンテナの起動順序（&lt;code&gt;depends_on&lt;/code&gt;）は制御できても、アプリケーション層のReady状態まではDockerエンジン単体で保証されないためです。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策:&lt;/b&gt; Nginxの &lt;code&gt;upstream&lt;/code&gt; ブロックにダイナミックリゾルバを設定するか、ヘルスチェックロジックを統合して依存関係の成立を確認後にプロキシトラフィックの通過を許可します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2--uri末尾スラッシュによるプロキシパスのミスマッチ"&gt;2. ⚠️ URI末尾スラッシュによるプロキシパスのミスマッチ
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;proxy_pass&lt;/code&gt; ディレクティブの末尾スラッシュ指定有無により、転送先へのパス付与動作が変化します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;proxy_pass http://backend/api/;&lt;/code&gt;（末尾スラッシュあり）: マッチした &lt;code&gt;location /api/&lt;/code&gt; 部分が置換され、&lt;code&gt;http://backend/api/posts&lt;/code&gt; へ転送されます。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;proxy_pass http://backend;&lt;/code&gt;（末尾スラッシュなし）: 元のリクエストURI全体がそのまま付加されます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;設定ミスによりバックエンド側で &lt;code&gt;404 Not Found&lt;/code&gt; が発生する場合は、&lt;code&gt;proxy_pass&lt;/code&gt; の末尾スラッシュと NestJS 側のグローバルプレフィックス設定の一致を確認してください。&lt;/p&gt;
+&lt;h2 id="configuration-notes"&gt;Configuration Notes
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;🛠️ &lt;b&gt;基盤健全性の検証基準:&lt;/b&gt; 単にコンテナが &lt;code&gt;Up&lt;/code&gt; 状態であることだけを確認するのではなく、ALBターゲットグループのヘルスチェックエンドポイントおよびプロキシ経由のL7レスポンスコード（&lt;code&gt;HTTP 200 OK&lt;/code&gt;）を監視指標として定義する必要があります。&lt;/li&gt;
+&lt;li&gt;🛠️ &lt;b&gt;最小権限のポート公開方針:&lt;/b&gt; ホスト側でポートを開放するコンテナはNginx（プロキシ層）のみに制限し、バックエンドおよびデータベースコンテナは内部ブリッジネットワークに限定配置することで、攻撃表面積を最小化できます。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>SSH対話型シェルで成功するスクリプトがcrontabでサイレント失敗する原因と対処構造</title><link>https://klifehack.com/p/crontab-ssh-script-silent-failure/</link><pubDate>Tue, 03 Nov 2026 11:00:51 +0900</pubDate><guid>https://klifehack.com/p/crontab-ssh-script-silent-failure/</guid><description>&lt;p&gt;インフラ構築や運用自動化の過程において、手動でSSHターミナルから実行した際には正常に終了するスクリプトが、&lt;code&gt;crontab&lt;/code&gt;によるスケジューリング実行時には無出力のまま停止、あるいはサイレントに失敗する現象は頻繁に発生します。この問題は、インタラクティブシェルとデモンプロセス経由の非対話型サブシェルにおける初期化ライフサイクルおよび環境変数の不一致に起因します。&lt;/p&gt;
 &lt;p&gt;本稿では、&lt;code&gt;cron&lt;/code&gt;実行時の環境分離メカニズムを解説し、絶対パスの強制、ファイル実行権限、およびログリダイレクトストリームの構築手順を整理します。&lt;/p&gt;
 &lt;h2 id="ssh対話型環境とcrontab実行環境の構造的差異"&gt;SSH対話型環境とcrontab実行環境の構造的差異
 &lt;/h2&gt;&lt;p&gt;手動実行と&lt;code&gt;cron&lt;/code&gt;実行の決定的な違いは、シェル起動時にロードされる環境変数と構成ファイルにあります。&lt;/p&gt;
