@@ -1,4 +1,125 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 17 Nov 2026 10:47:44 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Nginx Reverse Proxy Design and Port Binding in a Next.js / NestJS Multi-Container Architecture</title><link>https://klifehack.com/en/p/nginx-reverse-proxy-docker-multi-tier/</link><pubDate>Tue, 17 Nov 2026 10:47:44 +0900</pubDate><guid>https://klifehack.com/en/p/nginx-reverse-proxy-docker-multi-tier/</guid><description>&lt;p&gt;Co-locating frontend and backend roles on a single application server and individually exposing public ports introduces bottlenecks in scaling out components and maintaining security. Particularly in microservice architectures and decoupled frontend/backend architectures, centralizing endpoints and isolating internal networks are essential. This document outlines the design and verification procedures for a multi-tier container architecture that decouples the frontend (Next.js), backend (NestJS), and database (MySQL), integrating Nginx as a unified entry point for ingress traffic.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 19 Nov 2026 11:35:04 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Cache Stampede Mitigation in Redis Caching Strategies and Implementation of Redisson Distributed Locks</title><link>https://klifehack.com/en/p/redis-cache-stampede-redisson-distributed-lock/</link><pubDate>Thu, 19 Nov 2026 11:35:04 +0900</pubDate><guid>https://klifehack.com/en/p/redis-cache-stampede-redisson-distributed-lock/</guid><description>&lt;p&gt;In web application architectures centered on relational databases (RDBMS), disk I/O and connection pool exhaustion caused by sudden traffic spikes are factors that induce system-wide response delays and timeouts. Introducing Redis, an in-memory data store, as a caching layer can be expected to improve read performance; however, improper cache design or invalidation strategies risk triggering issues such as database load concentration caused by the expiration of specific keys (Cache Stampede) or data inconsistency during concurrent processing.&lt;/p&gt;
+&lt;p&gt;This article explains the selection criteria for major caching patterns, the implementation of distributed locks using Redisson, as well as Cache Stampede mitigation and memory management techniques in production operations.&lt;/p&gt;
+&lt;h2 id="1-classification-and-selection-criteria-for-cache-patterns"&gt;1. Classification and Selection Criteria for Cache Patterns
+&lt;/h2&gt;&lt;p&gt;An appropriate caching pattern must be selected based on data consistency requirements and write latency tolerance.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;+-----------------------------------------------------------------------------------+
+| CACHING PATTERNS |
++--------------------------+--------------------------+-----------------------------+
+| Cache-Aside | Write-Through | Write-Back (Write-Behind) |
+| (Read Optimization) | (Consistency First) | (Write Optimization) |
++--------------------------+--------------------------+-----------------------------+
+| 1. App reads Cache | 1. App writes Cache | 1. App writes Cache only |
+| 2. Miss -&amp;amp;gt; Read DB | 2. Cache writes DB | 2. Async batch updates DB |
+| 3. Populate Cache | (Synchronously) | |
++--------------------------+--------------------------+-----------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="cache-aside-look-aside"&gt;Cache-Aside (Look-Aside)
+&lt;/h3&gt;&lt;p&gt;This is a common pattern aimed at optimizing read operations. The application queries Redis first; upon a cache miss, it retrieves data from the RDBMS and writes it back to Redis. Even if a Redis node fails, system availability is maintained because operations fall back to the database. However, a trade-off exists where requests hit the DB all at once when a hot key&amp;rsquo;s Time-To-Live (TTL) expires.&lt;/p&gt;
+&lt;p&gt;When updating data, the standard sequence is to &amp;ldquo;delete the Redis key after updating the DB,&amp;rdquo; but to prevent race conditions with concurrent reads, short-duration TTL settings or the Delayed Double Delete pattern must be considered.&lt;/p&gt;
+&lt;h3 id="write-through"&gt;Write-Through
+&lt;/h3&gt;&lt;p&gt;During write operations, updates are performed synchronously to both the Redis cache and the RDBMS. High consistency between the cache and the database is maintained, allowing up-to-date data to be served constantly from the cache. On the other hand, latency increases because synchronous double writes occur for every write operation, and unreferenced data can also pressure cache memory capacity.&lt;/p&gt;
+&lt;h3 id="write-back-write-behind"&gt;Write-Back (Write-Behind)
+&lt;/h3&gt;&lt;p&gt;The application writes only to Redis and returns a response immediately. A background asynchronous process periodically commits changes to the RDBMS via batch processing. This is suitable for absorbing high-frequency write traffic, but if the Redis instance crashes before asynchronous processing completes, non-persisted data risks being permanently lost.&lt;/p&gt;
+&lt;h2 id="2-implementation-of-distributed-locks-and-concurrency-control-using-redisson"&gt;2. Implementation of Distributed Locks and Concurrency Control Using Redisson
+&lt;/h2&gt;&lt;p&gt;Standard Java locks on a single instance (such as &lt;code&gt;synchronized&lt;/code&gt; or &lt;code&gt;ReentrantLock&lt;/code&gt;) do not function in a distributed application environment composed of multiple nodes. Furthermore, pessimistic locking in RDBMS (&lt;code&gt;SELECT &amp;hellip; FOR UPDATE&lt;/code&gt;) rapidly consumes connection pools under high concurrency and becomes a cause of deadlocks.&lt;/p&gt;
+&lt;p&gt;Redisson utilizes Redis&amp;rsquo;s single-threaded event loop and Pub/Sub event notification mechanism to provide safe distributed locks (&lt;code&gt;RLock&lt;/code&gt;) while avoiding wasteful CPU consumption caused by spinlocks.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; com.example.service;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.redisson.api.RLock;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.redisson.api.RedissonClient;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.stereotype.Service;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.transaction.annotation.Transactional;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.concurrent.TimeUnit;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;StockService&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; RedissonClient redissonClient;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; ItemRepository itemRepository;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;StockService&lt;/span&gt;(RedissonClient redissonClient, ItemRepository itemRepository) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;redissonClient&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redissonClient;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;itemRepository&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; itemRepository;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;decreaseStock&lt;/span&gt;(Long itemId, &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; quantity) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; RLock lock &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redissonClient.&lt;span style="color:#a6e22e"&gt;getLock&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;stock:&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; itemId);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;boolean&lt;/span&gt; acquired &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Wait up to 3 seconds for lock acquisition; automatically release 5 seconds after acquisition&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; acquired &lt;span style="color:#f92672"&gt;=&lt;/span&gt; lock.&lt;span style="color:#a6e22e"&gt;tryLock&lt;/span&gt;(3, 5, TimeUnit.&lt;span style="color:#a6e22e"&gt;SECONDS&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#f92672"&gt;!&lt;/span&gt;acquired) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;throw&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; IllegalStateException(&lt;span style="color:#e6db74"&gt;&amp;#34;Lock acquisition timed out for item: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; itemId);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Execute the database transaction within the lock acquisition boundary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; executeDecreaseTransactional(itemId, quantity);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (InterruptedException e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Thread.&lt;span style="color:#a6e22e"&gt;currentThread&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;interrupt&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;throw&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; RuntimeException(&lt;span style="color:#e6db74"&gt;&amp;#34;Thread interrupted during lock acquisition&amp;#34;&lt;/span&gt;, e);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (acquired &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp; lock.&lt;span style="color:#a6e22e"&gt;isLocked&lt;/span&gt;() &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp; lock.&lt;span style="color:#a6e22e"&gt;isHeldByCurrentThread&lt;/span&gt;()) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; lock.&lt;span style="color:#a6e22e"&gt;unlock&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Transactional&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;executeDecreaseTransactional&lt;/span&gt;(Long itemId, &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; quantity) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Item item &lt;span style="color:#f92672"&gt;=&lt;/span&gt; itemRepository.&lt;span style="color:#a6e22e"&gt;findById&lt;/span&gt;(itemId)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;orElseThrow&lt;/span&gt;(() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; IllegalArgumentException(&lt;span style="color:#e6db74"&gt;&amp;#34;Item not found: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; itemId));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item.&lt;span style="color:#a6e22e"&gt;decrease&lt;/span&gt;(quantity);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; itemRepository.&lt;span style="color:#a6e22e"&gt;save&lt;/span&gt;(item);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When operating distributed locks, if an explicit &lt;code&gt;leaseTime&lt;/code&gt; is not specified in &lt;code&gt;tryLock&lt;/code&gt;, Redisson activates the Watchdog feature, automatically extending the lock expiration to 30 seconds every 10 seconds as long as the thread remains alive.&lt;/p&gt;
+&lt;h2 id="3-cache-stampede-avoidance-and-production-operation-checklist"&gt;3. Cache Stampede Avoidance and Production Operation Checklist
+&lt;/h2&gt;&lt;p&gt;The phenomenon where a large number of threads simultaneously access the database and attempt to execute recomputations at the exact moment the TTL of a hot key heavily accessed by traffic expires is called a Cache Stampede.&lt;/p&gt;
+&lt;h3 id="mitigation-strategies"&gt;Mitigation Strategies
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;💡 &lt;b&gt;TTL Jitter (Adding Random Jitter):&lt;/b&gt;
+When setting the TTL for each key, dynamically add a random fluctuation of $\pm 10% \sim 20%$ to the base duration to disperse simultaneous expirations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Distributed Recomputation Lock (Single-Threaded Recomputation):&lt;/b&gt;
+Design the system so that upon a cache miss, only the single request that acquired the distributed lock retrieves data from the DB and performs recomputation, while other requests wait briefly or return stale cache data (Stale Payload).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Probabilistic Early Recomputation (PER):&lt;/b&gt;
+Based on access frequency and recomputation cost, probabilistically calculate and update the cache in the background before the TTL completely expires.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="memory-and-eviction-policy-optimization"&gt;Memory and Eviction Policy Optimization
+&lt;/h3&gt;&lt;p&gt;・ &lt;b&gt;Standardization of &lt;code&gt;maxmemory&lt;/code&gt; Settings:&lt;/b&gt; If &lt;code&gt;maxmemory&lt;/code&gt; is not set, there is a risk that the Redis process will be forcibly terminated by the OS OOM Killer.&lt;/p&gt;
+&lt;p&gt;・ &lt;b&gt;Eviction Strategy Selection:&lt;/b&gt; Select &lt;code&gt;volatile-lru&lt;/code&gt; when targeting only keys with a TTL configured, or &lt;code&gt;allkeys-lru&lt;/code&gt; when targeting all keys as a dedicated cache layer. The use of &lt;code&gt;noeviction&lt;/code&gt; in a cache layer is strictly prohibited.&lt;/p&gt;
+&lt;p&gt;・ &lt;b&gt;Enforcement of Non-blocking Deletions:&lt;/b&gt; Using the synchronous command &lt;code&gt;DEL&lt;/code&gt; when deleting keys with large data structures will halt single-threaded processing. Enforce the use of &lt;code&gt;UNLINK&lt;/code&gt;, which performs asynchronous memory deallocation.&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="inconsistency-between-transaction-boundaries-and-lock-release-dirty-reads"&gt;Inconsistency Between Transaction Boundaries and Lock Release (Dirty Reads)
+&lt;/h3&gt;&lt;p&gt;If &lt;code&gt;lock.unlock()&lt;/code&gt; is invoked inside a method annotated with &lt;code&gt;@Transactional&lt;/code&gt;, the lock is released before the DB commit completes. If another thread acquires the lock at this precise moment, a race condition occurs where it references the uncommitted stale state. &lt;b&gt;Lock acquisition and release must strictly be performed outside of DB transactions&lt;/b&gt;.&lt;/p&gt;
+&lt;h3 id="exceptions-caused-by-releasing-unowned-locks"&gt;Exceptions Caused by Releasing Unowned Locks
+&lt;/h3&gt;&lt;p&gt;If a thread&amp;rsquo;s lock has already been automatically released due to TTL expiration, executing &lt;code&gt;unlock()&lt;/code&gt; on a lock owned by another thread throws an &lt;code&gt;IllegalMonitorStateException&lt;/code&gt;. Always verify ownership using &lt;code&gt;lock.isHeldByCurrentThread()&lt;/code&gt; prior to release.&lt;/p&gt;
+&lt;h3 id="system-verification-logs"&gt;System Verification Logs
+&lt;/h3&gt;&lt;p&gt;Verify memory status and operational health in production environments periodically via CLI logs or similar means.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli info memory
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Memory
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory:268435456
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_human:256.00M
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_rss:314572800
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_rss_human:300.00M
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mem_fragmentation_ratio:1.17
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mem_allocator:jemalloc-5.3.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli slowlog get 5
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1) 1) (integer) 12
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2) (integer) 1700000000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 3) (integer) 15200
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 4) 1) &amp;#34;UNLINK&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2) &amp;#34;stock:cache:1004&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli eval &amp;#34;return redis.call(&amp;#39;ttl&amp;#39;, KEYS[1])&amp;#34; 1 &amp;#34;stock:1001&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(integer) 298
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;In operating a highly concurrent caching infrastructure using Redis, it is indispensable not merely to use it as a data retention layer, but to comprehensively design for adding TTL jitter, concurrency control for recomputations, and memory overflow prevention measures (leveraging &lt;code&gt;maxmemory&lt;/code&gt; and &lt;code&gt;UNLINK&lt;/code&gt;). By implementing proper distributed lock boundary design and operational monitoring, stable operation with minimized DB load can be achieved even under high traffic conditions.&lt;/p&gt;</description></item><item><title>Nginx Reverse Proxy Design and Port Binding in a Next.js / NestJS Multi-Container Architecture</title><link>https://klifehack.com/en/p/nginx-reverse-proxy-docker-multi-tier/</link><pubDate>Tue, 17 Nov 2026 10:47:44 +0900</pubDate><guid>https://klifehack.com/en/p/nginx-reverse-proxy-docker-multi-tier/</guid><description>&lt;p&gt;Co-locating frontend and backend roles on a single application server and individually exposing public ports introduces bottlenecks in scaling out components and maintaining security. Particularly in microservice architectures and decoupled frontend/backend architectures, centralizing endpoints and isolating internal networks are essential. This document outlines the design and verification procedures for a multi-tier container architecture that decouples the frontend (Next.js), backend (NestJS), and database (MySQL), integrating Nginx as a unified entry point for ingress traffic.&lt;/p&gt;
 &lt;h2 id="network-configuration-and-container-topology"&gt;Network Configuration and Container Topology
 &lt;/h2&gt;&lt;p&gt;In this configuration, all external requests are received by the Nginx reverse proxy (Port 80) and routed to the appropriate service on the internal Docker bridge network based on the URI path. Application containers do not bind directly to the host&amp;rsquo;s public network ports; instead, they communicate using service name resolution provided by Docker&amp;rsquo;s internal DNS.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Docker Network (Bridge Interface)

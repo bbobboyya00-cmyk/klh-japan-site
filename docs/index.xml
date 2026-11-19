@@ -1,4 +1,125 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 17 Nov 2026 10:47:43 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Next.js・NestJSマルチコンテナ構成におけるNginxリバースプロキシの設計とポートバインディング</title><link>https://klifehack.com/p/nginx-reverse-proxy-docker-multi-tier/</link><pubDate>Tue, 17 Nov 2026 10:47:43 +0900</pubDate><guid>https://klifehack.com/p/nginx-reverse-proxy-docker-multi-tier/</guid><description>&lt;p&gt;単一のアプリケーションサーバーにフロントエンドとバックエンドの役割を同居させ、パブリックポートを個別に開放する構成は、コンポーネントのスケールアウトやセキュリティの維持においてボトルネックとなります。特にマイクロサービス構成やフロント・バック分離アーキテクチャでは、エンドポイントの一元化と内部ネットワークの隔離が必須となります。本稿では、フロントエンド（Next.js）、バックエンド（NestJS）、データベース（MySQL）を分離し、Nginxをイングラストラフィックの統一エントリポイントとして統合した多層コンテナ構成の設計と検証手順を整理します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 19 Nov 2026 11:35:03 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Redisキャッシュ戦略におけるCache Stampede対策とRedisson分散ロックの実装</title><link>https://klifehack.com/p/redis-cache-stampede-redisson-distributed-lock/</link><pubDate>Thu, 19 Nov 2026 11:35:03 +0900</pubDate><guid>https://klifehack.com/p/redis-cache-stampede-redisson-distributed-lock/</guid><description>&lt;p&gt;リレーショナルデータベース（RDBMS）を中心とするWebアプリケーションアーキテクチャでは、トラフィック急増に伴うディスクI/Oおよび接続プール枯渇がシステム全体の応答遅延やタイムアウトを引き起こす要因となります。インメモリデータストアであるRedisをキャッシュレイヤーとして導入することでリード性能の向上が期待できますが、不適切なキャッシュ設計や無効化戦略は、特定キーの有効期限切れによるデータベースへの負荷集中（Cache Stampede）や、並行処理時のデータ不整合といった問題を引き起こすリスクがあります。&lt;/p&gt;
+&lt;p&gt;本稿では、主要なキャッシュパターンの選定基準、Redissonを用いた分散ロックの実装、および本番運用におけるCache Stampede対策とメモリ管理手法について解説します。&lt;/p&gt;
+&lt;h2 id="1-キャッシュパターンの分類と適用基準"&gt;1. キャッシュパターンの分類と適用基準
+&lt;/h2&gt;&lt;p&gt;データの整合性要件や書き込み遅延の許容度に応じて、適切なキャッシュパターンを選択する必要があります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;+-----------------------------------------------------------------------------------+
+| CACHING PATTERNS |
++--------------------------+--------------------------+-----------------------------+
+| Cache-Aside | Write-Through | Write-Back (Write-Behind) |
+| (Read Optimization) | (Consistency First) | (Write Optimization) |
++--------------------------+--------------------------+-----------------------------+
+| 1. App reads Cache | 1. App writes Cache | 1. App writes Cache only |
+| 2. Miss -&amp;amp;gt; Read DB | 2. Cache writes DB | 2. Async batch updates DB |
+| 3. Populate Cache | (Synchronously) | |
++--------------------------+--------------------------+-----------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="cache-aside-look-aside"&gt;Cache-Aside (Look-Aside)
+&lt;/h3&gt;&lt;p&gt;読取操作の最適化を目的とした一般的なパターンです。アプリケーションはまずRedisへ問い合わせ、キャッシュミスの発生時にRDBMSからデータを取得してRedisへ書き戻します。Redisノードに障害が発生した場合でもデータベースへフォールバックされるためシステムの可用性は維持されますが、ホットキーのTTL（Time-To-Live）失効時にリクエストが一斉にDBへ到達するトレードオフが存在します。&lt;/p&gt;
+&lt;p&gt;データ更新時には「DBを更新した後にRedisのキーを削除する」順序が標準的ですが、並行読み取りとのレースコンディションを防ぐため、短期間のTTL設定やDelayed Double Deleteパターンの検討が必要となります。&lt;/p&gt;
+&lt;h3 id="write-through"&gt;Write-Through
+&lt;/h3&gt;&lt;p&gt;書き込み操作時にRedisキャッシュとRDBMSへ同期的に更新処理を行います。キャッシュとデータベース間の整合性が高く保たれ、常に最新のデータをキャッシュから提供できます。一方で、全書き込み操作で同期二重書き込みが発生するためレイテンシが増加し、参照されないデータもキャッシュ領域を圧迫する要因となります。&lt;/p&gt;
+&lt;h3 id="write-back-write-behind"&gt;Write-Back (Write-Behind)
+&lt;/h3&gt;&lt;p&gt;アプリケーションはRedisへのみ書き込みを行い、応答を即座に返します。バックグラウンドの非同期プロセスが定期的にバッチ処理でRDBMSへ変更を反映します。高頻度の書き込みトラフィックを吸収する用途に適していますが、非同期処理の完了前にRedisインスタンスがクラッシュした場合、非永続データが永久に失われるリスクがあります。&lt;/p&gt;
+&lt;h2 id="2-redissonによる分散ロックの実装と並行性制御"&gt;2. Redissonによる分散ロックの実装と並行性制御
+&lt;/h2&gt;&lt;p&gt;単一インスタンス上のJava標準ロック（&lt;code&gt;synchronized&lt;/code&gt;や&lt;code&gt;ReentrantLock&lt;/code&gt;）は、複数ノードで構成される分散アプリケーション環境では機能しません。また、RDBMSの悲観的ロック（&lt;code&gt;SELECT &amp;hellip; FOR UPDATE&lt;/code&gt;）は高い並列度において接続プールを急速に消費し、デッドロックの要因となります。&lt;/p&gt;
+&lt;p&gt;RedissonはRedisのシングルスレッドイベントループとPub/Subイベント通知機構を活用し、スピンロックによる無駄なCPU消費を回避しながら安全な分散ロック（&lt;code&gt;RLock&lt;/code&gt;）を提供します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; com.example.service;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.redisson.api.RLock;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.redisson.api.RedissonClient;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.stereotype.Service;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; org.springframework.transaction.annotation.Transactional;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; java.util.concurrent.TimeUnit;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;StockService&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; RedissonClient redissonClient;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;final&lt;/span&gt; ItemRepository itemRepository;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;StockService&lt;/span&gt;(RedissonClient redissonClient, ItemRepository itemRepository) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;redissonClient&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redissonClient;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;itemRepository&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; itemRepository;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;decreaseStock&lt;/span&gt;(Long itemId, &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; quantity) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; RLock lock &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redissonClient.&lt;span style="color:#a6e22e"&gt;getLock&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;stock:&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; itemId);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;boolean&lt;/span&gt; acquired &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// ロック取得を最大3秒間待機、取得後は5秒後に自動解放&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; acquired &lt;span style="color:#f92672"&gt;=&lt;/span&gt; lock.&lt;span style="color:#a6e22e"&gt;tryLock&lt;/span&gt;(3, 5, TimeUnit.&lt;span style="color:#a6e22e"&gt;SECONDS&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#f92672"&gt;!&lt;/span&gt;acquired) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;throw&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; IllegalStateException(&lt;span style="color:#e6db74"&gt;&amp;#34;Lock acquisition timed out for item: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; itemId);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// データベーストランザクションはロック取得の内部境界で実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; executeDecreaseTransactional(itemId, quantity);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (InterruptedException e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Thread.&lt;span style="color:#a6e22e"&gt;currentThread&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;interrupt&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;throw&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; RuntimeException(&lt;span style="color:#e6db74"&gt;&amp;#34;Thread interrupted during lock acquisition&amp;#34;&lt;/span&gt;, e);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;finally&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (acquired &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp; lock.&lt;span style="color:#a6e22e"&gt;isLocked&lt;/span&gt;() &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp;&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;amp; lock.&lt;span style="color:#a6e22e"&gt;isHeldByCurrentThread&lt;/span&gt;()) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; lock.&lt;span style="color:#a6e22e"&gt;unlock&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@Transactional&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;executeDecreaseTransactional&lt;/span&gt;(Long itemId, &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; quantity) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Item item &lt;span style="color:#f92672"&gt;=&lt;/span&gt; itemRepository.&lt;span style="color:#a6e22e"&gt;findById&lt;/span&gt;(itemId)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#a6e22e"&gt;orElseThrow&lt;/span&gt;(() &lt;span style="color:#f92672"&gt;-&amp;amp;&lt;/span&gt;gt; &lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; IllegalArgumentException(&lt;span style="color:#e6db74"&gt;&amp;#34;Item not found: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; itemId));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item.&lt;span style="color:#a6e22e"&gt;decrease&lt;/span&gt;(quantity);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; itemRepository.&lt;span style="color:#a6e22e"&gt;save&lt;/span&gt;(item);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;分散ロックを運用する際、&lt;code&gt;tryLock&lt;/code&gt;で明示的な &lt;code&gt;leaseTime&lt;/code&gt; を指定しない場合、RedissonはWatchdog機能を起動し、スレッドが生存している限り10秒ごとにロック期限を30秒へ自動延長します。&lt;/p&gt;
+&lt;h2 id="3-cache-stampedeの回避と本番運用チェックリスト"&gt;3. Cache Stampedeの回避と本番運用チェックリスト
+&lt;/h2&gt;&lt;p&gt;大量のリクエストが集中的に参照するホットキーのTTLが切れた瞬間、多数のスレッドが同時にデータベースへアクセスし、再計算を実行しようとする現象をCache Stampedeと呼びます。&lt;/p&gt;
+&lt;h3 id="緩和戦略"&gt;緩和戦略
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;💡 &lt;b&gt;TTL Jitter（ランダムジッターの付与）:&lt;/b&gt;
+各キーのTTL設定時にベース時間に加え $\pm 10% \sim 20%$ のランダムな揺らぎを動的に追加し、同時失効を分散させます。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;🛠️ &lt;b&gt;Distributed Recomputation Lock（再計算の単一化）:&lt;/b&gt;
+キャッシュミス発生時、分散ロックを取得できた1つのリクエストのみがDBからデータを取得して再計算を行い、他のリクエストは短時間の待機または古いキャッシュデータ（Stale Payload）を返却するように設計します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;⚠️ &lt;b&gt;Probabilistic Early Recomputation (PER):&lt;/b&gt;
+アクセス頻度と再計算コストに基づき、TTLが完全に失効する前に確率的な計算を行ってバックグラウンドでキャッシュを更新します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="メモリおよびエビクションポリシーの最適化"&gt;メモリおよびエビクションポリシーの最適化
+&lt;/h3&gt;&lt;p&gt;・ &lt;b&gt;&lt;code&gt;maxmemory&lt;/code&gt; 設定の標準化:&lt;/b&gt; &lt;code&gt;maxmemory&lt;/code&gt; を設定しない場合、OSのOOM KillerによってRedisプロセスが強制終了されるリスクが生じます。&lt;/p&gt;
+&lt;p&gt;・ &lt;b&gt;エビクション戦略の選択:&lt;/b&gt; TTLが設定されたキーのみを対象とする場合は &lt;code&gt;volatile-lru&lt;/code&gt;、専用キャッシュ層として全体を対象とする場合は &lt;code&gt;allkeys-lru&lt;/code&gt; を選択します。キャッシュ層において &lt;code&gt;noeviction&lt;/code&gt; の使用は厳禁です。&lt;/p&gt;
+&lt;p&gt;・ &lt;b&gt;非ブロッキング削除の徹底:&lt;/b&gt; 大規模構造のキー削除時に同期コマンド &lt;code&gt;DEL&lt;/code&gt; を使用すると、シングルスレッド処理が停止します。非同期でメモリ解放を行う &lt;code&gt;UNLINK&lt;/code&gt; の使用を徹底します。&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="トランザクション境界とロック解放の不整合dirty-reads"&gt;トランザクション境界とロック解放の不整合（Dirty Reads）
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;@Transactional&lt;/code&gt; アノテーションが付与されたメソッド内部で &lt;code&gt;lock.unlock()&lt;/code&gt; が呼び出されると、DBのコミットが完了する前にロックが解放されます。この瞬間に別スレッドがロックを取得すると、未コミットの古い状態を参照する競合が発生します。&lt;b&gt;ロックの取得・解放は必ずDBトランザクションの外側で行う&lt;/b&gt;必要があります。&lt;/p&gt;
+&lt;h3 id="権限外ロックの解放による例外発生"&gt;権限外ロックの解放による例外発生
+&lt;/h3&gt;&lt;p&gt;TTL超過により自スレッドのロックが既に自動解放されている場合、他スレッドが所有権を持つロックに対して &lt;code&gt;unlock()&lt;/code&gt; を実行すると &lt;code&gt;IllegalMonitorStateException&lt;/code&gt; が送出されます。解放前には必ず &lt;code&gt;lock.isHeldByCurrentThread()&lt;/code&gt; による検証を行ってください。&lt;/p&gt;
+&lt;h3 id="システム検証ログ"&gt;システム検証ログ
+&lt;/h3&gt;&lt;p&gt;本番環境におけるメモリ状態および操作の健全性は、CLI ログ等を通じて定期的に検証を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli info memory
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Memory
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory:268435456
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_human:256.00M
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_rss:314572800
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;used_memory_rss_human:300.00M
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mem_fragmentation_ratio:1.17
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mem_allocator:jemalloc-5.3.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli slowlog get 5
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1) 1) (integer) 12
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2) (integer) 1700000000
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 3) (integer) 15200
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 4) 1) &amp;#34;UNLINK&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 2) &amp;#34;stock:cache:1004&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli eval &amp;#34;return redis.call(&amp;#39;ttl&amp;#39;, KEYS[1])&amp;#34; 1 &amp;#34;stock:1001&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(integer) 298
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="lessons-learned"&gt;Lessons Learned
+&lt;/h2&gt;&lt;p&gt;Redisを用いた高並列キャッシュ基盤の運用においては、単なるデータ保持層としての利用にとどまらず、TTLジッターの付与や再計算の並行制御、メモリ溢れ防止策（&lt;code&gt;maxmemory&lt;/code&gt; および &lt;code&gt;UNLINK&lt;/code&gt; の活用）を包括的に設計することが不可欠です。適切な分散ロック境界の設計と運用モニタリングを実施することで、高トラフィック下においてもDB負荷を最小限に抑えた安定稼働が実現できます。&lt;/p&gt;</description></item><item><title>Next.js・NestJSマルチコンテナ構成におけるNginxリバースプロキシの設計とポートバインディング</title><link>https://klifehack.com/p/nginx-reverse-proxy-docker-multi-tier/</link><pubDate>Tue, 17 Nov 2026 10:47:43 +0900</pubDate><guid>https://klifehack.com/p/nginx-reverse-proxy-docker-multi-tier/</guid><description>&lt;p&gt;単一のアプリケーションサーバーにフロントエンドとバックエンドの役割を同居させ、パブリックポートを個別に開放する構成は、コンポーネントのスケールアウトやセキュリティの維持においてボトルネックとなります。特にマイクロサービス構成やフロント・バック分離アーキテクチャでは、エンドポイントの一元化と内部ネットワークの隔離が必須となります。本稿では、フロントエンド（Next.js）、バックエンド（NestJS）、データベース（MySQL）を分離し、Nginxをイングラストラフィックの統一エントリポイントとして統合した多層コンテナ構成の設計と検証手順を整理します。&lt;/p&gt;
 &lt;h2 id="ネットワーク構成とコンテナトポロジー"&gt;ネットワーク構成とコンテナトポロジー
 &lt;/h2&gt;&lt;p&gt;本構成では、外部からのリクエストをすべてNginxリバースプロキシ（Port 80）で受け取り、URIパスに基づいて内部Dockerブリッジネットワーク上の適切なサービスへとルーティングします。各アプリケーションコンテナは直接ホストのネットワークポートをパブリックにバインドせず、Docker内部DNSによるサービス名解決を利用して通信します。&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Docker Network (Bridge Interface)
