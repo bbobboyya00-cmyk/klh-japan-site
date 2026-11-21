@@ -1,4 +1,250 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 17 Nov 2026 10:47:43 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Next.js・NestJSマルチコンテナ構成におけるNginxリバースプロキシの設計とポートバインディング</title><link>https://klifehack.com/p/nginx-reverse-proxy-docker-multi-tier/</link><pubDate>Tue, 17 Nov 2026 10:47:43 +0900</pubDate><guid>https://klifehack.com/p/nginx-reverse-proxy-docker-multi-tier/</guid><description>&lt;p&gt;単一のアプリケーションサーバーにフロントエンドとバックエンドの役割を同居させ、パブリックポートを個別に開放する構成は、コンポーネントのスケールアウトやセキュリティの維持においてボトルネックとなります。特にマイクロサービス構成やフロント・バック分離アーキテクチャでは、エンドポイントの一元化と内部ネットワークの隔離が必須となります。本稿では、フロントエンド（Next.js）、バックエンド（NestJS）、データベース（MySQL）を分離し、Nginxをイングラストラフィックの統一エントリポイントとして統合した多層コンテナ構成の設計と検証手順を整理します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/linux-system-admin/</link><description>Recent content in Linux System Admin on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 21 Nov 2026 10:14:56 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/linux-system-admin/index.xml" rel="self" type="application/rss+xml"/><item><title>Keycloakデータベースの自動バックアップパイプライン構築と段階的リカバリ検証手法</title><link>https://klifehack.com/p/keycloak-postgres-backup-dr-automation/</link><pubDate>Sat, 21 Nov 2026 10:14:56 +0900</pubDate><guid>https://klifehack.com/p/keycloak-postgres-backup-dr-automation/</guid><description>&lt;p&gt;インフラストラクチャのスケーリングやマルチテナント統合が進む中で、KeycloakがKubernetes APIのOpenID Connect（OIDC）認証やArgoCD、Jenkins等の主要CI/CDツールのシングルサインオン（SSO）ゲートウェイとして機能している場合、そのバックエンドデータベースはシステム全体の単一障害点（SPOF）となります。単一のPostgreSQL PodやLocal PersistentVolumeに依存した運用では、ノードのハードウェア障害や論理的なデータ破損が発生した際、すべてのダウンストリームエンジニアリングワークフローが即座に停止するリスクを抱えます。&lt;/p&gt;
+&lt;p&gt;アクティブ・アクティブ構成のマルチマスターDB構築には高いアーキテクチャ複雑性が伴うため、運用における最小限の安全基準として、NFS PVCへのプライマリ退避とS3互換ストレージへの二次レプリケーションを組み合わせた自動バックアップおよび、Recovery Time Objective（RTO）とRecovery Point Objective（RPO）を実証的に検証する段階的な障害復旧演習（DR Rehearsal）の確立が不可欠です。&lt;/p&gt;
+&lt;h2 id="アーキテクチャ構成と前提条件"&gt;アーキテクチャ構成と前提条件
+&lt;/h2&gt;&lt;p&gt;対象となる標準的なインフラストラクチャ構成およびアクセス要件は以下の通りです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Identity Management&lt;/b&gt;: Keycloak v26.x（Keycloak Operatorによりデプロイ、&lt;code&gt;spec.instances: 1&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Database Engine&lt;/b&gt;: PostgreSQL 15（単一レプリカのStatefulSet、内部Service &lt;code&gt;postgres-db:5432&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Storage Allocation&lt;/b&gt;: ノードローカルディスク &lt;code&gt;/data&lt;/code&gt; にバインドされたPersistentVolume&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="重要なアクセス前提条件oidc依存の回避"&gt;重要なアクセス前提条件（OIDC依存の回避）
+&lt;/h3&gt;&lt;p&gt;障害復旧演習やトラブルシューティングを実行する前に、必ずKeycloak OIDCトークンを経由しないX.509証明書ベースの直接的な &lt;code&gt;kubeconfig&lt;/code&gt;（&lt;code&gt;admin.conf&lt;/code&gt;）によるクラスタ管理者権限を確保してください。Keycloakデータベースの切断や再構築中にOIDC経由で &lt;code&gt;kubectl&lt;/code&gt; 認証を行っている場合、すべてのAPIアクセスが遮断され、復旧操作自体が不可能になるデッドロックに陥ります。&lt;/p&gt;
+&lt;h2 id="2段階ストレージバックアップパイプラインの実装"&gt;2段階ストレージバックアップパイプラインの実装
+&lt;/h2&gt;&lt;p&gt;バックアップデータは、本番データベースのコンピュートおよびストレージドメインから完全分離する必要があります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Tier-1（ローカル・ステージング）&lt;/b&gt;: 共有ネットワークファイルシステム（NFS PVC）。外部ネットワーク転送のボトルネックを回避し、高速なRTOを実現します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Tier-2（災害復旧用オフサイト）&lt;/b&gt;: S3互換オブジェクトストレージ。ハイパーバイザーの停止やローカルディスクの物理破壊からデータを保護します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以下のKubernetes CronJobマニフェストは、&lt;code&gt;pg_dump&lt;/code&gt; によるバイナリ形式（&lt;code&gt;-Fc&lt;/code&gt;）の抽出、SHA-256チェックサムの検証、および &lt;code&gt;rclone&lt;/code&gt; を用いたS3への転送と整合性確認を自動化します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;batch/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;CronJob&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;schedule&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;0 2 * * *&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;timeZone&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Asia/Tokyo&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;concurrencyPolicy&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Forbid&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;jobTemplate&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;backoffLimit&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;restartPolicy&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Never&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;initContainers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pg-dump&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;postgres:15&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PGHOST&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;postgres-db&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PGDATABASE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PGUSER&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;valueFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secretKeyRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;username&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PGPASSWORD&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;valueFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secretKeyRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;password&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;command&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;/bin/bash&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-c&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; set -euo pipefail
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; N=&amp;#34;keycloak-$(date +%Y%m%d-%H%M%S).dump&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; cd /backup
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # カスタムフォーマットでのバイナリダンプ実行
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; pg_dump -Fc -f &amp;#34;$N&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # ダンプファイルのヘッダ構造および読み取り可能性を検証
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; pg_restore -l &amp;#34;$N&amp;#34; &amp;amp;gt; /dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # SHA256 ハッシュ値の生成
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; sha256sum &amp;#34;$N&amp;#34; &amp;amp;gt; &amp;#34;$N.sha256&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # 最新ファイル参照用ポインタの更新
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;$N&amp;#34; &amp;amp;gt; .latest
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # 7日以上経過したローカルバックアップの自動削除
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; find /backup -name &amp;#39;keycloak-*.dump*&amp;#39; -mtime +7 -delete&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumeMounts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mountPath&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;upload&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rclone/rclone:1.68&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RCLONE_CONFIG_BK_TYPE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;s3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RCLONE_CONFIG_BK_PROVIDER&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Other&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RCLONE_CONFIG_BK_ENDPOINT&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;http://s3-storage.internal:9000&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RCLONE_CONFIG_BK_ACCESS_KEY_ID&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;valueFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secretKeyRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-s3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ACCESS_KEY_ID&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RCLONE_CONFIG_BK_SECRET_ACCESS_KEY&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;valueFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secretKeyRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-s3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ACCESS_SECRET_KEY&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;DEST&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;bk:keycloak-db-backup/pgdump&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;command&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;/bin/sh&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-c&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; set -eu
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; N=$(cat /backup/.latest)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # S3ストレージへのアセット転送
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; rclone copyto &amp;#34;/backup/$N&amp;#34; &amp;#34;$DEST/$N&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; rclone copyto &amp;#34;/backup/$N.sha256&amp;#34; &amp;#34;$DEST/$N.sha256&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # リモート検証: S3上のストリームからハッシュ値を再計算して整合性を評価
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; L=$(awk &amp;#39;{print $1}&amp;#39; &amp;#34;/backup/$N.sha256&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; R=$(rclone cat &amp;#34;$DEST/$N&amp;#34; | sha256sum | awk &amp;#39;{print $1}&amp;#39;)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [ &amp;#34;$L&amp;#34; != &amp;#34;$R&amp;#34; ]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;CRITICAL: Remote checksum mismatch for: $N&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; exit 1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;Uploaded and verified: $N&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # 30日以上経過したリモートバックアップの削除
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; rclone delete &amp;#34;$DEST&amp;#34; --min-age 30d --include &amp;#39;keycloak-*.dump*&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumeMounts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mountPath&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;readOnly&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;persistentVolumeClaim&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;claimName&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="段階的リカバリ演習disaster-recovery-rehearsal"&gt;段階的リカバリ演習（Disaster Recovery Rehearsal）
+&lt;/h2&gt;&lt;p&gt;復旧能力の検証は、本番環境へのリスクレベルに応じた3つのフェーズで実施します。&lt;/p&gt;
+&lt;h3 id="level-1-非破壊分離ポッドでのスキーマおよびレコード整合性検証"&gt;Level 1: 非破壊分離ポッドでのスキーマおよびレコード整合性検証
+&lt;/h3&gt;&lt;p&gt;本番トラフィックや稼働中のPostgreSQLに影響を与えず、一時的なPodを立ち上げてリストアの成否とレコード数を検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 一時検証用Podの投入と待機&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl apply -f - &amp;amp;lt;&amp;lt;eof &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;basename&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$f&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$q&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt; &lt;span style="color:#75715e"&gt;#=&amp;#34;&amp;#34; $f).sha256&amp;#34;=&amp;#34;&amp;#34; &amp;amp;&amp;amp;=&amp;#34;&amp;#34; &amp;#39;=&amp;#34;&amp;#34; -=&amp;#34;&amp;#34; --=&amp;#34;&amp;#34; --exit-on-error=&amp;#34;&amp;#34; --for=&amp;#34;condition=Ready&amp;#34; --no-owner=&amp;#34;&amp;#34; --timeout=&amp;#34;120s&amp;#34; -1)=&amp;#34;&amp;#34; -c=&amp;#34;&amp;#34; -d=&amp;#34;&amp;#34; -n=&amp;#34;&amp;#34; -t=&amp;#34;&amp;#34; -u=&amp;#34;&amp;#34; 2;=&amp;#34;&amp;#34; \=&amp;#34;&amp;#34; apiversion:=&amp;#34;&amp;#34; backup=&amp;#34;&amp;#34; bash=&amp;#34;&amp;#34; cd=&amp;#34;&amp;#34; claimname:=&amp;#34;&amp;#34; containers:=&amp;#34;&amp;#34; do=&amp;#34;&amp;#34; done=&amp;#34;&amp;#34; env:=&amp;#34;&amp;#34; eof=&amp;#34;&amp;#34; exec=&amp;#34;&amp;#34; f=&amp;#34;$(ls&amp;#34; head=&amp;#34;&amp;#34; image:=&amp;#34;&amp;#34; keycloak=&amp;#34;&amp;#34; keycloak-*.dump=&amp;#34;&amp;#34; keycloak-db-backup=&amp;#34;&amp;#34; keycloak;=&amp;#34;&amp;#34; kind:=&amp;#34;&amp;#34; kubectl=&amp;#34;&amp;#34; metadata:=&amp;#34;&amp;#34; mountpath:=&amp;#34;&amp;#34; name:=&amp;#34;&amp;#34; namespace:=&amp;#34;&amp;#34; never=&amp;#34;&amp;#34; persistentvolumeclaim:=&amp;#34;&amp;#34; pg_isready=&amp;#34;&amp;#34; pg_restore=&amp;#34;&amp;#34; pod=&amp;#34;&amp;#34; postgres=&amp;#34;&amp;#34; postgres:15=&amp;#34;&amp;#34; postgres_db=&amp;#34;&amp;#34; postgres_password=&amp;#34;&amp;#34; postgres_user=&amp;#34;&amp;#34; psql=&amp;#34;&amp;#34; q=&amp;#34;SELECT &amp;#39;realm&amp;#39;, count(*) FROM realm UNION ALL SELECT &amp;#39;client&amp;#39;, count(*) FROM client UNION ALL SELECT &amp;#39;user_entity&amp;#39;, count(*) FROM user_entity;&amp;#34; readonly:=&amp;#34;&amp;#34; restartpolicy:=&amp;#34;&amp;#34; restore-test=&amp;#34;&amp;#34; sha256sum=&amp;#34;&amp;#34; sleep=&amp;#34;&amp;#34; spec:=&amp;#34;&amp;#34; true=&amp;#34;&amp;#34; until=&amp;#34;&amp;#34; v1=&amp;#34;&amp;#34; value:=&amp;#34;&amp;#34; volumemounts:=&amp;#34;&amp;#34; volumes:=&amp;#34;&amp;#34; wait=&amp;#34;&amp;#34; |=&amp;#34;&amp;#34; バックアップ整合性のチェックおよび復元実行=&amp;#34;&amp;#34; 事前取得したレコード数ベースラインとの比較検証=&amp;#34;&amp;#34;&amp;gt; count-restore.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;diff -u count-before.txt count-restore.txt &amp;amp;amp;&amp;amp;amp; echo &lt;span style="color:#e6db74"&gt;&amp;#34;CHECK_SUCCESS: Record counts match baseline.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# リソースのクリーンアップ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl delete pod restore-test -n keycloak
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="level-2-インプレースでのデータベース障害復元とrto計測"&gt;Level 2: インプレースでのデータベース障害復元とRTO計測
+&lt;/h3&gt;&lt;p&gt;論理的データ破損を想定し、Keycloakを停止した上でデータベースを再構築します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Keycloak Podの停止（競合の防止）&lt;/b&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl patch keycloak keycloak -n keycloak --type merge -p &lt;span style="color:#e6db74"&gt;&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;instances&amp;#34;:0}}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;データベースの再生成とリストア&lt;/b&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl exec -n keycloak postgresql-db-0 -- psql -U keycloak -d postgres -c &lt;span style="color:#e6db74"&gt;&amp;#39;DROP DATABASE keycloak;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl exec -n keycloak postgresql-db-0 -- psql -U keycloak -d postgres -c &lt;span style="color:#e6db74"&gt;&amp;#39;CREATE DATABASE keycloak OWNER keycloak;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl exec -n keycloak postgresql-db-0 -- bash -c &lt;span style="color:#e6db74"&gt;&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; set -euo pipefail
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; cd /backup
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; F=$(ls -t keycloak-*.dump | head -1)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; sha256sum -c &amp;#34;$F.sha256&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; pg_restore -U keycloak -d keycloak --no-owner --exit-on-error &amp;#34;$F&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # クラスタリングキャッシュ情報の初期化
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; psql -U keycloak -d keycloak -c &amp;#34;TRUNCATE jgroups_ping;&amp;#34; || true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Keycloakの再起動とヘルスチェック&lt;/b&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl patch keycloak keycloak -n keycloak --type merge -p &lt;span style="color:#e6db74"&gt;&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;instances&amp;#34;:1}}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl wait --for&lt;span style="color:#f92672"&gt;=&lt;/span&gt;condition&lt;span style="color:#f92672"&gt;=&lt;/span&gt;Ready keycloak/keycloak -n keycloak --timeout&lt;span style="color:#f92672"&gt;=&lt;/span&gt;600s
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="level-3-ノードおよびローカルストレージ全損からのdr復元"&gt;Level 3: ノードおよびローカルストレージ全損からのDR復元
+&lt;/h3&gt;&lt;p&gt;ノード障害によりローカルPV（&lt;code&gt;/data&lt;/code&gt;）が物理的に消滅した場合の復旧フローです。別ノード上にPVCを再定義し、S3からデータを直接引き戻して復旧を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 対象StatefulSetの定義バックアップと削除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl patch keycloak keycloak -n keycloak --type merge -p &lt;span style="color:#e6db74"&gt;&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;instances&amp;#34;:0}}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get sts postgresql-db -n keycloak -o yaml &amp;amp;gt; sts-backup.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl delete sts postgresql-db -n keycloak
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 新規ノード上のPV/PVCに再割り当てしてStatefulSetを再投入&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# (sts-backup.yaml 内の volumeClaimTemplates を編集後に適用)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl apply -f sts-backup.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# S3からの直接ダンプ引き戻しと復元&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl exec -n keycloak postgresql-db-0 -- bash -c &lt;span style="color:#e6db74"&gt;&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; rclone copyto bk:keycloak-db-backup/pgdump/latest.dump /backup/latest.dump
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; pg_restore -U keycloak -d keycloak --no-owner /backup/latest.dump
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="実行検証ログoperational-logs"&gt;実行検証ログ（Operational Logs）
+&lt;/h2&gt;&lt;p&gt;実システム上で実施されたリストア検証および比較プロトコルの出力結果ログです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl get keycloak,sts,pod,svc,pvc -n keycloak -o wide
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY CLIENTS PROVIDER AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;keycloak.k8s.keycloak.org/keycloak 1/1 1 db 45d
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY AGE CONTAINERS IMAGES
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;statefulset.apps/postgresql-db 1/1 45d postgres postgres:15
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY STATUS RESTARTS AGE IP NODE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pod/postgresql-db-0 1/1 Running 0 45d 10.244.3.12 infra-node-02
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl exec -n keycloak restore-test -- bash -c &amp;#39;cd /backup &amp;amp;amp;&amp;amp;amp; sha256sum -c keycloak-20261121-020000.dump.sha256&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;keycloak-20261121-020000.dump: OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl exec -n keycloak restore-test -- bash -c &amp;#39;pg_restore -U keycloak -d keycloak --no-owner --exit-on-error keycloak-20261121-020000.dump&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pg_restore: processing item 4201 TABLE DATA realm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pg_restore: processing item 4205 TABLE DATA client
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pg_restore: processing item 4210 TABLE DATA user_entity
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pg_restore: restore completed successfully without errors
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ diff -u count-before.txt count-restore.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;--- count-before.txt 2026-11-21 01:55:00.000000000 +0900
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+++ count-restore.txt 2026-11-21 02:15:30.000000000 +0900
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;@@ -1,4 +1,4 @@
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- realm | 3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- client | 42
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- user_entity | 1250
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+ realm | 3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+ client | 42
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+ user_entity | 1250
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CHECK_SUCCESS: Record counts match baseline.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-oidc認証トークン依存による-kubectl-操作不能状態"&gt;1. OIDC認証トークン依存による &lt;code&gt;kubectl&lt;/code&gt; 操作不能状態
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: データベース停止に伴いKeycloakが停止し、&lt;code&gt;kubectl&lt;/code&gt; 実行時に &lt;code&gt;Error: Unauthorized&lt;/code&gt; または Token Renewal エラーが発生して復旧用Podの投入操作が拒否されます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: 操作クライアントの &lt;code&gt;kubeconfig&lt;/code&gt; がKeycloak OIDCを認証プロバイダとして設定されているためです。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: DR作業時には、Kubernetes Control Plane APIサーバーが直接発行したX.509クライアント証明書認証（&lt;code&gt;admin.conf&lt;/code&gt;）にコンテキストを切り替えて操作を実行してください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-リストア後のkeycloak起動時における-jgroups_ping-クラスタロックアウト"&gt;2. リストア後のKeycloak起動時における &lt;code&gt;jgroups_ping&lt;/code&gt; クラスタロックアウト
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: DB復元後、Keycloak Podを起動してもログに &lt;code&gt;JGRP00006: failed sending message&lt;/code&gt; が連続出力され、Ready状態に移行しません。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: 旧環境のIPアドレスやノード識別子がDB内の &lt;code&gt;jgroups_ping&lt;/code&gt; テーブルに残留しており、新規Podとの間でクラスタノード探索のデッドロックが発生するためです。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: DBリストア直後、Keycloak起動前に &lt;code&gt;TRUNCATE TABLE jgroups_ping;&lt;/code&gt; を実行し、探索テーブルを初期化してください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-pg_dump-と-pg_restore-のバージョン不一致エラー"&gt;3. &lt;code&gt;pg_dump&lt;/code&gt; と &lt;code&gt;pg_restore&lt;/code&gt; のバージョン不一致エラー
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: リストア実行時に &lt;code&gt;pg_restore: error: unsupported version (1.15) in file header&lt;/code&gt; が発生し処理が停止します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: バックアップを実行したコンテナのPostgreSQLイメージタグと、リストア側Podのバージョン（例: PostgreSQL 14 と 15）に差異が存在するためです。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: バックアップJobおよび検証用Podのイメージタグを同一のメジャーバージョン（&lt;code&gt;postgres:15&lt;/code&gt;）に固定してください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-s3転送時のネットワーク瞬断によるハッシュ検証失敗"&gt;4. S3転送時のネットワーク瞬断によるハッシュ検証失敗
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: CronJobの &lt;code&gt;upload&lt;/code&gt; コンテナが &lt;code&gt;CRITICAL: Remote checksum mismatch&lt;/code&gt; を出力して失敗状態（Failed）になります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: 大容量ダンプファイルのアップロード中に不完全なマルチパートアップロードが発生し、S3上のデータ長が一部欠落したためです。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: &lt;code&gt;rclone copyto&lt;/code&gt; 実行時に &lt;code&gt;--checksum&lt;/code&gt; フラグを付与してリトライを適用し、転送エラー発生時は &lt;code&gt;backoffLimit&lt;/code&gt; に基づきJobを自動再実行させてください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;ストレージドメインの分離原則&lt;/b&gt;: 本番PostgreSQLと同一の物理ディスクにバックアップファイルを保存する構成はDR設計として無効です。必ず別系ネットワークのNFSおよびS3互換ストレージに多重化してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;JGroupsキャッシュの初期化&lt;/b&gt;: データベース復旧時は、&lt;code&gt;jgroups_ping&lt;/code&gt; テーブルの明示的なパージを行わない限り、Keycloakクラスタのノード発見処理で大幅なタイムアウトが発生します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;オフラインセッションの扱い&lt;/b&gt;: バックアップの取得タイミングと復元タイミングの間に発行されたトークンやアクティブセッションは失われます。事業要件に応じて &lt;code&gt;offline_user_session&lt;/code&gt; の削除ポリシーをあらかじめ定めておいてください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;定期的な演習の標準化&lt;/b&gt;: バックアップ設定の自動化だけでなく、四半期ごとにLevel 1およびLevel 2の復旧演習を実施し、RTOの実測値を監査ログとして残す運用ルールを推奨します。&lt;/eof&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Next.js・NestJSマルチコンテナ構成におけるNginxリバースプロキシの設計とポートバインディング</title><link>https://klifehack.com/p/nginx-reverse-proxy-docker-multi-tier/</link><pubDate>Tue, 17 Nov 2026 10:47:43 +0900</pubDate><guid>https://klifehack.com/p/nginx-reverse-proxy-docker-multi-tier/</guid><description>&lt;p&gt;単一のアプリケーションサーバーにフロントエンドとバックエンドの役割を同居させ、パブリックポートを個別に開放する構成は、コンポーネントのスケールアウトやセキュリティの維持においてボトルネックとなります。特にマイクロサービス構成やフロント・バック分離アーキテクチャでは、エンドポイントの一元化と内部ネットワークの隔離が必須となります。本稿では、フロントエンド（Next.js）、バックエンド（NestJS）、データベース（MySQL）を分離し、Nginxをイングラストラフィックの統一エントリポイントとして統合した多層コンテナ構成の設計と検証手順を整理します。&lt;/p&gt;
 &lt;h2 id="ネットワーク構成とコンテナトポロジー"&gt;ネットワーク構成とコンテナトポロジー
 &lt;/h2&gt;&lt;p&gt;本構成では、外部からのリクエストをすべてNginxリバースプロキシ（Port 80）で受け取り、URIパスに基づいて内部Dockerブリッジネットワーク上の適切なサービスへとルーティングします。各アプリケーションコンテナは直接ホストのネットワークポートをパブリックにバインドせず、Docker内部DNSによるサービス名解決を利用して通信します。&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Docker Network (Bridge Interface)

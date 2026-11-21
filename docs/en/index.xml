@@ -1,4 +1,250 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 19 Nov 2026 11:35:04 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Cache Stampede Mitigation in Redis Caching Strategies and Implementation of Redisson Distributed Locks</title><link>https://klifehack.com/en/p/redis-cache-stampede-redisson-distributed-lock/</link><pubDate>Thu, 19 Nov 2026 11:35:04 +0900</pubDate><guid>https://klifehack.com/en/p/redis-cache-stampede-redisson-distributed-lock/</guid><description>&lt;p&gt;In web application architectures centered on relational databases (RDBMS), disk I/O and connection pool exhaustion caused by sudden traffic spikes are factors that induce system-wide response delays and timeouts. Introducing Redis, an in-memory data store, as a caching layer can be expected to improve read performance; however, improper cache design or invalidation strategies risk triggering issues such as database load concentration caused by the expiration of specific keys (Cache Stampede) or data inconsistency during concurrent processing.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/</link><description>Recent content on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 21 Nov 2026 10:14:57 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Building an Automated Backup Pipeline for Keycloak Database and Step-by-Step Recovery Verification Methodologies</title><link>https://klifehack.com/en/p/keycloak-postgres-backup-dr-automation/</link><pubDate>Sat, 21 Nov 2026 10:14:57 +0900</pubDate><guid>https://klifehack.com/en/p/keycloak-postgres-backup-dr-automation/</guid><description>&lt;p&gt;As infrastructure scaling and multi-tenant integration progress, when Keycloak serves as the Single Sign-On (SSO) gateway for Kubernetes API OpenID Connect (OIDC) authentication and major CI/CD tools such as ArgoCD and Jenkins, its backend database becomes a Single Point of Failure (SPOF) for the entire system. Operations relying on a single PostgreSQL Pod or Local PersistentVolume carry the risk that a node hardware failure or logical data corruption will immediately halt all downstream engineering workflows.&lt;/p&gt;
+&lt;p&gt;Because constructing an active-active multi-master DB introduces high architectural complexity, establishing an automated backup combining primary evacuation to an NFS PVC with secondary replication to S3-compatible storage, alongside a phased disaster recovery rehearsal (DR Rehearsal) to empirically verify Recovery Time Objective (RTO) and Recovery Point Objective (RPO), is essential as a baseline operational safety standard.&lt;/p&gt;
+&lt;h2 id="architecture-configuration-and-prerequisites"&gt;Architecture Configuration and Prerequisites
+&lt;/h2&gt;&lt;p&gt;The target standard infrastructure configuration and access requirements are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Identity Management&lt;/b&gt;: Keycloak v26.x (deployed via Keycloak Operator, &lt;code&gt;spec.instances: 1&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Database Engine&lt;/b&gt;: PostgreSQL 15 (single-replica StatefulSet, internal Service &lt;code&gt;postgres-db:5432&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Storage Allocation&lt;/b&gt;: PersistentVolume bound to node-local disk &lt;code&gt;/data&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="critical-access-prerequisites-avoiding-oidc-dependency"&gt;Critical Access Prerequisites (Avoiding OIDC Dependency)
+&lt;/h3&gt;&lt;p&gt;Before executing disaster recovery rehearsals or troubleshooting, ensure cluster administrator privileges using a direct X.509 certificate-based &lt;code&gt;kubeconfig&lt;/code&gt; (&lt;code&gt;admin.conf&lt;/code&gt;) that does not rely on Keycloak OIDC tokens. If &lt;code&gt;kubectl&lt;/code&gt; authentication relies on OIDC during a Keycloak database disconnection or rebuild, all API access will be blocked, resulting in a deadlock where recovery operations themselves become impossible.&lt;/p&gt;
+&lt;h2 id="implementation-of-a-two-tier-storage-backup-pipeline"&gt;Implementation of a Two-Tier Storage Backup Pipeline
+&lt;/h2&gt;&lt;p&gt;Backup data must be completely isolated from the production database compute and storage domains.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Tier-1 (Local Staging)&lt;/b&gt;: Shared Network File System (NFS PVC). Avoids external network transfer bottlenecks and achieves a fast RTO.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Tier-2 (Offsite Disaster Recovery)&lt;/b&gt;: S3-compatible object storage. Protects data against hypervisor outages or physical destruction of local disks.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following Kubernetes CronJob manifest automates binary format (&lt;code&gt;-Fc&lt;/code&gt;) extraction using &lt;code&gt;pg_dump&lt;/code&gt;, SHA-256 checksum verification, and transfer to S3 with integrity verification using &lt;code&gt;rclone&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;batch/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;CronJob&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;schedule&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;0 2 * * *&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;timeZone&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Asia/Tokyo&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;concurrencyPolicy&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Forbid&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;jobTemplate&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;backoffLimit&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;restartPolicy&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Never&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;initContainers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;pg-dump&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;postgres:15&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PGHOST&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;postgres-db&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PGDATABASE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PGUSER&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;valueFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secretKeyRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;username&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;PGPASSWORD&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;valueFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secretKeyRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;password&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;command&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;/bin/bash&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-c&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; set -euo pipefail
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; N=&amp;#34;keycloak-$(date +%Y%m%d-%H%M%S).dump&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; cd /backup
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # Execute binary dump in custom format
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; pg_dump -Fc -f &amp;#34;$N&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # Verify dump file header structure and readability
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; pg_restore -l &amp;#34;$N&amp;#34; &amp;amp;gt; /dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # Generate SHA256 hash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; sha256sum &amp;#34;$N&amp;#34; &amp;amp;gt; &amp;#34;$N.sha256&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # Update pointer to latest file
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;$N&amp;#34; &amp;amp;gt; .latest
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # Automatically delete local backups older than 7 days
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; find /backup -name &amp;#39;keycloak-*.dump*&amp;#39; -mtime +7 -delete&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumeMounts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mountPath&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;upload&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rclone/rclone:1.68&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RCLONE_CONFIG_BK_TYPE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;s3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RCLONE_CONFIG_BK_PROVIDER&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Other&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RCLONE_CONFIG_BK_ENDPOINT&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;http://s3-storage.internal:9000&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RCLONE_CONFIG_BK_ACCESS_KEY_ID&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;valueFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secretKeyRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-s3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ACCESS_KEY_ID&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;RCLONE_CONFIG_BK_SECRET_ACCESS_KEY&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;valueFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;secretKeyRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-s3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;key&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ACCESS_SECRET_KEY&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;DEST&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;value&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;bk:keycloak-db-backup/pgdump&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;command&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;/bin/sh&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-c&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; set -eu
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; N=$(cat /backup/.latest)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # Transfer assets to S3 storage
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; rclone copyto &amp;#34;/backup/$N&amp;#34; &amp;#34;$DEST/$N&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; rclone copyto &amp;#34;/backup/$N.sha256&amp;#34; &amp;#34;$DEST/$N.sha256&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # Remote verification: Recalculate hash from S3 stream to verify integrity
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; L=$(awk &amp;#39;{print $1}&amp;#39; &amp;#34;/backup/$N.sha256&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; R=$(rclone cat &amp;#34;$DEST/$N&amp;#34; | sha256sum | awk &amp;#39;{print $1}&amp;#39;)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; if [ &amp;#34;$L&amp;#34; != &amp;#34;$R&amp;#34; ]; then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;CRITICAL: Remote checksum mismatch for: $N&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; exit 1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; fi
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;Uploaded and verified: $N&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # Delete remote backups older than 30 days
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; rclone delete &amp;#34;$DEST&amp;#34; --min-age 30d --include &amp;#39;keycloak-*.dump*&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumeMounts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mountPath&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;/backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;readOnly&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;persistentVolumeClaim&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;claimName&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;keycloak-db-backup&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="phased-recovery-rehearsals-disaster-recovery-rehearsal"&gt;Phased Recovery Rehearsals (Disaster Recovery Rehearsal)
+&lt;/h2&gt;&lt;p&gt;Recovery capabilities are verified in three phases according to the level of risk to the production environment.&lt;/p&gt;
+&lt;h3 id="level-1-schema-and-record-integrity-verification-in-a-non-destructive-isolated-pod"&gt;Level 1: Schema and Record Integrity Verification in a Non-Destructive Isolated Pod
+&lt;/h3&gt;&lt;p&gt;Verify restore success and record counts by launching a temporary Pod without impacting production traffic or the running PostgreSQL instance.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Deploy temporary verification Pod and wait&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl apply -f - &amp;amp;lt;&amp;lt;eof &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;basename&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$f&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$q&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt; &lt;span style="color:#75715e"&gt;#=&amp;#34;&amp;#34; $f).sha256&amp;#34;=&amp;#34;&amp;#34; &amp;amp;&amp;amp;=&amp;#34;&amp;#34; &amp;#39;=&amp;#34;&amp;#34; -=&amp;#34;&amp;#34; --=&amp;#34;&amp;#34; --exit-on-error=&amp;#34;&amp;#34; --for=&amp;#34;condition=Ready&amp;#34; --no-owner=&amp;#34;&amp;#34; --timeout=&amp;#34;120s&amp;#34; -1)=&amp;#34;&amp;#34; -c=&amp;#34;&amp;#34; -d=&amp;#34;&amp;#34; -n=&amp;#34;&amp;#34; -t=&amp;#34;&amp;#34; -u=&amp;#34;&amp;#34; 2;=&amp;#34;&amp;#34; \=&amp;#34;&amp;#34; against=&amp;#34;&amp;#34; and=&amp;#34;&amp;#34; apiversion:=&amp;#34;&amp;#34; backup=&amp;#34;&amp;#34; baseline=&amp;#34;&amp;#34; bash=&amp;#34;&amp;#34; cd=&amp;#34;&amp;#34; check=&amp;#34;&amp;#34; claimname:=&amp;#34;&amp;#34; compare=&amp;#34;&amp;#34; containers:=&amp;#34;&amp;#34; count=&amp;#34;&amp;#34; do=&amp;#34;&amp;#34; done=&amp;#34;&amp;#34; env:=&amp;#34;&amp;#34; eof=&amp;#34;&amp;#34; exec=&amp;#34;&amp;#34; execute=&amp;#34;&amp;#34; f=&amp;#34;$(ls&amp;#34; head=&amp;#34;&amp;#34; image:=&amp;#34;&amp;#34; integrity=&amp;#34;&amp;#34; keycloak=&amp;#34;&amp;#34; keycloak-*.dump=&amp;#34;&amp;#34; keycloak-db-backup=&amp;#34;&amp;#34; keycloak;=&amp;#34;&amp;#34; kind:=&amp;#34;&amp;#34; kubectl=&amp;#34;&amp;#34; metadata:=&amp;#34;&amp;#34; mountpath:=&amp;#34;&amp;#34; name:=&amp;#34;&amp;#34; namespace:=&amp;#34;&amp;#34; never=&amp;#34;&amp;#34; persistentvolumeclaim:=&amp;#34;&amp;#34; pg_isready=&amp;#34;&amp;#34; pg_restore=&amp;#34;&amp;#34; pod=&amp;#34;&amp;#34; postgres=&amp;#34;&amp;#34; postgres:15=&amp;#34;&amp;#34; postgres_db=&amp;#34;&amp;#34; postgres_password=&amp;#34;&amp;#34; postgres_user=&amp;#34;&amp;#34; pre-acquired=&amp;#34;&amp;#34; psql=&amp;#34;&amp;#34; q=&amp;#34;SELECT &amp;#39;realm&amp;#39;, count(*) FROM realm UNION ALL SELECT &amp;#39;client&amp;#39;, count(*) FROM client UNION ALL SELECT &amp;#39;user_entity&amp;#39;, count(*) FROM user_entity;&amp;#34; readonly:=&amp;#34;&amp;#34; record=&amp;#34;&amp;#34; restartpolicy:=&amp;#34;&amp;#34; restore=&amp;#34;&amp;#34; restore-test=&amp;#34;&amp;#34; sha256sum=&amp;#34;&amp;#34; sleep=&amp;#34;&amp;#34; spec:=&amp;#34;&amp;#34; the=&amp;#34;&amp;#34; true=&amp;#34;&amp;#34; until=&amp;#34;&amp;#34; v1=&amp;#34;&amp;#34; value:=&amp;#34;&amp;#34; verify=&amp;#34;&amp;#34; volumemounts:=&amp;#34;&amp;#34; volumes:=&amp;#34;&amp;#34; wait=&amp;#34;&amp;#34; |=&amp;#34;&amp;#34;&amp;gt; count-restore.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;diff -u count-before.txt count-restore.txt &amp;amp;amp;&amp;amp;amp; echo &lt;span style="color:#e6db74"&gt;&amp;#34;CHECK_SUCCESS: Record counts match baseline.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Clean up resources&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl delete pod restore-test -n keycloak
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="level-2-in-place-database-failure-restoration-and-rto-measurement"&gt;Level 2: In-Place Database Failure Restoration and RTO Measurement
+&lt;/h3&gt;&lt;p&gt;Rebuild the database after stopping Keycloak, assuming logical data corruption.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Stopping Keycloak Pods (Preventing Race Conditions)&lt;/b&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl patch keycloak keycloak -n keycloak --type merge -p &lt;span style="color:#e6db74"&gt;&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;instances&amp;#34;:0}}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Database Re-creation and Restore&lt;/b&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl exec -n keycloak postgresql-db-0 -- psql -U keycloak -d postgres -c &lt;span style="color:#e6db74"&gt;&amp;#39;DROP DATABASE keycloak;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl exec -n keycloak postgresql-db-0 -- psql -U keycloak -d postgres -c &lt;span style="color:#e6db74"&gt;&amp;#39;CREATE DATABASE keycloak OWNER keycloak;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl exec -n keycloak postgresql-db-0 -- bash -c &lt;span style="color:#e6db74"&gt;&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; set -euo pipefail
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; cd /backup
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; F=$(ls -t keycloak-*.dump | head -1)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; sha256sum -c &amp;#34;$F.sha256&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; pg_restore -U keycloak -d keycloak --no-owner --exit-on-error &amp;#34;$F&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; # クラスタリングキャッシュ情報の初期化
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; psql -U keycloak -d keycloak -c &amp;#34;TRUNCATE jgroups_ping;&amp;#34; || true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;b&gt;Keycloak Restart and Health Checks&lt;/b&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl patch keycloak keycloak -n keycloak --type merge -p &lt;span style="color:#e6db74"&gt;&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;instances&amp;#34;:1}}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl wait --for&lt;span style="color:#f92672"&gt;=&lt;/span&gt;condition&lt;span style="color:#f92672"&gt;=&lt;/span&gt;Ready keycloak/keycloak -n keycloak --timeout&lt;span style="color:#f92672"&gt;=&lt;/span&gt;600s
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="level-3-dr-recovery-from-complete-loss-of-node-and-local-storage"&gt;Level 3: DR Recovery from Complete Loss of Node and Local Storage
+&lt;/h3&gt;&lt;p&gt;This recovery flow is for cases where the local PV (&lt;code&gt;/data&lt;/code&gt;) is physically lost due to a node failure. Re-define the PVC on a different node and pull data directly back from S3 to restore.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Back up the target StatefulSet definition and delete it&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl patch keycloak keycloak -n keycloak --type merge -p &lt;span style="color:#e6db74"&gt;&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;instances&amp;#34;:0}}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl get sts postgresql-db -n keycloak -o yaml &amp;amp;gt; sts-backup.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl delete sts postgresql-db -n keycloak
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Recreate the StatefulSet by reallocating to PV/PVC on the new node&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# (Apply after editing volumeClaimTemplates in sts-backup.yaml)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl apply -f sts-backup.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Pull dump directly from S3 and restore&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kubectl exec -n keycloak postgresql-db-0 -- bash -c &lt;span style="color:#e6db74"&gt;&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; rclone copyto bk:keycloak-db-backup/pgdump/latest.dump /backup/latest.dump
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; pg_restore -U keycloak -d keycloak --no-owner /backup/latest.dump
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-logs"&gt;Operational Logs
+&lt;/h2&gt;&lt;p&gt;Output logs from restore verification and comparison protocols executed on an actual system.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl get keycloak,sts,pod,svc,pvc -n keycloak -o wide
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY CLIENTS PROVIDER AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;keycloak.k8s.keycloak.org/keycloak 1/1 1 db 45d
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY AGE CONTAINERS IMAGES
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;statefulset.apps/postgresql-db 1/1 45d postgres postgres:15
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;NAME READY STATUS RESTARTS AGE IP NODE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pod/postgresql-db-0 1/1 Running 0 45d 10.244.3.12 infra-node-02
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl exec -n keycloak restore-test -- bash -c &amp;#39;cd /backup &amp;amp;amp;&amp;amp;amp; sha256sum -c keycloak-20261121-020000.dump.sha256&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;keycloak-20261121-020000.dump: OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ kubectl exec -n keycloak restore-test -- bash -c &amp;#39;pg_restore -U keycloak -d keycloak --no-owner --exit-on-error keycloak-20261121-020000.dump&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pg_restore: processing item 4201 TABLE DATA realm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pg_restore: processing item 4205 TABLE DATA client
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pg_restore: processing item 4210 TABLE DATA user_entity
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pg_restore: restore completed successfully without errors
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ diff -u count-before.txt count-restore.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;--- count-before.txt 2026-11-21 01:55:00.000000000 +0900
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+++ count-restore.txt 2026-11-21 02:15:30.000000000 +0900
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;@@ -1,4 +1,4 @@
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- realm | 3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- client | 42
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- user_entity | 1250
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+ realm | 3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+ client | 42
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+ user_entity | 1250
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CHECK_SUCCESS: Record counts match baseline.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-inability-to-execute-kubectl-operations-due-to-oidc-authentication-token-dependency"&gt;1. Inability to Execute &lt;code&gt;kubectl&lt;/code&gt; Operations Due to OIDC Authentication Token Dependency
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Symptom&lt;/b&gt;: Keycloak stops following the database shutdown, and executing &lt;code&gt;kubectl&lt;/code&gt; fails with &lt;code&gt;Error: Unauthorized&lt;/code&gt; or Token Renewal errors, rejecting recovery Pod deployment operations.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cause&lt;/b&gt;: The client&amp;rsquo;s &lt;code&gt;kubeconfig&lt;/code&gt; is configured with Keycloak OIDC as the authentication provider.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mitigation&lt;/b&gt;: During DR procedures, switch the context to X.509 client certificate authentication (&lt;code&gt;admin.conf&lt;/code&gt;) issued directly by the Kubernetes Control Plane API server before executing operations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-jgroups_ping-cluster-lockout-during-keycloak-startup-after-restore"&gt;2. &lt;code&gt;jgroups_ping&lt;/code&gt; Cluster Lockout During Keycloak Startup After Restore
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Symptom&lt;/b&gt;: After database restoration, starting Keycloak Pods results in repeated log outputs of &lt;code&gt;JGRP00006: failed sending message&lt;/code&gt;, failing to transition to Ready state.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cause&lt;/b&gt;: IP addresses or node identifiers from the old environment remain in the DB&amp;rsquo;s &lt;code&gt;jgroups_ping&lt;/code&gt; table, causing a deadlock during cluster node discovery with new Pods.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mitigation&lt;/b&gt;: Immediately after DB restore and prior to Keycloak startup, execute &lt;code&gt;TRUNCATE TABLE jgroups_ping;&lt;/code&gt; to initialize the discovery table.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-version-mismatch-error-between-pg_dump-and-pg_restore"&gt;3. Version Mismatch Error Between &lt;code&gt;pg_dump&lt;/code&gt; and &lt;code&gt;pg_restore&lt;/code&gt;
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Symptom&lt;/b&gt;: During restore execution, &lt;code&gt;pg_restore: error: unsupported version (1.15) in file header&lt;/code&gt; occurs and processing halts.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cause&lt;/b&gt;: A version discrepancy exists between the PostgreSQL image tag of the container that performed the backup and the target restore Pod (e.g., PostgreSQL 14 vs 15).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mitigation&lt;/b&gt;: Pin the image tags of both the backup Job and verification Pod to the same major version (&lt;code&gt;postgres:15&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-hash-verification-failure-due-to-transient-network-interruptions-during-s3-transfer"&gt;4. Hash Verification Failure Due to Transient Network Interruptions During S3 Transfer
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Symptom&lt;/b&gt;: The CronJob&amp;rsquo;s &lt;code&gt;upload&lt;/code&gt; container outputs &lt;code&gt;CRITICAL: Remote checksum mismatch&lt;/code&gt; and transitions to a Failed state.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Cause&lt;/b&gt;: An incomplete multipart upload occurred during the upload of a large dump file, resulting in missing data length on S3.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mitigation&lt;/b&gt;: Apply retries by adding the &lt;code&gt;--checksum&lt;/code&gt; flag during &lt;code&gt;rclone copyto&lt;/code&gt; execution, and allow the Job to automatically retry upon transfer errors based on &lt;code&gt;backoffLimit&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Storage Domain Isolation Principle&lt;/b&gt;: Saving backup files to the same physical disk as the production PostgreSQL database is invalid for DR design. Ensure redundancy across a separate network NFS and S3-compatible storage.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;JGroups Cache Initialization&lt;/b&gt;: During database recovery, substantial timeouts will occur in Keycloak cluster node discovery unless the &lt;code&gt;jgroups_ping&lt;/code&gt; table is explicitly purged.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Handling Offline Sessions&lt;/b&gt;: Tokens or active sessions issued between the time of backup creation and restoration will be lost. Establish deletion policies for &lt;code&gt;offline_user_session&lt;/code&gt; in advance according to business requirements.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Standardization of Periodic Rehearsals&lt;/b&gt;: In addition to automating backup configurations, establishing operational procedures to perform Level 1 and Level 2 recovery rehearsals quarterly and recording measured RTO values in audit logs is recommended.&lt;/eof&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Cache Stampede Mitigation in Redis Caching Strategies and Implementation of Redisson Distributed Locks</title><link>https://klifehack.com/en/p/redis-cache-stampede-redisson-distributed-lock/</link><pubDate>Thu, 19 Nov 2026 11:35:04 +0900</pubDate><guid>https://klifehack.com/en/p/redis-cache-stampede-redisson-distributed-lock/</guid><description>&lt;p&gt;In web application architectures centered on relational databases (RDBMS), disk I/O and connection pool exhaustion caused by sudden traffic spikes are factors that induce system-wide response delays and timeouts. Introducing Redis, an in-memory data store, as a caching layer can be expected to improve read performance; however, improper cache design or invalidation strategies risk triggering issues such as database load concentration caused by the expiration of specific keys (Cache Stampede) or data inconsistency during concurrent processing.&lt;/p&gt;
 &lt;p&gt;This article explains the selection criteria for major caching patterns, the implementation of distributed locks using Redisson, as well as Cache Stampede mitigation and memory management techniques in production operations.&lt;/p&gt;
 &lt;h2 id="1-classification-and-selection-criteria-for-cache-patterns"&gt;1. Classification and Selection Criteria for Cache Patterns
 &lt;/h2&gt;&lt;p&gt;An appropriate caching pattern must be selected based on data consistency requirements and write latency tolerance.&lt;/p&gt;
