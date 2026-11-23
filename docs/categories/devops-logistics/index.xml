@@ -1,4 +1,162 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 13 Nov 2026 11:32:57 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>エアギャップクラスタ向けGitLab CIとHarborレジストリ連携パイプライン実装</title><link>https://klifehack.com/p/airgap-gitlab-ci-harbor-pipeline/</link><pubDate>Fri, 13 Nov 2026 11:32:57 +0900</pubDate><guid>https://klifehack.com/p/airgap-gitlab-ci-harbor-pipeline/</guid><description>&lt;p&gt;インターネット接続が制限または完全に切断されたエアギャップ環境では、外部のパブリックレジストリ（Docker HubやQuay.ioなど）へのアウトバウンド通信がファイアウォールによって遮断されます。このようなインフラストラクチャにおいてKubesprayを用いたKubernetesクラスタを運用する場合、コンテナイメージの依存解決にパブリックエンドポイントが含まれていると、ビルドパイプラインがタイムアウトや名前解決エラーにより停止することになります。コンテナビルドプロセスの再現性を確保し、意図しない外部ネットワークリクエストを排除するには、内部プライベートレジストリを前提条件とした静的検証ゲートおよび閉域環境専用のパイプライン構成が不可欠となります。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/categories/devops-logistics/</link><description>Recent content in DevOps Logistics on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 23 Nov 2026 11:26:44 +0900</lastBuildDate><atom:link href="https://klifehack.com/categories/devops-logistics/index.xml" rel="self" type="application/rss+xml"/><item><title>AWS LightsailにおけるSelf-Hosted Runner移行とインバウンド非公開CDパイプラインの構築</title><link>https://klifehack.com/p/aws-lightsail-github-actions-selfhosted-runner-cd/</link><pubDate>Mon, 23 Nov 2026 11:26:44 +0900</pubDate><guid>https://klifehack.com/p/aws-lightsail-github-actions-selfhosted-runner-cd/</guid><description>&lt;p&gt;インフラのスケールおよび運用自動化において、アプリケーションコードと機械学習モデルの更新サイクルの分離、ならびにデプロイ時におけるインバウンドアクセス権限の最小化は極めて重要な設計要素です。従来のようにアプリケーションコードとモデルバイナリを同一のDockerイメージ内に同梱する構成では、モデル更新のみのタイミングでもリビルドが発生し、コンテナイメージの配送コストが増大する課題が存在しました。&lt;/p&gt;
+&lt;p&gt;また、CI/CDパイプラインから本番サーバーへSSH経由でデプロイを実行するアーキテクチャでは、IPアドレスが動的に変化するマネージドランナーに対応するため、SSHポート（Port 22）を全開放（0.0.0.0/0）せざるを得ず、セキュリティ上のリスクを抱え込むことになります。&lt;/p&gt;
+&lt;p&gt;本稿では、AWS Lightsail上で稼働する&lt;code&gt;eta-mini&lt;/code&gt;サービスを対象に、コードとモデルのバージョン分離設計、外部SSH接続型デプロイ（Stage 1）からSelf-Hosted Runnerを用いたアウトバウンド専用デプロイ（Stage 2）への移行手順、および遭遇したトラブルシューティングの実績ログを記録します。&lt;/p&gt;
+&lt;h2 id="1-コードとモデルの分離アーキテクチャ"&gt;1. コードとモデルの分離アーキテクチャ
+&lt;/h2&gt;&lt;p&gt;機械学習モデルの再学習サイクルは、アプリケーションのロジック改修よりも高頻度で発生します。このライフサイクルの非対称性に対応するため、コンテナイメージとモデルバイナリの依存関係を完全に切り離す分離設計を採用します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;アプリケーションコードバージョン (&lt;code&gt;v1.x&lt;/code&gt;)&lt;/b&gt;: Gitのセマンティックタグのプッシュをトリガーとして、GHCR（GitHub Container Registry）へコンテナイメージをビルド・プッシュします。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;モデルバージョン (&lt;code&gt;m&amp;lt;yyyymmdd&amp;gt;-&amp;lt;seq&amp;gt;&lt;/code&gt;)&lt;/seq&gt;&lt;/yyyymmdd&gt;&lt;/b&gt;: モデルファイルはコンテナイメージ内部へ焼き込まず、ホストサーバーの永続ストレージ（&lt;code&gt;/srv/eta/models/&lt;/code&gt;）に配置し、コンテナ起動時に読み取り専用（&lt;code&gt;:ro&lt;/code&gt;）でボリュームマウントします。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;コンテナ側は &lt;code&gt;/health&lt;/code&gt; エンドポイントを公開し、現在読み込まれているアプリケーションバージョンとモデルバージョンの整合性を動的に応答する構造とします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;status&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;ok&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;model&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;onnx&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;app_version&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;v1.0&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;model_version&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;baked&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;応答に含まれる &lt;code&gt;model_version&lt;/code&gt; が &lt;code&gt;baked&lt;/code&gt; を示す場合、イメージに組み込まれたデフォルトの初期モデルが適用されていることを意味します。&lt;/p&gt;
+&lt;h2 id="2-stage-1-ssh接続によるデプロイの限界"&gt;2. Stage 1: SSH接続によるデプロイの限界
+&lt;/h2&gt;&lt;p&gt;初期運用段階（Stage 1）では、GitHubホステッドランナーからAWS Lightsail上のインスタンスへSSH経由で接続し、デプロイスクリプトを実行するプッシュ型の構成をとっていました。&lt;/p&gt;
+&lt;h3 id="stage-1-のデプロイスクリプト-serversh"&gt;Stage 1 のデプロイスクリプト (&lt;code&gt;server.sh&lt;/code&gt;)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set -euo pipefail
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;TARGET_DIR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/srv/eta&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ENV_FILE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;TARGET_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/.env&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;COMMAND&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;1&lt;span style="color:#66d9ef"&gt;:-&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;TAG_NAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;2&lt;span style="color:#66d9ef"&gt;:-&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;COMMAND&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;image&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;TAG_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Error: Tag name is required.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; exit &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; PREV_TAG&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;grep -E &lt;span style="color:#e6db74"&gt;&amp;#39;^TAG=&amp;#39;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;ENV_FILE&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; | cut -d&lt;span style="color:#e6db74"&gt;&amp;#39;=&amp;#39;&lt;/span&gt; -f2 &lt;span style="color:#f92672"&gt;||&lt;/span&gt; true&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Updating TAG to &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;TAG_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sed -i &lt;span style="color:#e6db74"&gt;&amp;#34;s/^TAG=.*/TAG=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;TAG_NAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;ENV_FILE&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; docker compose -f &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;TARGET_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/compose.yml&amp;#34;&lt;/span&gt; pull
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; docker compose -f &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;TARGET_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/compose.yml&amp;#34;&lt;/span&gt; up -d
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# ヘルスチェックによるロールバック判定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sleep &lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; HEALTH_STATUS&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;curl -s http://localhost:8080/health | grep -o &lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#34;status&amp;#34;:&amp;#34;ok&amp;#34;&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; true&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;HEALTH_STATUS&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;Health check failed. Rolling back to &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;PREV_TAG&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sed -i &lt;span style="color:#e6db74"&gt;&amp;#34;s/^TAG=.*/TAG=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;PREV_TAG&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;ENV_FILE&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; docker compose -f &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;TARGET_DIR&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/compose.yml&amp;#34;&lt;/span&gt; up -d
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; exit &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="stage-1-のセキュリティ課題"&gt;Stage 1 のセキュリティ課題
+&lt;/h3&gt;&lt;p&gt;⚠️ &lt;b&gt;構成上のリスクと制限事項:&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;IP全開放の強制&lt;/b&gt;: GitHubホステッドランナーの送信元IP帯域が可変であるため、LightsailのファイアウォールルールにてPort 22を &lt;code&gt;0.0.0.0/0&lt;/code&gt; に対し常時開放する必要があります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;秘密情報の保持&lt;/b&gt;: ホストのSSH秘密鍵（&lt;code&gt;LIGHTSAIL_SSH_KEY&lt;/code&gt;）を外部CI/CDサービス側に保持し続ける運用リスクが存在します。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;TOFUパターンのリスク&lt;/b&gt;: 接続確立時に &lt;code&gt;StrictHostKeyChecking=accept-new&lt;/code&gt; を指定するため、中間者攻撃（MITM）に対する厳格な検証が制限されます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-stage-2-self-hosted-runnerへの移行とインバウンド閉鎖"&gt;3. Stage 2: Self-Hosted Runnerへの移行とインバウンド閉鎖
+&lt;/h2&gt;&lt;p&gt;インバウンドアクセスにおけるセキュリティリスクを根本から排除するため、ターゲットサーバー自体をGitHub ActionsのSelf-Hosted Runnerとして登録するプル型アーキテクチャへ移行します。サーバー側からGitHubに対しHTTPS（Port 443）経由でアウトバウンドのロングポーリングを行うため、外部からのインバウンドポート開放が一切不要となります。&lt;/p&gt;
+&lt;h3 id="self-hosted-runnerのエージェント設定"&gt;Self-Hosted Runnerのエージェント設定
+&lt;/h3&gt;&lt;p&gt;ホストサーバー（Amazon Linux 2023）上にて以下のコマンドを実行し、Runnerエージェントの登録および systemd サービスとしての起動を完了させます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ランナーのセットアップとラベル付与&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./config.sh --url https://github.com/&amp;lt;username&amp;gt;/eta-mini-aws &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --token &amp;lt;registration_token&amp;gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --name eta-mini &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --labels lightsail &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --unattended
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Systemdサービスとして常駐化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ./svc.sh install ec2-user
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ./svc.sh start
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="ワークフロー設定の変更-githubworkflowsdeployyml"&gt;ワークフロー設定の変更 (&lt;code&gt;.github/workflows/deploy.yml&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;デプロイジョブの実行環境ラベルを &lt;code&gt;ubuntu-latest&lt;/code&gt; から &lt;code&gt;[self-hosted, lightsail]&lt;/code&gt; へ変更し、ローカルでの直接シェル実行へ切り替えます。同一定義の並列実行によるリソース競合を防ぐため、&lt;code&gt;concurrency&lt;/code&gt; 制御を追加します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;CD Pipeline&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;tags&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;v*&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;deploy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;self-hosted, lightsail]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;concurrency&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;group&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;lightsail-deploy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;cancel-in-progress&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout repository&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Sync configuration files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; cp compose.yml /srv/eta/compose.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; cp server.sh /srv/eta/server.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; chmod +x /srv/eta/server.sh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Execute deployment script&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; echo &amp;#34;${{ secrets.GITHUB_TOKEN }}&amp;#34; | docker login ghcr.io -u &amp;#34;${{ github.actor }}&amp;#34; --password-stdin
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; /srv/eta/server.sh image &amp;#34;${{ github.ref_name }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-ランナー登録トークンの有効期限切れ"&gt;1. ランナー登録トークンの有効期限切れ
+&lt;/h3&gt;&lt;p&gt;🛠️ &lt;b&gt;現象と対策:&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: &lt;code&gt;./config.sh&lt;/code&gt; 実行時に &lt;code&gt;HTTP 404 Not Found&lt;/code&gt; または認証エラーが発生して登録が失敗する。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: GitHub UI/APIから発行したアクティベーショントークンは、生成後1時間で自動的に失効する仕様となっています。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: トークン発行後は速やかにセットアップスクリプトを実行するか、GitHub APIを用いてトークンを動的に自動再発行するスクリプトを構築します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-linux依存ライブラリの不足による登録失敗"&gt;2. Linux依存ライブラリの不足による登録失敗
+&lt;/h3&gt;&lt;p&gt;🛠️ &lt;b&gt;現象と対策:&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: Amazon Linux 2023環境で &lt;code&gt;./config.sh&lt;/code&gt; を実行した際、&lt;code&gt;libicu&lt;/code&gt; などの共有ライブラリが見つからずプロセスが異常終了する。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: 最小構成のOSイメージには .NET Core ランタイムの動的リンクに必要なシステムライブラリが含まれていません。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: インスタンス起動時の UserData（Launch Script）に依存パッケージの事前インストール処理を追加します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo dnf install -y libicu digest-shasum docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl enable --now docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo usermod -aG docker ec2-user
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-同時タグプッシュによるローカル排他制御の失敗"&gt;3. 同時タグプッシュによるローカル排他制御の失敗
+&lt;/h3&gt;&lt;p&gt;🛠️ &lt;b&gt;現象と対策:&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: 複数のGitタグが連続してプッシュされた際、&lt;code&gt;/srv/eta/.env&lt;/code&gt; の書き換え処理が競合し、コンテナの起動状態が不正になる。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;原因&lt;/b&gt;: Self-Hosted Runner上で同一ホストリソースを参照するデプロイジョブが並行して実行されたためです。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: GitHub Actionsの &lt;code&gt;concurrency&lt;/code&gt; 属性を適切に定義し、該当のデプロイグループ単位でジョブを排他的にシリアライズ実行させます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-移行途中の認証情報削除によるデプロイ不能"&gt;4. 移行途中の認証情報削除によるデプロイ不能
+&lt;/h3&gt;&lt;p&gt;🛠️ &lt;b&gt;現象と対策:&lt;/b&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;現象&lt;/b&gt;: Stage 2への切り替え完了前にGitHub Secrets（&lt;code&gt;LIGHTSAIL_SSH_KEY&lt;/code&gt;）を早期削除したことで、ロールバックが不可能になる。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;対策&lt;/b&gt;: 新規タグ（例: &lt;code&gt;v1.1&lt;/code&gt;）によるデプロイがSelf-Hosted Runner経由で完全成功したことを実行ログから確認した上で、旧環境のSecretsおよび Port 22 のファイアウォールルールを段階的に削除・変更します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-ネットワーク隔離および動作検証"&gt;4. ネットワーク隔離および動作検証
+&lt;/h2&gt;&lt;p&gt;Stage 2への移行完了後、ホストのPort 22（SSH）に対する外部アクセス遮断を実施し、最終的なデプロイパイプラインの動作検証を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ssh -i eta-deploy.pem ec2-user@54.250.x.x
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh: connect to host 54.250.x.x port 22: Connection timed out
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl -s http://54.250.x.x/health
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&amp;#34;status&amp;#34;:&amp;#34;ok&amp;#34;,&amp;#34;model&amp;#34;:&amp;#34;onnx&amp;#34;,&amp;#34;app_version&amp;#34;:&amp;#34;v1.1&amp;#34;,&amp;#34;model_version&amp;#34;:&amp;#34;baked&amp;#34;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo systemctl status Actions-Runner-Service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;● Actions-Runner-Service.service - GitHub Actions Runner (eta-mini)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Loaded: loaded (/etc/systemd/system/Actions-Runner-Service.service; enabled; preset: disabled)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Active: active (running) since Mon 2026-11-23 10:15:22 KST; 2h ago
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Main PID: 14205 (Runner.Listener)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Tasks: 18 (limit: 2282)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Memory: 48.2M
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;外部端末からのSSH直接接続はタイムアウトとなり、ポートが遮断されていることが実証されました。同時に、`/health` エンドポイントからは更新された `app_version: v1.1` が正常に応答されています。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;## Lessons Learned
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1. **インバウンドアクセス全廃による攻撃対象領域の縮小**: デプロイ基盤をアウトバウンドのポーリング型（Self-Hosted Runner）へ変更したことで、本番サーバーのSSHポートをインターネットに露出させるリスクを排除できました。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2. **コンテナとモデルバイナリの疎結合化**: アプリケーションコード（`v1.x`）とモデル（`m&amp;lt;date&amp;gt;`）のデプロイラインを分離したことで、無駄なコンテナイメージリビルドを防ぎ、帯域転送コストとデプロイ時間を削減できました。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3. **ローカル実行に伴う排他制御の必須化**: Self-Hosted Runnerを同一ノードで運用する場合、ホスト側の設定ファイルやDockerデーモンへのアクセス競合を防止するため、ワークフロー側での `concurrency` 制御が不可欠です。&amp;lt;/date&amp;gt;&amp;lt;/registration_token&amp;gt;&amp;lt;/username&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>エアギャップクラスタ向けGitLab CIとHarborレジストリ連携パイプライン実装</title><link>https://klifehack.com/p/airgap-gitlab-ci-harbor-pipeline/</link><pubDate>Fri, 13 Nov 2026 11:32:57 +0900</pubDate><guid>https://klifehack.com/p/airgap-gitlab-ci-harbor-pipeline/</guid><description>&lt;p&gt;インターネット接続が制限または完全に切断されたエアギャップ環境では、外部のパブリックレジストリ（Docker HubやQuay.ioなど）へのアウトバウンド通信がファイアウォールによって遮断されます。このようなインフラストラクチャにおいてKubesprayを用いたKubernetesクラスタを運用する場合、コンテナイメージの依存解決にパブリックエンドポイントが含まれていると、ビルドパイプラインがタイムアウトや名前解決エラーにより停止することになります。コンテナビルドプロセスの再現性を確保し、意図しない外部ネットワークリクエストを排除するには、内部プライベートレジストリを前提条件とした静的検証ゲートおよび閉域環境専用のパイプライン構成が不可欠となります。&lt;/p&gt;
 &lt;p&gt;本稿では、内部レジストリである「Harbor」を基盤とし、Kubesprayクラスタへデプロイするワークロードイメージを安全に生成・検証・配布するためのGitLab CI/CDパイプラインの実装仕様を整理します。&lt;/p&gt;
 &lt;h2 id="パイプライン全体構造と実行基盤パラメータ"&gt;パイプライン全体構造と実行基盤パラメータ
 &lt;/h2&gt;&lt;p&gt;対象環境では、GitLab Runner自体も閉域ネットワーク内に配置し、&lt;code&gt;docker&lt;/code&gt;および&lt;code&gt;offline&lt;/code&gt;の実行タグによってターゲットノードを制約します。パイプライン全体で使用するグローバル設定は以下の通りです。&lt;/p&gt;
