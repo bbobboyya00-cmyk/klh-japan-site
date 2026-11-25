@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nosuid on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/nosuid/</link><description>Recent content in Nosuid on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 25 Nov 2026 10:27:01 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/nosuid/index.xml" rel="self" type="application/rss+xml"/><item><title>Behavioral Characteristics and Permission Design of Linux Special Permissions (SUID, SGID, Sticky Bit)</title><link>https://klifehack.com/en/p/linux-special-permissions-architecture-audit/</link><pubDate>Wed, 25 Nov 2026 10:27:01 +0900</pubDate><guid>https://klifehack.com/en/p/linux-special-permissions-architecture-audit/</guid><description>&lt;p&gt;In multi-tenant environments or Linux infrastructures where multiple processes operate collaboratively, standard POSIX access controls (read, write, and execute permissions for owner, group, and others) are sometimes insufficient to meet operational requirements. Examples include requirements to allow unprivileged users to change their own passwords while maintaining the security of the privileged configuration file (&lt;code&gt;/etc/shadow&lt;/code&gt;), to unify group ownership of artifacts created by multiple engineers in a shared directory, or to prevent unauthorized deletion or tampering of others&amp;rsquo; files in a shared workspace such as &lt;code&gt;/tmp&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To meet these demands, the Linux kernel implements &amp;ldquo;Special Permissions&amp;rdquo; above the standard access permission bits. However, misconfigured special permissions can become a major privilege escalation attack vector, making it essential to precisely understand their detailed runtime behavior and auditing techniques.&lt;/p&gt;
+&lt;h2 id="architecture-and-execution-context-of-special-permissions"&gt;Architecture and Execution Context of Special Permissions
+&lt;/h2&gt;&lt;p&gt;Special permissions in the Linux file system consist of the following three bits:&lt;/p&gt;
+&lt;h3 id="1-set-user-id-suid--octal-bit-4000"&gt;1. Set User ID (SUID) — Octal Bit: &lt;code&gt;4000&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;When a user executes an executable binary with the SUID bit set, the effective user ID (EUID) of the process temporarily switches from the executing user to the &amp;ldquo;owner of the binary (typically root)&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;A primary example is &lt;code&gt;/usr/bin/passwd&lt;/code&gt;. The &lt;code&gt;/etc/shadow&lt;/code&gt; file, which stores password hashes for unprivileged users, normally has permissions set to &lt;code&gt;0000&lt;/code&gt; or &lt;code&gt;0600&lt;/code&gt; (owned by root), preventing direct viewing or modification by unprivileged users. Because SUID is set on &lt;code&gt;/usr/bin/passwd&lt;/code&gt;, it runs with root privileges only during execution, enabling file updates.&lt;/p&gt;
+&lt;h3 id="2-set-group-id-sgid--octal-bit-2000"&gt;2. Set Group ID (SGID) — Octal Bit: &lt;code&gt;2000&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;SGID behaves differently for files and directories.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;For executable files&lt;/b&gt;: Regardless of the primary group of the executing user, the effective group ID (EGID) of the process switches to the &amp;ldquo;owning group of the file&amp;rdquo;.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;For directories&lt;/b&gt;: All new files and subdirectories created within that directory automatically inherit the &amp;ldquo;owning group of the parent directory&amp;rdquo; rather than the primary group of the creator. This configuration is essential when setting up shared directories for development teams, etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-sticky-bit--octal-bit-1000"&gt;3. Sticky Bit — Octal Bit: &lt;code&gt;1000&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;A special permission configured on directories. In a directory with the Sticky Bit enabled, even if the directory permissions are set to &lt;code&gt;777&lt;/code&gt; (world-writable), deletion and renaming of files are restricted exclusively to the &amp;ldquo;owner of the file&amp;rdquo; or the &amp;ldquo;root superuser&amp;rdquo;. It is applied to the &lt;code&gt;/tmp&lt;/code&gt; directory where an unspecified number of users or services write temporary files.&lt;/p&gt;
+&lt;h2 id="interpretation-of-permission-notation-ss-and-tt"&gt;Interpretation of Permission Notation (s/S and t/T)
+&lt;/h2&gt;&lt;p&gt;In &lt;code&gt;ls -l&lt;/code&gt; output, special permissions are displayed in the position of the execute permission bits. The case of the characters displayed here indicates the presence or absence of the underlying standard execute permission (&lt;code&gt;x&lt;/code&gt;).&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th style="text-align: left"&gt;Notation&lt;/th&gt;
+ &lt;th style="text-align: left"&gt;Permission Type&lt;/th&gt;
+ &lt;th style="text-align: left"&gt;Standard Execute Permission (x) Status&lt;/th&gt;
+ &lt;th style="text-align: left"&gt;System Behavior Interpretation&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;rws&lt;/code&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;SUID / SGID&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Enabled&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Standard state where SUID/SGID functions normally&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;rwS&lt;/code&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;SUID / SGID&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;&lt;b&gt;Disabled&lt;/b&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Inconsistent state where special permission is set but execute permission is missing&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;rwt&lt;/code&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Sticky Bit&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Enabled&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Standard state where Sticky Bit functions normally&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;rwT&lt;/code&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Sticky Bit&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;&lt;b&gt;Disabled&lt;/b&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;State where Sticky Bit is set but execute permission for Others is missing&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;If an uppercase &lt;code&gt;S&lt;/code&gt; or &lt;code&gt;T&lt;/code&gt; is displayed, there is a high probability that consistency between the intended permission settings and the execution flags is broken, requiring a review of the configuration.&lt;/p&gt;
+&lt;h2 id="configuration-procedure-numeric-octal-and-symbolic-notation"&gt;Configuration Procedure: Numeric (Octal) and Symbolic Notation
+&lt;/h2&gt;&lt;p&gt;The &lt;code&gt;chmod&lt;/code&gt; command is used to grant or revoke special permissions.&lt;/p&gt;
+&lt;h3 id="configuration-via-octal-mode"&gt;Configuration via Octal Mode
+&lt;/h3&gt;&lt;p&gt;Specify a 4-digit number where the sum of the special permission values is prepended to the standard 3-digit permission.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Set SUID (4000 + 0755 = 4755)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;4755&lt;/span&gt; /usr/local/bin/custom-exec
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Set SGID (2000 + 0775 = 2775)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;2775&lt;/span&gt; /shared/devteam
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Set Sticky Bit (1000 + 0777 = 1777)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;1777&lt;/span&gt; /tmp/scratch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Completely remove special permissions (set leading digit to 0)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;0755&lt;/span&gt; /usr/local/bin/custom-exec
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="configuration-via-symbolic-mode"&gt;Configuration via Symbolic Mode
+&lt;/h3&gt;&lt;p&gt;Specify the &lt;code&gt;s&lt;/code&gt; or &lt;code&gt;t&lt;/code&gt; flag for the target (&lt;code&gt;u&lt;/code&gt;: owner, &lt;code&gt;g&lt;/code&gt;: group, &lt;code&gt;o&lt;/code&gt;: others).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Adding and removing SUID&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod u+s /usr/local/bin/custom-exec
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod u-s /usr/local/bin/custom-exec
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Adding and removing SGID&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod g+s /shared/devteam
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod g-s /shared/devteam
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Adding and removing the Sticky Bit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod o+t /tmp/scratch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod o-t /tmp/scratch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="system-auditing-and-search-pipeline"&gt;System Auditing and Search Pipeline
+&lt;/h2&gt;&lt;p&gt;To mitigate the risk of privilege escalation attacks, security audits require periodic detection of unnecessary SUID/SGID files. Audit the entire file system using the &lt;code&gt;find&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Comprehensive search for SUID binaries&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -4000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Search for SGID binaries and files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -2000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Search for directories with the Sticky Bit set&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -1000 -type d 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Search for files with either SUID or SGID set (4000 + 2000 = 6000)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -6000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;-perm -4000&lt;/code&gt; evaluates whether all specified bits are set. To prevent permission errors from cluttering the screen, standard error is redirected to &lt;code&gt;/dev/null&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-permission-denied-and-uppercase-s-notation-when-executing-suid-binary"&gt;1. &amp;ldquo;Permission denied&amp;rdquo; and Uppercase &lt;code&gt;S&lt;/code&gt; Notation When Executing SUID Binary
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Symptom:&lt;/b&gt; When an unprivileged user attempts to execute a binary with SUID set, execution fails with &lt;code&gt;bash: ./binary: Permission denied&lt;/code&gt;. Checking &lt;code&gt;ls -l&lt;/code&gt; reveals an uppercase &lt;code&gt;S&lt;/code&gt; displayed, such as &lt;code&gt;-rwSr-xr-x&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Cause:&lt;/b&gt; SUID (&lt;code&gt;u+s&lt;/code&gt; or &lt;code&gt;4xxx&lt;/code&gt;) was configured without granting execute permission (&lt;code&gt;x&lt;/code&gt;) to the file owner, causing the kernel to reject execution.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Resolution Workflow:&lt;/b&gt; Granting execute permission changes the notation to a lowercase &lt;code&gt;s&lt;/code&gt;, allowing execution to succeed.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod u+x /path/to/binary
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-group-ownership-inconsistency-in-shared-directories"&gt;2. Group Ownership Inconsistency in Shared Directories
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Symptom:&lt;/b&gt; In a directory co-edited by multiple users, new files created by a specific user inherit that user&amp;rsquo;s primary group, preventing other members from editing them.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Cause:&lt;/b&gt; If SGID is not set on the target directory, the group of created files defaults to the creator&amp;rsquo;s primary group.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Resolution Workflow:&lt;/b&gt; Change the target directory&amp;rsquo;s group ownership to the shared group, then set SGID.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chown -R :sharedgroup /shared/workspace
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;2775&lt;/span&gt; /shared/workspace
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-structural-elimination-of-privilege-escalation-risks-via-suid-nosuid"&gt;3. Structural Elimination of Privilege Escalation Risks via SUID (nosuid)
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;Symptom / Problem:&lt;/b&gt; If a malicious SUID binary is placed in shared storage (NFS) or user-writable locations (&lt;code&gt;/tmp&lt;/code&gt;, &lt;code&gt;/home&lt;/code&gt;), it can serve as a foothold for local privilege escalation.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Resolution Workflow:&lt;/b&gt; Explicitly specify &lt;code&gt;nosuid&lt;/code&gt; in mount options. This disables kernel-level interpretation of SUID and SGID bits on the corresponding file system.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/etc/fstab&lt;/code&gt; configuration example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;UUID=xxxx-xxxx /home ext4 defaults,nosuid,nodev 0 2
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;UUID=yyyy-yyyy /tmp ext4 defaults,nosuid,noexec,nodev 0 2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="verification-procedure-and-execution-logs"&gt;Verification Procedure and Execution Logs
+&lt;/h2&gt;&lt;p&gt;Verification logs for permission states and file system behavior after configuration.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Check SUID binary
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -l /usr/bin/passwd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rwsr-xr-x 1 root root 68248 Mar 23 2024 /usr/bin/passwd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Check Sticky Bit directory
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -ld /tmp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drwxrwxrwt 15 root root 4096 Nov 25 10:00 /tmp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Example of extracting system files with SUID set
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ find /usr/bin -perm -4000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/chfn
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/chsh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/passwd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/newgrp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/sudo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/su
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Check nosuid mount status
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ mount | grep nosuid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/dev/nvme0n1p3 on /home type ext4 (rw,nosuid,nodev,relatime)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tmpfs on /tmp type tmpfs (rw,nosuid,nodev)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;Principle of Least Privilege:&lt;/b&gt; Avoid granting SUID to custom scripts or binaries whenever possible. Consider controlling command execution via &lt;code&gt;sudo&lt;/code&gt; or granting fine-grained privileges using Linux capabilities (&lt;code&gt;setcap&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Disabling on Scripts:&lt;/b&gt; In standard Linux distributions, the SUID bit on shell scripts or interpreted language scripts is ignored at the kernel level for security reasons (mitigating environment variable injection and race conditions).&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Periodic Consistency Scanning:&lt;/b&gt; On production hosts, it is recommended to maintain a configuration that periodically collects search logs via CI/CD pipelines or monitoring agents to verify that SUID/SGID bits are not assigned to unexpected files.&lt;/li&gt;
+&lt;/ol&gt;</description></item></channel></rss>

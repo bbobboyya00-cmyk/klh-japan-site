@@ -1,4 +1,146 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Mon, 23 Nov 2026 11:26:44 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>AWS LightsailにおけるSelf-Hosted Runner移行とインバウンド非公開CDパイプラインの構築</title><link>https://klifehack.com/p/aws-lightsail-github-actions-selfhosted-runner-cd/</link><pubDate>Mon, 23 Nov 2026 11:26:44 +0900</pubDate><guid>https://klifehack.com/p/aws-lightsail-github-actions-selfhosted-runner-cd/</guid><description>&lt;p&gt;インフラのスケールおよび運用自動化において、アプリケーションコードと機械学習モデルの更新サイクルの分離、ならびにデプロイ時におけるインバウンドアクセス権限の最小化は極めて重要な設計要素です。従来のようにアプリケーションコードとモデルバイナリを同一のDockerイメージ内に同梱する構成では、モデル更新のみのタイミングでもリビルドが発生し、コンテナイメージの配送コストが増大する課題が存在しました。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/posts/</link><description>Recent content in Posts on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 25 Nov 2026 10:27:00 +0900</lastBuildDate><atom:link href="https://klifehack.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux特殊権限の挙動特性とパーミッション設計（SUID・SGID・Sticky Bit）</title><link>https://klifehack.com/p/linux-special-permissions-architecture-audit/</link><pubDate>Wed, 25 Nov 2026 10:27:00 +0900</pubDate><guid>https://klifehack.com/p/linux-special-permissions-architecture-audit/</guid><description>&lt;p&gt;マルチテナント環境や複数プロセスが協調動作するLinuxインフラストラクチャにおいて、標準のPOSIXアクセス制御（所有者、グループ、その他に対する読み取り・書き込み・実行権限）のみでは、業務要件を満たせない場面が存在します。例えば、一般ユーザーに自身のパスワード変更を許可しつつ特権設定ファイル（&lt;code&gt;/etc/shadow&lt;/code&gt;）の安全性を担保する要件や、複数エンジニアが共有ディレクトリ内で生成した成果物のグループ所有権を統一する要件、さらには&lt;code&gt;/tmp&lt;/code&gt;のような共有作業領域で他者のファイルを不当に削除・改ざんされないよう保護する要件などです。&lt;/p&gt;
+&lt;p&gt;これらの要求に応えるため、Linuxカーネルは通常のアクセス権限ビットの上位に「特殊権限（Special Permissions）」を実装しています。しかし、特殊権限は設定を誤ると重大な特権昇格（Privilege Escalation）攻撃のベクターとなるため、その詳細な実行時挙動と監査手法を正確に把握しておく必要があります。&lt;/p&gt;
+&lt;h2 id="特殊権限のアーキテクチャと実行コンテキスト"&gt;特殊権限のアーキテクチャと実行コンテキスト
+&lt;/h2&gt;&lt;p&gt;Linuxファイルシステムにおける特殊権限は、以下の3つのビットで構成されます。&lt;/p&gt;
+&lt;h3 id="1-set-user-id-suid--8進数ビット-4000"&gt;1. Set User ID (SUID) — 8進数ビット: &lt;code&gt;4000&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;SUIDビットが付与された実行可能バイナリをユーザーが実行すると、プロセスの実効ユーザーID（EUID: Effective User ID）が実行者ではなく「バイナリの所有者（通常はroot）」に一時的に切り替わります。&lt;/p&gt;
+&lt;p&gt;代表例が &lt;code&gt;/usr/bin/passwd&lt;/code&gt; です。一般ユーザーのパスワードハッシュが格納される &lt;code&gt;/etc/shadow&lt;/code&gt; は通常パーミッションが &lt;code&gt;0000&lt;/code&gt; または &lt;code&gt;0600&lt;/code&gt;（所有者root）となっており、一般ユーザーは直接参照・変更ができません。&lt;code&gt;/usr/bin/passwd&lt;/code&gt; にSUIDが設定されていることで、実行中のみroot権限で動作し、ファイルの更新が可能となります。&lt;/p&gt;
+&lt;h3 id="2-set-group-id-sgid--8進数ビット-2000"&gt;2. Set Group ID (SGID) — 8進数ビット: &lt;code&gt;2000&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;SGIDはファイルとディレクトリで動作が異なります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;実行ファイルの場合&lt;/b&gt;: 実行者のプライマリグループに関わらず、プロセスの実効グループID（EGID）が「ファイルの所属グループ」に切り替わります。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;ディレクトリの場合&lt;/b&gt;: 該当ディレクトリ配下に新規作成されたすべてのファイルおよびサブディレクトリのグループ所有権が、作成者のプライマリグループではなく「親ディレクトリの所属グループ」を強制的に継承します。開発チームなどの共有ディレクトリ構築において必須となる設定です。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-sticky-bit--8進数ビット-1000"&gt;3. Sticky Bit — 8進数ビット: &lt;code&gt;1000&lt;/code&gt;
+&lt;/h3&gt;&lt;p&gt;ディレクトリに対して設定される特殊権限です。Sticky Bitが付与されたディレクトリ内では、仮にディレクトリ全体のパーミッションが &lt;code&gt;777&lt;/code&gt;（誰でも書き込み可能）であっても、ファイルの削除およびファイル名変更の権限が「ファイルの所有者」または「rootスーパーユーザー」に限定されます。不特定多数のユーザーやサービスがファイルを一時書き込みする &lt;code&gt;/tmp&lt;/code&gt; ディレクトリに適用されています。&lt;/p&gt;
+&lt;h2 id="パーミッション表記の解釈ss-および-tt"&gt;パーミッション表記の解釈（s/S および t/T）
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;ls -l&lt;/code&gt; 出力において、特殊権限は実行権限ビットの位置に表示されます。ここで表示される文字の大小は、ベースとなる通常実行権限（&lt;code&gt;x&lt;/code&gt;）の有無を示しています。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th style="text-align: left"&gt;表記&lt;/th&gt;
+ &lt;th style="text-align: left"&gt;権限種別&lt;/th&gt;
+ &lt;th style="text-align: left"&gt;通常実行権（x）の状態&lt;/th&gt;
+ &lt;th style="text-align: left"&gt;システム挙動の解釈&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;rws&lt;/code&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;SUID / SGID&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;有効&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;SUID/SGIDが正常に機能する標準状態&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;rwS&lt;/code&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;SUID / SGID&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;&lt;b&gt;無効&lt;/b&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;特殊権限はセットされているが実行権限が欠落している不整合状態&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;rwt&lt;/code&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Sticky Bit&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;有効&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Sticky Bitが正常に機能する標準状態&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td style="text-align: left"&gt;&lt;code&gt;rwT&lt;/code&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Sticky Bit&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;&lt;b&gt;無効&lt;/b&gt;&lt;/td&gt;
+ &lt;td style="text-align: left"&gt;Sticky BitはセットされているがOthersの実行権限が欠落している状態&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;大文字の &lt;code&gt;S&lt;/code&gt; や &lt;code&gt;T&lt;/code&gt; が表示されている場合、パーミッション設定の意図と実行フラグの整合性が崩れている可能性が高いため、設定の見直しが必要です。&lt;/p&gt;
+&lt;h2 id="設定手順数値8進数指定とシンボリック指定"&gt;設定手順：数値（8進数）指定とシンボリック指定
+&lt;/h2&gt;&lt;p&gt;特殊権限の付与・剥奪には &lt;code&gt;chmod&lt;/code&gt; コマンドを使用します。&lt;/p&gt;
+&lt;h3 id="8進数モードによる設定"&gt;8進数モードによる設定
+&lt;/h3&gt;&lt;p&gt;標準の3桁パーミッションの先頭に、特殊権限の合算値を付加した4桁の数値を指定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SUIDの設定 (4000 + 0755 = 4755)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;4755&lt;/span&gt; /usr/local/bin/custom-exec
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SGIDの設定 (2000 + 0775 = 2775)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;2775&lt;/span&gt; /shared/devteam
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Sticky Bitの設定 (1000 + 0777 = 1777)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;1777&lt;/span&gt; /tmp/scratch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 特殊権限の完全解除 (先頭を0に設定)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;0755&lt;/span&gt; /usr/local/bin/custom-exec
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="シンボリックモードによる設定"&gt;シンボリックモードによる設定
+&lt;/h3&gt;&lt;p&gt;対象（&lt;code&gt;u&lt;/code&gt;: 所有者、&lt;code&gt;g&lt;/code&gt;: グループ、&lt;code&gt;o&lt;/code&gt;: その他）に対して &lt;code&gt;s&lt;/code&gt; または &lt;code&gt;t&lt;/code&gt; フラグを指定します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SUIDの付加と解除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod u+s /usr/local/bin/custom-exec
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod u-s /usr/local/bin/custom-exec
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SGIDの付加と解除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod g+s /shared/devteam
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod g-s /shared/devteam
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Sticky Bitの付加と解除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod o+t /tmp/scratch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod o-t /tmp/scratch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="システム監査と探索パイプライン"&gt;システム監査と探索パイプライン
+&lt;/h2&gt;&lt;p&gt;特権昇格攻撃のリスクを抑止するため、セキュリティ監査では不要なSUID/SGIDファイルの定期的な検出が必要です。&lt;code&gt;find&lt;/code&gt; コマンドを使用してファイルシステム全体を監査します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SUIDバイナリの網羅的探索&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -4000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SGIDバイナリおよびファイルの探索&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -2000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Sticky Bitが設定されたディレクトリの探索&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -1000 -type d 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SUIDまたはSGIDのいずれかが設定されたファイルの探索 (4000 + 2000 = 6000)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find / -perm -6000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;-perm -4000&lt;code&gt;は指定ビットがすべて含まれているかを判定します。権限エラーによる画面の汚染を防ぐため、標準エラー出力は&lt;/code&gt;/dev/null` にリダイレクトします。&lt;/p&gt;
+&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-suidバイナリ実行時のpermission-deniedと大文字-s-表記"&gt;1. SUIDバイナリ実行時の「Permission denied」と大文字 &lt;code&gt;S&lt;/code&gt; 表記
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;問題事象:&lt;/b&gt; SUIDを設定したバイナリを一般ユーザーが実行しようとすると、&lt;code&gt;bash: ./binary: Permission denied&lt;/code&gt; が発生し実行に失敗する。&lt;code&gt;ls -l&lt;/code&gt; を確認すると &lt;code&gt;-rwSr-xr-x&lt;/code&gt; のように大文字の &lt;code&gt;S&lt;/code&gt; が表示されている。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;原因:&lt;/b&gt; ファイルの所有者（Owner）に対する実行権限（&lt;code&gt;x&lt;/code&gt;）が付与されていない状態でSUID（&lt;code&gt;u+s&lt;/code&gt; または &lt;code&gt;4xxx&lt;/code&gt;）が設定されたため、カーネルが実行を拒絶しています。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;解決ワークフロー:&lt;/b&gt; 実行権限を付与することで、表記が小文字 &lt;code&gt;s&lt;/code&gt; に変化し正常に実行可能となります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod u+x /path/to/binary
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-共有ディレクトリにおけるグループ所有権の不整合"&gt;2. 共有ディレクトリにおけるグループ所有権の不整合
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;問題事象:&lt;/b&gt; 複数ユーザーで共同編集するディレクトリにおいて、特定のユーザーが作成した新規ファイルのグループがそのユーザーのプライマリグループになってしまい、他メンバーが編集できない。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;原因:&lt;/b&gt; 対象ディレクトリにSGIDが付与されていない場合、作成されたファイルのグループは作成者のデフォルトグループとなります。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;解決ワークフロー:&lt;/b&gt; 対象ディレクトリのグループ所有権を共有グループに変更した上で、SGIDを付与します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chown -R :sharedgroup /shared/workspace
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#ae81ff"&gt;2775&lt;/span&gt; /shared/workspace
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-suid経由の特権昇格リスクの構造的排除nosuid"&gt;3. SUID経由の特権昇格リスクの構造的排除（nosuid）
+&lt;/h3&gt;&lt;p&gt;&lt;b&gt;問題事象:&lt;/b&gt; 共有ストレージ（NFS）やユーザーが自由に書き込み可能な領域（&lt;code&gt;/tmp&lt;/code&gt;、&lt;code&gt;/home&lt;/code&gt;）に悪意あるSUIDバイナリが配置された場合、ローカル特権昇格の足がかりとなる。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;解決ワークフロー:&lt;/b&gt; マウントオプションに &lt;code&gt;nosuid&lt;/code&gt; を明示的に指定します。これにより、カーネルレベルで該当ファイルシステム上のSUIDおよびSGIDビットの解釈が無効化されます。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/etc/fstab&lt;/code&gt; の設定例:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;UUID=xxxx-xxxx /home ext4 defaults,nosuid,nodev 0 2
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;UUID=yyyy-yyyy /tmp ext4 defaults,nosuid,noexec,nodev 0 2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="検証手順と実行ログ"&gt;検証手順と実行ログ
+&lt;/h2&gt;&lt;p&gt;設定後の権限状態およびファイルシステムの挙動確認ログです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# SUIDバイナリの確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -l /usr/bin/passwd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rwsr-xr-x 1 root root 68248 Mar 23 2024 /usr/bin/passwd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Sticky Bitディレクトリの確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -ld /tmp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;drwxrwxrwt 15 root root 4096 Nov 25 10:00 /tmp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# システム内のSUID設定ファイルの抽出実行例
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ find /usr/bin -perm -4000 -type f 2&amp;amp;gt;/dev/null
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/chfn
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/chsh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/passwd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/newgrp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/sudo
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/su
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# nosuid適用状況の確認
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ mount | grep nosuid
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/dev/nvme0n1p3 on /home type ext4 (rw,nosuid,nodev,relatime)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tmpfs on /tmp type tmpfs (rw,nosuid,nodev)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="operational-notes"&gt;Operational Notes
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;b&gt;最小権限の原則:&lt;/b&gt; 独自スクリプトや自作バイナリへのSUID付与は極力回避し、&lt;code&gt;sudo&lt;/code&gt; 経由のコマンド実行制御やLinuxケーパビリティ（&lt;code&gt;setcap&lt;/code&gt;）を用いた粒度の細かい権限付与を検討してください。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;スクリプトへの無効化:&lt;/b&gt; 一般的なLinuxディストリビューションにおいて、シェルスクリプトやインタープリタ型言語スクリプトに対するSUIDビットはセキュリティ上の理由（環境変数インジェクションやレースコンディション対策）からカーネルレベルで無視されます。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;定期的な整合性スキャン:&lt;/b&gt; 本番ホストにおいては、予期せぬファイルにSUID/SGIDが付与されていないか、CI/CDパイプラインや監視エージェントを用いて探索ログを定期取得する構成を維持することが推奨されます。&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>AWS LightsailにおけるSelf-Hosted Runner移行とインバウンド非公開CDパイプラインの構築</title><link>https://klifehack.com/p/aws-lightsail-github-actions-selfhosted-runner-cd/</link><pubDate>Mon, 23 Nov 2026 11:26:44 +0900</pubDate><guid>https://klifehack.com/p/aws-lightsail-github-actions-selfhosted-runner-cd/</guid><description>&lt;p&gt;インフラのスケールおよび運用自動化において、アプリケーションコードと機械学習モデルの更新サイクルの分離、ならびにデプロイ時におけるインバウンドアクセス権限の最小化は極めて重要な設計要素です。従来のようにアプリケーションコードとモデルバイナリを同一のDockerイメージ内に同梱する構成では、モデル更新のみのタイミングでもリビルドが発生し、コンテナイメージの配送コストが増大する課題が存在しました。&lt;/p&gt;
 &lt;p&gt;また、CI/CDパイプラインから本番サーバーへSSH経由でデプロイを実行するアーキテクチャでは、IPアドレスが動的に変化するマネージドランナーに対応するため、SSHポート（Port 22）を全開放（0.0.0.0/0）せざるを得ず、セキュリティ上のリスクを抱え込むことになります。&lt;/p&gt;
 &lt;p&gt;本稿では、AWS Lightsail上で稼働する&lt;code&gt;eta-mini&lt;/code&gt;サービスを対象に、コードとモデルのバージョン分離設計、外部SSH接続型デプロイ（Stage 1）からSelf-Hosted Runnerを用いたアウトバウンド専用デプロイ（Stage 2）への移行手順、および遭遇したトラブルシューティングの実績ログを記録します。&lt;/p&gt;
 &lt;h2 id="1-コードとモデルの分離アーキテクチャ"&gt;1. コードとモデルの分離アーキテクチャ
