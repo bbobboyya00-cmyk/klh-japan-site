@@ -1,4 +1,119 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 25 Nov 2026 10:27:00 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux特殊権限の挙動特性とパーミッション設計（SUID・SGID・Sticky Bit）</title><link>https://klifehack.com/p/linux-special-permissions-architecture-audit/</link><pubDate>Wed, 25 Nov 2026 10:27:00 +0900</pubDate><guid>https://klifehack.com/p/linux-special-permissions-architecture-audit/</guid><description>&lt;p&gt;マルチテナント環境や複数プロセスが協調動作するLinuxインフラストラクチャにおいて、標準のPOSIXアクセス制御（所有者、グループ、その他に対する読み取り・書き込み・実行権限）のみでは、業務要件を満たせない場面が存在します。例えば、一般ユーザーに自身のパスワード変更を許可しつつ特権設定ファイル（&lt;code&gt;/etc/shadow&lt;/code&gt;）の安全性を担保する要件や、複数エンジニアが共有ディレクトリ内で生成した成果物のグループ所有権を統一する要件、さらには&lt;code&gt;/tmp&lt;/code&gt;のような共有作業領域で他者のファイルを不当に削除・改ざんされないよう保護する要件などです。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>K-Life Hack | システムアーキテクチャ &amp; DevOps</title><link>https://klifehack.com/</link><description>Recent content on K-Life Hack | システムアーキテクチャ &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Fri, 27 Nov 2026 10:34:44 +0900</lastBuildDate><atom:link href="https://klifehack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>resticとrest-serverのAppend-Only構成によるランサムウェア耐性バックアップ基盤の構築</title><link>https://klifehack.com/p/restic-rest-server-append-only-backup/</link><pubDate>Fri, 27 Nov 2026 10:34:44 +0900</pubDate><guid>https://klifehack.com/p/restic-rest-server-append-only-backup/</guid><description>&lt;h1 id="append-onlyモデルによる堅牢なバックアップアーキテクチャの構築"&gt;Append-Onlyモデルによる堅牢なバックアップアーキテクチャの構築
+&lt;/h1&gt;&lt;p&gt;単一のLinux Mini PCホスト上で各種Dockerコンテナ（PostgreSQL、Redis、Qdrant）や自動化パイプライン、システム設定を単一NVMeストレージ上で運用する場合、ハードウェア劣化やファイルシステム破損に伴うデータ損失リスクが常につきまといます。ソースコード以外の動的な運用データを安全に維持するには、単一障害点（SPOF）を排除するバックアップ構成が不可欠です。&lt;/p&gt;
+&lt;p&gt;本稿では、プライマリサーバからネットワーク上のNAS（Synology DS923+）へ対して、アプリケーション層のトランザクション整合性を保証しつつ、ホストが侵害された場合でもバックアップデータの後ろ倒し消去や改ざんを防ぐ「Append-Only（追記専用）」モデルのバックアップアーキテクチャ構築手順を整理します。&lt;/p&gt;
+&lt;h2 id="構成比較と選定の背景"&gt;構成比較と選定の背景
+&lt;/h2&gt;&lt;p&gt;Linuxホストのデータ退避において、Synology Active Backup for Business (ABB) や rsync、BorgBackup、restic などのアプローチが検討対象となりますが、カーネル互換性とセキュリティ境界の観点から慎重な評価が必要です。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Synology ABB Linux Agent&lt;/b&gt;: 専用カーネルモジュール（&lt;code&gt;synosnap&lt;/code&gt;）に依存します。Debian 13 (Linux Kernel 6.12) 環境ではカーネルパニックや自動更新時のビルド破損のリスクが高く、データベースの不整合防止メカニズムも備わっていません。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;rsync over SSH/SMB&lt;/b&gt;: 簡易的な同期は可能ですが、クライアント側での暗号化や重複排除、ポイントインタイムのバージョン管理が欠落します。また、ホスト側がランサムウェアに感染した場合、リモート側の同期済みファイルまで暗号化データで上書きされる恐れがあります。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;BorgBackup&lt;/b&gt;: 高度な重複排除と暗号化を提供しますが、DSM側でサードパーティ製バイナリを実行する必要があり、Append-Only制限のバイパス経路に関する課題が指摘されています。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;restic + rest-server (採用)&lt;/b&gt;: クライアント側で軽量な単一バイナリ &lt;code&gt;restic&lt;/code&gt; を実行し、NAS側で公式の &lt;code&gt;rest-server&lt;/code&gt; を &lt;code&gt;--append-only&lt;/code&gt; モードでコンテナ起動します。この構成では、HTTP APIレベルで &lt;code&gt;DELETE&lt;/code&gt; やファイル切詰リクエストが拒否（403 Forbidden）されるため、プライマリサーバのroot権限が奪取された場合でも過去のバックアップスナップショットが保護されます。&lt;/p&gt;
+&lt;h2 id="システムアーキテクチャとデータフロー"&gt;システムアーキテクチャとデータフロー
+&lt;/h2&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;+-------------------------------------------------------------------------+
+| Linux Server (Debian 13, Kernel 6.12) |
+| |
+| +----------------------+ +-------------------------------------+ |
+| | DB Engine Containers | | System Workspace &amp;amp;amp; Files | |
+| | (Postgres, Redis, | | (Configs, Code, Container Mounts) | |
+| | Qdrant) | +------------------+------------------+ |
+| +----------+-----------+ | |
+| | (Logical Dump) | |
+| v | |
+| +----------------------+ | |
+| | ~/srv/backup/dumps/ | | |
+| +----------+-----------+ | |
+| | | |
+| +------------------+------------------+ |
+| | |
+| v |
+| +-------------------------------------+ |
+| | restic CLI (Client Engine) | |
+| +------------------+------------------+ |
+| | |
+| | systemd Timer (Sat 02:00 JST/KST) |
++--------------------------------|----------------------------------------+
+ |
+ | REST API / HTTP Port 8000
+ v
++-------------------------------------------------------------------------+
+| Synology DS923+ NAS |
+| |
+| +-------------------------------------------------------------------+ |
+| | Container Manager: restic/rest-server | |
+| | Flags: --append-only | Auth: HTPasswd Authentication | |
+| +---------------------------------+---------------------------------+ |
+| | Mount |
+| v |
+| +-------------------------------------------------------------------+ |
+| | Target Btrfs Shared Volume (/volume2/server-backup) | |
+| | Data Checksums: Enabled | Immutable Snapshots: 7-Day Retention | |
+| +-------------------------------------------------------------------+ |
++-------------------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&amp;gt; ⚠️ &lt;b&gt;注意&lt;/b&gt;: 稼働中のデータベースのデータディレクトリ（例: &lt;code&gt;/var/lib/postgresql/data&lt;/code&gt;）を直接静止点なしでコピーすると、復元時にデータベースが壊れた状態になる確率が極めて高くなります。バックアップ処理の直前に必ず論理ダンプ（&lt;code&gt;pg_dump&lt;/code&gt;等）を出力する必要があります。&lt;/p&gt;
+&lt;h2 id="ステップ1-synology-nas側のセットアップ"&gt;ステップ1: Synology NAS側のセットアップ
+&lt;/h2&gt;&lt;h3 id="1-btrfs共有フォルダの作成"&gt;1. Btrfs共有フォルダの作成
+&lt;/h3&gt;&lt;p&gt;DSMの &lt;b&gt;コントロールパネル -&amp;gt; 共有フォルダ -&amp;gt; 作成&lt;/b&gt; へ移動し、名前を &lt;code&gt;server-backup&lt;/code&gt; に設定してBtrfsストレージプールを指定します。restic内部でオブジェクトを管理するためごみ箱は無効化し、Btrfsのサイレントデータロト検出に必須である &lt;b&gt;データ整合性のためのデータチェックサムを有効化&lt;/b&gt; をチェックします。なお、resticがクライアント側でAES-256暗号化を行うため、二重暗号化による性能低下を防ぐ目的でボリューム暗号化は無効化します。&lt;/p&gt;
+&lt;h3 id="2-snapshot-replicationによる不変スナップショットの設定"&gt;2. Snapshot Replicationによる不変スナップショットの設定
+&lt;/h3&gt;&lt;p&gt;DSMの &lt;b&gt;Snapshot Replication&lt;/b&gt; を開き、&lt;code&gt;server-backup&lt;/code&gt; フォルダに対して毎週土曜日 06:00 のスケジュールを設定します。保持ポリシーを8世代とし、&lt;b&gt;不変スナップショット（Immutable Snapshots）&lt;/b&gt; を「7日間」有効化することで、万が一NASの管理者アカウントが侵入された場合でも物理的に一定期間データ消去が不可能な状態を構築します。&lt;/p&gt;
+&lt;h3 id="3-container-manager-rest-server-のデプロイ"&gt;3. Container Manager (&lt;code&gt;rest-server&lt;/code&gt;) のデプロイ
+&lt;/h3&gt;&lt;p&gt;Container Managerから &lt;code&gt;restic/rest-server:latest&lt;/code&gt; イメージを取得し、&lt;code&gt;--append-only&lt;/code&gt; オプションを有効化してコンテナを起動します。ユーザー認証用アカウントの生成およびAPI疎通確認を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.8&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;rest-server&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;restic/rest-server:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rest-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;restart&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;always&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;8000:8000&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/volume2/server-backup:/data&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;OPTIONS=--append-only&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;PASSWORD_FILE=/data/.htpasswd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;コンテナ内ターミナルまたはホストシェルから認証ユーザーを作成します。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;```bash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;パスワード設定後、ファイアウォールで対象LinuxホストのIPからポート8000への通信のみを許可し、以下の疎通確認を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## ステップ2: クライアントホスト（Linux Mini PC）環境の初期化と認証&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;クライアントホスト側でバックアップ用ディレクトリ構造を作成し、秘密情報（認証パスワードおよびリポジトリ暗号化キー）を安全に保存した上で、共通ライブラリ定義ファイルとリポジトリ初期化を実行します。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="ステップ2-linuxホスト側のスクリプトおよび自動化設定"&gt;ステップ2: Linuxホスト側のスクリプトおよび自動化設定
+&lt;/h2&gt;&lt;p&gt;ホスト側では一般ユーザー権限で環境構築を行い、秘密情報はパーミッション &lt;code&gt;0600&lt;/code&gt; で保護します。&lt;/p&gt;
+&lt;h3 id="1-ディレクトリと認証情報の準備"&gt;1. ディレクトリと認証情報の準備
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-共通環境変数定義-srvbackuplibsh"&gt;2. 共通環境変数定義 (&lt;code&gt;~/srv/backup/lib.sh&lt;/code&gt;)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-リポジトリの初期化"&gt;3. リポジトリの初期化
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## ステップ3: トランザクション整合性を保証するデータベースダンプスクリプト&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;稼働中のコンテナ（PostgreSQL, Redis, Qdrant）のトランザクション静止点を確保し、整合性のある論理ダンプをアトミックに抽出するスクリプトを作成します。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="4-データベース静止点出力スクリプト-srvbackupdump-dbssh"&gt;4. データベース静止点出力スクリプト (&lt;code&gt;~/srv/backup/dump-dbs.sh&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;重複排除の効率を最大化するため、DBダンプ時の圧縮オプション（&lt;code&gt;-Z0&lt;/code&gt;）はオフに設定し、生データをrestic側のZstandard圧縮メカニズムに委ねます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## ステップ4: アトミック実行とランダム検証を組み込んだメインバックアップスクリプト&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;排他制御（&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;flock&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;）を適用したメインバックアップスクリプトを構築し、バックアップ完了後にリポジトリの5%をランダムサンプリング検証して整合性を担保します。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="5-メインバックアップ処理-srvbackupbackup-filessh"&gt;5. メインバックアップ処理 (&lt;code&gt;~/srv/backup/backup-files.sh&lt;/code&gt;)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## ステップ5: systemd User Timerによる自動化と権限分離&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;システム管理者権限ではなくユーザー空間の &lt;span style="color:#e6db74"&gt;`&lt;/span&gt;systemd&lt;span style="color:#e6db74"&gt;`&lt;/span&gt; サービスとタイマーを利用してバックアップタスクを実行し、権限分離と確実な自動実行を実現します。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="6-systemd-timerによる自動実行化"&gt;6. systemd Timerによる自動実行化
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;~/.config/systemd/user/backup-files.service&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;~/.config/systemd/user/backup-files.timer&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ユーザーセッション終了後もタイマーを維持するため、Lingeringを有効化して起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## ステップ6: Append-Onlyセキュリティ検証&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;バックアップ設定完了後、クライアント側から過去のスナップショット削除コマンド（&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;forget&lt;span style="color:#e6db74"&gt;`&lt;/span&gt; / &lt;span style="color:#e6db74"&gt;`&lt;/span&gt;prune&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;）を実行し、&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;rest-server&lt;span style="color:#e6db74"&gt;`&lt;/span&gt; が期待通り &lt;span style="color:#e6db74"&gt;`&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;403&lt;/span&gt; Forbidden&lt;span style="color:#e6db74"&gt;`&lt;/span&gt; を返して削除を拒否することを確認します。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-http-403-forbidden-による消去ブロックの動作検証"&gt;1. HTTP 403 Forbidden による消去ブロックの動作検証
+&lt;/h3&gt;&lt;p&gt;クライアントホストからスナップショットの消去（&lt;code&gt;forget&lt;/code&gt; / &lt;code&gt;prune&lt;/code&gt;）を意図的に試行し、&lt;code&gt;--append-only&lt;/code&gt; が正しく機能しているか検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実行結果プロトコルログ:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;検証結果が示す通り、クライアント側からのスナップショット削除要求は `rest-server` の Append-Only 制約により確実に遮断され、データベースの論理整合性とランダムチェックによるデータ健全性が正常に維持されていることが確認されました。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>Linux特殊権限の挙動特性とパーミッション設計（SUID・SGID・Sticky Bit）</title><link>https://klifehack.com/p/linux-special-permissions-architecture-audit/</link><pubDate>Wed, 25 Nov 2026 10:27:00 +0900</pubDate><guid>https://klifehack.com/p/linux-special-permissions-architecture-audit/</guid><description>&lt;p&gt;マルチテナント環境や複数プロセスが協調動作するLinuxインフラストラクチャにおいて、標準のPOSIXアクセス制御（所有者、グループ、その他に対する読み取り・書き込み・実行権限）のみでは、業務要件を満たせない場面が存在します。例えば、一般ユーザーに自身のパスワード変更を許可しつつ特権設定ファイル（&lt;code&gt;/etc/shadow&lt;/code&gt;）の安全性を担保する要件や、複数エンジニアが共有ディレクトリ内で生成した成果物のグループ所有権を統一する要件、さらには&lt;code&gt;/tmp&lt;/code&gt;のような共有作業領域で他者のファイルを不当に削除・改ざんされないよう保護する要件などです。&lt;/p&gt;
 &lt;p&gt;これらの要求に応えるため、Linuxカーネルは通常のアクセス権限ビットの上位に「特殊権限（Special Permissions）」を実装しています。しかし、特殊権限は設定を誤ると重大な特権昇格（Privilege Escalation）攻撃のベクターとなるため、その詳細な実行時挙動と監査手法を正確に把握しておく必要があります。&lt;/p&gt;
 &lt;h2 id="特殊権限のアーキテクチャと実行コンテキスト"&gt;特殊権限のアーキテクチャと実行コンテキスト
 &lt;/h2&gt;&lt;p&gt;Linuxファイルシステムにおける特殊権限は、以下の3つのビットで構成されます。&lt;/p&gt;

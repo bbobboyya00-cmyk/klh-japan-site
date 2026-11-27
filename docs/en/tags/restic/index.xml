@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Restic on K-Life Hack | Systems Architecture &amp; DevOps</title><link>https://klifehack.com/en/tags/restic/</link><description>Recent content in Restic on K-Life Hack | Systems Architecture &amp; DevOps</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 27 Nov 2026 10:34:45 +0900</lastBuildDate><atom:link href="https://klifehack.com/en/tags/restic/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Ransomware-Resilient Backup Infrastructure Using an Append-Only Configuration with restic and rest-server</title><link>https://klifehack.com/en/p/restic-rest-server-append-only-backup/</link><pubDate>Fri, 27 Nov 2026 10:34:45 +0900</pubDate><guid>https://klifehack.com/en/p/restic-rest-server-append-only-backup/</guid><description>&lt;h1 id="building-a-robust-backup-architecture-using-an-append-only-model"&gt;Building a Robust Backup Architecture Using an Append-Only Model
+&lt;/h1&gt;&lt;p&gt;Operating various Docker containers (PostgreSQL, Redis, Qdrant), automation pipelines, and system configurations on a single NVMe storage drive on a single Linux Mini PC host carries a constant risk of data loss due to hardware degradation or filesystem corruption. To safely maintain dynamic operational data beyond source code, a backup architecture that eliminates single points of failure (SPOF) is essential.&lt;/p&gt;
+&lt;p&gt;This article details the setup procedures for an &amp;ldquo;Append-Only&amp;rdquo; backup architecture from a primary server to a network NAS (Synology DS923+). This design guarantees application-layer transaction consistency while preventing backdated deletion or tampering of backup data even if the host is compromised.&lt;/p&gt;
+&lt;h2 id="architecture-comparison-and-selection-background"&gt;Architecture Comparison and Selection Background
+&lt;/h2&gt;&lt;p&gt;When offloading data from a Linux host, approaches such as Synology Active Backup for Business (ABB), rsync, BorgBackup, and restic are considered. However, careful evaluation is required regarding kernel compatibility and security boundaries.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Synology ABB Linux Agent&lt;/b&gt;: Relies on a proprietary kernel module (&lt;code&gt;synosnap&lt;/code&gt;). In a Debian 13 (Linux Kernel 6.12) environment, there is a high risk of kernel panics or build failures during automatic updates, and it lacks mechanisms to prevent database inconsistency.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;rsync over SSH/SMB&lt;/b&gt;: Allows simple synchronization, but lacks client-side encryption, deduplication, and point-in-time version management. Furthermore, if the host side is infected with ransomware, synchronized remote files risk being overwritten with encrypted data.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;BorgBackup&lt;/b&gt;: Provides advanced deduplication and encryption, but requires executing third-party binaries on the DSM side, and concerns have been raised regarding bypass vectors for Append-Only restrictions.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;restic + rest-server (Selected)&lt;/b&gt;: Runs the lightweight single binary &lt;code&gt;restic&lt;/code&gt; on the client side, and launches the official &lt;code&gt;rest-server&lt;/code&gt; in containerized &lt;code&gt;--append-only&lt;/code&gt; mode on the NAS side. Under this configuration, &lt;code&gt;DELETE&lt;/code&gt; and file truncation requests are rejected (403 Forbidden) at the HTTP API level, preserving historical backup snapshots even if root access on the primary server is compromised.&lt;/p&gt;
+&lt;h2 id="system-architecture-and-data-flow"&gt;System Architecture and Data Flow
+&lt;/h2&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;+-------------------------------------------------------------------------+
+| Linux Server (Debian 13, Kernel 6.12) |
+| |
+| +----------------------+ +-------------------------------------+ |
+| | DB Engine Containers | | System Workspace &amp;amp;amp; Files | |
+| | (Postgres, Redis, | | (Configs, Code, Container Mounts) | |
+| | Qdrant) | +------------------+------------------+ |
+| +----------+-----------+ | |
+| | (Logical Dump) | |
+| v | |
+| +----------------------+ | |
+| | ~/srv/backup/dumps/ | | |
+| +----------+-----------+ | |
+| | | |
+| +------------------+------------------+ |
+| | |
+| v |
+| +-------------------------------------+ |
+| | restic CLI (Client Engine) | |
+| +------------------+------------------+ |
+| | |
+| | systemd Timer (Sat 02:00 JST/KST) |
++--------------------------------|----------------------------------------+
+ |
+ | REST API / HTTP Port 8000
+ v
++-------------------------------------------------------------------------+
+| Synology DS923+ NAS |
+| |
+| +-------------------------------------------------------------------+ |
+| | Container Manager: restic/rest-server | |
+| | Flags: --append-only | Auth: HTPasswd Authentication | |
+| +---------------------------------+---------------------------------+ |
+| | Mount |
+| v |
+| +-------------------------------------------------------------------+ |
+| | Target Btrfs Shared Volume (/volume2/server-backup) | |
+| | Data Checksums: Enabled | Immutable Snapshots: 7-Day Retention | |
+| +-------------------------------------------------------------------+ |
++-------------------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&amp;gt; ⚠️ &lt;b&gt;Warning&lt;/b&gt;: Directly copying the data directory of a running database (e.g., &lt;code&gt;/var/lib/postgresql/data&lt;/code&gt;) without taking a snapshot/quiescence point carries an extremely high probability of database corruption upon restoration. Logical dumps (such as &lt;code&gt;pg_dump&lt;/code&gt;) must be executed immediately prior to the backup process.&lt;/p&gt;
+&lt;h2 id="step-1-synology-nas-setup"&gt;Step 1: Synology NAS Setup
+&lt;/h2&gt;&lt;h3 id="1-creating-a-btrfs-shared-folder"&gt;1. Creating a Btrfs Shared Folder
+&lt;/h3&gt;&lt;p&gt;Navigate to DSM &lt;b&gt;Control Panel -&amp;gt; Shared Folder -&amp;gt; Create&lt;/b&gt;, name it &lt;code&gt;server-backup&lt;/code&gt;, and select the Btrfs storage pool. Disable the Recycle Bin since restic manages objects internally, and check &lt;b&gt;Enable data checksum for advanced data integrity&lt;/b&gt;, which is required for Btrfs silent data corruption detection. Volume encryption is disabled to prevent performance degradation from double encryption, as restic handles AES-256 client-side encryption.&lt;/p&gt;
+&lt;h3 id="2-configuring-immutable-snapshots-with-snapshot-replication"&gt;2. Configuring Immutable Snapshots with Snapshot Replication
+&lt;/h3&gt;&lt;p&gt;Open DSM &lt;b&gt;Snapshot Replication&lt;/b&gt; and configure a schedule for the &lt;code&gt;server-backup&lt;/code&gt; folder to run every Saturday at 06:00. Set the retention policy to 8 generations and enable &lt;b&gt;Immutable Snapshots&lt;/b&gt; for 7 days. This ensures that even if the NAS administrator account is compromised, data deletion is physically impossible for a set duration.&lt;/p&gt;
+&lt;h3 id="3-deploying-container-manager-rest-server"&gt;3. Deploying Container Manager (&lt;code&gt;rest-server&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;Pull the &lt;code&gt;restic/rest-server:latest&lt;/code&gt; image from Container Manager and launch the container with the &lt;code&gt;--append-only&lt;/code&gt; option enabled. Generate user authentication accounts and verify API connectivity.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.8&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;rest-server&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;restic/rest-server:latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;container_name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;rest-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;restart&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;always&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;8000:8000&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;volumes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/volume2/server-backup:/data&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;OPTIONS=--append-only&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;PASSWORD_FILE=/data/.htpasswd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;コンテナ内ターミナルまたはホストシェルから認証ユーザーを作成します。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;```bash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;パスワード設定後、ファイアウォールで対象LinuxホストのIPからポート8000への通信のみを許可し、以下の疎通確認を行います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## Step 2: Client Host (Linux Mini PC) Environment Initialization and Authentication&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Create the backup directory structure on the client host, securely store secrets &lt;span style="color:#f92672"&gt;(&lt;/span&gt;authentication password and repository encryption key&lt;span style="color:#f92672"&gt;)&lt;/span&gt;, and execute the common library definition file and repository initialization.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="ステップ2-linuxホスト側のスクリプトおよび自動化設定"&gt;ステップ2: Linuxホスト側のスクリプトおよび自動化設定
+&lt;/h2&gt;&lt;p&gt;ホスト側では一般ユーザー権限で環境構築を行い、秘密情報はパーミッション &lt;code&gt;0600&lt;/code&gt; で保護します。&lt;/p&gt;
+&lt;h3 id="1-ディレクトリと認証情報の準備"&gt;1. ディレクトリと認証情報の準備
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-共通環境変数定義-srvbackuplibsh"&gt;2. 共通環境変数定義 (&lt;code&gt;~/srv/backup/lib.sh&lt;/code&gt;)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-リポジトリの初期化"&gt;3. リポジトリの初期化
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## Step 3: Database Dump Script Guaranteeing Transaction Consistency&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Create a script to ensure transaction quiescence &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; running containers &lt;span style="color:#f92672"&gt;(&lt;/span&gt;PostgreSQL, Redis, Qdrant&lt;span style="color:#f92672"&gt;)&lt;/span&gt; and atomically extract consistent logical dumps.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="4-データベース静止点出力スクリプト-srvbackupdump-dbssh"&gt;4. データベース静止点出力スクリプト (&lt;code&gt;~/srv/backup/dump-dbs.sh&lt;/code&gt;)
+&lt;/h3&gt;&lt;p&gt;重複排除の効率を最大化するため、DBダンプ時の圧縮オプション（&lt;code&gt;-Z0&lt;/code&gt;）はオフに設定し、生データをrestic側のZstandard圧縮メカニズムに委ねます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## Step 4: Main Backup Script Incorporating Atomic Execution and Random Verification&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Construct the main backup script with mutual exclusion &lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;flock&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt;, and perform a 5% random sampling verification of the repository after backup completion to guarantee integrity.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="5-メインバックアップ処理-srvbackupbackup-filessh"&gt;5. メインバックアップ処理 (&lt;code&gt;~/srv/backup/backup-files.sh&lt;/code&gt;)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## Step 5: Automation and Privilege Separation via systemd User Timer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Execute backup tasks using user-space &lt;span style="color:#e6db74"&gt;`&lt;/span&gt;systemd&lt;span style="color:#e6db74"&gt;`&lt;/span&gt; services and timers rather than root system admin privileges, achieving privilege separation and reliable automated execution.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="6-systemd-timerによる自動実行化"&gt;6. systemd Timerによる自動実行化
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;~/.config/systemd/user/backup-files.service&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;~/.config/systemd/user/backup-files.timer&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ユーザーセッション終了後もタイマーを維持するため、Lingeringを有効化して起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## Step 6: Append-Only Security Verification&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;After completing the backup configuration, execute historical snapshot deletion commands &lt;span style="color:#f92672"&gt;(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;forget&lt;span style="color:#e6db74"&gt;`&lt;/span&gt; / &lt;span style="color:#e6db74"&gt;`&lt;/span&gt;prune&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt; from the client side and verify that &lt;span style="color:#e6db74"&gt;`&lt;/span&gt;rest-server&lt;span style="color:#e6db74"&gt;`&lt;/span&gt; rejects the deletion by returning &lt;span style="color:#e6db74"&gt;`&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;403&lt;/span&gt; Forbidden&lt;span style="color:#e6db74"&gt;`&lt;/span&gt; as expected.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="troubleshooting"&gt;Troubleshooting
+&lt;/h2&gt;&lt;h3 id="1-http-403-forbidden-による消去ブロックの動作検証"&gt;1. HTTP 403 Forbidden による消去ブロックの動作検証
+&lt;/h3&gt;&lt;p&gt;クライアントホストからスナップショットの消去（&lt;code&gt;forget&lt;/code&gt; / &lt;code&gt;prune&lt;/code&gt;）を意図的に試行し、&lt;code&gt;--append-only&lt;/code&gt; が正しく機能しているか検証します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実行結果プロトコルログ:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;As the verification results indicate, snapshot deletion requests from the client side are reliably blocked by `rest-server`&amp;#39;s Append-Only constraints, confirming that logical database consistency and data health via random checks are properly maintained.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item></channel></rss>
